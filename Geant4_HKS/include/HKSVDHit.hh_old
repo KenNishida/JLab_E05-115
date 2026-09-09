@@ -1,0 +1,69 @@
+/*
+  HKSVDHit.hh
+
+  D.Kawama
+*/
+
+#ifndef HKSVDHit_h
+
+#define HKSVDHit_h 1
+
+#include "G4VHit.hh"
+#include "G4THitsCollection.hh"
+#include "G4ThreeVector.hh"
+#include "G4Allocator.hh"
+
+class HKSVDHit : public G4VHit
+{
+public:
+  HKSVDHit( G4int id, const G4ThreeVector &gPos, const G4ThreeVector &gMom,
+	    G4double x, G4double y, G4double u, G4double v);
+  ~HKSVDHit();
+
+private:
+  HKSVDHit( const HKSVDHit &  );
+  HKSVDHit & operator = ( const HKSVDHit & );
+
+public:
+  int operator == ( const HKSVDHit & right ) const
+  { return 0; }
+
+  inline void* operator new( size_t size );
+  inline void operator delete( void* aHit );
+
+  void Draw() const;
+  void Print() const;
+
+private:
+  G4int VDId_;
+  G4ThreeVector gPos_ , gMom_;
+  G4double Xloc, Yloc, Uloc, Vloc;
+  G4ThreeVector lPos_, lMom_;
+
+public:
+  void SetLPos( const G4ThreeVector & pos ) { lPos_ = pos; }
+  void SetLMom( const G4ThreeVector & mom ) { lMom_ = mom; }
+
+  const G4ThreeVector & GetPos() const { return lPos_; }
+  const G4ThreeVector & GetMom() const { return lMom_; }
+  const G4ThreeVector & GetGMom() const { return gMom_; } 
+  G4int GetVDid( void ) const { return VDId_; }
+
+};
+
+typedef G4THitsCollection<HKSVDHit> HKSVDHitsCollection;
+
+extern G4Allocator<HKSVDHit> HKSVDHitAllocator;
+
+inline void* HKSVDHit::operator new( size_t )
+{
+  return static_cast<void*>( HKSVDHitAllocator.MallocSingle() );
+}
+
+inline void HKSVDHit::operator delete( void* aHit )
+{
+  HKSVDHitAllocator.FreeSingle
+    ( static_cast<HKSVDHit *>( aHit ) );
+}
+
+#endif

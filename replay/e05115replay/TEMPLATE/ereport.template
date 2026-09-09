@@ -1,0 +1,79 @@
+
+begin parm erep
+
+e_report_blockname = 'erep'
+
+end parm erep
+
+begin report erep
+The name of this report template file is {e_report_template_filename}.
+
+All efficiencies are normalized to "etrig".
+Values in parenthesis are rates ( Hz ).
+hardware scalers have rates in square brackets [ Hz ].
+
+Run #: {gen_run_number}
+Time of run = {g_run_time:%7.1f} sec (at most recent scaler event)
+first event = {gen_run_starting_event:%7d}
+last event  = {gen_event_id_number:%7d}
+
+dmytst        = {dmytst.scaler:%8d} ( {dmytst.scaler/g_run_time:%7.1f} )
+atrig         = {atrig.scaler:%8d} ( {atrig.scaler/g_run_time:%7.1f} )
+etrig         = {etrig.scaler:%8d} ( {etrig.scaler/g_run_time:%7.1f} )
+ctrig         = {ctrig.scaler:%8d} ( {ctrig.scaler/g_run_time:%7.1f} )
+enge adcgates = {gscaler(336):%8d} [ {gscaler(336)/g_run_time:%7.1f} ]
+all adcgates  = {gscaler(175):%8d} [ {gscaler(175)/g_run_time:%7.1f} ]
+
+#include 'TEMPLATE/etrack.template'
+
+*****************************
+* RAW SOFTWARE EFFICIENCIES *
+*****************************
+"raw"  means one or more hits per EDC plane.
+"Good" means one or two  hits per EDC plane.
+rawedc1   = {edceff_good_trig:%7d}  eff = {edc_layer_eff(1):%5.3f} +/- {edc_layer_eff_err(1):%5.4f} BAD = .95
+rawedc2   = {edceff_good_trig:%7d}  eff = {edc_layer_eff(2):%5.3f} +/- {edc_layer_eff_err(2):%5.4f} BAD = .95
+rawedc3   = {edceff_good_trig:%7d}  eff = {edc_layer_eff(3):%5.3f} +/- {edc_layer_eff_err(3):%5.4f} BAD = .95
+rawedc4   = {edceff_good_trig:%7d}  eff = {edc_layer_eff(4):%5.3f} +/- {edc_layer_eff_err(4):%5.4f} BAD = .95
+rawedc5   = {edceff_good_trig:%7d}  eff = {edc_layer_eff(5):%5.3f} +/- {edc_layer_eff_err(5):%5.4f} BAD = .95
+rawedc6   = {edceff_good_trig:%7d}  eff = {edc_layer_eff(6):%5.3f} +/- {edc_layer_eff_err(6):%5.4f} BAD = .95
+rawedc7   = {edceff_good_trig:%7d}  eff = {edc_layer_eff(7):%5.3f} +/- {edc_layer_eff_err(7):%5.4f} BAD = .95
+rawedc8   = {edceff_good_trig:%7d}  eff = {edc_layer_eff(8):%5.3f} +/- {edc_layer_eff_err(8):%5.4f} BAD = .95
+rawedc9   = {edceff_good_trig:%7d}  eff = {edc_layer_eff(9):%5.3f} +/- {edc_layer_eff_err(9):%5.4f} BAD = .95
+rawedc10  = {edceff_good_trig:%7d}  eff = {edc_layer_eff(10):%5.3f} +/- {edc_layer_eff_err(10):%5.4f} BAD = .95
+
+goodedc1   = {goodedc1.scaler:%7d}   eff = {goodedc1.scaler/(etrig.scaler+.0001):%5.3f}  BAD = .00
+goodedc2   = {goodedc2.scaler:%7d}   eff = {goodedc2.scaler/(etrig.scaler+.0001):%5.3f}  BAD = .00
+goodedc3   = {goodedc3.scaler:%7d}   eff = {goodedc3.scaler/(etrig.scaler+.0001):%5.3f}  BAD = .00
+goodedc4   = {goodedc4.scaler:%7d}   eff = {goodedc4.scaler/(etrig.scaler+.0001):%5.3f}  BAD = .00
+goodedc5   = {goodedc5.scaler:%7d}   eff = {goodedc5.scaler/(etrig.scaler+.0001):%5.3f}  BAD = .00
+goodedc6   = {goodedc6.scaler:%7d}   eff = {goodedc6.scaler/(etrig.scaler+.0001):%5.3f}  BAD = .00
+goodedc7   = {goodedc7.scaler:%7d}   eff = {goodedc7.scaler/(etrig.scaler+.0001):%5.3f}  BAD = .00
+goodedc8   = {goodedc8.scaler:%7d}   eff = {goodedc8.scaler/(etrig.scaler+.0001):%5.3f}  BAD = .00
+goodedc9   = {goodedc9.scaler:%7d}   eff = {goodedc9.scaler/(etrig.scaler+.0001):%5.3f}  BAD = .00
+goodedc10  = {goodedc10.scaler:%7d}  eff = {goodedc10.scaler/(etrig.scaler+.0001):%5.3f}  BAD = .00
+
+"ecleantrack" based on analyzer variable k_ntracks.
+
+ecleantrack = {ecleantrack.scaler:%7d}   eff = {ecleantrack.scaler/(etrig.scaler+.0001):%5.3f}  BAD = .95
+eclean1track= {eclean1track.scaler:%7d}   eff = {eclean1track.scaler/(etrig.scaler+.0001):%5.3f}
+eclean2track= {eclean2track.scaler:%7d}   eff = {eclean2track.scaler/(etrig.scaler+.0001):%5.3f}
+eclean3track= {eclean3track.scaler:%7d}   eff = {eclean3track.scaler/(etrig.scaler+.0001):%5.3f}
+eclean4track= {eclean4track.scaler:%7d}   eff = {eclean4track.scaler/(etrig.scaler+.0001):%5.3f}
+
+*************************
+* TRACKING EFFICIENCIES *
+*************************
+gen_event_ID_number            : {gen_event_ID_number:%9d}
+
+etrkeff_good_trig1             : {etrkeff_good_trig(1):%9d}
+etrkeff_good_trig2             : {etrkeff_good_trig(2):%9d}
+etrk_eff                       : {etrk_eff(1):%9.7f}
+etrk_eff_err                   : {etrk_eff_err(1):%9.7f}
+
+htrkeff_good_trig1             : {htrkeff_good_trig(1):%9d}
+htrkeff_good_trig2             : {htrkeff_good_trig(2):%9d}
+htrk_eff                       : {htrk_eff(1):%9.7f}
+htrk_eff_err                   : {htrk_eff_err(1):%9.7f}
+
+end report erep

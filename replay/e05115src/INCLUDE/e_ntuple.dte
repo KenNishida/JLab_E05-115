@@ -1,0 +1,89 @@
+**************************begin: e_ntuple.dte ***********************
+*- 
+*-   Created    15-Jun-1994   Kevin B. Beard, Hampton Univ.
+*........................................................................
+*- leave clean field for HNSS Ntuple
+* $Log: e_ntuple.dte,v $
+* Revision 1.1.1.1  2009/06/23 13:55:43  kawama
+*
+* e05115 src repository for software development
+*
+* Revision 1.2  2005/06/09 17:55:09  cdaq
+* add fission ntuple variables
+*
+* Revision 1.1.1.1  2005/05/14 21:44:37  miyoshi
+*
+*
+* Revision 1.3  2005/02/22 23:23:15  miyoshi
+* add new variables
+*
+* Revision 1.2  2005/01/03 19:28:45  miyoshi
+* add edc ntuple
+*
+* Revision 1.1.1.1  2004/08/30 21:21:37  miyoshi
+* new dir
+*
+* Revision 1.2 2004/03/03 Miyoshi
+* for E01-011
+* Revision 1.1.1.1  1999/11/01 13:54:48  ysato
+* Upgrade for HNSS
+*
+* Revision 1.1  1994/06/17  02:12:52  cdaq
+* Initial revision
+*
+      data e_Ntuple_exists/.FALSE./
+      data e_Ntuple_ID/0/
+      data e_Ntuple_file/' '/
+      data e_Ntuple_name/' '/
+      data e_Ntuple_title/' '/
+      data e_Ntuple_directory/' '/
+      data e_Ntuple_IOchannel/0/
+      data e_Ntuple_size/0/
+      data e_Ntuple_tag/EMAX_Ntuple_size*' '/
+      data e_Ntuple_contents/EMAX_Ntuple_size*0/
+
+      data e_dc_ntuple_exists/.FALSE./
+      data e_dc_ntuple_ID/0/
+      data e_dc_ntuple_file/' '/
+      data e_dc_ntuple_name/' '/
+      data e_dc_ntuple_title/' '/
+      data e_dc_ntuple_directory/' '/
+      data e_dc_ntuple_IOchannel/0/
+      data e_dc_ntuple_size/0/
+      data e_dc_ntuple_tag/EMAX_Ntuple_size*' '/
+      data e_dc_ntuple_contents/EMAX_Ntuple_size*0/
+
+      data e_track_ntuple_exists/.FALSE./
+      data e_track_ntuple_ID/0/
+      data e_track_ntuple_file/' '/
+      data e_track_ntuple_name/' '/
+      data e_track_ntuple_title/' '/
+      data e_track_ntuple_directory/' '/
+      data e_track_ntuple_IOchannel/0/
+      data e_track_ntuple_size/0/
+      data e_track_ntuple_tag/EMAX_Ntuple_size*' '/
+      data e_track_ntuple_contents/EMAX_Ntuple_size*0/
+
+      data e_scin_ntuple_exists/.FALSE./
+      data e_scin_ntuple_ID/0/
+      data e_scin_ntuple_file/' '/
+      data e_scin_ntuple_name/' '/
+      data e_scin_ntuple_title/' '/
+      data e_scin_ntuple_directory/' '/
+      data e_scin_ntuple_IOchannel/0/
+      data e_scin_ntuple_size/0/
+      data e_scin_ntuple_tag/EMAX_Ntuple_size*' '/
+      data e_scin_ntuple_contents/EMAX_Ntuple_size*0/
+
+      data e_fis_ntuple_exists/.FALSE./
+      data e_fis_ntuple_ID/0/
+      data e_fis_ntuple_file/' '/
+      data e_fis_ntuple_name/' '/
+      data e_fis_ntuple_title/' '/
+      data e_fis_ntuple_directory/' '/
+      data e_fis_ntuple_IOchannel/0/
+      data e_fis_ntuple_size/0/
+      data e_fis_ntuple_tag/EMAX_Ntuple_size*' '/
+      data e_fis_ntuple_contents/EMAX_Ntuple_size*0/
+*
+****************************end: e_ntuple.dte ***********************

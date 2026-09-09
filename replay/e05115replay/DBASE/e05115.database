@@ -1,0 +1,60 @@
+1-74567
+g_ctp_parm_filename   = 'DBASE/e05115.param.0'
+g_decode_map_filename = 'MAPS/e05115.map.0'
+g_ctp_kinematics_filename ='DBASE/e05115.kinematics.0'
+74568-74592
+g_ctp_parm_filename   = 'DBASE/e05115.param.0'
+g_decode_map_filename = 'MAPS/e05115.map.74568'
+g_ctp_kinematics_filename ='DBASE/e05115.kinematics.0'
+74593-74719
+g_ctp_parm_filename   = 'DBASE/e05115.param.0'
+g_decode_map_filename = 'MAPS/e05115.map.74594'
+g_ctp_kinematics_filename ='DBASE/e05115.kinematics.0'
+74720-75049
+g_ctp_parm_filename   = 'DBASE/e05115.param.0'
+g_decode_map_filename = 'MAPS/e05115.map.74720.gogami'
+g_ctp_kinematics_filename ='DBASE/e05115.kinematics.0'
+75050-75068
+g_ctp_parm_filename   = 'DBASE/e05115.param.0'
+g_decode_map_filename = 'MAPS/e05115.map.75050'
+g_ctp_kinematics_filename ='DBASE/e05115.kinematics.0'
+75069-75181
+g_ctp_parm_filename   = 'DBASE/e05115.param.75069'
+g_decode_map_filename = 'MAPS/e05115.map.75050'
+g_ctp_kinematics_filename ='DBASE/e05115.kinematics.0'
+75182-75330
+g_ctp_parm_filename   = 'DBASE/e05115.param.75069
+g_decode_map_filename = 'MAPS/e05115.map.75182'
+g_ctp_kinematics_filename ='DBASE/e05115.kinematics.0'
+75331-75408
+g_ctp_parm_filename   = 'DBASE/e05115.param.75331'
+g_decode_map_filename = 'MAPS/e05115.map.75182'
+g_ctp_kinematics_filename ='DBASE/e05115.kinematics.0'
+75385-75413
+g_ctp_parm_filename   = 'DBASE/e05115.param.75385'
+g_decode_map_filename = 'MAPS/e05115.map.75182'
+g_ctp_kinematics_filename ='DBASE/e05115.kinematics.0'
+75414-75554
+g_ctp_parm_filename   = 'DBASE/e05115.param.75414'
+g_decode_map_filename = 'MAPS/e05115.map.75182'
+g_ctp_kinematics_filename ='DBASE/e05115.kinematics.0'
+75555-75602
+g_ctp_parm_filename   = 'DBASE/e05115.param.75414'
+g_decode_map_filename = 'MAPS/e05115.map.75555'
+g_ctp_kinematics_filename ='DBASE/e05115.kinematics.0'
+75603-75883
+g_ctp_parm_filename   = 'DBASE/e05115.param.75414'
+g_decode_map_filename = 'MAPS/e05115.map.75603'
+g_ctp_kinematics_filename ='DBASE/e05115.kinematics.0'
+75884-75923
+g_ctp_parm_filename   = 'DBASE/e05115.param.75885'
+g_decode_map_filename = 'MAPS/e05115.map.75603'
+g_ctp_kinematics_filename ='DBASE/e05115.kinematics.0'
+75924-76091
+g_ctp_parm_filename   = 'DBASE/e05115.param.75885'
+g_decode_map_filename = 'MAPS/e05115.map.75924'
+g_ctp_kinematics_filename ='DBASE/e05115.kinematics.0'
+76092-99999
+g_ctp_parm_filename   = 'DBASE/e05115.param.76092'
+g_decode_map_filename = 'MAPS/e05115.map.75924'
+g_ctp_kinematics_filename ='DBASE/e05115.kinematics.0'

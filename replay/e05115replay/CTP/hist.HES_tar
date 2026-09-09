@@ -1,0 +1,21 @@
+begin hist hes_tar group=hes group=both
+extar,20,-2.,2.              $ex-tar
+eytar,100,-10.,10.           $ey-tar
+exptar,100,-0.25,0.25          $exp-tar
+eyptar,100,-0.20,0.20          $eyp-tar
+etarxpyp,100,-0.25,0.25,100,-0.12,-0.02 $hes target yp vs xp
+
+;etarxy,100,-2.,2.,100,-10.,10.   $hes target y vs x
+;etarxxp,100,-2.,2.,60,-0.6,0.6   $hes target xp vs x
+;etarxyp,100,-2.,2.,60,-0.3,0.3   $hes target yp vs x
+;etaryxp,100,-10.,10.,60,-0.6,0.6 $hes target xp vs y
+;etaryyp,100,-10.,10.,60,-0.3,0.3 $hes target yp vs y
+
+edeltatar,120,-60.,60.       $edelta-tar
+eptar,200,0.65,1.15          $ep-tar
+
+exsv,100,-20.,20.         $ex-sv
+eysv,100,-50.,50.           $ey-sv
+esvxy,100,-20., 20., 100, -50, 50   $hes sv y vs x
+
+end   hist hes_tar

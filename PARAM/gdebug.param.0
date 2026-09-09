@@ -1,0 +1,31 @@
+;choose how much of run to analyze
+  gen_run_starting_event = 1
+  gen_run_stopping_event = 0
+  gen_run_hist_dump_interval = 10000
+;
+  gmisc_min_peds = 500
+
+; mode=0(normal)/mode=1(high) resolution mode
+; see gen_rocid.cmn
+
+  escin_f1tdc_mode = 1
+
+; in Hall C, all should be 0 
+; because no c794 uses.
+
+  HES_C794_SLOT_NUMBER = -1, -1, -1, -1, -1
+
+; decode debug
+; 1=dump decode 
+; 2=dump decoded results
+
+ g_decode_debug = 0
+
+; 0;off MHTDC (0-65535) is in the data.
+; 1:on MHTDC (0-8192) is in the data.
+
+ g_decode_filter_on = 1
+
+; 0:NOT contain pedestal 
+; 1:contain pedestal 
+ g_decode_pedana = 0

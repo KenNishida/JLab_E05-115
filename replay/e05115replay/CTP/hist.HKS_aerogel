@@ -1,0 +1,78 @@
+begin hist hks_pid_aerogel group=hks group=both
+haerposnpe1_1,100,-2,18        $HKS AC1-1 npe+
+haerposnpe1_2,100,-2,18        $HKS AC1-2 npe+
+haerposnpe1_3,100,-2,18        $HKS AC1-3 npe+
+haerposnpe1_4,100,-2,18        $HKS AC1-4 npe+
+haerposnpe1_5,100,-2,18        $HKS AC1-5 npe+
+haerposnpe1_6,100,-2,18        $HKS AC1-6 npe+
+haerposnpe1_7,100,-2,18        $HKS AC1-7 npe+
+
+haernegnpe1_1,100,-2,18        $HKS AC1-1 npe-
+haernegnpe1_2,100,-2,18        $HKS AC1-2 npe-
+haernegnpe1_3,100,-2,18        $HKS AC1-3 npe-
+haernegnpe1_4,100,-2,18        $HKS AC1-4 npe-
+haernegnpe1_5,100,-2,18        $HKS AC1-5 npe-
+haernegnpe1_6,100,-2,18        $HKS AC1-6 npe-
+haernegnpe1_7,100,-2,18        $HKS AC1-7 npe-
+
+haerposnpe2_1,100,-2,18        $HKS AC2-1 npe+
+haerposnpe2_2,100,-2,18        $HKS AC2-2 npe+
+haerposnpe2_3,100,-2,18        $HKS AC2-3 npe+
+haerposnpe2_4,100,-2,18        $HKS AC2-4 npe+
+haerposnpe2_5,100,-2,18        $HKS AC2-5 npe+
+haerposnpe2_6,100,-2,18        $HKS AC2-6 npe+
+haerposnpe2_7,100,-2,18        $HKS AC2-7 npe+
+
+haernegnpe2_1,100,-2,18        $HKS AC2-1 npe-
+haernegnpe2_2,100,-2,18        $HKS AC2-2 npe-
+haernegnpe2_3,100,-2,18        $HKS AC2-3 npe-
+haernegnpe2_4,100,-2,18        $HKS AC2-4 npe-
+haernegnpe2_5,100,-2,18        $HKS AC2-5 npe-
+haernegnpe2_6,100,-2,18        $HKS AC2-6 npe-
+haernegnpe2_7,100,-2,18        $HKS AC2-7 npe-
+
+haerposnpe3_1,100,-2,18        $HKS AC3-1 npe+
+haerposnpe3_2,100,-2,18        $HKS AC3-2 npe+
+haerposnpe3_3,100,-2,18        $HKS AC3-3 npe+
+haerposnpe3_4,100,-2,18        $HKS AC3-4 npe+
+haerposnpe3_5,100,-2,18        $HKS AC3-5 npe+
+haerposnpe3_6,100,-2,18        $HKS AC3-6 npe+
+haerposnpe3_7,100,-2,18        $HKS AC3-7 npe+
+
+haernegnpe3_1,100,-2,18        $HKS AC3-1 npe-
+haernegnpe3_2,100,-2,18        $HKS AC3-2 npe-
+haernegnpe3_3,100,-2,18        $HKS AC3-3 npe-
+haernegnpe3_4,100,-2,18        $HKS AC3-4 npe-
+haernegnpe3_5,100,-2,18        $HKS AC3-5 npe-
+haernegnpe3_6,100,-2,18        $HKS AC3-6 npe-
+haernegnpe3_7,100,-2,18        $HKS AC3-7 npe-
+
+haersumnpe1_1,100,-2,28        $HKS AC1-1 npesum
+haersumnpe1_2,100,-2,28        $HKS AC1-2 npesum
+haersumnpe1_3,100,-2,28        $HKS AC1-3 npesum
+haersumnpe1_4,100,-2,28        $HKS AC1-4 npesum
+haersumnpe1_5,100,-2,28        $HKS AC1-5 npesum
+haersumnpe1_6,100,-2,28        $HKS AC1-6 npesum
+haersumnpe1_7,100,-2,28        $HKS AC1-7 npesum
+
+haersumnpe2_1,100,-2,28        $HKS AC2-1 npesum
+haersumnpe2_2,100,-2,28        $HKS AC2-2 npesum
+haersumnpe2_3,100,-2,28        $HKS AC2-3 npesum
+haersumnpe2_4,100,-2,28        $HKS AC2-4 npesum
+haersumnpe2_5,100,-2,28        $HKS AC2-5 npesum
+haersumnpe2_6,100,-2,28        $HKS AC2-6 npesum
+haersumnpe2_7,100,-2,28        $HKS AC2-7 npesum
+
+haersumnpe3_1,100,-2,28        $HKS AC3-1 npesum
+haersumnpe3_2,100,-2,28        $HKS AC3-2 npesum
+haersumnpe3_3,100,-2,28        $HKS AC3-3 npesum
+haersumnpe3_4,100,-2,28        $HKS AC3-4 npesum
+haersumnpe3_5,100,-2,28        $HKS AC3-5 npesum
+haersumnpe3_6,100,-2,28        $HKS AC3-6 npesum
+haersumnpe3_7,100,-2,28        $HKS AC3-7 npesum
+
+haernpesum1,150,-2,28        $HKS AC1 npe sum
+haernpesum2,150,-2,28        $HKS AC2 npe sum
+haernpesum3,150,-2,28        $HKS AC3 npe sum
+
+end hist hks_pid_aerogel

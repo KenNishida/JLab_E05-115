@@ -1,0 +1,95 @@
+; path length  central
+      hpathlength_central = 881.715
+
+; Geometrical parameters input by V.M. Rodriguez 05/27/05
+; paddle positions adjusted according to hit pattern   L.Yuan 07/19/05
+; Z positions of hodoscopes (1,2,3)=(1x,1y,2x)
+
+; z=0 is focus plane which is desingend to be center between HDC1 and HDC2. MK
+
+      hscin_zpos = 69.2+2.04, 85.1+2.04, 218.7+2.04, 250.0+2.04
+
+;scintillator width
+      hscin_width = 7.5, 3.5, 9.5, 3.5
+
+; Sizes of hodoscope paddles
+      hscin_1x_size =  30.0
+      hscin_1y_size = 125.0
+      hscin_2x_size =  35.0
+      hscin_1x_spacing = 7.025
+      hscin_1y_spacing = 4.050
+      hscin_2x_spacing = 7.025
+
+; Number of hodoscope paddles per layer
+      hscin_1x_nr = 17
+      hscin_1y_nr =  9
+      hscin_2x_nr = 18
+
+; X,Y positions of hodoscope paddles
+      hscin_1x_top  =  15.0
+      hscin_1x_bot  = -15.0
+      hscin_1x_offset=  0.0
+
+;     The center of HKS detector package stays at x=-7.5.
+
+;     hscin_1x_center is center position of rod in x direction
+
+      hscin_1x_center= -61.5 -5.0,
+                       -53.8 -5.0,
+                       -46.1 -5.0,
+                       -38.4 -5.0,
+                       -30.8 -5.0,
+                       -23.1 -5.0,
+                       -15.4 -5.0,
+                        -7.7 -5.0,
+                         0.0 -5.0,
+                         7.6 -5.0,
+                        15.3 -5.0,
+                        23.0 -5.0,
+                        30.7 -5.0,
+                        38.3 -5.0,
+                        46.0 -5.0,
+                        53.7 -5.0,
+                        61.4 -5.0
+
+;     Definition of left and right is: looking at detectors from HKS exit to downstream
+
+      hscin_1y_left  =  62.5 -7.5
+      hscin_1y_right = -62.5 -7.5
+      hscin_1y_offset=   0.0
+; Y position order are reversed      07/19/05
+;     hscin_1y_center center is a center position of rod in y direction
+      hscin_1y_center=  12.7+1.9, 
+                         9.0+1.9,
+                         5.3+1.9,
+                         1.7+1.9,
+                        -2.0+1.9,
+                        -5.7+1.9,
+                        -9.3+1.9,
+                       -13.0+1.9,
+                       -16.7+1.9
+
+
+      hscin_2x_top    =  17.5
+      hscin_2x_bot    = -17.5
+      hscin_2x_offset =   0.0
+
+      hscin_2x_center= -81.3 -7.5,
+                       -71.8 -7.5,
+                       -62.2 -7.5,
+                       -52.6 -7.5,
+                       -43.1 -7.5,
+                       -33.5 -7.5,
+                       -23.9 -7.5,
+                       -14.4 -7.5,
+                        -4.8 -7.5,
+                         4.8 -7.5,
+                        14.4 -7.5,
+                        23.9 -7.5,
+                        33.5 -7.5,
+                        43.1 -7.5,
+                        52.6 -7.5,
+                        62.2 -7.5,
+                        71.8 -7.5,
+                        81.3 -7.5
+

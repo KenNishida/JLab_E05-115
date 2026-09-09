@@ -1,0 +1,43 @@
+begin hist hes_dec group=hes gsoup=both
+
+;--------------------------------------------------
+; HES hodo hit pattern
+; Filled in e_fill_scin_dec_hist
+
+escindectothit,102,0.,102.        $EHODO tot hits (dec)
+escindectothitzoom,20,0.,20.      $EHODO tot hits zoom(dec)
+escindectothitpos1,11,0.,11.        $EHODO tot hits pos 1 (dec)
+escindectothitneg1,11,0.,11.        $EHODO tot hits neg 1 (dec)
+escindectothitpos2,9,0.,9.        $EHODO tot hits pos 2 (dec)
+escindectothitneg2,9,0.,9.        $EHODO tot hits neg 2 (dec)
+escindectothitboth1,9,0.,9.       $EHODO tot hits both 1 (dec)
+escindectothitboth2,9,0.,9.       $EHODO tot hits both 2 (dec)
+escindechitpatpos1,30,0.,30.      $EHODO hitpat pos 1 (dec)
+escindechitpatneg1,30,0.,30.      $EHODO hitpat neg 1 (dec)
+escindechitpatpos2,30,0.,30.      $EHODO hitpat pos 2 (dec)
+escindechitpatneg2,30,0.,30.      $EHODO hitpat neg 2 (dec)
+escindechitpatboth1,30,0.,30.     $EHODO hitpat both 1 (dec)
+escindechitpatboth2,30,0.,30.     $EHODO hitpat both 2 (dec)
+
+; EDC hit pattern
+; Filled in e_fill_dc_dec_hist
+
+edc1dectothit,550,0.,1100.          $EDC1 dec tot hits
+edc1dectothitzoom,30,0.,30.         $EDC1 dec tot hits (zoom)
+
+edc1wirecenter01,120,-51.961524,51.961524    $EDC1 wire center layer 01 x 
+edc1wirecenter02,120,-51.961524,51.961524    $EDC1 wire center layer 02 xp
+edc1wirecenter03,120,-51.961524,51.961524    $EDC1 wire center layer 03 u
+edc1wirecenter04,120,-51.961524,51.961524    $EDC1 wire center layer 04 up
+edc1wirecenter05,120,-51.961524,51.961524    $EDC1 wire center layer 05 x
+edc1wirecenter06,120,-51.961524,51.961524    $EDC1 wire center layer 06 xp
+edc1wirecenter07,120,-51.961524,51.961524    $EDC1 wire center layer 07 v
+edc1wirecenter08,120,-51.961524,51.961524    $EDC1 wire center layer 08 vp
+edc1wirecenter09,120,-51.961524,51.961524    $EDC1 wire center layer 09 x
+edc1wirecenter10,120,-51.961524,51.961524    $EDC1 wire center layer 10 xp
+
+edc1nspacepoint,110,0.,1100.    $EDC1 espace point tot
+edc1nspacepointzoom,20,0.,20.   $EDC1 espace point tot (zoom)
+edc1nspacepointhits,30,0.,30.   $EDC1 space point hits
+
+end hist hes_dec

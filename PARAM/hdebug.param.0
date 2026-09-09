@@ -1,0 +1,128 @@
+; hks tracking code debug flags.
+; when these flags are non-zero, dump routines are called to
+; print out the data banks for each event.
+;
+;  hluno     fortran lun for output
+      hluno = 6
+; sdebugdumptof           Dump timing information for fitting offsets
+      hdebugdumptof = 0
+; number of pedestal events required to overwrite orig. peds.
+
+  hscin_min_peds = 500
+  haer_min_peds  = 500
+  hwat_min_peds  = 500
+  hluc_min_peds  = 500
+
+; DEBUGGING OUTPUT FLAGS
+; ----------------------
+; hdebugflagpsi               Dump calculated coordinate positions
+      hdebugflagpsi =  0
+; hdebugflaggeoemtry          Dump calculated geometrical parameters
+      hdebugflaggeometry = 0
+; hdebugflagpr                Dump intermediate pattern recognition results
+      hdebugflagpr = 0
+; hdebugflagstubchisq         Dump chi2 of left-right fits
+      hdebugstubchisq = 0
+; hdebugflagstubs             Dump stub fit results
+      hdebugflagstubs = 0
+; hdebuglinkstubs             Dump link stub results
+      hdebuglinkstubs = 0
+; hdebugtrackprint            Dump focal plane track fit results
+      hdebugtrackprint = 0
+; hdebugtartrackprint         Dump tracks at target
+      hdebugtartrackprint = 0
+; tof debuging
+;
+;  hdebugprintscinraw         Dump HKS_RAW_SCIN
+    hdebugprintscinraw = 0
+;  hdebugprintscindec         Dump HKS_DECODED_SCIN
+    hdebugprintscindec = 0
+;  hdebugprinttoftracks       Dump hks_scin_tof
+    hdebugprinttoftracks = 0
+;  hdebugprinttracktests      Dump HKS_TRACK_TESTS
+    hdebugprinttracktests = 0
+;
+;  hard wired histograms. If these flags .ne. 0 then the histogram
+;     blocks are filled
+;
+  hturnon_dc_raw_hist = 1
+  hturnon_dc_dec_hist = 1
+  hturnon_scin_raw_hist = 1
+  hturnon_scin_dec_hist = 1
+  hturnon_dc_fp_hist = 1
+  hturnon_dc_target_hist = 1
+  hturnon_ac_raw_hist = 1
+  hturnon_ac_dec_hist = 1
+  hturnon_wc_raw_hist = 1
+  hturnon_wc_dec_hist = 1
+  hturnon_lc_raw_hist = 1
+  hturnon_lc_dec_hist = 1
+;
+; Bypass paramters to bypass code elementes in s_reconstruction
+;      Stored in hks_bypass_switches.cmn
+;      Code element is bypassed if switch .ne. 0
+
+; hbypass_trans_dc         bypass h_trans_dc
+  hbypass_trans_dc   = 0
+; hbypass_track            bypass h_track
+  hbypass_track      = 0
+; hbypass_targ_trans       bypass h_targ_trans
+  hbypass_targ_trans = 0
+; hbypass_dc_eff           bypass h_dc_eff and h_dc_eff_shutdown
+  hbypass_dc_eff     = 0
+; hbypass_track_eff        bypass h_tracking efficiency code
+  hbypass_track_eff  = 0
+; hbypass_track_eff_files  bypass h_tracking efficiency output files
+  hbypass_track_eff_files  = 1
+
+; hbypass_trans_scin       bypass h_trans_scin
+  hbypass_trans_scin = 0
+; hbypass_tof              bypass h_tof
+  hbypass_tof        = 0
+; hbypass_scin_eff         bypass h_scin_eff and h_scin_eff_shutdown
+  hbypass_scin_eff   = 0
+
+; hbypass_aero             bypass h_aero
+  hbypass_aero       = 0
+
+; hbypass_water           bypass h_water
+  hbypass_water     = 0
+
+; hbypass_lucite           bypass h_lucite
+  hbypass_lucite     = 0
+
+; hbypass_physics          bypass h_physics
+  hbypass_physics    = 0
+
+
+; reconstruction switch 0(default) ERIKAfit, 1:RAYTRACE matrix fit
+
+  h_recon_switch = 1
+
+; hbypass_physics          bypass h_physics
+  hbypass_physics    = 0
+; Swiches for Ntuple create
+; 1:RWN(0)/CWN(1), 
+; 2:hscin(1:raw,2:dec), 
+; 3:hdc(1:raw,2:dec), 
+; 4:hac(1:raw,2:dec), 
+; 5:hwc(1:raw,2:dec), 
+; 6:hfp(1:ON), 
+; 7:htar(1:ON), 
+; 8:hlc(1:raw,2:dec), 
+; 9:pid(1:raw), 
+
+    h_debugnt = 0,
+                2,
+                1,
+                1,
+                2,
+                0,
+                0,
+                1,
+		1
+
+; If you want to output KDC hit wire infomation 
+; into "hks_cham.dat" , make this flag ON.
+    hdc_hitinfo_flag  = 0
+    hdc_hitinfo_flag2 = 0

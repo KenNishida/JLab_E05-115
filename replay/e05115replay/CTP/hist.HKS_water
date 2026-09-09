@@ -1,0 +1,82 @@
+begin hist hks_pid_water group=hks group=both
+hwatposnpe1_01,150,-10,140        $HKS WC1-01 npe+
+hwatposnpe1_02,150,-10,140        $HKS WC1-02 npe+
+hwatposnpe1_03,150,-10,140        $HKS WC1-03 npe+
+hwatposnpe1_04,150,-10,140        $HKS WC1-04 npe+
+hwatposnpe1_05,150,-10,140        $HKS WC1-05 npe+
+hwatposnpe1_06,150,-10,140        $HKS WC1-06 npe+
+hwatposnpe1_07,150,-10,140        $HKS WC1-07 npe+
+hwatposnpe1_08,150,-10,140        $HKS WC1-08 npe+
+hwatposnpe1_09,150,-10,140        $HKS WC1-09 npe+
+hwatposnpe1_10,150,-10,140        $HKS WC1-10 npe+
+hwatposnpe1_11,150,-10,140        $HKS WC1-11 npe+
+hwatposnpe1_12,150,-10,140        $HKS WC1-12 npe+
+
+hwatnegnpe1_01,150,-10,140        $HKS WC1-01 npe-
+hwatnegnpe1_02,150,-10,140        $HKS WC1-02 npe-
+hwatnegnpe1_03,150,-10,140        $HKS WC1-03 npe-
+hwatnegnpe1_04,150,-10,140        $HKS WC1-04 npe-
+hwatnegnpe1_05,150,-10,140        $HKS WC1-05 npe-
+hwatnegnpe1_06,150,-10,140        $HKS WC1-06 npe-
+hwatnegnpe1_07,150,-10,140        $HKS WC1-07 npe-
+hwatnegnpe1_08,150,-10,140        $HKS WC1-08 npe-
+hwatnegnpe1_09,150,-10,140        $HKS WC1-09 npe-
+hwatnegnpe1_10,150,-10,140        $HKS WC1-10 npe-
+hwatnegnpe1_11,150,-10,140        $HKS WC1-11 npe-
+hwatnegnpe1_12,150,-10,140        $HKS WC1-12 npe-
+
+hwatposnpe2_01,150,-10,140        $HKS WC2-01 npe+
+hwatposnpe2_02,150,-10,140        $HKS WC2-02 npe+
+hwatposnpe2_03,150,-10,140        $HKS WC2-03 npe+
+hwatposnpe2_04,150,-10,140        $HKS WC2-04 npe+
+hwatposnpe2_05,150,-10,140        $HKS WC2-05 npe+
+hwatposnpe2_06,150,-10,140        $HKS WC2-06 npe+
+hwatposnpe2_07,150,-10,140        $HKS WC2-07 npe+
+hwatposnpe2_08,150,-10,140        $HKS WC2-08 npe+
+hwatposnpe2_09,150,-10,140        $HKS WC2-09 npe+
+hwatposnpe2_10,150,-10,140        $HKS WC2-10 npe+
+hwatposnpe2_11,150,-10,140        $HKS WC2-11 npe+
+hwatposnpe2_12,150,-10,140        $HKS WC2-12 npe+
+
+hwatnegnpe2_01,150,-10,140        $HKS WC2-01 npe-
+hwatnegnpe2_02,150,-10,140        $HKS WC2-02 npe-
+hwatnegnpe2_03,150,-10,140        $HKS WC2-03 npe-
+hwatnegnpe2_04,150,-10,140        $HKS WC2-04 npe-
+hwatnegnpe2_05,150,-10,140        $HKS WC2-05 npe-
+hwatnegnpe2_06,150,-10,140        $HKS WC2-06 npe-
+hwatnegnpe2_07,150,-10,140        $HKS WC2-07 npe-
+hwatnegnpe2_08,150,-10,140        $HKS WC2-08 npe-
+hwatnegnpe2_09,150,-10,140        $HKS WC2-09 npe-
+hwatnegnpe2_10,150,-10,140        $HKS WC2-10 npe-
+hwatnegnpe2_11,150,-10,140        $HKS WC2-11 npe-
+hwatnegnpe2_12,150,-10,140        $HKS WC2-12 npe-
+
+hwatsumnpe1_01,150,-10,140        $HKS WC1-01 npe sum
+hwatsumnpe1_02,150,-10,140        $HKS WC1-02 npe sum
+hwatsumnpe1_03,150,-10,140        $HKS WC1-03 npe sum
+hwatsumnpe1_04,150,-10,140        $HKS WC1-04 npe sum
+hwatsumnpe1_05,150,-10,140        $HKS WC1-05 npe sum
+hwatsumnpe1_06,150,-10,140        $HKS WC1-06 npe sum
+hwatsumnpe1_07,150,-10,140        $HKS WC1-07 npe sum
+hwatsumnpe1_08,150,-10,140        $HKS WC1-08 npe sum
+hwatsumnpe1_09,150,-10,140        $HKS WC1-09 npe sum
+hwatsumnpe1_10,150,-10,140        $HKS WC1-10 npe sum
+hwatsumnpe1_11,150,-10,140        $HKS WC1-11 npe sum
+hwatsumnpe1_12,150,-10,140        $HKS WC1-12 npe sum
+
+hwatsumnpe2_01,150,-10,140        $HKS WC2-01 npe sum
+hwatsumnpe2_02,150,-10,140        $HKS WC2-02 npe sum
+hwatsumnpe2_03,150,-10,140        $HKS WC2-03 npe sum
+hwatsumnpe2_04,150,-10,140        $HKS WC2-04 npe sum
+hwatsumnpe2_05,150,-10,140        $HKS WC2-05 npe sum
+hwatsumnpe2_06,150,-10,140        $HKS WC2-06 npe sum
+hwatsumnpe2_07,150,-10,140        $HKS WC2-07 npe sum
+hwatsumnpe2_08,150,-10,140        $HKS WC2-08 npe sum
+hwatsumnpe2_09,150,-10,140        $HKS WC2-09 npe sum
+hwatsumnpe2_10,150,-10,140        $HKS WC2-10 npe sum
+hwatsumnpe2_11,150,-10,140        $HKS WC2-11 npe sum
+hwatsumnpe2_12,150,-10,140        $HKS WC2-12 npe sum
+
+hwatnpesum1,200,-10,140           $HKS WC1 npe sum
+hwatnpesum2,200,-10,140           $HKS WC2 npe sum
+end hist hks_pid_water

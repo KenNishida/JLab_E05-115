@@ -1,0 +1,150 @@
+;     HKS Aerogen parameters
+;       information of TDC and ADC,
+;       and geometry
+;
+
+; TDC window extracted on 09/14/09 run 75349
+; watch out, there's probably a different for earlier dates (JR)
+      haer_tdc_pos_min = 8000
+      haer_tdc_pos_max = 12000
+      haer_tdc_neg_min = 8000
+      haer_tdc_neg_max = 12000
+
+; Gain calibration 9/6/09 w/LED and no beam run between 75003 and 75034
+; Pedestal and 1 p.e. extracted by simple single gauss fits
+; Before run 74990 changed HV_AC3T1 from 1850 to 1900 V
+; This calibration usable from run 74001 on except for AC3T1
+
+
+      haer_pos_gain   = 275.0, 132. , 174.4 
+                        258.5, 120. , 155.1
+                        286.6,  55. , 165.5
+                        245.5, 110.2, 159.8
+                        290.2, 108.1, 159.3
+                        286.6, 121.5, 108.3
+                        269.7, 104. , 103.8
+
+      haer_neg_gain   = 272.5, 186.7, 114.1
+                        239.2, 141.4, 150.0
+                        249.8, 147.5,  98.8
+                        286.6, 155. , 106.7
+                        299.7, 138. , 164.6
+                        273.6, 169.2, 205.6
+                        297.4, 135. , 139.3
+
+
+      haer_pos_offset   = -850., -850., -850.,
+                          -850., -850., -850.,
+                          -850., -850., -850.,
+                          -850., -850., -850.,
+                          -850., -850., -850.,
+                          -850., -850., -850.,
+                          -850., -850., -850.
+
+      haer_neg_offset   = -850., -850., -850.,
+                          -850., -850., -850.,
+                          -850., -850., -850.,
+                          -850., -850., -850.,
+                          -850., -850., -850.,
+                          -850., -850., -850.,
+                          -850., -850., -850.
+
+      haer_pos_threshold = .200, .200, .200,
+                           .200, .200, .200,
+                           .200, .200, .200,
+                           .200, .200, .200,
+                           .200, .200, .200,
+                           .200, .200, .200,
+                           .200, .200, .200  
+
+      haer_neg_threshold = .200, .200, .200,
+                           .200, .200, .200,
+                           .200, .200, .200,
+                           .200, .200, .200,
+                           .200, .200, .200,
+                           .200, .200, .200,
+                           .200, .200, .200 
+
+; Aerogel SP-50 position is -12.5 from center of the detector box.
+
+; Geometrical parameters input by V.M. Rodriguez 05/27/05
+
+     haer_box_zpos = 124.6-12.5, 156.8-12.5, 188.9-12.5
+
+
+; Regarding Joerg Reinhold, the aerogel SP-50 is tiled by 11.3(W) x 11.3(H) x 1(T) cm^3,
+; where W is width, H is height, and T is thickness
+; One Aerogel detector is tiled by 2 x 4 x 5
+; The final tune of geometry will be done by tracking association.
+; Aerogel detector box is designed as 23.0(W) x 46.0(H) x 20.0(T) cm^3
+; MK
+
+     haer_width     = 22.6 
+     haer_height    = 45.2
+     haer_thickness =  5.0
+
+     haer_slope = 2.0
+
+     haer_npe_min = 0.5
+
+; A relative x position of Aerogel detector box is (-7.2, 0.0 , 7.2)
+; for layer # 1, 2, 3, respectively.
+; center of detector package is on x=-7.5
+
+;     haer_box_xcenter = -67.8-7.5, -75.0-7.5, -82.2-7.5,
+;                        -42.9-7.5, -50.1-7.5, -57.3-7.5,
+;                        -18.0-7.5, -25.2-7.5, -32.4-7.5,
+;                          6.9-7.5,  -0.3-7.5,  -7.5-7.5,
+;                         31.8-7.5,  24.6-7.5,  17.4-7.5,
+;                         56.7-7.5,  49.5-7.5,  42.3-7.5,
+;                         81.6-7.5,  74.4-7.5,  67.2-7.5
+
+;old param
+;     haer_box_xcenter = -67.8-8.067, -75.0-4.7, -82.2-1.333,
+;                        -42.9-8.067, -50.1-4.7, -57.3-1.333,
+;                        -18.0-8.067, -25.2-4.7, -32.4-1.333,
+;                          6.9-8.067,  -0.3-4.7,  -7.5-1.333,
+;                         31.8-8.067,  24.6-4.7,  17.4-1.333,
+;                         56.7-8.067,  49.5-4.7,  42.3-1.333,
+;                         81.6-8.067,  74.4-4.7,  67.2-1.333
+
+;new param by hamlet
+     haer_box_xcenter = -68.85-0.001, -76.21-0.001, -83.77-0.001,
+
+                        -45.72-0.001, -53.05-0.001, -60.52-0.001,
+
+                        -22.59-0.001, -29.89-0.001, -37.27-0.001,
+
+                          0.69-0.001,  -6.87-0.001, -14.05-0.001,
+
+                         23.74-0.001,  16.55-0.001,   9.26-0.001,
+
+                         46.80-0.001,  39.56-0.001,  32.47-0.001,
+
+                         69.90-0.001,  62.72-0.001,  55.72-0.001
+
+     haer_box_ycenter = 0., 0., 0.,
+                        0., 0., 0.,
+                        0., 0., 0.,
+                        0., 0., 0.,
+                        0., 0., 0.,
+                        0., 0., 0.,
+                        0., 0., 0.
+
+ 
+    haer_pos_ped_limit = 1000.,1000.,1500.,
+                         1000.,1000.,1500.,
+                         1000.,1000.,1500.,
+                         1000.,1000.,1500.,
+                         1000.,1000.,1500.,
+                         1000.,1000.,1500.,
+                         1000.,1000.,1500.
+
+    haer_neg_ped_limit = 1000.,1000.,1500.,
+                         1000.,1000.,1500.,
+                         1000.,1000.,1500.,
+                         1000.,1000.,1500.,
+                         1000.,1000.,1500.,
+                         1000.,1000.,1500.,
+                         1000.,1000.,1500.
+;end of file

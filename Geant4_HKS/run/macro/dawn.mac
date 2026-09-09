@@ -1,0 +1,19 @@
+/vis/scene/create
+/vis/scene/add/volume
+  
+/vis/sceneHandler/create DAWNFILE
+ 
+/vis/viewer/create
+  
+/tracking/storeTrajectory 1
+/vis/scene/add/trajectories
+/vis/scene/endOfEventAction accumulate 
+ 
+#/vis/viewer/set/viewpointVector 0.643 0. -0.766
+/vis/viewer/set/viewpointThetaPhi 90 0 deg
+
+/vis/scene/notifyHandlers
+/vis/viewer/update
+
+/run/verbose 1
+/run/beamOn 50

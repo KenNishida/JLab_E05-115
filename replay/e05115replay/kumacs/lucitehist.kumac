@@ -1,0 +1,54 @@
+macro lucitehist run
+close 0
+his/fil 1 paw/[run].hbook
+exec paw/paw[run] 
+opt logy
+
+
+ila=1
+zone 4 4
+
+do ico=1,9
+  set hcol 1
+  his/plo hlucposnpe[ila]_0[ico]
+  set hcol 2
+  his/plo hlucnegnpe[ila]_0[ico] s
+enddo
+do ico=10,16
+  set hcol 1
+  his/plo hlucposnpe[ila]_[ico]
+  set hcol 2
+  his/plo hlucnegnpe[ila]_[ico] s
+enddo
+pic/print hlucposnegnpe[ila].gif
+wait
+
+do ico=1,9
+  set hcol 1
+  his/plo hlucsumnpe[ila]_0[ico]
+enddo
+do ico=10,16
+  set hcol 1
+  his/plo hlucsumnpe[ila]_[ico]
+enddo
+pic/print hlucsumnpe[ila].gif
+wait
+
+do ico=1,9
+  set hcol 1
+  his/plo hluctotnpe[ila]_0[ico]
+enddo
+do ico=10,16
+  set hcol 1
+  his/plo hluctotnpe[ila]_[ico]
+enddo
+pic/print hluctotnpe[ila].gif
+wait
+
+zone 1 1
+  set hcol 1
+  his/plo hlucnpesum[ila]
+ pic/print haernpesum[ila].gif
+
+return 
+endkumac

@@ -1,0 +1,74 @@
+begin hist hks_dec group=hks group=both
+
+
+hscindectothits, 200,-0.5,199.5       $HKS HTF dec tot hits
+hscinlayer,  3,0.5,3.5           $HKS HTF layer dec hitpat
+hscincounters1, 17,0.5,17.5      $HKS HTF1X counter dec hitpat
+hscincounters2, 9,0.5,9.5        $HKS HTF1Y counter dec hitpat
+hscincounters3, 18,0.5,18.5      $HKS HTF2X counter dec hitpat
+hscinpattdcpos1, 17, 0.5, 17.5   $HKS HTF1X+ dec tdc hitpat
+hscinpattdcneg1, 17, 0.5, 17.5   $HKS HTF1X- dec tdc hitpat
+hscinpattdcpos2,  9, 0.5,  9.5   $HKS HTF1Y+ dec tdc hitpat
+hscinpattdcneg2,  9, 0.5,  9.5   $HKS HTF1Y- dec tdc hitpat
+hscinpattdcpos3, 18, 0.5, 18.5   $HKS HTF2X+ dec tdc hitpat
+hscinpattdcneg3, 18, 0.5, 18.5   $HKS HTF2X- dec tdc hitpat
+hscinpattdcboth1, 17, 0.5, 17.5  $HKS HTF1X both dec tdc hitpat
+hscinpattdcboth2,  9, 0.5,  9.5  $HKS HTF1Y both dec tdc hitpat
+hscinpattdcboth3, 18, 0.5, 18.5  $HKS HTF2X both dec tdc hitpat
+hscinpatadcpos1, 17, 0.5, 17.5   $HKS HTF1X+ dec adc hitpat
+hscinpatadcneg1, 17, 0.5, 17.5   $HKS HTF1X- dec adc hitpat
+hscinpatadcpos2,  9, 0.5,  9.5   $HKS HTF1Y+ dec adc hitpat
+hscinpatadcneg2,  9, 0.5,  9.5   $HKS HTF1Y- dec adc hitpat
+hscinpatadcpos3, 18, 0.5, 18.5   $HKS HTF2X+ dec adc hitpat
+hscinpatadcneg3, 18, 0.5, 18.5   $HKS HTF2X- dec adc hitpat
+hscinpatadcboth1, 17, 0.5, 17.5  $HKS HTF1X both dec adc hitpat
+hscinpatadcboth2,  9, 0.5,  9.5  $HKS HTF1Y both dec adc hitpat
+hscinpatadcboth3, 18, 0.5, 18.5  $HKS HTF2X both dec adc hitpat
+	
+; HDC hit pattern
+; Filled in e_fill_dc_dec_hist
+
+hdcdectothit,550,0.,1100.          $HDC dec tot hits
+hdcdectothitzoom,30,0.,30.         $HDC dec tot hits (zoom)
+hdcdectdcall,500,-2000.,2000.   $HDC dec tdc (after cut)
+
+hdcwirecenter01,140,-70.,70.    $HDC1u wire center layer 01  
+hdcwirecenter02,140,-70.,70.    $HDC1u wire center layer 02 
+hdcwirecenter03,140,-70.,70.    $HDC1x wire center layer 03 
+hdcwirecenter04,140,-70.,70.    $HDC1x wire center layer 04 
+hdcwirecenter05,140,-70.,70.    $HDC1v wire center layer 05 
+hdcwirecenter06,140,-70.,70.    $HDC1v wire center layer 06 
+hdcwirecenter07,140,-70.,70.    $HDC2u wire center layer 07 
+hdcwirecenter08,140,-70.,70.    $HDC2u wire center layer 08 
+hdcwirecenter09,140,-70.,70.    $HDC2x wire center layer 09 
+hdcwirecenter10,140,-70.,70.    $HDC2x wire center layer 10 
+hdcwirecenter11,140,-70.,70.    $HDC2v wire center layer 11 
+hdcwirecenter12,140,-70.,70.    $HDC2v wire center layer 12 
+
+hdcnspacepoint,110,0.,1100.   $HDC espace point tot
+hdcnspacepointzoom,20,0.,20.  $HDC espace point tot (zoom)
+hdcnspacepointhits,30,0.,30.  $HDC space point hits
+
+; AC&WC&LC dec 
+
+haertothits,43,0.,43.         $AC tot hits (dec)
+haerlayer,3,0.5,3.5           $AC layer hitpat (dec)
+haerhitpat1,7,0.5,7.5         $AC1 hitpat (dec)
+haerhitpat2,7,0.5,7.5         $AC2 hitpat (dec)
+haerhitpat3,7,0.5,7.5         $AC3 hitpat (dec)
+haerlayerhits1,10,0.,10.      $AC1 layer hits (dec)
+haerlayerhits2,10,0.,10.      $AC2 layer hits (dec)
+haerlayerhits3,10,0.,10.      $AC3 layer hits (dec)
+
+hwattothits,49,0.,49.         $WC tot hits (dec)
+hwatlayer,2,0.5,2.5           $WC layer hitpat (dec)
+hwathitpat1,12,0.5,12.5       $WC1 hitpat (dec)
+hwathitpat2,12,0.5,12.5       $WC2 hitpat (dec)
+hwatlayerhits1,15,0.,15.      $WC1 layer hits (dec)
+hwatlayerhits2,15,0.,15.      $WC2 layer hits (dec)
+
+hluctothits,49,0.,49.         $LC tot hits (dec)
+hluclayer,2,0.5,2.5           $LC layer hitpat (dec)
+hluchitpat1,12,0.5,12.5       $LC1 hitpat (dec)
+hluclayerhits1,15,0.,15.      $LC1 layer hits (dec)
+end   hist hks_dec   

@@ -1,0 +1,189 @@
+*     hks_scin_tof.cmn:   common block used by the subroutines that
+*     calculate the hks time of flight.
+*     $Log: hks_scin_tof.cmn,v $
+*     Revision 1.1.1.1  2009/06/23 13:55:43  kawama
+*
+*     e05115 src repository for software development
+*
+*     Revision 1.3  2005/06/28 23:25:01  cdaq
+*     Mod. hscin_time
+*
+*     Revision 1.2  2005/06/08 15:11:11  cdaq
+*     Change struct.
+*
+*     Revision 1.1.1.1  2005/05/14 21:44:37  miyoshi
+*
+*
+*     Revision 1.5  2005/01/11 00:52:04  sumihama
+*     Change include
+*
+*     Revision 1.4  2005/01/07 23:41:34  sumihama
+*     Mod scin_tof.cmn
+*
+*     Revision 1.3  2005/01/05 23:37:39  sumihama
+*     Mod. of escin and hscin
+*
+*     Revision 1.2  2004/12/24 21:18:50  miyoshi
+*     change name plane to layer
+*
+*     Revision 1.1.1.1  2004/08/30 21:21:37  miyoshi
+*     new dir
+*
+*     Revision 1.8  1996/04/30 14:04:07  saw
+*     (JRA) Add sbeta_p, and sbeta_pcent
+*     
+*     Revision 1.7  1995/05/22 19:03:32  cdaq
+*     (SAW) Split gen_data_data_structures into gen, hms, hks, and coin parts
+*     Add some varaibles and fix typos
+*     
+*     Revision 1.6  1995/03/13  19:13:57  cdaq
+*     (JRA) Change sscin_minph to sscin_???_minph arrays.  Add tracks index to
+*     sgood_tdc_pos, sgood_tdc_neg, sgood_scin_time, sgood_layer_time,
+*     and sgood_beta.
+*     
+*     Revision 1.5  1994/11/21  18:02:11  cdaq
+*     * (SPB) Recopied from hms file and modified names for HKS
+*     
+*     Revision 1.4  1994/08/16  03:56:41  cdaq
+*     (SAW) Change some variables to parm CTPTYPE
+*     
+*     Revision 1.3  1994/08/05  21:02:04  cdaq
+*     (SAW) Add makereg directive with required include files
+*     Add "CTPTYPE=event" directive for auto generation of CTP reg calls
+*     
+*     Revision 1.2  1994/05/13  03:58:46  cdaq
+*     (DFG) Remove parameters to .parm file
+*     
+*     Revision 1.1  1994/04/13  19:01:46  cdaq
+*     Initial revision
+*     
+*     The following include statments must precede the inclusion of this
+*     file in each routine that uses it.  The *%% syntax is also a
+*     directive to makereg to tell it to include the code in the program
+*     that it generates.
+*     
+*%%   include 'hks_data_structures.cmn'
+*%%   include 'hks_scin_parms.cmn'
+*     
+*     CTPTYPE=event
+*     
+      real*4 hscin_long_coord(hmax_scin_hits)
+      real*4 hscin_trans_coord(hmax_scin_hits)
+      real*4 hscin_pos_coord(hmax_scin_hits)
+      real*4 hscin_neg_coord(hmax_scin_hits)
+
+      real*4 hscin_pos_invadc_offset(hmax_scin_hits)
+      real*4 hscin_neg_invadc_offset(hmax_scin_hits)
+      real*4 hscin_pos_invadc_linear(hmax_scin_hits)
+      real*4 hscin_neg_invadc_linear(hmax_scin_hits)
+      real*4 hscin_pos_invadc_adc(hmax_scin_hits)
+      real*4 hscin_neg_invadc_adc(hmax_scin_hits)	
+
+*     
+*     CTPTYPE=parm
+*     
+      real*4 hscin_adc_min
+      real*4 hscin_adc_max
+      real*4 hscin_tdc_min
+      real*4 hscin_tdc_max
+      real*4 hscin_tdc_to_time
+      real*4 hstart_time_center    
+      real*4 htof_tolerance        ! tolerance for tof window in nsec
+      Integer hdumptof
+*     ! center of time window on scin. hits
+      real*4 hstart_time_slop      
+*     ! 1/2 width of time window on scin. hits
+      
+*     
+*     CTPTYPE=event
+*     
+      logical*4 hgood_pos(hmax_scin_hits)
+      logical*4 hgood_neg(hmax_scin_hits)
+      logical*4 hgood_tdc_pos(hntracks_max,hmax_scin_hits)
+      logical*4 hgood_tdc_neg(hntracks_max,hmax_scin_hits)
+
+      Integer*4 hscin_on_track(hntracks_max,hnum_scin_layers)
+      Integer*4 hscin_on_track2(hntracks_max,hnum_scin_layers)
+      real*4 hscin_trk_good(hntracks_max,hnum_scin_layers)
+      real*4 hscin_trk_depo(hntracks_max,hnum_scin_layers)
+      real*4 hscin_trk_time(hntracks_max,hnum_scin_layers)
+      real*4 hscin_trk_depo2(hntracks_max,hnum_scin_layers)
+      real*4 hscin_trk_time2(hntracks_max,hnum_scin_layers)
+      real*4 hscin_trk_diff(hntracks_max,hnum_scin_layers)
+      real*4 hscin_trk_fptime(hntracks_max,hnum_scin_layers)
+      real*4 htrk_tof(hntracks_max)
+      real*4 htrk_leng(hntracks_max)
+      real*4 htrk_beta(hntracks_max)
+      real*4 htrk_depo(hntracks_max)
+      Integer*4 htrk_id(hntracks_max)
+            
+      common/hks_scin_tof/
+     &     hscin_on_track,             
+     &     hscin_on_track2,             
+     &     hscin_long_coord,
+     &     hscin_trans_coord,
+     &     hscin_pos_coord,hscin_neg_coord,
+     &     hscin_adc_min,
+     &     hscin_adc_max,
+     &     hscin_tdc_min,
+     &     hscin_tdc_max,
+     &     hscin_tdc_to_time,
+     &     hgood_tdc_pos, hgood_tdc_neg, 
+     &     hgood_pos, hgood_neg, 
+     &     hscin_trk_good,
+     &     hscin_trk_depo,
+     &     hscin_trk_time,
+     &     hscin_trk_depo2,
+     &     hscin_trk_time2,
+     &     hscin_trk_diff,
+     &     hscin_trk_fptime,            
+     &     htrk_tof,
+     &     htrk_leng,
+     &     htrk_beta,
+     &     htrk_depo,
+     &     htrk_id,
+     &     hstart_time_center,
+     &     hstart_time_slop,
+     &     hdumptof, 
+     &     htof_tolerance,
+     >     hscin_pos_invadc_offset,
+     >     hscin_neg_invadc_offset,
+     >     hscin_pos_invadc_linear,
+     >     hscin_neg_invadc_linear,
+     >     hscin_pos_invadc_adc,
+     >     hscin_neg_invadc_adc
+
+*     
+*     CTPTYPE=event
+*
+
+      real*4 hbeta_notrk
+      real*4 hbeta_chisq_notrk
+      real*4 hbeta_p
+      real*4 hbeta_pcent
+      
+      common/htof_notrk/
+     &     hbeta_notrk,
+     &     hbeta_chisq_notrk,
+     &     hbeta_p,
+     &     hbeta_pcent
+      
+c     integer*4 hscin_pos_did(hnum_scin_layers,16)
+c     integer*4 hscin_neg_did(hnum_scin_layers,16)
+c     integer*4 hscin_pos_should(hnum_scin_layers,16)
+c     integer*4 hscin_neg_should(hnum_scin_layers,16)
+c     real*4 hscin_pos_eff(hnum_scin_layers,16)
+c     real*4 hscin_neg_eff(hnum_scin_layers,16)
+c     real*4 hscin_pos_solo(hnum_scin_layers,16)
+c     real*4 hscin_neg_solo(hnum_scin_layers,16)
+c     
+c     common/hmore_debugging/
+c     &  hscin_pos_eff,
+c     &  hscin_neg_eff,
+c     &  hscin_pos_solo,
+c     &  hscin_neg_solo,
+c     &  hscin_pos_did,
+c     &  hscin_neg_did,
+c     &  hscin_pos_should,
+c     &  hscin_neg_should
+      

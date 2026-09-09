@@ -1,0 +1,9 @@
+gtrig_tdc_min=200
+gtrig_tdc_max=1000
+
+htul_tdc_min=200
+htul_tdc_max=1000
+
+etul_tdc_min=200
+etul_tdc_max=1000
+

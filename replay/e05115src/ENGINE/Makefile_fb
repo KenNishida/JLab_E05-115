@@ -1,0 +1,80 @@
+include ../Makefile.in
+
+C_OBJS=c_clear_event.o c_initialize.o c_keep_results.o \
+       c_ntuple_init.o c_ntuple_keep.o c_ntuple_register.o \
+       c_ntuple_shutdown.o c_physics.o c_proper_shutdown.o \
+       c_reconstruction.o c_register_variables.o c_reset_event.o \
+       c_init_histid.o
+
+G_OBJS=g_analyze_beam_pedestal.o g_analyze_misc.o g_analyze_pedestal.o \
+       g_analyze_trig.o g_analyze_scaler_bank.o g_analyze_scalers.o \
+       g_analyze_scalers_by_banks.o g_bm_nt_init.o g_bm_nt_keep.o \
+       g_bm_nt_register.o g_bm_nt_shutdown.o g_calc_beam_pedestal.o \
+       g_calc_bpm_pedestal.o g_calc_pedestal.o g_calc_raster_pedestal.o \
+       g_clear_event.o g_ctp_database.o g_decode_clear.o g_decode_config.o \
+       g_decode_event_by_banks.o g_decode_all_bank.o \
+       g_decode_all_detector.o g_decode_fb_detector.o g_decode_fb_bank.o \
+       g_decode_init.o g_dump_histograms.o g_dump_peds.o \
+       g_examine_control_event.o g_examine_epics_event.o \
+       g_examine_go_info.o g_examine_physics_event.o \
+       g_extract_epics_info.o g_extract_kinematics.o \
+       g_get_next_event.o g_init_filenames.o \
+       g_init_histid.o g_initialize.o \
+       g_keep_results.o g_ntuple_init.o g_ntuple_shutdown.o g_open_source.o \
+       g_output_thresholds.o g_preproc_event.o g_preproc_open.o \
+       g_proper_shutdown.o g_reconstruction.o g_register_variables.o \
+       g_reset_event.o g_scaler_reset_event.o g_target_initialize.o \
+       g_total_eloss.o g_trans_misc.o g_write_event.o \
+
+E_OBJS=e_clear_event.o e_initialize.o e_keep_results.o \
+       e_ntuple_register.o \
+       e_ntuple_init.o e_ntuple_keep.o e_ntuple_shutdown.o \
+       e_fis_ntuple_init.o e_fis_ntuple_keep.o e_fis_ntuple_shutdown.o \
+       e_dc_ntuple_init.o e_dc_ntuple_keep.o e_dc_ntuple_shutdown.o \
+       e_scin_ntuple_init.o e_scin_ntuple_keep.o e_scin_ntuple_shutdown.o \
+       e_proper_shutdown.o e_register_variables.o \
+       e_reset_event.o e_initialize.o
+
+R_OBJS=r_c_ntuple.o r_coin_data_structures.o r_coin_filenames.o \
+       r_coin_id_histid.o r_gen_data_structures.o \
+       r_gen_event_info.o r_gen_f1tdc.o \
+       r_gen_filenames.o \
+       r_gen_rocid.o r_gen_run_info.o \
+       r_gen_run_pref.o r_gen_scalers.o r_gen_decode_common.o\
+       r_hes_data_structures.o r_e_ntuple.o r_g_beam_ntuple.o r_h_ntuple.o \
+       r_hks_data_structures.o r_coin_id_histid.o
+
+H_OBJS=h_clear_event.o h_initialize.o h_keep_results.o \
+       h_ntuple_init.o h_ntuple_keep.o h_ntuple_shutdown.o \
+       h_dc_ntuple_init.o h_dc_ntuple_keep.o h_dc_ntuple_shutdown.o \
+       h_scin_ntuple_init.o h_scin_ntuple_keep.o h_scin_ntuple_shutdown.o \
+       h_ch_ntuple_init.o h_ch_ntuple_keep.o h_ch_ntuple_shutdown.o \
+       h_ntuple_register.o h_proper_shutdown.o h_register_variables.o \
+       h_reset_event.o
+
+ALLOBJS= $(C_OBJS) $(G_OBJS) $(E_OBJS) $(R_OBJS) $(H_OBJS)
+
+LIB= libengine.a
+
+F77=/usr/bin/g77
+
+FFLAGS=-m32 -g -ffixed-line-length-132
+
+INC=-I../INCLUDE/
+
+%.o:%.f
+	$(F77) $(FFLAGS) $(INC) -c $< -o $@
+
+
+none: $(LIB)
+
+all: $(LIB)
+
+$(LIB): $(ALLOBJS)
+	$(AR) r $@ $?
+
+install:
+	cp $(LIB) $(LIBROOT)
+
+clean:
+	$(RM) *.o $(LIB) r_*.f

@@ -1,0 +1,213 @@
+  TTree *tree = dynamic_cast<TTree *>(gFile->Get("tree"));
+  //event ID
+  tree->Branch("evID",     &evID, "evID/I"  );
+  //Kaon Momentum
+  tree->Branch("KMom",     &Mom, "KMom/D"  );
+  //Kaon theta, phi
+  tree->Branch("KTheta",  &Theta, "KTheta/D");
+  tree->Branch("KPhi",      &Phi, "KPhi/D"  );
+  //Kaon x't, y't
+  tree->Branch("KXpt",      &Xpt, "KXpt/D"  );
+  tree->Branch("KYpt",      &Ypt, "KYpt/D"  );
+  //don't care
+  tree->Branch("KXSp",    &X[0],  "KXSp/D");
+  tree->Branch("KYSp",    &Y[0],  "KYSp/D");
+  tree->Branch("KZSp",    &Z[0],  "KZSp/D");
+  //x,y,z @ KQ1 in (local)
+  tree->Branch("KXQ1i",    &X[1],  "KXQ1i/D");
+  tree->Branch("KYQ1i",    &Y[1],  "KYQ1i/D");
+  tree->Branch("KZQ1i",    &Z[1],  "KZQ1i/D");
+  //x,y,z @ KQ1 exit (local)
+  tree->Branch("KXQ1e",    &X[2],  "KXQ1e/D");
+  tree->Branch("KYQ1e",    &Y[2],  "KYQ1e/D");
+  tree->Branch("KZQ1e",    &Z[2],  "KZQ1e/D");
+  //x,y,z @ KQ2 in (local)
+  tree->Branch("KXQ2i",    &X[3],  "KXQ2i/D");
+  tree->Branch("KYQ2i",    &Y[3],  "KYQ2i/D");
+  tree->Branch("KZQ2i",    &Z[3],  "KZQ2i/D");
+  //x,y,z @ KQ2 exit (local)
+  tree->Branch("KXQ2e",    &X[4],  "KXQ2e/D");
+  tree->Branch("KYQ2e",    &Y[4],  "KYQ2e/D");
+  tree->Branch("KZQ2e",    &Z[4],  "KZQ2e/D");
+  //x,y,z @ KD in (local)
+  tree->Branch("KXDi",     &X[5],   "KXDi/D");
+  tree->Branch("KYDi",     &Y[5],   "KYDi/D");
+  tree->Branch("KZDi",     &Z[5],   "KYZi/D");
+  //x,y,z @ KD exit (local)
+  tree->Branch("KXDe",     &X[6],   "KXDe/D");
+  tree->Branch("KYDe",     &Y[6],   "KYDe/D");
+  tree->Branch("KZDe",     &Z[6],  "KZDe/D");
+  //x,y,z,x',y',xv,yv,zv @ FP1 (local)
+  //"v" means the vertex of the track
+  tree->Branch("KXFP1",    &X[7],  "KXFP1/D");
+  tree->Branch("KYFP1",    &Y[7],  "KYFP1/D");
+  tree->Branch("KZFP1",    &Z[7],  "KZFP1/D");
+  tree->Branch("KXpFP1",  &Xp[7], "KXpFP1/D");
+  tree->Branch("KYpFP1",  &Yp[7], "KYpFP1/D");
+  tree->Branch("KXvFP1",  &Xv[7], "KXvFP1/D");
+  tree->Branch("KYvFP1",  &Yv[7], "KYvFP1/D");
+  tree->Branch("KZvFP1",  &Zv[7], "KZvFP1/D");
+  //x,y,z,x',y',xv,yv,zv @ FP2 (local)
+  tree->Branch("KXFP2",    &X[8],  "KXFP2/D");
+  tree->Branch("KYFP2",    &Y[8],  "KYFP2/D");
+  tree->Branch("KZFP2",    &Z[8],  "KZFP2/D");
+  tree->Branch("KXpFP2",  &Xp[8], "KXpFP2/D");
+  tree->Branch("KYpFP2",  &Yp[8], "KYpFP2/D");
+  tree->Branch("KXvFP2",  &Xv[8], "KXvFP2/D");
+  tree->Branch("KYvFP2",  &Yv[8], "KYvFP2/D");
+  tree->Branch("KZvFP2",  &Zv[8], "KZvFP2/D");
+  //x,y,z,x',y',xv,yv,zv @ FP3 (local)
+  tree->Branch("KXFP3",    &X[9],  "KXFP3/D");
+  tree->Branch("KYFP3",    &Y[9],  "KYFP3/D");
+  tree->Branch("KZFP3",    &Z[9],  "KZFP3/D");
+  tree->Branch("KXpFP3",  &Xp[9], "KXpFP3/D");
+  tree->Branch("KYpFP3",  &Yp[9], "KYpFP3/D");
+  tree->Branch("KXvFP3",  &Xv[9], "KXvFP3/D");
+  tree->Branch("KYvFP3",  &Yv[9], "KYvFP3/D");
+  tree->Branch("KZvFP3",  &Zv[9], "KZvFP3/D");
+  //x,y,z,x',y',xv,yv,zv @ FP4 (local)
+  tree->Branch("KXFP4",   &X[10],  "KXFP4/D");
+  tree->Branch("KYFP4",   &Y[10],  "KYFP4/D");
+  tree->Branch("KZFP4",   &Z[10],  "KZFP4/D");
+  tree->Branch("KXpFP4", &Xp[10], "KXpFP4/D");
+  tree->Branch("KYpFP4", &Yp[10], "KYpFP4/D");
+  tree->Branch("KXvFP4", &Xv[10], "KXvFP4/D");
+  tree->Branch("KYvFP4", &Yv[10], "KYvFP4/D");
+  tree->Branch("KZvFP4", &Zv[10], "KZvFP4/D");
+  //x,y,z,x',y',xv,yv,zv @ FP5 (local)
+  tree->Branch("KXFP5",   &X[11],  "KXFP5/D");
+  tree->Branch("KYFP5",   &Y[11],  "KYFP5/D");
+  tree->Branch("KZFP5",   &Z[11],  "KZFP5/D");
+  tree->Branch("KXpFP5", &Xp[11], "KXpFP5/D");
+  tree->Branch("KYpFP5", &Yp[11], "KYpFP5/D");
+  tree->Branch("KXvFP5", &Xv[11], "KXvFP5/D");
+  tree->Branch("KYvFP5", &Yv[11], "KYvFP5/D");
+  tree->Branch("KZvFP5", &Zv[11], "KZvFP5/D");
+  //don't care
+  tree->Branch("KXSp1",   &X[12],  "KXSp1/D");
+  tree->Branch("KYSp1",   &Y[12],  "KYSp1/D");
+  tree->Branch("KXSp2",   &X[13],  "KXSp2/D");
+  tree->Branch("KYSp2",   &Y[13],  "KYSp2/D");
+  tree->Branch("XSp3",   &X[14],  "XSp3/D");
+  tree->Branch("YSp3",   &Y[14],  "YSp3/D");
+  
+  //hit KDC and VDs(@magnets)
+  tree->Branch("Trig",    &Trig,  "Trig/B");
+  //hit KDC 
+  tree->Branch("KDCTrig",    &KDCTrig,  "KDCTrig/B");
+  //hit VDs(@magnets),WC,AC,TOF 
+  tree->Branch("VDTrig",    &VD,  "VDTrig/B");
+  tree->Branch("WCTrig",    &WCTrig,  "WCTrig/B");
+  tree->Branch("ACTrig",    &ACTrig,  "ACTrig/B");
+  tree->Branch("TOFTrig",    &TOFTrig,  "TOFTrig/B");
+  
+  //===Drift Chamber===//
+  //same as FPs
+  for (int i=0;i<6;i++){
+    sprintf(sPKDC,"PKDC%d",i+1); 
+    sprintf(sPKDCD,"PKDC%d/D",i+1); 
+    sprintf(sXKDC,"XKDC%d",i+1); 
+    sprintf(sXKDCD,"XKDC%d/D",i+1); 
+    sprintf(sYKDC,"YKDC%d",i+1); 
+    sprintf(sYKDCD,"YKDC%d/D",i+1); 
+    sprintf(sZKDC,"ZKDC%d",i+1); 
+    sprintf(sZKDCD,"ZKDC%d/D",i+1); 
+    sprintf(sXpKDC,"XpKDC%d",i+1); 
+    sprintf(sXpKDCD,"XpKDC%d/D",i+1); 
+    sprintf(sYpKDC,"YpKDC%d",i+1); 
+    sprintf(sYpKDCD,"YpKDC%d/D",i+1); 
+    tree->Branch(sPKDC,    &KDC1P[i],   sPKDCD);
+    tree->Branch(sXKDC,    &KDC1X[i],   sXKDCD);
+    tree->Branch(sYKDC,    &KDC1Y[i],   sYKDCD);
+    tree->Branch(sZKDC,    &KDC1Z[i],   sZKDCD);
+    tree->Branch(sXpKDC,   &KDC1Xp[i],   sXpKDCD);
+    tree->Branch(sYpKDC,   &KDC1Yp[i],   sYpKDCD);
+  }
+  for (int i=0;i<6;i++){
+    sprintf(sPKDC,"PKDC%d",i+7); 
+    sprintf(sPKDCD,"PKDC%d/D",i+7); 
+    sprintf(sXKDC,"XKDC%d",i+7); 
+    sprintf(sXKDCD,"XKDC%d/D",i+7); 
+    sprintf(sYKDC,"YKDC%d",i+7); 
+    sprintf(sYKDCD,"YKDC%d/D",i+7); 
+    sprintf(sZKDC,"ZKDC%d",i+7); 
+    sprintf(sZKDCD,"ZKDC%d/D",i+7); 
+    sprintf(sXpKDC,"XpKDC%d",i+7); 
+    sprintf(sXpKDCD,"XpKDC%d/D",i+7); 
+    sprintf(sYpKDC,"YpKDC%d",i+7); 
+    sprintf(sYpKDCD,"YpKDC%d/D",i+7); 
+    tree->Branch(sPKDC,    &KDC2P[i],   sPKDCD);
+    tree->Branch(sXKDC,    &KDC2X[i],   sXKDCD);
+    tree->Branch(sYKDC,    &KDC2Y[i],   sYKDCD);
+    tree->Branch(sZKDC,    &KDC2Z[i],   sZKDCD);
+    tree->Branch(sXpKDC,   &KDC2Xp[i],   sXpKDCD);
+    tree->Branch(sYpKDC,   &KDC2Yp[i],   sYpKDCD);
+  }
+
+  if(flag==0){
+  //==WC
+  //same as FPs + adc + tdc
+	for(int j=0;j<2;j++){
+		for(int i=0;i<12;i++){	
+			sprintf(sXWC,   "XWC%d",    100*(j+1)+i+1); 
+    		sprintf(sXWCD,  "XWC%d/D",  100*(j+1)+i+1); 
+ 		   sprintf(sYWC,   "YWC%d",    100*(j+1)+i+1); 
+			sprintf(sYWCD,  "YWC%d/D",  100*(j+1)+i+1); 
+		   sprintf(sWCadc, "WCadc%d",  100*(j+1)+i+1); 
+    		sprintf(sWCadcD,"WCadc%d/D",100*(j+1)+i+1); 
+    		sprintf(sWCtdc, "WCtdc%d",  100*(j+1)+i+1); 
+    		sprintf(sWCtdcD,"WCtdc%d/D",100*(j+1)+i+1); 
+    		tree->Branch(sXWC,    &WCx[j][i],     sXWCD);
+    		tree->Branch(sYWC,    &WCy[j][i],     sYWCD);
+    		tree->Branch(sWCadc,  &WCadc[j][i],   sWCadcD);
+    		tree->Branch(sWCtdc,  &WCtdc[j][i],   sWCtdcD);
+		}
+	}
+  
+  //==AC
+  //same as FPs + adc + tdc
+	for(int j=0;j<3;j++){
+		for(int i=0;i<7;i++){	
+			sprintf(sXAC,   "XAC%d",    100*(j+1)+i+1); 
+    		sprintf(sXACD,  "XAC%d/D",  100*(j+1)+i+1); 
+ 		   sprintf(sYAC,   "YAC%d",    100*(j+1)+i+1); 
+			sprintf(sYACD,  "YAC%d/D",  100*(j+1)+i+1); 
+		   sprintf(sACadc, "ACadc%d",  100*(j+1)+i+1); 
+    		sprintf(sACadcD,"ACadc%d/D",100*(j+1)+i+1); 
+    		sprintf(sACtdc, "ACtdc%d",  100*(j+1)+i+1); 
+    		sprintf(sACtdcD,"ACtdc%d/D",100*(j+1)+i+1); 
+    		tree->Branch(sXAC,    &ACx[j][i],     sXACD);
+    		tree->Branch(sYAC,    &ACy[j][i],     sYACD);
+    		tree->Branch(sACadc,  &ACadc[j][i],   sACadcD);
+    		tree->Branch(sACtdc,  &ACtdc[j][i],   sACtdcD);
+		}
+	}
+
+  //==TOF
+  //same as FPs + adc + tdc
+  //====TOFpid
+  tree->Branch("TOF1XPID",   &TOFpid[0],  "TOF1XPID/I");  
+  tree->Branch("TOF1YPID",   &TOFpid[1],  "TOF1YPID/I");  
+  tree->Branch("TOF2XPID",   &TOFpid[2],  "TOF2XPID/I");   
+  //====TOFtdcsum
+  tree->Branch("TOF1X",   &TOFtdcSum[0],  "TOF1X/D");  
+  tree->Branch("TOF1Y",   &TOFtdcSum[1],  "TOF1Y/D");  
+  tree->Branch("TOF2X",   &TOFtdcSum[2],  "TOF2X/D");   
+	for(int j=0;j<3;j++){
+		for(int i=0;i<17;i++){	
+			sprintf(sXTOF,   "XTOF%d",  100*(j+1)+i+1); 
+    		sprintf(sXTOFD,  "XTOF%d/D",100*(j+1)+i+1); 
+ 		   sprintf(sYTOF,   "YTOF%d",  100*(j+1)+i+1); 
+			sprintf(sYTOFD,  "YTOF%d/D",100*(j+1)+i+1); 
+		   sprintf(sTOFa,   "TOFa%d",  100*(j+1)+i+1); 
+    		sprintf(sTOFaD,  "TOFa%d/D",100*(j+1)+i+1); 
+    		sprintf(sTOFt,   "TOFt%d",  100*(j+1)+i+1); 
+    		sprintf(sTOFtD,  "TOFt%d/D",100*(j+1)+i+1); 
+    		tree->Branch(sXTOF,  &TOFx[j][i],     sXTOFD);
+    		tree->Branch(sYTOF,  &TOFy[j][i],     sYTOFD);
+    		tree->Branch(sTOFa,  &TOFadc[j][i],   sTOFaD);
+    		tree->Branch(sTOFt,  &TOFtdc[j][i],   sTOFtD);
+		}
+	}
+}
+

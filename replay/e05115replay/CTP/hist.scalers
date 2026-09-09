@@ -1,0 +1,32 @@
+begin hist scalers group=both group=hks group=enge
+
+
+gtrigrawtothits,17,0.5,17.5     $TRIG RAW TOT HITS
+gtrigrawchannels,17,0.5,17.5    $TRIG RAW CHANNEL NUM
+gtrigrawtdc,100,0.,2000.        $TRIG RAW TDC
+gtrigtothits,17,0.5,17.5        $TRIG TOT HITS
+gtrigchannels,17,0.5,17.5       $TRIG CHANNEL NUM
+gtrigtdc1,1000,5000.,15000.         $HES0 
+gtrigtdc2,1000,5000.,15000.         $HKS0
+gtrigtdc3,1000,5000.,15000.         $HKS Gr1
+gtrigtdc4,1000,5000.,15000.         $HKS Gr2
+gtrigtdc5,1000,5000.,15000.         $HKS Gr3
+gtrigtdc6,1000,5000.,15000.         $HKS Gr4
+gtrigtdc7,1000,5000.,15000.         $HKS Gr5
+gtrigtdc8,1000,5000.,15000.         $HKS Gr6
+gtrigcoin,1000,-1000.,1000.         $HKS-HES
+gprobe, 2000, 5500., 8500.      $Splitter hall probe
+
+htulrawtothits,129,0.5,129.5        $HTUL RAW TOT HITS
+htulrawtotchannelnum,129,0.5,129.5  $HTUL RAW TOT CHANNEL NUM
+htulrawtdc,100,0.,2000.             $HTUL RAW TDC
+htultothits,129,0.5,129.5           $HTUL TOT HITS
+htultotchannelnum,129,0.5,129.5     $HTUL TOT CHANNEL NUM
+
+etulrawtothits,17,0.5,17.5        $ETUL RAW TOT HITS
+etulrawtotchannelnum,16,0.5,16.5  $ETUL RAW TOT CHANNEL NUM
+etulrawtdc,100,0.,2000.           $ETUL RAW TDC
+etultothits,17,0.5,17.5           $ETUL TOT HITS
+etultotchannelnum,16,0.5,16.5     $ETUL TOT CHANNEL NUM 
+
+end   hist scalers

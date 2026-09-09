@@ -1,0 +1,47 @@
+**************************begin: evdisplay_info.cmn ***********************
+*- 
+*-   Created   03-Jun-2005   Masashi Kaneta, Tohoku University
+*........................................................................
+*- Misc. info. about one event display
+*
+*     CTPTYPE=event
+*
+      logical show_all_events                               ! if .FALSE., only events that has valid hits print
+      logical wait_next_event                               ! if .FALSE., NO wait to display next event
+*
+      common /evdisplay_info/ 
+     +        show_all_events,
+     +        wait_next_event
+
+      real*4  wn_co1(6), wn_co2(6), wn_co3(6)               ! for Workstation Normalization
+      data wn_co1 / -130., 110., -40., 40., -90., 260. /    ! for HKS detectors
+      data wn_co2 /  -90.,  70., -10., 10., -30.,  50. /    ! for HES detectors
+
+
+      integer nt(6)
+      data nt / 11, 12, 13, 14, 15, 16/                     ! id number of normalization transformation
+
+
+*     for RPC 
+      integer       gen_display_server_RPCprgmID
+      integer       gen_display_server_RPCversionID
+      character*80  gen_display_server_machine
+      integer       gen_display_RPCclientID
+      integer       gen_display_everything
+      integer       gen_display_event_info
+      integer       gen_display_device
+      integer       gen_display_wait_events
+      integer       gen_display_wait_seconds
+      character*132 gen_display_interesting
+*
+      common /gen_display_info/
+     &        gen_display_server_RPCprgmID,
+     &        gen_display_server_RPCversionID,
+     &        gen_display_server_machine,
+     &        gen_display_RPCclientID,
+     &        gen_display_everything,gen_display_event_info,
+     &        gen_display_device,gen_display_wait_events,
+     &        gen_display_wait_seconds,gen_display_interesting
+
+*
+****************************end: evdisplay_info.cmn ***********************

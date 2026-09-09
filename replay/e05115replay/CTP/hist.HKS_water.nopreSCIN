@@ -1,0 +1,130 @@
+; NOTE: Since s_water.f is called AFTER tracking, these values are
+; only calculated IF THERE IS A TRACK.  Thus, we need scleantrack
+; as a MINIMUM test for all histograms.
+
+begin test water_adcsub group=sos group=both
+#real swat_pos1_adc,swat_pos2_adc,swat_pos3_adc,swat_pos4_adc
+#real swat_pos5_adc,swat_pos6_adc,swat_pos7_adc,swat_pos8_adc
+swat_pos1_adc=swat_rawadc_pos(1)-swat_pos_ped_mean(1)
+swat_pos2_adc=swat_rawadc_pos(2)-swat_pos_ped_mean(2)
+swat_pos3_adc=swat_rawadc_pos(3)-swat_pos_ped_mean(3)
+swat_pos4_adc=swat_rawadc_pos(4)-swat_pos_ped_mean(4)
+swat_pos5_adc=swat_rawadc_pos(5)-swat_pos_ped_mean(5)
+swat_pos6_adc=swat_rawadc_pos(6)-swat_pos_ped_mean(6)
+swat_pos7_adc=swat_rawadc_pos(7)-swat_pos_ped_mean(7)
+swat_pos8_adc=swat_rawadc_pos(8)-swat_pos_ped_mean(8)
+#real swat_neg1_adc,swat_neg2_adc,swat_neg3_adc,swat_neg4_adc
+#real swat_neg5_adc,swat_neg6_adc,swat_neg7_adc,swat_neg8_adc
+swat_neg1_adc=swat_rawadc_neg(1)-swat_neg_ped_mean(1)
+swat_neg2_adc=swat_rawadc_neg(2)-swat_neg_ped_mean(2)
+swat_neg3_adc=swat_rawadc_neg(3)-swat_neg_ped_mean(3)
+swat_neg4_adc=swat_rawadc_neg(4)-swat_neg_ped_mean(4)
+swat_neg5_adc=swat_rawadc_neg(5)-swat_neg_ped_mean(5)
+swat_neg6_adc=swat_rawadc_neg(6)-swat_neg_ped_mean(6)
+swat_neg7_adc=swat_rawadc_neg(7)-swat_neg_ped_mean(7)
+swat_neg8_adc=swat_rawadc_neg(8)-swat_neg_ped_mean(8)
+
+#int watertest
+watertest=(ssbeta>0.9)&&scleantrack
+
+#int lp1,lp2,lp3,lp4,lp5,lp6,lp7,lp8
+#int ln1,ln2,ln3,ln4,ln5,ln6,ln7,ln8
+lp1=(swat_pos1_adc>800)&&watertest
+lp2=(swat_pos2_adc>800)&&watertest
+lp3=(swat_pos3_adc>800)&&watertest
+lp4=(swat_pos4_adc>800)&&watertest
+lp5=(swat_pos5_adc>800)&&watertest
+lp6=(swat_pos6_adc>800)&&watertest
+lp7=(swat_pos7_adc>800)&&watertest
+lp8=(swat_pos8_adc>800)&&watertest
+ln1=(swat_neg1_adc>800)&&watertest
+ln2=(swat_neg2_adc>800)&&watertest
+ln3=(swat_neg3_adc>800)&&watertest
+ln4=(swat_neg4_adc>800)&&watertest
+ln5=(swat_neg5_adc>800)&&watertest
+ln6=(swat_neg6_adc>800)&&watertest
+ln7=(swat_neg7_adc>800)&&watertest
+ln8=(swat_neg8_adc>800)&&watertest
+
+#real swat_xpos
+swat_xpos=ssx_fp+245.*ssxp_fp
+
+#real swat_rawnpesum_pos,swat_rawnpesum_neg,swat_rawnpesum_tot
+swat_rawnpesum_pos=swat_pos_npe(1)+swat_pos_npe(2)+swat_pos_npe(3)+swat_pos_npe(4)+swat_pos_npe(5)+swat_pos_npe(6)+swat_pos_npe(7)+swat_pos_npe(8)
+swat_rawnpesum_neg=swat_neg_npe(1)+swat_neg_npe(2)+swat_neg_npe(3)+swat_neg_npe(4)+swat_neg_npe(5)+swat_neg_npe(6)+swat_neg_npe(7)+swat_neg_npe(8)
+swat_rawnpesum_tot=swat_rawnpesum_pos+swat_rawnpesum_neg
+
+#int swatlat
+swatlat = ((smisc_dec_data(8)>400)&&(smisc_dec_data(8)<900))&&scleantrack ;water PID signal fires.
+
+end test water_adcsub
+
+; ==> Water stuff
+begin hist sos_pid_water group=sos group=both
+; ==> Positive channels
+swat_pos1_adcsub,swat_pos1_adc,300,-500,7500,scleantrack   $swat-pos1-adcsub t=sclean
+swat_pos2_adcsub,swat_pos2_adc,300,-500,7500,scleantrack   $swat-pos2-adcsub t=sclean
+swat_pos3_adcsub,swat_pos3_adc,300,-500,7500,scleantrack   $swat-pos3-adcsub t=sclean
+swat_pos4_adcsub,swat_pos4_adc,300,-500,7500,scleantrack   $swat-pos4-adcsub t=sclean
+swat_pos5_adcsub,swat_pos5_adc,300,-500,7500,scleantrack   $swat-pos5-adcsub t=sclean
+swat_pos6_adcsub,swat_pos6_adc,300,-500,7500,scleantrack   $swat-pos6-adcsub t=sclean
+swat_pos7_adcsub,swat_pos7_adc,300,-500,7500,scleantrack   $swat-pos7-adcsub t=sclean
+swat_pos8_adcsub,swat_pos8_adc,300,-500,7500,scleantrack   $swat-pos8-adcsub t=sclean
+
+; ==> Negative channels
+swat_neg1_adcsub,swat_neg1_adc,300,-500,7500,scleantrack   $swat-neg1-adcsub t=sclean
+swat_neg2_adcsub,swat_neg2_adc,300,-500,7500,scleantrack   $swat-neg2-adcsub t=sclean
+swat_neg3_adcsub,swat_neg3_adc,300,-500,7500,scleantrack   $swat-neg3-adcsub t=sclean
+swat_neg4_adcsub,swat_neg4_adc,300,-500,7500,scleantrack   $swat-neg4-adcsub t=sclean
+swat_neg5_adcsub,swat_neg5_adc,300,-500,7500,scleantrack   $swat-neg5-adcsub t=sclean
+swat_neg6_adcsub,swat_neg6_adc,300,-500,7500,scleantrack   $swat-neg6-adcsub t=sclean
+swat_neg7_adcsub,swat_neg7_adc,300,-500,7500,scleantrack   $swat-neg7-adcsub t=sclean
+swat_neg8_adcsub,swat_neg8_adc,300,-500,7500,scleantrack   $swat-neg8-adcsub t=sclean
+
+; ==> Sums
+swat_pos_sum,swat_pos_npe_sum,100,-5,45,scleantrack       $swat-pos-npesum t=sclean
+swat_neg_sum,swat_neg_npe_sum,100,-5,45,scleantrack       $swat-neg-npesum t=sclean
+swat_npe_sum,swat_npe_sum,100,-5,45,scleantrack           $swat-tot-npesum t=sclean
+swat_npe_sum_lat,swat_npe_sum,100,-5,45,swatlat           $swat-tot-npesum t=swater_latch(&cleantrack)
+swat_pos_sumcut,swat_pos_npe_sum,100,-5,45,watertest     $swat-pos-npesum t=beta>.9
+swat_neg_sumcut,swat_neg_npe_sum,100,-5,45,watertest     $swat-neg-npesum t=beta>.9
+swat_npe_sumcut,swat_npe_sum,100,-5,45,watertest         $swat-tot-npesum t=beta>.9
+
+swat_pos_rawsum,swat_rawnpesum_pos,100,-5,45,scleantrack    $swat-pos-rawnpesum t=sclean
+swat_neg_rawsum,swat_rawnpesum_neg,100,-5,45,scleantrack    $swat-neg-rawnpesum t=sclean
+swat_npe_rawsum,swat_rawnpesum_tot,100,-5,45,scleantrack    $swat-tot-rawnpesum t=sclean
+swat_npe_rawsum_lat,swat_rawnpesum_tot,100,-5,45,swatlat    $swat-tot-rawnpesum t=swater_latch(&cleantrack)
+swat_pos_rawsumcut,swat_rawnpesum_pos,100,-5,45,watertest  $swat-pos-rawnpesum t=beta>.9
+swat_neg_rawsumcut,swat_rawnpesum_neg,100,-5,45,watertest  $swat-neg-rawnpesum t=beta>.9
+swat_npe_rawsumcut,swat_rawnpesum_tot,100,-5,45,watertest  $swat-tot-rawnpesum t=beta>.9
+
+; ==> where is it?
+spos_pos1,swat_xpos,500,-100,100,lp1       $sposition 1+ t=lp1
+spos_pos2,swat_xpos,500,-100,100,lp2       $sposition 2+ t=lp2
+spos_pos3,swat_xpos,500,-100,100,lp3       $sposition 3+ t=lp3
+spos_pos4,swat_xpos,500,-100,100,lp4       $sposition 4+ t=lp4
+spos_pos5,swat_xpos,500,-100,100,lp5       $sposition 5+ t=lp5
+spos_pos6,swat_xpos,500,-100,100,lp6       $sposition 6+ t=lp6
+spos_pos7,swat_xpos,500,-100,100,lp7       $sposition 7+ t=lp7
+spos_pos8,swat_xpos,500,-100,100,lp8       $sposition 8+ t=lp8
+spos_neg1,swat_xpos,500,-100,100,ln1       $sposition 1- t=ln1
+spos_neg2,swat_xpos,500,-100,100,ln2       $sposition 2- t=ln2
+spos_neg3,swat_xpos,500,-100,100,ln3       $sposition 3- t=ln3
+spos_neg4,swat_xpos,500,-100,100,ln4       $sposition 4- t=ln4
+spos_neg5,swat_xpos,500,-100,100,ln5       $sposition 5- t=ln5
+spos_neg6,swat_xpos,500,-100,100,ln6       $sposition 6- t=ln6
+spos_neg7,swat_xpos,500,-100,100,ln7       $sposition 7- t=ln7
+spos_neg8,swat_xpos,500,-100,100,ln8       $sposition 8- t=ln8
+
+ssbetaraw,ssbeta,100,0.3,1.3,scleantrack	$ssbeta t=sclean
+ssbetaaer,ssbeta,100,0.3,1.3,scleanaerveto	$ssbeta t=sclean&saerveto
+ssbetanoaer,ssbeta,100,0.3,1.3,scleanaernoveto	$ssbeta t=sclean&saerNOveto
+ssbetawat,ssbeta,100,0.3,1.3,swatlat	   	$ssbeta t=sclean&swat_latch
+
+;swat_npe, swat_npe, 300, 0, 100 $swat-npe t=strig
+;swat_npe_max, swat_npe_max, 300, 0, 100 $swat-npe-max t=strig
+;swat_sum, swat_sum, 300, 0, 100 $swat-sum t=strig
+
+swattdc,smisc_dec_data(8),400,-10,4100,scleantrack   $swattdc t=sclean
+
+end hist sos_pid_water

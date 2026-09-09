@@ -1,0 +1,45 @@
+macro acrawhist run adclow=0. adchig=8000. tdclow=-100000. tdchig=100000.
+close 0
+his/fil 1 paw/[run].hbook
+exec paw/paw[run] 
+opt logy
+
+
+* First all Pedestals by layer
+do ila=1,3
+ zone 3 3
+ do ico=1,7
+  set hcol 1
+  his/plo haerrawposped[ila]_[ico]([adclow]:[adchig])
+  set hcol 2
+  his/plo haerrawnegped[ila]_[ico]([adclow]:[adchig]) s
+ enddo
+ pic/print acrawhistped[ila].gif
+ wait
+enddo
+* First all ADCs by layer
+do ila=1,3
+ zone 3 3
+ do ico=1,7
+  set hcol 1
+  his/plo haerrawposadc[ila]_[ico]([adclow]:[adchig])
+  set hcol 2
+  his/plo haerrawnegadc[ila]_[ico]([adclow]:[adchig]) s
+ enddo
+ pic/print acrawhistadc[ila].gif
+ wait
+enddo
+* Second all TDCs by layer
+do ila=1,3
+ zone 3 3
+ do ico=1,7
+  set hcol 1
+  his/plo haerrawpostdc[ila]_[ico]([tdclow]:[tdchig])
+  set hcol 2
+  his/plo haerrawnegtdc[ila]_[ico]([tdclow]:[tdchig]) s
+ enddo
+ pic/print acrawhisttdc[ila].gif
+ wait
+enddo
+set hcol 1
+return

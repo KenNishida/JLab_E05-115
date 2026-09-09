@@ -1,0 +1,41 @@
+begin hist hes_tracking_debug group=hes
+
+edc1distime01,120,-10.,110.,100,-0.5,0.5    $EDC1 dis vs time 01
+edc1distime02,120,-10.,110.,100,-0.5,0.5    $EDC1 dis vs time 02
+edc1distime03,120,-10.,110.,100,-0.5,0.5    $EDC1 dis vs time 03
+edc1distime04,120,-10.,110.,100,-0.5,0.5    $EDC1 dis vs time 04
+edc1distime05,120,-10.,110.,100,-0.5,0.5    $EDC1 dis vs time 05
+edc1distime06,120,-10.,110.,100,-0.5,0.5    $EDC1 dis vs time 06
+edc1distime07,120,-10.,110.,100,-0.5,0.5    $EDC1 dis vs time 07
+edc1distime08,120,-10.,110.,100,-0.5,0.5    $EDC1 dis vs time 08
+edc1distime09,120,-10.,110.,100,-0.5,0.5    $EDC1 dis vs time 09
+edc1distime10,120,-10.,110.,100,-0.5,0.5    $EDC1 dis vs time 10
+
+edc1layerres,11,0.,11.,20,-1.,1.        $EDC1 residual vs layer
+
+etrkdx,100,-1.,1.      $EDC1 dx between track
+etrkdy,100,-1.,1.      $EDC1 dy between track
+etrkdxp,100,-0.1,0.1   $EDC1 dxp between track
+etrkdyp,100,-0.2,0.2   $EDC1 dyp between track
+etrkdiff,21,0.,21.     $EDC1 ntrack difference
+
+entrackspre,100,0.,1000.      $EDC1 ntracks pre 
+entracksprezoom,20,0.,20.     $EDC1 ntracks pre (zoom)
+
+edc1residualpre01,200,-1.,1.     $EDC1 residual pre 01
+edc1residualpre02,200,-1.,1.     $EDC1 residual pre 02
+edc1residualpre03,200,-1.,1.     $EDC1 residual pre 03
+edc1residualpre04,200,-1.,1.     $EDC1 residual pre 04
+edc1residualpre05,200,-1.,1.     $EDC1 residual pre 05
+edc1residualpre06,200,-1.,1.     $EDC1 residual pre 06
+edc1residualpre07,200,-1.,1.     $EDC1 residual pre 07
+edc1residualpre08,200,-1.,1.     $EDC1 residual pre 08
+edc1residualpre09,200,-1.,1.     $EDC1 residual pre 09
+edc1residualpre10,200,-1.,1.     $EDC1 residual pre 10
+
+edc1chi2perdofpre,100,0.,500.      $EDC1 chi2 per dof pre
+edc1chi2perdofprezoom,100,0.,20.    $EDC1 chi2 per dof pre (zoom)
+edc2chi2perdofpre,100,0.,500.      $EDC2 chi2 per dof pre
+edc2chi2perdofprezoom,100,0.,20.    $EDC2 chi2 per dof pre (zoom)
+
+end hist hes_tracking_debug

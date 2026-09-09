@@ -1,0 +1,19 @@
+
+****** How to etrieve a file from tape ******
+1. Retrieve a rawdata file from tape to /cache/hallc/hks09/raw/
+   jcache get /mss/hallc/hks09/raw/hks09-hks_74120.log.*
+2. Convert the rawdata to rootfile: /volatile/hallc/c-hks/E05-115/filename.root
+   ./hb2root filename
+
+****** List of sample rootfiles from Toshi on May 19, 2026 ******
+I received sample rootfiles of each target from Toshi on May 19, 2026.
+li7_9-3.root: Lithium_7 target, 
+b10_9-3.root: Beryllium_10 target, 
+c12_20uA_9-3.root: Carbon_12 target at 20uA, 
+c12_35uA_9-3.root: Carbon_12 target at 35uA, 
+ch2_9-3.root: Polyethylene target, 
+ch2asc12_9-3.root: Polyethylene as a carbon_12 target,
+cr52_9-3.root: Chromium_52 target, 
+
+
+

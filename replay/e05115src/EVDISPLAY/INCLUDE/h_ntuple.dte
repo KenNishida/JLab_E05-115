@@ -1,0 +1,112 @@
+**************************begin: h_ntuple.dte ***********************
+*- 
+*-   Created    15-Jun-1994   Kevin B. Beard, Hampton Univ.
+*........................................................................
+*- leave clean field for HMS Ntuple
+* $Log: h_ntuple.dte,v $
+* Revision 1.1.1.1  2009/06/23 13:55:43  kawama
+*
+* e05115 src repository for software development
+*
+* Revision 1.1.1.1  2005/05/14 21:44:37  miyoshi
+*
+*
+* Revision 1.2  2005/02/22 23:23:15  miyoshi
+* add new variables
+*
+* Revision 1.1.1.1  2004/08/30 21:21:38  miyoshi
+* new dir
+*
+* Revision 1.1  1994/06/17 02:12:52  cdaq
+* Initial revision
+*
+      data h_Ntuple_exists/.FALSE./
+      data h_Ntuple_ID/0/
+      data h_Ntuple_file/' '/
+      data h_Ntuple_name/' '/
+      data h_Ntuple_title/' '/
+      data h_Ntuple_directory/' '/
+      data h_Ntuple_IOchannel/0/
+      data h_Ntuple_size/0/
+      data h_Ntuple_tag/HMAX_Ntuple_size*' '/
+      data h_Ntuple_contents/HMAX_Ntuple_size*0/
+
+      data h_dc_Ntuple_exists/.FALSE./
+      data h_dc_Ntuple_ID/0/
+      data h_dc_Ntuple_file/' '/
+      data h_dc_Ntuple_name/' '/
+      data h_dc_Ntuple_title/' '/
+      data h_dc_Ntuple_directory/' '/
+      data h_dc_Ntuple_IOchannel/0/
+      data h_dc_Ntuple_size/0/
+      data h_dc_Ntuple_tag/HMAX_Ntuple_size*' '/
+      data h_dc_Ntuple_contents/HMAX_Ntuple_size*0/
+
+      data h_scin_Ntuple_exists/.FALSE./
+      data h_scin_Ntuple_ID/0/
+      data h_scin_Ntuple_file/' '/
+      data h_scin_Ntuple_name/' '/
+      data h_scin_Ntuple_title/' '/
+      data h_scin_Ntuple_directory/' '/
+      data h_scin_Ntuple_IOchannel/0/
+      data h_scin_Ntuple_size/0/
+      data h_scin_Ntuple_tag/HMAX_Ntuple_size*' '/
+      data h_scin_Ntuple_contents/HMAX_Ntuple_size*0/
+
+      data h_ch_Ntuple_exists/.FALSE./
+      data h_ch_Ntuple_ID/0/
+      data h_ch_Ntuple_file/' '/
+      data h_ch_Ntuple_name/' '/
+      data h_ch_Ntuple_title/' '/
+      data h_ch_Ntuple_directory/' '/
+      data h_ch_Ntuple_IOchannel/0/
+      data h_ch_Ntuple_size/0/
+      data h_ch_Ntuple_tag/HMAX_Ntuple_size*' '/
+      data h_ch_Ntuple_contents/HMAX_Ntuple_size*0/
+
+      data h_wat_Ntuple_exists/.FALSE./
+      data h_wat_Ntuple_ID/0/
+      data h_wat_Ntuple_file/' '/
+      data h_wat_Ntuple_name/' '/
+      data h_wat_Ntuple_title/' '/
+      data h_wat_Ntuple_directory/' '/
+      data h_wat_Ntuple_IOchannel/0/
+      data h_wat_Ntuple_size/0/
+      data h_wat_Ntuple_tag/HMAX_Ntuple_size*' '/
+      data h_wat_Ntuple_contents/HMAX_Ntuple_size*0/
+
+      data h_aer_Ntuple_exists/.FALSE./
+      data h_aer_Ntuple_ID/0/
+      data h_aer_Ntuple_file/' '/
+      data h_aer_Ntuple_name/' '/
+      data h_aer_Ntuple_title/' '/
+      data h_aer_Ntuple_directory/' '/
+      data h_aer_Ntuple_IOchannel/0/
+      data h_aer_Ntuple_size/0/
+      data h_aer_Ntuple_tag/HMAX_Ntuple_size*' '/
+      data h_aer_Ntuple_contents/HMAX_Ntuple_size*0/
+      
+      data h_luc_Ntuple_exists/.FALSE./
+      data h_luc_Ntuple_ID/0/
+      data h_luc_Ntuple_file/' '/
+      data h_luc_Ntuple_name/' '/
+      data h_luc_Ntuple_title/' '/
+      data h_luc_Ntuple_directory/' '/
+      data h_luc_Ntuple_IOchannel/0/
+      data h_luc_Ntuple_size/0/
+      data h_luc_Ntuple_tag/HMAX_Ntuple_size*' '/
+      data h_luc_Ntuple_contents/HMAX_Ntuple_size*0/
+		
+		data h_pid_Ntuple_exists/.FALSE./
+      data h_pid_Ntuple_ID/0/
+      data h_pid_Ntuple_file/' '/
+      data h_pid_Ntuple_name/' '/
+      data h_pid_Ntuple_title/' '/
+      data h_pid_Ntuple_directory/' '/
+      data h_pid_Ntuple_IOchannel/0/
+      data h_pid_Ntuple_size/0/
+      data h_pid_Ntuple_tag/HMAX_Ntuple_size*' '/
+      data h_pid_Ntuple_contents/HMAX_Ntuple_size*0/
+
+*
+****************************end: h_ntuple.dte ***********************

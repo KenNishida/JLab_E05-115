@@ -1,0 +1,38 @@
+**************************begin: g_beam_ntuple.cmn ***********************
+*- 
+*........................................................................
+*- Misc. info for beam related Ntuple
+* Revision 1.0  2000/02/28 11:14:58  jinghua
+* Initial revision
+*
+*
+      integer SMAX_bm_Ntuple_size
+      parameter (SMAX_bm_Ntuple_size= 60)
+      integer default_g_beam_Ntuple_ID
+      parameter (default_g_beam_Ntuple_ID= 6600)
+*
+*     CTPTYPE=parm
+*
+      integer g_beam_Ntuple_ID
+      integer g_beam_Ntuple_size
+      integer g_beam_Ntuple_IOchannel
+      character*80 g_beam_Ntuple_name
+      character*80 g_beam_Ntuple_title
+      character*132 g_beam_Ntuple_directory   
+      character*256 g_beam_Ntuple_file
+      character*8 g_beam_Ntuple_tag(SMAX_bm_Ntuple_size)
+
+      logical g_beam_Ntuple_exists
+*
+*     CTPTYPE=event
+*
+      real g_beam_Ntuple_contents(SMAX_bm_Ntuple_size)
+*
+      COMMON /GEN_beam_Ntuple/ g_beam_Ntuple_ID,
+     &     g_beam_Ntuple_size,g_beam_Ntuple_IOchannel,
+     &     g_beam_Ntuple_name,g_beam_Ntuple_title,
+     &     g_beam_Ntuple_directory,g_beam_Ntuple_file,
+     &     g_beam_Ntuple_tag,g_beam_Ntuple_contents,
+     &     g_beam_Ntuple_exists
+
+*****************************end: g_beam_ntuple.cmn ***********************

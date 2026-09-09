@@ -1,0 +1,91 @@
+; hes tracking code debug flags.
+; when these flags are non-zero, dump routines are called to
+; print out the data banks for each event.
+;
+; number of pedestal events required to overwrite orig. peds.
+
+  escin_pos_min_peds = 500
+  escin_neg_min_peds = 500
+
+; DEBUGGING OUTPUT FLAGS
+; ----------------------
+
+; edebugprintscinraw
+    edebugprintscinraw = 0
+
+; edebugprintmiscraw
+    edebugprintmiscraw = 0
+
+; edumpdecodedscin
+    edumpdecodedscin = 0
+
+; edumptrack
+    edumptrack = 0
+
+; edumplayer
+    edumplayer = 0
+
+; edumpphysics
+    edumpphysics = 0
+
+; Bypass paramters to bypass code elementes in k_reconstruction
+;      Stored in hes_bypass_switches.cmn
+;      Code element is bypassed if switch .ne. 0
+;      on 0/off 1
+
+    ebypass_trans_scin = 0
+    ebypass_track = 0
+    ebypass_good_tracks = 0
+    ebypass_targ_trans = 0
+    ebypass_link_tracks = 0
+    ebypass_physics = 0
+
+;
+; bypass swiches to skip efficiency analysis
+; off 0/on 1 
+
+    ebypass_dc1_layer_eff = 0
+    ebypass_track_eff = 0
+    ebypass_scin_eff = 0
+
+; histgram on(1)/off(0) 
+
+  eturnon_dc1_raw_hist = 1
+  eturnon_dc1_dec_hist = 1
+  eturnon_dc1_track_hist = 1
+  eturnon_dc1_target_hist = 1
+  eturnon_scin_raw_hist = 1
+  eturnon_scin_dec_hist = 1
+  eturnon_scin_dt_hist = 1
+   eturnon_dc2_raw_hist = 1
+  eturnon_dc2_dec_hist = 1
+  eturnon_dc2_track_hist = 1
+  eturnon_dc2_target_hist = 1
+; logical unit number for hes debugs. (70-99)
+; logical unit number for dumping event number and residuals
+
+  e_res_dump_no = 71
+
+; debug flag
+  edebug_scinraw = 0
+
+;
+; 
+;
+
+; Swiches for Ntuple create
+; 1:RWN(0)/CWN(1), 
+; 2:escin(1:raw,2:dec), 
+; 3:edc(1:raw,2:dec), 
+; 4:efp(1:ON), 
+; 5:etar(1:ON), 
+
+    e_debugnt = 0,
+                1,
+                2,
+                1,
+                1,
+; If you want to output EDC hit wire infomation 
+; into "hes_cham.dat" , make this flag ON.
+    edc_hitinfo_flag  = 0
+    edc_hitinfo_flag2 = 0

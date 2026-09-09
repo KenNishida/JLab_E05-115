@@ -1,0 +1,124 @@
+begin hist hks_dec_debug group=hks
+
+; HDC drift time
+; Filled in e_fill_dc_dec_hist
+
+hdcdrifttimesl01,200,-100.,300.           $HDC drift time slot 01
+hdcdrifttimesl02,200,-100.,300.           $HDC drift time slot 02
+hdcdrifttimesl03,200,-100.,300.           $HDC drift time slot 03
+hdcdrifttimesl04,200,-100.,300.           $HDC drift time slot 04
+hdcdrifttimesl05,200,-100.,300.           $HDC drift time slot 05
+hdcdrifttimesl06,200,-100.,300.           $HDC drift time slot 06
+hdcdrifttimesl07,200,-100.,300.           $HDC drift time slot 07
+hdcdrifttimesl08,200,-100.,300.           $HDC drift time slot 08
+hdcdrifttimesl09,200,-100.,300.           $HDC drift time slot 09
+hdcdrifttimesl10,200,-100.,300.           $HDC drift time slot 10
+hdcdrifttimesl11,200,-100.,300.           $HDC drift time slot 11
+hdcdrifttimesl12,200,-100.,300.           $HDC drift time slot 12
+hdcdrifttimesl13,200,-100.,300.           $HDC drift time slot 13
+hdcdrifttimesl14,200,-100.,300.           $HDC drift time slot 14
+hdcdrifttimesl15,200,-100.,300.           $HDC drift time slot 15
+hdcdrifttimesl16,200,-100.,300.           $HDC drift time slot 16
+hdcdrifttimesl17,200,-100.,300.           $HDC drift time slot 17
+hdcdrifttimesl18,200,-100.,300.           $HDC drift time slot 18
+hdcdrifttimesl19,200,-100.,300.           $HDC drift time slot 19
+hdcdrifttimesl20,200,-100.,300.           $HDC drift time slot 20
+hdcdrifttimesl21,200,-100.,300.           $HDC drift time slot 21
+hdcdrifttimesl22,200,-100.,300.           $HDC drift time slot 22
+hdcdrifttimesl23,200,-100.,300.           $HDC drift time slot 23
+hdcdrifttimesl24,200,-100.,300.           $HDC drift time slot 24
+hdcdrifttimesl25,200,-100.,300.           $HDC drift time slot 25
+hdcdrifttimesl26,200,-100.,300.           $HDC drift time slot 26
+hdcdrifttimesl27,200,-100.,300.           $HDC drift time slot 27
+hdcdrifttimesl28,200,-100.,300.           $HDC drift time slot 28
+hdcdrifttimesl29,200,-100.,300.           $HDC drift time slot 29
+hdcdrifttimesl30,200,-100.,300.           $HDC drift time slot 30
+hdcdrifttimesl31,200,-100.,300.           $HDC drift time slot 31
+hdcdrifttimesl32,200,-100.,300.           $HDC drift time slot 32
+hdcdrifttimesl33,200,-100.,300.           $HDC drift time slot 33
+hdcdrifttimesl34,200,-100.,300.           $HDC drift time slot 34
+hdcdrifttimesl35,200,-100.,300.           $HDC drift time slot 35
+hdcdrifttimesl36,200,-100.,300.           $HDC drift time slot 36
+hdcdrifttimesl37,200,-100.,300.           $HDC drift time slot 37
+hdcdrifttimesl38,200,-100.,300.           $HDC drift time slot 38
+hdcdrifttimesl39,200,-100.,300.           $HDC drift time slot 39
+hdcdrifttimesl40,200,-100.,300.           $HDC drift time slot 40
+hdcdrifttimesl41,200,-100.,300.           $HDC drift time slot 41
+hdcdrifttimesl42,200,-100.,300.           $HDC drift time slot 42
+hdcdrifttimesl43,200,-100.,300.           $HDC drift time slot 43
+hdcdrifttimesl44,200,-100.,300.           $HDC drift time slot 44
+hdcdrifttimesl45,200,-100.,300.           $HDC drift time slot 45
+hdcdrifttimesl46,200,-100.,300.           $HDC drift time slot 46
+hdcdrifttimesl47,200,-100.,300.           $HDC drift time slot 47
+hdcdrifttimesl48,200,-100.,300.           $HDC drift time slot 48
+hdcdrifttimesl49,200,-100.,300.           $HDC drift time slot 49
+hdcdrifttimesl50,200,-100.,300.           $HDC drift time slot 50
+hdcdrifttimesl51,200,-100.,300.           $HDC drift time slot 51
+hdcdrifttimesl52,200,-100.,300.           $HDC drift time slot 52
+hdcdrifttimesl53,200,-100.,300.           $HDC drift time slot 53
+hdcdrifttimesl54,200,-100.,300.           $HDC drift time slot 54
+hdcdrifttimesl55,200,-100.,300.           $HDC drift time slot 55
+hdcdrifttimesl56,200,-100.,300.           $HDC drift time slot 56
+hdcdrifttimesl57,200,-100.,300.           $HDC drift time slot 57
+hdcdrifttimesl58,200,-100.,300.           $HDC drift time slot 58
+hdcdrifttimesl59,200,-100.,300.           $HDC drift time slot 59
+hdcdrifttimesl60,200,-100.,300.           $HDC drift time slot 60
+hdcdrifttimesl61,200,-100.,300.           $HDC drift time slot 61
+hdcdrifttimesl62,200,-100.,300.           $HDC drift time slot 62
+hdcdrifttimesl63,200,-100.,300.           $HDC drift time slot 63
+hdcdrifttimesl64,200,-100.,300.           $HDC drift time slot 64
+hdcdrifttimesl65,200,-100.,300.           $HDC drift time slot 65
+hdcdrifttimesl66,200,-100.,300.           $HDC drift time slot 66
+hdcdrifttimesl67,200,-100.,300.           $HDC drift time slot 67
+hdcdrifttimesl68,200,-100.,300.           $HDC drift time slot 68
+hdcdrifttimesl69,200,-100.,300.           $HDC drift time slot 69
+hdcdrifttimesl70,200,-100.,300.           $HDC drift time slot 70
+hdcdrifttimesl71,200,-100.,300.           $HDC drift time slot 71
+hdcdrifttimesl72,200,-100.,300.           $HDC drift time slot 72
+hdcdrifttimesl73,200,-100.,300.           $HDC drift time slot 73
+hdcdrifttimesl74,200,-100.,300.           $HDC drift time slot 74
+hdcdrifttimesl75,200,-100.,300.           $HDC drift time slot 75
+hdcdrifttimesl76,200,-100.,300.           $HDC drift time slot 76
+hdcdrifttimesl77,200,-100.,300.           $HDC drift time slot 77
+hdcdrifttimesl78,200,-100.,300.           $HDC drift time slot 78
+hdcdrifttimesl79,200,-100.,300.           $HDC drift time slot 79
+hdcdrifttimesl80,200,-100.,300.           $HDC drift time slot 80
+
+hdclayerhit01,20,0.,20.      $HDC1u layer hit layer 01
+hdclayerhit02,20,0.,20.      $HDC1u layer hit layer 02
+hdclayerhit03,20,0.,20.      $HDC1x layer hit layer 03
+hdclayerhit04,20,0.,20.      $HDC1x layer hit layer 04
+hdclayerhit05,20,0.,20.      $HDC1v layer hit layer 05
+hdclayerhit06,20,0.,20.      $HDC1v layer hit layer 06
+hdclayerhit07,20,0.,20.      $HDC2u layer hit layer 07
+hdclayerhit08,20,0.,20.      $HDC2u layer hit layer 08
+hdclayerhit09,20,0.,20.      $HDC2x layer hit layer 09
+hdclayerhit10,20,0.,20.      $HDC2x layer hit layer 10
+hdclayerhit11,20,0.,20.      $HDC2v layer hit layer 11
+hdclayerhit12,20,0.,20.      $HDC2v layer hit layer 12
+
+hdccluster01,10,0.,10.       $HDC1u cluster size layer 01
+hdccluster02,10,0.,10.       $HDC1u cluster size layer 02
+hdccluster03,10,0.,10.       $HDC1x cluster size layer 03
+hdccluster04,10,0.,10.       $HDC1x cluster size layer 04
+hdccluster05,10,0.,10.       $HDC1v cluster size layer 05
+hdccluster06,10,0.,10.       $HDC1v cluster size layer 06
+hdccluster07,10,0.,10.       $HDC2u cluster size layer 07
+hdccluster08,10,0.,10.       $HDC2u cluster size layer 08
+hdccluster09,10,0.,10.       $HDC2x cluster size layer 09
+hdccluster10,10,0.,10.       $HDC2x cluster size layer 10
+hdccluster11,10,0.,10.       $HDC2v cluster size layer 11
+hdccluster12,10,0.,10.       $HDC2v cluster size layer 12
+
+hdcearlymult,1220,0.,1220.   $HDC early mult
+hdclatemult,1220,0.,1220.    $HDC late mult
+hdcextramult,1220,0.,1220.   $HDC extra mult
+
+sqdistance,100,-1.,19.     $HDC sqdistance test
+
+xtcriterion,120,-60.,60.     $HDC dx for two space points
+ytcriterion,120,-60.,60.     $HDC dy for two space points
+xptcriterion,120,-6.,6.      $HDC dxp for two space points
+yptcriterion,120,-6.,6.      $HDC dyp for two space points
+
+end hist hks_dec_debug

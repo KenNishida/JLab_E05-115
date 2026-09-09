@@ -1,0 +1,25 @@
+/* example by FermLab */
+
+#include "TStopwatch.h"
+#include "TRandom3.h"
+#include "TH1.h"
+
+void hrandom()
+{
+
+  const Int_t nfills = 1000000000;
+  TStopwatch timer;
+
+  TH1F h("h","h",100,0,1);
+  Int_t i;
+  timer.Start();
+  for( i=0; i<nfills; i++ ) h.Fill(0.5);
+  Double_t fillTime = timer.CpuTime();
+  printf( "Time for Fill    = %f ns/event\n",fillTime );
+
+  timer.Start();
+  TRandom r1;
+  for( i=0; i<nfills; i++ )h.Fill(r1.Rndm());
+  printf( "Time for TRandom = %f ns/event\n",
+	  timer.CpuTime()-fillTime );
+}

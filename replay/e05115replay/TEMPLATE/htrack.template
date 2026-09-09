@@ -1,0 +1,27 @@
+*****************************
+* HKS TRACKING EFFICIENCIES *
+*****************************
+htrig                          :{htrig.scaler:%7d}
+hhitslt = passed hits/cham     :{hhitslt.scaler:%7d}
+hhitsplanes =+ planes >= 5/6   :{hhitsplanes.scaler:%7d}
+hhtsplanessps = + sps          :{hhitsplanessps.scaler:%7d}
+hhitsplanesspsstubs =+stub     :{hhitsplanesspsstubs.scaler:%7d}
+hsfoundtrack                   :{hsfoundtrack.scaler:%7d}
+hscleantrack                   :{hscleantrack.scaler:%7d}
+hstublt = passed stub tests    :{hstublt.scaler:%7d}
+h1histlt                       :{h1hitslt.scaler:%7d}
+h2histlt                       :{h2hitslt.scaler:%7d}
+h1planesgt                     :{h1planesgt.scaler:%7d}
+h2planesgt                     :{h2planesgt.scaler:%7d}
+hplanesgt = gt 5 planes/cham   :{hplanesgt.scaler:%7d}
+f1hspacepoints                 :{f1hspacepoints.scaler:%7d}
+f2hspacepoints                 :{f2hspacepoints.scaler:%7d}
+htest1=p hits/planes, f sp     :{htest1.scaler:%7d}
+htest2=p sp, f stubs           :{htest2.scaler:%7d}
+hdid			       :{hdid.scaler:%7d}
+hscinshould		       :{hscinshould.scaler:%7d}
+'CLEAN' SING TRACK EFF         :{hdid.scaler/(hscinshould.scaler+.0001):%8.3f}
+* hks coincidences...
+ctrig                          :{ctrig.scaler:%7d}
+
+********************************************************************

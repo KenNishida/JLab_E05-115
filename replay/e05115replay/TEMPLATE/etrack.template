@@ -1,0 +1,32 @@
+*****************************
+* HES TRACKING EFFICIENCIES *
+*****************************
+etrig                          :{etrig.scaler:%7d}
+ehitslt = passed hits/cham     :{ehitslt.scaler:%7d}
+ehitsplanes =+ planes >= 5/6   :{ehitsplanes.scaler:%7d}
+ehtsplanessps = + sps          :{ehitsplanessps.scaler:%7d}
+ehitsplanesspsstubs =+stub     :{ehitsplanesspsstubs.scaler:%7d}
+esfoundtrack                   :{esfoundtrack.scaler:%7d}
+escleantrack                   :{escleantrack.scaler:%7d}
+estublt = passed stub tests    :{estublt.scaler:%7d}
+e1histlt                       :{e1hitslt.scaler:%7d}
+e2histlt                       :{e2hitslt.scaler:%7d}
+e1planesgt                     :{e1planesgt.scaler:%7d}
+e2planesgt                     :{e2planesgt.scaler:%7d}
+eplanesgt = gt 5 planes/cham   :{eplanesgt.scaler:%7d}
+f1sspacepoints                 :{f1espacepoints.scaler:%7d}
+f2sspacepoints                 :{f2espacepoints.scaler:%7d}
+etest1=p hits/planes, f sp     :{etest1.scaler:%7d}
+etest2=p sp, f stubs           :{etest2.scaler:%7d}
+edid			       :{edid.scaler:%7d}
+escinshould		       :{escinshould.scaler:%7d}
+'CLEAN' SING TRACK EFF         :{edid.scaler/(escinshould.scaler+.0001):%8.3f}
+* enge coincidences...
+ctrig                          :{ctrig.scaler:%7d}
+
+********************************************************************
+gen_event_ID_number            :{gen_event_ID_number:%15d}
+etrkeff_good_trig              :{etrkeff_good_trig(1):%15d}
+etrkeff_bad_trig               :{etrkeff_bad_trig(1):%15d}
+etrk_eff                       :{etrk_eff(1):%7.2f}
+etrk_eff_err                   :{etrk_eff_err(1):%7.2f}

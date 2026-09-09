@@ -1,0 +1,137 @@
+      subroutine g_decode_event_by_banks(event,ABORT, err)
+*-----------------------------------------------------------------------
+*-     Purpose and Methods: Pull out individual Fastbus banks from event
+*-                          for subsequent decoding
+*-
+*-     Find the beginning of each ROC bank and send it off to 
+*-    "g_decode_fb_bank".
+*-
+*-     Inputs:
+*-         event      Pointer to the first word (length) of an event data bank.
+*-
+*-     Outputs:
+*-        ABORT       success or failure
+*-        err         explanation for failure
+*-
+*-     Created   3-Dec-1993   Kevin Beard, Hampton U.
+*-
+*-    Revision 1.5  1995/07/27 19:09:10  cdaq
+*-    (SAW) Use specific bit manipulation routines for f2c compatibility
+*-
+* Revision 1.4  1994/04/15  20:34:42  cdaq
+* ???
+*
+* Revision 1.3  1994/02/17  21:30:37  cdaq
+* Move ABORT, err args to end of g_decode_fb_bank call
+*
+* Revision 1.2  1994/02/02  19:59:16  cdaq
+* Rewrite without using fbgen routines
+*
+* Revision 1.1  1994/02/01  20:38:58  cdaq
+* Initial revision
+*
+*-----------------------------------------------------------------------
+      IMPLICIT NONE
+      SAVE
+*
+      integer*4 event(*)
+*
+      character*30 here
+      parameter (here= 'g_decode_event_by_banks')
+*
+      logical ABORT
+      character*(*) err
+      integer*4 evlength                        ! Total length of the event
+      integer*4 bankpointer                     ! Pointer to next bank
+      integer*4 iand,i
+*
+      include 'gen_data_structures.cmn'
+      include 'gen_event_info.cmn'
+      include 'gen_decode_common.cmn'
+      Include 'gen_run_info.cmn'
+*
+      logical WARN
+*
+*-----------------------------------------------------------------------
+*
+*
+*     Assume that the event is bank containing banks, the first of which is
+*     an event ID bank.
+*
+*     Various hex constants that are used in decode routines should
+*     probably be put in an include file.
+*
+
+      ABORT = iand(event(2),X'FFFF').ne.X'10CC'
+      if(ABORT) then
+         err = here//'Event header not standard physics event'
+         return
+      endif
+
+      evlength = event(1)
+      bankpointer = 3
+
+c      Write(*,*) 'gnev=',gen_event_ID_number
+c      if(evlength .gt. 20) then
+c         Write(*,'(5(z8,x))') (event(i),i=1,5)
+c         Write(*,'(5(z8,x))') (event(i),i=6,10)
+c         Write(*,'(5(z8,x))') (event(i),i=11,15)
+c         Write(*,'(5(z8,x))') (event(i),i=16,20)
+c      EndIf
+c     
+c     --- # of words for chambers <3000 
+c     --- others <1000
+c     --- so event length should not exceed g_decode_maxwords = 6000.
+c     --- g_decode_maxwords - 100, here 96 = 1877 # of channels to be safe
+      if(evlength .gt. G_DECODE_MAXWORDS-96) then
+         Write(*,*) ' (g_decode_event_by_bank) ',
+     &        ' EXCEEDED DECODE MAXWORDS ev=',
+     &        gen_event_ID_number,' length=',evlength
+         Write(*,*) ' ! Probably chamber oscillation or noize. skipped.'
+         goto 101
+      EndIf
+      
+      ABORT = event(bankpointer+1).ne.X'C0000100'
+      if(ABORT) then
+         err = here//'First bank is not an Event ID bank'
+         return
+      endif
+
+c     Write(*,*) '(before) point and event',bankpointer,event(bankpointer)
+
+      bankpointer = bankpointer + event(bankpointer) + 1
+
+c     Write(*,*) '(after) point and event',bankpointer,event(bankpointer)
+
+      WARN = (bankpointer.gt.evlength)           ! No ROC's in event
+      IF(WARN) THEN
+        err= ':event contained no ROC banks'
+        call G_add_path(here,err)
+      ENDIF
+      
+      do while(bankpointer.lt.evlength)
+         if (gen_run_number.lt.50000) then
+            call g_decode_fb_bank(event(bankpointer), ABORT, err)
+         Endif
+         call g_decode_all_bank(event(bankpointer), ABORT, err)
+c     Write(*,*) '(in while before) point,event,evlength',bankpointer,
+c     &        event(bankpointer),evlength
+         bankpointer = bankpointer + event(bankpointer) + 1
+c     Write(*,*) '(in while after) point,event,evlength',bankpointer,
+c     &        event(bankpointer),evlength
+      enddo
+
+      WARN = bankpointer.eq.(evlength + 1)
+      if(WARN) THEN
+         err = ':inconsistent bank and event lengths'
+         call G_add_path(here,err)
+      endif
+
+ 101  continue
+
+*
+      RETURN
+      END
+
+
+

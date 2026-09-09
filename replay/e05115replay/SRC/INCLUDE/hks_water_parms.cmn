@@ -1,0 +1,56 @@
+* Revision 2.1  2000/03/12 18:31:12  jinghua
+* (JLiu) Added Lucite's geometry
+*
+* Revision 2.0  2000/02/17 10:23:45  Jinghua
+* (JLiu) Modified the data structure
+*
+* Revision 1.1  1996/10/02 18:58:07  saw
+* Initial revision
+*
+*%%       include "hks_data_structures.cmn"
+*
+*
+*      CTPTYPE = parm
+*
+  
+      INTEGER*4 hwat_tdc_pos_min
+      INTEGER*4 hwat_tdc_pos_max
+      INTEGER*4 hwat_tdc_neg_min
+      INTEGER*4 hwat_tdc_neg_max
+
+      REAL*4 hwat_pos_gain(HNUM_WAT_LAYERS,HNUM_WAT_COUNTERS)
+      REAL*4 hwat_neg_gain(HNUM_WAT_LAYERS,HNUM_WAT_COUNTERS)
+      REAL*4 hwat_pos_offset(HNUM_WAT_LAYERS,HNUM_WAT_COUNTERS)
+      REAL*4 hwat_neg_offset(HNUM_WAT_LAYERS,HNUM_WAT_COUNTERS)
+      REAL*4 hwat_box_zpos(HNUM_WAT_LAYERS)
+      REAL*4 hwat_box_xcenter(HNUM_WAT_LAYERS,HNUM_WAT_COUNTERS)
+      REAL*4 hwat_box_ycenter(HNUM_WAT_LAYERS,HNUM_WAT_COUNTERS)
+      REAL*4 hwat_width
+      REAL*4 hwat_height
+      REAL*4 hwat_thickness
+      REAL*4 hwat_slope
+      REAL*4 hwat_tdc_to_time
+      Real*4 hwat_npe_min
+		real*4 hwat_f1tdc_gate_width
+
+      common/hks_water_parms/
+     &  hwat_tdc_pos_min,
+     &  hwat_tdc_pos_max,
+     &  hwat_tdc_neg_min,
+     &  hwat_tdc_neg_max, 
+     &  hwat_pos_offset,
+     &  hwat_neg_offset,
+     &  hwat_pos_gain,
+     &  hwat_neg_gain,
+     &  hwat_box_zpos,
+     &  hwat_box_xcenter,
+     &  hwat_box_ycenter,
+     &  hwat_width,
+     &  hwat_height,
+     &  hwat_thickness,
+     &  hwat_slope,
+     &  hwat_tdc_to_time,
+     &  hwat_npe_min,
+     &  hwat_f1tdc_gate_width
+
+

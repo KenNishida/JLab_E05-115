@@ -1,0 +1,33 @@
+# ----- Large experimental/generated data -----
+rawdata/
+rootfiles/
+rootfiles_gogami/
+tape/
+
+*.root
+
+# ----- Compiler output -----
+*.o
+*.obj
+*.a
+*.so
+*.so.*
+*.d
+
+# ----- Build directories -----
+build/
+CMakeFiles/
+CMakeCache.txt
+
+# ----- Logs / temporary files -----
+*.log
+*.tmp
+*~
+*.swp
+
+# ----- Core dumps -----
+core
+core.*
+
+# Large field maps
+Geant4_HKS/run/param/*.map

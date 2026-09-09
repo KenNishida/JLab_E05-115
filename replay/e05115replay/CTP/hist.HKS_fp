@@ -1,0 +1,45 @@
+begin hist hks_fp group=hks group=both
+
+;rf25ps,gmisc_dec_data(116),1,0,1 $### SOS FOCAL PLANE VARS
+
+hx_fp,140,-70.,70.        $hx-fp t=user
+hy_fp,80,-20.,20.         $hy-fp t=user
+hxp_fp,100,-.4,.4         $hxp-fp t=user
+hyp_fp,100,-.1,.1         $hyp-fp t=user
+
+;hlogchi2_fp,60,-1.,5.     $slogchi2-fp t=user
+;hnfree_fp,20,0.,20.       $snfree-fp t=user
+;hchi2perdeg_fp,300,0.,30. $schi2perdeg-fp t=user
+
+; hdc1u1_sing_res,200,-1.,1.    $sdc1u1 res                 
+; hdc1u2_sing_res,200,-1.,1.    $sdc1u2 res                          
+; hdc1x1_sing_res,200,-1.,1.    $sdc1x1 res                          
+; hdc1x2_sing_res,200,-1.,1.    $sdc1x2 res                          
+; hdc1v1_sing_res,200,-1.,1.    $sdc1v1 res                          
+; hdc1v2_sing_res,200,-1.,1.    $sdc1v2 res                          
+; hdc2u1_sing_res,200,-1.,1.    $sdc2u1 res                          
+; hdc2u2_sing_res,200,-1.,1.    $sdc2u2 res                          
+; hdc2x1_sing_res,200,-1.,1.    $sdc2x1 res                          
+; hdc2x2_sing_res,200,-1.,1.    $sdc2x2 res                          
+; hdc2v1_sing_res,200,-1.,1.    $sdc2v1 res                          
+; hdc2v2_sing_res,200,-1.,1.    $sdc2v2 res               
+
+;hsp-,hsp,100,0.6*spcentral,1.4*spcentral,scleantrack   $ssp fp t=scleantrack
+;hsx_fp,hsx_fp,300,-60,60,scleantrack                   $ssx fp t=scleantrack
+;hsy_fp,hsy_fp,200,-40,40,scleantrack                   $ssy fp t=scleantrack
+;hsxp_fp,ssxp_fp,400,-.4,.4,scleantrack                 $ssxp fp t=scleantrack
+;hsyp_fp,ssyp_fp,100,-.1,.1,scleantrack                 $ssyp fp t=scleantrack
+;hsnfree fp,snfree_fp,20,0.5,20.5,scleantrack           $ssnfree fp t=scleantrack
+;hschi2perdeg,sschi2perdeg,300,0,30,scleantrack         $sschi2perdof t=scleantrack
+
+; focal plane x vs y with 1 cm resolution and various PID requirements
+;ssxvsssyzoom,ssy_fp,ssx_fp,30,-15,15,60,-30,30,sgoodtar  $SOS x vs y t= sgoodtar
+;ssxvsssy,ssy_fp,ssx_fp,30,-15,15,60,-30,30,scleantrack $SOS x vs y t=scleantrack
+;ssxvsssye,ssy_fp,ssx_fp,30,-15,15,60,-30,30,selec_cercut  $SOS x vs y t=selec_cercut 
+;ssxvsssypi,ssy_fp,ssx_fp,30,-15,15,60,-30,30,spion_cercut  $SOS x vs y t=spion_cercut
+;ssxvsssytare,ssy_fp,ssx_fp,50,-15,15,60,-30,30,sgoodtar_seleccercut $SOS x vs y t=sgoodtar_seleccercut
+
+; close up of transverse focus to look for waist motion, elestic peaks near x=0, and mt target runs.
+;ssxvsssytar,ssy_fp,ssx_fp,30,-7.5,7.5,60,-15,15,sgoodtar    $SOS x vs y (zoom) t=sgoodtar
+
+end   hist hks_fp

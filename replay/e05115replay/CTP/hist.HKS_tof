@@ -1,0 +1,21 @@
+begin hist hks_tof group=hks group=both
+htrktof,100,0.,10.           $HKS TOF
+htrkleng,120,90.,150.        $HKS path length between planes
+htrkp,100,-2.,2.             $HKS hptar at htof
+htrkbetap,110,0.0,1.1        $HKS betap
+htrkbetaall,150,0.0,1.5      $HKS beta
+htrkbeta1,150,0.0,1.5        $HKS beta between 1x-2x
+htrkbeta2,150,0.0,1.5        $HKS beta between 1y-2x
+htrkdepo,100,0.,4000.        $HKS scin average deposit
+htrkid,3,0.5,3.5             $HKS tof calculation tag
+htrkdeltabeta,75,0.0,1.5,60.,-30.,30.  $HKS delta vs beta
+hscintrktime1,200,10.,60.    $HKS scin trk time 1x
+hscintrktime2,200,10.,60.    $HKS scin trk time 1y
+hscintrktime3,200,10.,60.    $HKS scin trk time 2x
+hscintrkfptime1,200,10.,60.  $HKS scin trk fptime 1x
+hscintrkfptime2,200,10.,60.  $HKS scin trk fptime 1y
+hscintrkfptime3,200,10.,60.  $HKS scin trk fptime 2x
+htrktimeatfpall,200,10.,60.  $HKS trk time at fp (all)
+htrktimeatfp1,200,10.,60.    $HKS trk time at fp (flag=1)
+htrktimeatfp2,200,10.,60.    $HKS trk time at fp (flag=2)
+end   hist hks_tof

@@ -1,0 +1,116 @@
+*_______________________________________________________________________
+*      hks_track_histid.cmn
+*
+*      This common block contains the HBOOK histogram id numbers
+*      for all hks histograms in which direct hfill calls are made.
+*
+*      It also contains the paramter flags to turn on and off histograming
+*      of each of the hard coded blocks.
+*
+*      Created 9 April 1994	D. F. Geesaman
+*
+* $Log: hks_track_histid.cmn,v $
+* Revision 1.1.1.1  2009/06/23 13:55:43  kawama
+*
+* e05115 src repository for software development
+*
+* Revision 1.1.1.1  2005/05/14 21:44:37  miyoshi
+*
+*
+* Revision 1.2  2004/12/24 21:18:50  miyoshi
+* change name plane to layer
+*
+* Revision 1.1.1.1  2004/08/30 21:21:37  miyoshi
+* new dir
+*
+* Revision 1.7  1996/01/17 15:06:31  cdaq
+* (JRA) Add sidcuttdc and a temporary junk common block
+*
+* Revision 1.6  1995/05/22 19:12:33  cdaq
+* (SAW) Split gen_data_data_structures into gen, hms, hks, and coin parts
+*
+* Revision 1.5  1995/05/12  12:24:01  cdaq
+* (JRA) Modify/add user histograms
+*
+* Revision 1.4  1995/04/06  20:22:13  cdaq
+* (SAW) Add residuals histogram ids
+*
+* Revision 1.3  1994/08/05  20:38:26  cdaq
+* (SAW) Add makereg directive with required include files
+*       Add "CTPTYPE=event" directive for auto generation of CTP reg calls
+*
+* Revision 1.2  1994/05/13  04:00:50  cdaq
+* (DFG) Add s_fill_dc_target_hist id's
+*
+* Revision 1.1  1994/04/12  21:13:42  cdaq
+* Initial revision
+*
+*     The following include statments must precede the inclusion of this
+*     file in each routine that uses it.  The *%% syntax is also a
+*     directive to makereg to tell it to include the code in the program
+*     that it generates.
+*
+*%%   include 'hks_data_structures.cmn'
+*
+*     CTPTYPE=parm
+*
+      integer*4 hiddcwiremap(hmax_num_dc_layers)
+      integer*4 hiddcdrifttime(hmax_num_dc_layers)
+      integer*4 hiddcdriftdis(hmax_num_dc_layers)
+      integer*4 hiddcwirecent(hmax_num_dc_layers)
+      integer*4 hidhx_fp,hidhy_fp,hidhxp_fp,hidhyp_fp,hidhlogchi2_fp,
+     &     hidhnfree_fp,hidhchi2perdeg_fp
+      integer*4 hidhx_tar, hidhy_tar, hidhz_tar, hidhxp_tar, hidhyp_tar,
+     &     hidhdelta_tar, hidhp_tar
+      integer*4 hidres_fp(hmax_num_dc_layers)
+      integer*4 hidsingres_fp(hmax_num_dc_layers)
+      integer*4 hidrawtdc
+      integer*4 hidcuttdc
+
+      common/hks_tracking_histid/
+     &     hiddcwiremap,
+     &     hiddcdrifttime,
+     &     hiddcdriftdis,
+     &     hiddcwirecent,
+     &     hidhx_fp,
+     &     hidhy_fp,
+     &     hidhxp_fp,
+     &     hidhyp_fp,
+     &     hidhlogchi2_fp,
+     &     hidhnfree_fp,
+     &     hidhchi2perdeg_fp,
+     &     hidhx_tar,
+     &     hidhy_tar,
+     &     hidhz_tar,
+     &     hidhxp_tar,
+     &     hidhyp_tar,
+     &     hidhdelta_tar,
+     &     hidhp_tar,
+     &     hidres_fp,
+     &     hidsingres_fp,
+     &     hidrawtdc,
+     &     hidcuttdc
+
+*
+*     CTPTYPE=parm
+*
+      integer*4 hturnon_decoded_dc_hist
+      integer*4 hturnon_focal_plane_hist
+      integer*4 hturnon_target_hist
+      common/hks_hist_flags/
+     &     hturnon_decoded_dc_hist,
+     &     hturnon_focal_plane_hist,
+     &     hturnon_target_hist
+
+
+*  temporary junk common block.
+*
+*     CTPTYPE=event
+*
+      real*4 hx_sp1(hntracks_max),hy_sp1(hntracks_max),hxp_sp1(hntracks_max)
+      real*4 hx_sp2(hntracks_max),hy_sp2(hntracks_max),hxp_sp2(hntracks_max)
+      real*4 hhx_sp1,hhy_sp1,hhxp_sp1
+      real*4 hhx_sp2,hhy_sp2,hhxp_sp2
+*
+      common/htemp_junk_cb/hx_sp1,hy_sp1,hxp_sp1,hx_sp2,hy_sp2,hxp_sp2,
+     &     hhx_sp1,hhy_sp1,hhxp_sp1,hhx_sp2,hhy_sp2,hhxp_sp2

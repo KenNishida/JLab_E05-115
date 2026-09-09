@@ -1,0 +1,49 @@
+*
+*     put f1tdc setting stuff here.
+*
+*     Miyoshi add parameters,
+*
+*     This is for test.
+*     normal=0/high=1 resolution mode
+*
+*     CTPTYPE=parm
+*
+      INTEGER*4 ESCIN_F1TDC_MODE
+      INTEGER*4 F1TDC_LR_GATE_WIDTH
+      INTEGER*4 F1TDC_HR_GATE_WIDTH
+      REAL*4 F1TDC_LR_TDC_TO_TIME
+      REAL*4 F1TDC_HR_TDC_TO_TIME
+
+      Common/GEN_F1TDC/
+     &     ESCIN_F1TDC_MODE,
+     &     F1TDC_LR_GATE_WIDTH,
+     &     F1TDC_HR_GATE_WIDTH,
+     &     F1TDC_LR_TDC_TO_TIME,
+     &     F1TDC_HR_TDC_TO_TIME
+
+*
+*     CTPTYPE=event
+*     
+*     only for F1TDC readout, 
+*     the number of trigger time<5 is enough. 
+*     
+      INTEGER*4 G_F1_MULTIHIT
+      Parameter(G_F1_MULTIHIT=8)
+      INTEGER*4 G_F1_MAX_TRIG
+      Parameter(G_F1_MAX_TRIG=5)
+      INTEGER*4 g_f1_trigger_time(15)
+      INTEGER*4 g_f1_refer_time(15,G_F1_MAX_TRIG,G_F1_MULTIHIT)
+      INTEGER*4 gidf1trigtimehist(15,G_F1_MAX_TRIG,G_F1_MULTIHIT)
+      
+      Common/GEN_F1TDC_VAR/
+     &     g_f1_trigger_time,
+     &     g_f1_refer_time,
+     &     gidf1trigtimehist
+      
+*     
+*                                          
+*******************end: gen_f1tdc.cmn *************************
+*     Local Variables:
+*     mode: fortran
+*     fortran-continuation-string: "&"
+*     End:

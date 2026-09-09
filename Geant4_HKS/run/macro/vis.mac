@@ -1,0 +1,6 @@
+/vis/scene/notifyHandlers
+/vis/viewer/update
+
+/run/verbose 1
+/run/beamOn 50
+

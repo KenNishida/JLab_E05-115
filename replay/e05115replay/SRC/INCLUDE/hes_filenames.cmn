@@ -1,0 +1,44 @@
+*     hes_filename.cmn
+*
+*     The following include statments must precede the inclusion of this
+*     file in each routine that uses it.  The *%% syntax is also a
+*     directive to makereg to tell it to include the code in the program
+*     that it generates.
+*
+*     Revision 1.3 2004/03/01 17: Miyoshi
+*	
+*     $Log: hes_filenames.cmn,v $
+*     Revision 1.1.1.1  2009/06/23 13:55:43  kawama
+*
+*     e05115 src repository for software development
+*
+*     Revision 1.1.1.1  2005/05/14 21:44:37  miyoshi
+*
+*
+*     Revision 1.1.1.1  2004/08/30 21:21:37  miyoshi
+*     new dir
+*
+*     Revision 1.2  1999/11/02 15:55:23  ysato
+*     Upgrade for HNSS
+*
+*
+*
+*
+*     CTPTYPE=parm             ! Probably don't really want the following registered
+*
+
+      character*80 e_recon_coeff_filename
+      Character*80 e_report_template_filename
+      Character*80 e_report_output_filename
+      Character*80 e_report_blockname
+      Character*80 e_threshold_output_filename
+      Character*80 e_pedestal_output_filename
+
+      COMMON/hes_filenames/
+     &    e_recon_coeff_filename,
+     &    e_report_template_filename,
+     &    e_report_output_filename,
+     &    e_report_blockname,
+     &    e_threshold_output_filename,
+     &    e_pedestal_output_filename
+

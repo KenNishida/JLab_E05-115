@@ -1,0 +1,94 @@
+*    This include file contains all the epics extracted variables, 
+*    which should be parsed to the engine for further use.
+* $Log: gen_epics.cmn
+*
+* Revision 2.0 Mar 1, 2000 Jinghua
+* (JLiu) Added the BCMs and removed all unnecessary variables.
+*
+* Revision 1.5 February 23, 2000, Paul Gueye
+*	1. Update file to match new changes in g_extract_beam_info.f
+*	   (original code: g_extract_bpm.f)
+*	2. Include new variables:
+*        - Magnets: NMR reading, temperature sensors
+*        - OTR: beam position, widths, calibration
+*        - Fast feedback information
+*
+* Revision 1.1  Jan. 24, 1997, Joerg Reinhold
+* Initial revision
+*
+*
+*     CTPTYPE=event
+*
+
+      real*4 gepics_delta_ebeam
+      real*4 gepics_xc07,gepics_yc07
+      real*4 gepics_xc08,gepics_yc08
+      real*4 gepics_xc11,gepics_yc11
+      real*4 gepics_xc12,gepics_yc12
+      real*4 gepics_xc14,gepics_yc14
+      real*4 gepics_xc16,gepics_yc16
+      real*4 gepics_xc17,gepics_yc17
+      real*4 gepics_xc18,gepics_yc18
+      real*4 gepics_xc20,gepics_yc20
+      real*4 gepics_xh00a,gepics_yh00a
+      real*4 gepics_xh00b,gepics_yh00b
+      real*4 gepics_xh00c,gepics_yh00c
+      real*4 gepics_target_x,gepics_target_y
+      real*4 gepics_target_xp,gepics_target_yp
+      real*4 gepics_target_xchi2,gepics_target_ychi2
+      real*4 gbpm_target_xchi2,gbpm_target_ychi2
+      real*4 gepics_dpp,gepics_ebeam,gepics_pbeam
+      real*4 gepics_dbdl,gepics_diset,gepics_diread
+      real*4 gepics_xbeam(3),gepics_ybeam(3),gepics_zbeam(3)
+      real*4 gepics_otr_x,gepics_otr_y
+      real*4 gepics_otr_widx,gepics_otr_widy
+      real*4 gepics_otr_maxpix,gepics_otr_sat
+      real*4 gepics_nmr_field,gepics_nmr_lock
+      real*4 gepics_mag_temp1,gepics_mag_temp2
+      real*4 gepics_mag_temp3,gepics_mag_temp4,gepics_mag_temp5
+      real*4 gepics_ffb_c_stat,gepics_ffb_c_use
+      real*4 gepics_bcm1, gepics_bcm2, gepics_bcm3
+c     --- sli info.
+      REAL*4 gepics_sli_dywids
+      REAL*4 gepics_sli_dywidm
+      REAL*4 gepics_sli_dywidme
+      REAL*4 gepics_sli_spreads
+      REAL*4 gepics_sli_espreadm
+      REAL*4 gepics_sli_espreadme
+
+
+      COMMON/g_epics_events/
+     &     gepics_delta_ebeam,
+     &	   gepics_xc07,gepics_yc07,
+     &	   gepics_xc08,gepics_yc08,
+     &	   gepics_xc11,gepics_yc11,
+     &	   gepics_xc12,gepics_yc12,
+     &	   gepics_xc14,gepics_yc14,
+     &	   gepics_xc16,gepics_yc16,
+     &	   gepics_xc17,gepics_yc17,
+     &	   gepics_xc18,gepics_yc18,
+     &	   gepics_xc20,gepics_yc20,
+     &	   gepics_xh00a,gepics_yh00a,
+     &     gepics_xh00b,gepics_yh00b,
+     &     gepics_xh00c,gepics_yh00c,
+     &     gepics_xbeam,gepics_ybeam,gepics_zbeam,
+     &     gepics_target_x,gepics_target_y,
+     &     gepics_target_xp,gepics_target_yp,
+     &     gepics_target_xchi2,gepics_target_ychi2,
+     &     gbpm_target_xchi2,gbpm_target_ychi2,
+     &	   gepics_dpp,gepics_ebeam,gepics_pbeam,
+     &	   gepics_dbdl,gepics_diset,gepics_diread,
+     &     gepics_otr_x,gepics_otr_y,
+     &     gepics_otr_widx,gepics_otr_widy,
+     &     gepics_otr_maxpix,gepics_otr_sat,
+     &     gepics_nmr_field,gepics_nmr_lock,
+     &     gepics_mag_temp1,gepics_mag_temp2,
+     &     gepics_mag_temp3,gepics_mag_temp4,gepics_mag_temp5,
+     &     gepics_ffb_c_stat,gepics_ffb_c_use,
+     &     gepics_bcm1, gepics_bcm2, gepics_bcm3,     
+     &     gepics_sli_dywids,
+     &     gepics_sli_dywidm,
+     &     gepics_sli_dywidme,
+     &     gepics_sli_spreads,
+     &     gepics_sli_espreadm,
+     &     gepics_sli_espreadme

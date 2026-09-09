@@ -1,0 +1,80 @@
+* Revision 2.2  2009/09/09 11:31:30  yez
+* Add Lucite TDC time offset 
+* Revision 2.2  2009/08/17 21:18:00  yez
+* Add Lucite sum channels, name as *_tot_* 
+* Revision 2.2  2009/07/09 16:18:55  yez
+* Convert into Lucite Cerenkov Detectors' parm 
+*
+* Revision 2.1  2000/03/12 18:31:12  jinghua
+* (JLiu) Added Lucite's geometry
+*
+* Revision 2.0  2000/02/17 10:23:45  Jinghua
+* (JLiu) Modified the data structure
+*
+* Revision 1.1  1996/10/02 18:58:07  saw
+* Initial revision
+*
+*%%       include "hks_data_structures.cmn"
+*
+*
+*      CTPTYPE = parm
+*
+  
+      INTEGER*4 hluc_tdc_pos_min
+      INTEGER*4 hluc_tdc_pos_max
+      INTEGER*4 hluc_tdc_neg_min
+      INTEGER*4 hluc_tdc_neg_max
+      INTEGER*4 hluc_tdc_tot_min
+      INTEGER*4 hluc_tdc_tot_max
+
+
+      REAL*4 hluc_pos_gain(HNUM_LUC_LAYERS,HNUM_LUC_COUNTERS)
+      REAL*4 hluc_neg_gain(HNUM_LUC_LAYERS,HNUM_LUC_COUNTERS)
+      REAL*4 hluc_tot_gain(HNUM_LUC_LAYERS,HNUM_LUC_COUNTERS)
+      REAL*4 hluc_pos_offset(HNUM_LUC_LAYERS,HNUM_LUC_COUNTERS)
+      REAL*4 hluc_neg_offset(HNUM_LUC_LAYERS,HNUM_LUC_COUNTERS)
+      REAL*4 hluc_tot_offset(HNUM_LUC_LAYERS,HNUM_LUC_COUNTERS)
+	
+      REAL*4 hluc_pos_time_offset(HNUM_LUC_LAYERS,HNUM_LUC_COUNTERS)
+      REAL*4 hluc_neg_time_offset(HNUM_LUC_LAYERS,HNUM_LUC_COUNTERS)
+      REAL*4 hluc_tot_time_offset(HNUM_LUC_LAYERS,HNUM_LUC_COUNTERS)
+
+      REAL*4 hluc_box_zpos(HNUM_LUC_LAYERS)
+      REAL*4 hluc_box_xcenter(HNUM_LUC_LAYERS,HNUM_LUC_COUNTERS)
+      REAL*4 hluc_box_ycenter(HNUM_LUC_LAYERS,HNUM_LUC_COUNTERS)
+      REAL*4 hluc_width
+      REAL*4 hluc_height
+      REAL*4 hluc_thickness
+      REAL*4 hluc_slope
+      REAL*4 hluc_tdc_to_time
+      Real*4 hluc_npe_min
+      Real*4 hluc_f1tdc_gate_width
+
+      common/hks_lucite_parms/
+     &  hluc_tdc_pos_min,
+     &  hluc_tdc_pos_max,
+     &  hluc_tdc_neg_min,
+     &  hluc_tdc_neg_max, 
+     &  hluc_tdc_tot_min,
+     &  hluc_tdc_tot_max, 
+     &  hluc_pos_offset,
+     &  hluc_neg_offset,
+     &  hluc_tot_offset,
+     &  hluc_pos_time_offset,
+     &  hluc_neg_time_offset,
+     &  hluc_tot_time_offset,
+     &  hluc_pos_gain,
+     &  hluc_neg_gain,
+     &  hluc_tot_gain,
+     &  hluc_box_zpos,
+     &  hluc_box_xcenter,
+     &  hluc_box_ycenter,
+     &  hluc_width,
+     &  hluc_height,
+     &  hluc_thickness,
+     &  hluc_slope,
+     &  hluc_tdc_to_time,
+     &  hluc_npe_min,
+     &  hluc_f1tdc_gate_width
+
+

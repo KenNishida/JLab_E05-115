@@ -1,0 +1,27 @@
+#!/bin/sh
+
+### This script is used to submit jasmine request to jcache rawdata from silo to cache
+### Zhihong Ye Sep. 20 2009
+
+RAWDIR=/mss/hallc/hks09/raw/
+#
+# Ask for file name
+#
+echo 'Input the file name. It gives the list of Run# that needed to be cached!'
+echo
+echo -n 'File name: '
+read fname
+
+while read krun
+do
+
+jcache  $RAWDIR/hks09-coin_$krun.log.0
+jcache  $RAWDIR/hks09-coin_$krun.log.1
+jcache  $RAWDIR/hks09-coin_$krun.log.2
+jcache  $RAWDIR/hks09-coin_$krun.log.3
+echo 'Finish request job '$krun
+sleep 2
+
+done < $fname
+
+echo 'All Requests have been submited!'

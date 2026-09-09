@@ -1,0 +1,45 @@
+begin hist hks_decoded_dc group=sos group=both
+
+hdcrawtdc,400,0000,5000   $hdc raw tdcs t=user
+hdccuttdc,400,0000,5000   $hdc cut tdcs t=user
+
+; wiremaps
+hdc1u1_wiremap,hdc_nrwire(1),0.5,hdc_nrwire(1)+0.5   $hdc1u1 wiremap t=user (goodhits)
+hdc1u2_wiremap,hdc_nrwire(2),0.5,hdc_nrwire(2)+0.5   $hdc1u2 wiremap t=user (goodhits)
+hdc1x1_wiremap,hdc_nrwire(3),0.5,hdc_nrwire(3)+0.5   $hdc1x1 wiremap t=user (goodhits)
+hdc1x2_wiremap,hdc_nrwire(4),0.5,hdc_nrwire(4)+0.5   $hdc1x2 wiremap t=user (goodhits)
+hdc1v1_wiremap,hdc_nrwire(5),0.5,hdc_nrwire(5)+0.5   $hdc1v1 wiremap t=user (goodhits)
+hdc1v2_wiremap,hdc_nrwire(6),0.5,hdc_nrwire(6)+0.5   $hdc1v2 wiremap t=user (goodhits)
+hdc2u1_wiremap,hdc_nrwire(7),0.5,hdc_nrwire(7)+0.5   $hdc2u1 wiremap t=user (goodhits)
+hdc2u2_wiremap,hdc_nrwire(8),0.5,hdc_nrwire(8)+0.5   $hdc2u2 wiremap t=user (goodhits)
+hdc2x1_wiremap,hdc_nrwire(9),0.5,hdc_nrwire(9)+0.5   $hdc2x1 wiremap t=user (goodhits)
+hdc2x2_wiremap,hdc_nrwire(10),0.5,hdc_nrwire(10)+0.5 $hdc2x2 wiremap t=user (goodhits)
+hdc2v1_wiremap,hdc_nrwire(11),0.5,hdc_nrwire(11)+0.5 $hdc2v1 wiremap t=user (goodhits)
+hdc2v2_wiremap,hdc_nrwire(12),0.5,hdc_nrwire(12)+0.5 $hdc2v2 wiremap t=user (goodhits)
+
+hdc1u1_rawmap,hdc_nrwire(1),0.5,hdc_nrwire(1)+0.5   $hdc1u1 rawmap t=user
+hdc1u2_rawmap,hdc_nrwire(2),0.5,hdc_nrwire(2)+0.5   $hdc1u2 rawmap t=user
+hdc1x1_rawmap,hdc_nrwire(3),0.5,hdc_nrwire(3)+0.5   $hdc1x1 rawmap t=user
+hdc1x2_rawmap,hdc_nrwire(4),0.5,hdc_nrwire(4)+0.5   $hdc1x2 rawmap t=user
+hdc1v1_rawmap,hdc_nrwire(5),0.5,hdc_nrwire(5)+0.5   $hdc1v1 rawmap t=user
+hdc1v2_rawmap,hdc_nrwire(6),0.5,hdc_nrwire(6)+0.5   $hdc1v2 rawmap t=user
+hdc2u1_rawmap,hdc_nrwire(7),0.5,hdc_nrwire(7)+0.5   $hdc2u1 rawmap t=user
+hdc2u2_rawmap,hdc_nrwire(8),0.5,hdc_nrwire(8)+0.5   $hdc2u2 rawmap t=user
+hdc2x1_rawmap,hdc_nrwire(9),0.5,hdc_nrwire(9)+0.5   $hdc2x1 rawmap t=user
+hdc2x2_rawmap,hdc_nrwire(10),0.5,hdc_nrwire(10)+0.5 $hdc2x2 rawmap t=user
+hdc2v1_rawmap,hdc_nrwire(11),0.5,hdc_nrwire(11)+0.5 $hdc2v1 rawmap t=user
+hdc2v2_rawmap,hdc_nrwire(12),0.5,hdc_nrwire(12)+0.5 $hdc2v2 rawmap t=user
+
+hdc1u1_goodmap,hdc_nrwire(1),0.5,hdc_nrwire(1)+0.5   $hdc1u1 goodmap t=user
+hdc1u2_goodmap,hdc_nrwire(2),0.5,hdc_nrwire(2)+0.5   $hdc1u2 goodmap t=user
+hdc1x1_goodmap,hdc_nrwire(3),0.5,hdc_nrwire(3)+0.5   $hdc1x1 goodmap t=user
+hdc1x2_goodmap,hdc_nrwire(4),0.5,hdc_nrwire(4)+0.5   $hdc1x2 goodmap t=user
+hdc1v1_goodmap,hdc_nrwire(5),0.5,hdc_nrwire(5)+0.5   $hdc1v1 goodmap t=user
+hdc1v2_goodmap,hdc_nrwire(6),0.5,hdc_nrwire(6)+0.5   $hdc1v2 goodmap t=user
+hdc2u1_goodmap,hdc_nrwire(7),0.5,hdc_nrwire(7)+0.5   $hdc2u1 goodmap t=user
+hdc2u2_goodmap,hdc_nrwire(8),0.5,hdc_nrwire(8)+0.5   $hdc2u2 goodmap t=user
+hdc2x1_goodmap,hdc_nrwire(9),0.5,hdc_nrwire(9)+0.5   $hdc2x1 goodmap t=user
+hdc2x2_goodmap,hdc_nrwire(10),0.5,hdc_nrwire(10)+0.5 $hdc2x2 goodmap t=user
+hdc2v1_goodmap,hdc_nrwire(11),0.5,hdc_nrwire(11)+0.5 $hdc2v1 goodmap t=user
+hdc2v2_goodmap,hdc_nrwire(12),0.5,hdc_nrwire(12)+0.5 $hdc2v2 goodmap t=user
+end   hist hks_decoded_dc

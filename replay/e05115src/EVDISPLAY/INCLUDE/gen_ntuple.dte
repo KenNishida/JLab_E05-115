@@ -1,0 +1,28 @@
+**************************begin: k_ntuple.dte ***********************
+*- 
+*- leave clean field for all Ntuple
+* $Log: gen_ntuple.dte,v $
+* Revision 1.1.1.1  2009/06/23 13:55:43  kawama
+*
+* e05115 src repository for software development
+*
+* Revision 1.1.1.1  2005/05/14 21:44:37  miyoshi
+*
+*
+* Revision 1.1  2005/02/22 23:23:47  miyoshi
+* initial version
+*
+*
+      data g_all_Ntuple_exists/.FALSE./
+      data g_all_Ntuple_ID/0/
+      data g_all_Ntuple_file/' '/
+      data g_all_Ntuple_name/' '/
+      data g_all_Ntuple_title/' '/
+      data g_all_Ntuple_directory/' '/
+      data g_all_Ntuple_IOchannel/0/
+      data g_all_Ntuple_size/0/
+      data g_all_Ntuple_tag/gMAX_Ntuple_size*' '/
+      data g_all_Ntuple_contents/gMAX_Ntuple_size*0/
+
+*
+****************************end: e_ntuple.dte ***********************

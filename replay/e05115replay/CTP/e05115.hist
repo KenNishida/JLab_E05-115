@@ -1,0 +1,63 @@
+; Main Histogram File
+; updated 03/09/2004 Miyoshi
+
+; First calculate a few things that aren't calculated 
+; anywhere else in the code
+
+; #include "CTP/hist.tests"
+
+; Main block: beamline histograms
+
+#include "CTP/hist.beamline"
+#include "CTP/hist.scalers"
+
+; HES histogram block
+
+#include "CTP/hist.HES_raw"
+#include "CTP/hist.HES_dec"
+#include "CTP/hist.HES_tracking"
+#include "CTP/hist.HES_tar"
+#include "CTP/hist.HES_linkhist"
+#include "CTP/hist.HES_physics"
+
+; for debug
+#include "CTP/hist.HES_dcrawtdc"
+#include "CTP/hist.HES_decdebug"
+#include "CTP/hist.HES_trackingdebug"
+#include "CTP/hist.HES_hodoraw"
+#include "CTP/hist.HES_hododec"
+#include "CTP/hist.HES_hododebug"
+#include "CTP/hist.HES_linkdebug
+
+; HKS histogram block
+
+#include "CTP/hist.HKS_raw"
+#include "CTP/hist.HKS_dec"
+#include "CTP/hist.HKS_dc_drifttime_dist"
+#include "CTP/hist.HKS_tracking"
+#include "CTP/hist.HKS_trackingdebug"
+#include "CTP/hist.HKS_aerogel"
+#include "CTP/hist.HKS_water"
+#include "CTP/hist.HKS_lucite"
+;#include "CTP/hist.HKS_fp"
+#include "CTP/hist.HKS_tar"
+#include "CTP/hist.HKS_tof"
+#include "CTP/hist.HKS_link"
+#include "CTP/hist.HKS_physics"
+
+; for debug
+#include "CTP/hist.HKS_dcrawtdc"
+;#include "CTP/hist.HKS_dc_wiremaps
+;#include "CTP/hist.HKS_dc_track_statistics
+#include "CTP/hist.HKS_decdebug"
+#include "CTP/hist.HKS_hodoraw"
+#include "CTP/hist.HKS_hododec"
+#include "CTP/hist.HKS_aerraw"
+#include "CTP/hist.HKS_aerdec"
+#include "CTP/hist.HKS_watraw"
+#include "CTP/hist.HKS_watdec"
+#include "CTP/hist.HKS_lucraw"
+#include "CTP/hist.HKS_lucdec"
+
+; Physics histograms
+#include "CTP/hist.coin_physics"

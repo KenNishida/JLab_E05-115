@@ -1,0 +1,16 @@
+#real raddeg
+  raddeg = 3.14159265/180.
+
+; Offsets in the spectrometer momentum and reconstructed quantaties.
+;  hmomentum_factor = 1.000 ; Rolf's magic number from comparision of 
+                           ; x y crossover point for 1,2 3 and 4 pass beam
+;  kdelta_offset = 0.0000   ; (%)  small
+;  ktheta_offset = 0.0000   ; (rad)small but noticeable
+;  kphi_offset   = 0.00     ; (rad)
+
+  hmomentum_factor = 1.0   ;
+  hdelta_offset = 0.0      ; (%) small
+  htheta_offset = 0.0      ; (rad)
+  hphi_offset   = 0.0      ; (rad)
+                           ; *****THIS MAY ALREADY BE TAKEN INTO ACCOUNT
+                           ;   THRU DETECTOR OFFSETS AND CHAMBER ROTATIONS.***

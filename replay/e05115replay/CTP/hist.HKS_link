@@ -1,0 +1,22 @@
+begin hist hks_link group=hks group=both
+htrknaer1,7,0.,7.          $HTRK ac1 hits
+htrknaer2,7,0.,7.          $HTRK ac2 hits
+htrknaer3,7,0.,7.          $HTRK ac3 hits
+htrkaernum1,7,0.5,7.5      $HTRK ac1 hitpat
+htrkaernum2,7,0.5,7.5      $HTRK ac2 hitpat
+htrkaernum3,7,0.5,7.5      $HTRK ac3 hitpat
+htrkaernpesum1,120,0.,30.  $HTRK ac1 npe sum
+htrkaernpesum2,120,0.,30.  $HTRK ac2 npe sum
+htrkaernpesum3,120,0.,30.  $HTRK ac3 npe sum
+
+htrknwat1,12,0.,12.        $HTRK wc1 hits
+htrknwat2,12,0.,12.        $HTRK wc2 hits
+htrkwatnum1,12,0.5,12.5    $HTRK wc1 hitpat
+htrkwatnum2,12,0.5,12.5    $HTRK wc2 hitpat
+htrkwatnpesum1,200,0.,50.  $HTRK wc1 npe sum
+htrkwatnpesum2,200,0.,50.  $HTRK wc2 num sum
+
+htrknluc,12,0.,12.         $HTRK lc hits
+htrklucnum,12,0.5,12.5     $HTRK lc hitpat
+htrklucnpesum,200,0.,50.   $HTRK lc npe sum
+end   hist hks_link

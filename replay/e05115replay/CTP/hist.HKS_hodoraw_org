@@ -1,0 +1,182 @@
+begin hist hks_hodoraw group=hks group=both
+
+; must set hturnon_scin_raw_hist=1 in hdebug.param to fill these
+
+hscin1x1rawposadc,500,-50,7950. $ hS1X1+ raw ADC 
+hscin1x2rawposadc,500,-50,7950. $ hS1X2+ raw ADC 
+hscin1x3rawposadc,500,-50,7950. $ hS1X3+ raw ADC 
+hscin1x4rawposadc,500,-50,7950. $ hS1X4+ raw ADC 
+hscin1x5rawposadc,500,-50,7950. $ hS1X5+ raw ADC 
+hscin1x6rawposadc,500,-50,7950. $ hS1X6+ raw ADC 
+hscin1x7rawposadc,500,-50,7950. $ hS1X7+ raw ADC 
+hscin1x8rawposadc,500,-50,7950. $ hS1X8+ raw ADC 
+hscin1x9rawposadc,500,-50,7950. $ hS1X9+ raw ADC 
+hscin1x10rawposadc,500,-50,7950. $ hS1X10+ raw ADC 
+hscin1x11rawposadc,500,-50,7950. $ hS1X11+ raw ADC 
+hscin1x12rawposadc,500,-50,7950. $ hS1X12+ raw ADC 
+hscin1x13rawposadc,500,-50,7950. $ hS1X13+ raw ADC 
+hscin1x14rawposadc,500,-50,7950. $ hS1X14+ raw ADC 
+hscin1x15rawposadc,500,-50,7950. $ hS1X15+ raw ADC 
+hscin1x16rawposadc,500,-50,7950. $ hS1X16+ raw ADC 
+hscin1x17rawposadc,500,-50,7950. $ hS1X17+ raw ADC 
+hscin1y1rawposadc,500,-50,7950.  $ hS1Y1+ raw ADC 
+hscin1y2rawposadc,500,-50,7950.  $ hS1Y2+ raw ADC 
+hscin1y3rawposadc,500,-50,7950.  $ hS1Y3+ raw ADC 
+hscin1y4rawposadc,500,-50,7950.  $ hS1Y4+ raw ADC 
+hscin1y5rawposadc,500,-50,7950.  $ hS1Y5+ raw ADC 
+hscin1y6rawposadc,500,-50,7950.  $ hS1Y6+ raw ADC 
+hscin1y7rawposadc,500,-50,7950.  $ hS1Y7+ raw ADC 
+hscin1y8rawposadc,500,-50,7950.  $ hS1Y8+ raw ADC 
+hscin1y9rawposadc,500,-50,7950.  $ hS1Y9+ raw ADC 
+hscin2x1rawposadc,500,-50,7950. $ hS2X1+ raw ADC 
+hscin2x2rawposadc,500,-50,7950. $ hS2X2+ raw ADC 
+hscin2x3rawposadc,500,-50,7950. $ hS2X3+ raw ADC 
+hscin2x4rawposadc,500,-50,7950. $ hS2X4+ raw ADC 
+hscin2x5rawposadc,500,-50,7950. $ hS2X5+ raw ADC 
+hscin2x6rawposadc,500,-50,7950. $ hS2X6+ raw ADC 
+hscin2x7rawposadc,500,-50,7950. $ hS2X7+ raw ADC 
+hscin2x8rawposadc,500,-50,7950. $ hS2X8+ raw ADC 
+hscin2x9rawposadc,500,-50,7950. $ hS2X9+ raw ADC 
+hscin2x10rawposadc,500,-50,7950. $ hS2X10+ raw ADC 
+hscin2x11rawposadc,500,-50,7950. $ hS2X11+ raw ADC 
+hscin2x12rawposadc,500,-50,7950. $ hS2X12+ raw ADC 
+hscin2x13rawposadc,500,-50,7950. $ hS2X13+ raw ADC 
+hscin2x14rawposadc,500,-50,7950. $ hS2X14+ raw ADC 
+hscin2x15rawposadc,500,-50,7950. $ hS2X15+ raw ADC 
+hscin2x16rawposadc,500,-50,7950. $ hS2X16+ raw ADC 
+hscin2x17rawposadc,500,-50,7950. $ hS2X17+ raw ADC 
+hscin2x18rawposadc,500,-50,7950. $ hS2X18+ raw ADC 
+hscin1x1rawnegadc,500,-50,7950.  $ hS1X1- raw ADC 
+hscin1x2rawnegadc,500,-50,7950.  $ hS1X2- raw ADC 
+hscin1x3rawnegadc,500,-50,7950.  $ hS1X3- raw ADC 
+hscin1x4rawnegadc,500,-50,7950.  $ hS1X4- raw ADC 
+hscin1x5rawnegadc,500,-50,7950.  $ hS1X5- raw ADC 
+hscin1x6rawnegadc,500,-50,7950.  $ hS1X6- raw ADC 
+hscin1x7rawnegadc,500,-50,7950.  $ hS1X7- raw ADC 
+hscin1x8rawnegadc,500,-50,7950.  $ hS1X8- raw ADC 
+hscin1x9rawnegadc,500,-50,7950.  $ hS1X9- raw ADC 
+hscin1x10rawnegadc,500,-50,7950.  $ hS1X10- raw ADC 
+hscin1x11rawnegadc,500,-50,7950.  $ hS1X11- raw ADC 
+hscin1x12rawnegadc,500,-50,7950.  $ hS1X12- raw ADC 
+hscin1x13rawnegadc,500,-50,7950.  $ hS1X13- raw ADC 
+hscin1x14rawnegadc,500,-50,7950.  $ hS1X14- raw ADC 
+hscin1x15rawnegadc,500,-50,7950.  $ hS1X15- raw ADC 
+hscin1x16rawnegadc,500,-50,7950.  $ hS1X16- raw ADC 
+hscin1x17rawnegadc,500,-50,7950.  $ hS1X17- raw ADC 
+hscin1y1rawnegadc,500,-50,7950.  $ hS1Y1- raw ADC 
+hscin1y2rawnegadc,500,-50,7950.  $ hS1Y2- raw ADC 
+hscin1y3rawnegadc,500,-50,7950.  $ hS1Y3- raw ADC 
+hscin1y4rawnegadc,500,-50,7950.  $ hS1Y4- raw ADC 
+hscin1y5rawnegadc,500,-50,7950.  $ hS1Y5- raw ADC 
+hscin1y6rawnegadc,500,-50,7950.  $ hS1Y6- raw ADC 
+hscin1y7rawnegadc,500,-50,7950.  $ hS1Y7- raw ADC 
+hscin1y8rawnegadc,500,-50,7950.  $ hS1Y8- raw ADC 
+hscin1y9rawnegadc,500,-50,7950.  $ hS1Y9- raw ADC 
+hscin2x1rawnegadc,500,-50,7950.  $ hS2X1- raw ADC 
+hscin2x2rawnegadc,500,-50,7950.  $ hS2X2- raw ADC 
+hscin2x3rawnegadc,500,-50,7950.  $ hS2X3- raw ADC 
+hscin2x4rawnegadc,500,-50,7950.  $ hS2X4- raw ADC 
+hscin2x5rawnegadc,500,-50,7950.  $ hS2X5- raw ADC 
+hscin2x6rawnegadc,500,-50,7950.  $ hS2X6- raw ADC 
+hscin2x7rawnegadc,500,-50,7950.  $ hS2X7- raw ADC 
+hscin2x8rawnegadc,500,-50,7950.  $ hS2X8- raw ADC 
+hscin2x9rawnegadc,500,-50,7950.  $ hS2X9- raw ADC 
+hscin2x10rawnegadc,500,-50,7950. $ hS2X10- raw ADC 
+hscin2x11rawnegadc,500,-50,7950. $ hS2X11- raw ADC 
+hscin2x12rawnegadc,500,-50,7950. $ hS2X12- raw ADC 
+hscin2x13rawnegadc,500,-50,7950. $ hS2X13- raw ADC 
+hscin2x14rawnegadc,500,-50,7950. $ hS2X14- raw ADC 
+hscin2x15rawnegadc,500,-50,7950. $ hS2X15- raw ADC 
+hscin2x16rawnegadc,500,-50,7950. $ hS2X16- raw ADC 
+hscin2x17rawnegadc,500,-50,7950. $ hS2X17- raw ADC 
+hscin2x18rawnegadc,500,-50,7950. $ hS2X18- raw ADC         
+
+hscin1x1postdc,500,0,4000  $hs1x1+ raw TDC 
+hscin1x2postdc,500,0,4000  $hs1x2+ raw TDC 
+hscin1x3postdc,500,0,4000  $hs1x3+ raw TDC 
+hscin1x4postdc,500,0,4000  $hs1x4+ raw TDC 
+hscin1x5postdc,500,0,4000  $hs1x5+ raw TDC 
+hscin1x6postdc,500,0,4000  $hs1x6+ raw TDC 
+hscin1x7postdc,500,0,4000  $hs1x7+ raw TDC 
+hscin1x8postdc,500,0,4000  $hs1x8+ raw TDC 
+hscin1x9postdc,500,0,4000  $hs1x9+ raw TDC 
+hscin1x10postdc,500,0,4000  $hs1x10+ raw TDC 
+hscin1x11postdc,500,0,4000  $hs1x11+ raw TDC 
+hscin1x12postdc,500,0,4000  $hs1x12+ raw TDC 
+hscin1x13postdc,500,0,4000  $hs1x13+ raw TDC 
+hscin1x14postdc,500,0,4000  $hs1x14+ raw TDC 
+hscin1x15postdc,500,0,4000  $hs1x15+ raw TDC 
+hscin1x16postdc,500,0,4000  $hs1x16+ raw TDC 
+hscin1x17postdc,500,0,4000  $hs1x17+ raw TDC 
+hscin1y1postdc,500,0,4000  $hs1y1+ raw TDC 
+hscin1y2postdc,500,0,4000  $hs1y2+ raw TDC 
+hscin1y3postdc,500,0,4000  $hs1y3+ raw TDC 
+hscin1y4postdc,500,0,4000  $hs1y4+ raw TDC 
+hscin1y5postdc,500,0,4000  $hs1y5+ raw TDC 
+hscin1y6postdc,500,0,4000  $hs1y6+ raw TDC 
+hscin1y7postdc,500,0,4000  $hs1y7+ raw TDC 
+hscin1y8postdc,500,0,4000  $hs1y8+ raw TDC 
+hscin1y9postdc,500,0,4000  $hs1y9+ raw TDC 
+hscin2x1postdc,500,0,4000  $hs2x1+ raw TDC 
+hscin2x2postdc,500,0,4000  $hs2x2+ raw TDC 
+hscin2x3postdc,500,0,4000  $hs2x3+ raw TDC 
+hscin2x4postdc,500,0,4000  $hs2x4+ raw TDC 
+hscin2x5postdc,500,0,4000  $hs2x5+ raw TDC 
+hscin2x6postdc,500,0,4000  $hs2x6+ raw TDC 
+hscin2x7postdc,500,0,4000  $hs2x7+ raw TDC 
+hscin2x8postdc,500,0,4000  $hs2x8+ raw TDC 
+hscin2x9postdc,500,0,4000  $hs2x9+ raw TDC 
+hscin2x10postdc,500,0,4000 $hs2x10+ raw TDC 
+hscin2x11postdc,500,0,4000 $hs2x11+ raw TDC 
+hscin2x12postdc,500,0,4000 $hs2x12+ raw TDC 
+hscin2x13postdc,500,0,4000 $hs2x13+ raw TDC 
+hscin2x14postdc,500,0,4000 $hs2x14+ raw TDC 
+hscin2x15postdc,500,0,4000 $hs2x15+ raw TDC 
+hscin2x16postdc,500,0,4000 $hs2x16+ raw TDC 
+hscin2x17postdc,500,0,4000 $hs2x17+ raw TDC 
+hscin2x18postdc,500,0,4000 $hs2x18+ raw TDC 
+hscin1x1negtdc,500,0,4000  $hs1x1- raw TDC 
+hscin1x2negtdc,500,0,4000  $hs1x2- raw TDC 
+hscin1x3negtdc,500,0,4000  $hs1x3- raw TDC 
+hscin1x4negtdc,500,0,4000  $hs1x4- raw TDC 
+hscin1x5negtdc,500,0,4000  $hs1x5- raw TDC 
+hscin1x6negtdc,500,0,4000  $hs1x6- raw TDC 
+hscin1x7negtdc,500,0,4000  $hs1x7- raw TDC 
+hscin1x8negtdc,500,0,4000  $hs1x8- raw TDC 
+hscin1x9negtdc,500,0,4000  $hs1x9- raw TDC 
+hscin1x10negtdc,500,0,4000  $hs1x10- raw TDC 
+hscin1x11negtdc,500,0,4000  $hs1x11- raw TDC 
+hscin1x12negtdc,500,0,4000  $hs1x12- raw TDC 
+hscin1x13negtdc,500,0,4000  $hs1x13- raw TDC 
+hscin1x14negtdc,500,0,4000  $hs1x14- raw TDC 
+hscin1x15negtdc,500,0,4000  $hs1x15- raw TDC 
+hscin1x16negtdc,500,0,4000  $hs1x16- raw TDC 
+hscin1x17negtdc,500,0,4000  $hs1x17- raw TDC 
+hscin1y1negtdc,500,0,4000  $hs1y1- raw TDC 
+hscin1y2negtdc,500,0,4000  $hs1y2- raw TDC 
+hscin1y3negtdc,500,0,4000  $hs1y3- raw TDC 
+hscin1y4negtdc,500,0,4000  $hs1y4- raw TDC 
+hscin1y5negtdc,500,0,4000  $hs1y5- raw TDC 
+hscin1y6negtdc,500,0,4000  $hs1y6- raw TDC 
+hscin1y7negtdc,500,0,4000  $hs1y7- raw TDC 
+hscin1y8negtdc,500,0,4000  $hs1y8- raw TDC 
+hscin1y9negtdc,500,0,4000  $hs1y9- raw TDC 
+hscin2x1negtdc,500,0,4000  $hs2x1- raw TDC 
+hscin2x2negtdc,500,0,4000  $hs2x2- raw TDC 
+hscin2x3negtdc,500,0,4000  $hs2x3- raw TDC 
+hscin2x4negtdc,500,0,4000  $hs2x4- raw TDC 
+hscin2x5negtdc,500,0,4000  $hs2x5- raw TDC 
+hscin2x6negtdc,500,0,4000  $hs2x6- raw TDC 
+hscin2x7negtdc,500,0,4000  $hs2x7- raw TDC 
+hscin2x8negtdc,500,0,4000  $hs2x8- raw TDC 
+hscin2x9negtdc,500,0,4000  $hs2x9- raw TDC 
+hscin2x10negtdc,500,0,4000 $hs2x10- raw TDC 
+hscin2x11negtdc,500,0,4000 $hs2x11- raw TDC 
+hscin2x12negtdc,500,0,4000 $hs2x12- raw TDC 
+hscin2x13negtdc,500,0,4000 $hs2x13- raw TDC 
+hscin2x14negtdc,500,0,4000 $hs2x14- raw TDC 
+hscin2x15negtdc,500,0,4000 $hs2x15- raw TDC 
+hscin2x16negtdc,500,0,4000 $hs2x16- raw TDC 
+hscin2x17negtdc,500,0,4000 $hs2x17- raw TDC 
+hscin2x18negtdc,500,0,4000 $hs2x18- raw TDC         
+end   hist hks_hodoraw

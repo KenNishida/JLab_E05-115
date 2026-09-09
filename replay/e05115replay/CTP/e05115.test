@@ -1,0 +1,142 @@
+; this test block is called 'a_...' 
+; so that it is evaluated before all of the others
+
+begin test a_trigs group=hes group=hks group=both
+#int dmytst, ctrig, etrig, strig, atrig
+ dmytst = 1
+ ctrig = (gen_event_type == 5)
+ etrig = (gen_event_type == 5) || ctrig
+ htrig = (gen_event_type == 5) || ctrig
+ atrig = etrig || htrig
+end test a_trigs
+
+begin test hes_tests group=hes group=both
+
+#int ecleantrack, eclean1track, eclean2track, eclean3track, eclean4track
+ecleantrack  = entracks_fp != 0
+eclean1track = entracks_fp == 1
+eclean2track = entracks_fp == 2
+eclean3track = entracks_fp == 3
+eclean4track = entracks_fp == 4
+
+; good here means that there is a hit in the layer with a high chance 
+; of being understandable
+; AND a space point was found (the drift time varable is filled 
+; only if a space point was found).
+
+#int goodedc1, goodedc2, goodedc3, goodedc4, goodedc5
+#int goodedc6, goodedc7, goodedc8, goodedc9, goodedc10
+goodedc1 = (EDC1_HITS_PER_LAYER(1) != 0)
+goodedc2 = (EDC1_HITS_PER_LAYER(2) != 0)
+goodedc3 = (EDC1_HITS_PER_LAYER(3) != 0)
+goodedc4 = (EDC1_HITS_PER_LAYER(4) != 0)
+goodedc5 = (EDC1_HITS_PER_LAYER(5) != 0)
+goodedc6 = (EDC1_HITS_PER_LAYER(6) != 0)
+goodedc7 = (EDC1_HITS_PER_LAYER(7) != 0)
+goodedc8 = (EDC1_HITS_PER_LAYER(8) != 0)
+goodedc9 = (EDC1_HITS_PER_LAYER(9) != 0)
+goodedc10 = (EDC1_HITS_PER_LAYER(10) != 0)
+
+end test hes_tests
+
+begin test hks_tests group=hks group=both
+
+#int hfoundtrack, hfound1track, hfound2track, hfound3track, hfound4track
+hfoundtrack  = hntracks_fp != 0
+hfound1track = hntracks_fp == 1
+hfound2track = hntracks_fp == 2
+hfound3track = hntracks_fp == 3
+hfound4track = hntracks_fp == 4
+
+hcleantrack = hntracks_fp != 0
+
+; good here means that there is a hit in the layer with 
+; a high chance of being understandable
+
+#int goodhdc1u1, goodhdc1u2, goodhdc1x1, goodhdc1x2, goodhdc1v1, goodhdc1v2
+goodhdc1u1 = (HDC_HITS_PER_LAYER(1) > 0) && (HDC_HITS_PER_LAYER(1) < 3)
+goodhdc1u2 = (HDC_HITS_PER_LAYER(2) > 0) && (HDC_HITS_PER_LAYER(2) < 3)
+goodhdc1x1 = (HDC_HITS_PER_LAYER(3) > 0) && (HDC_HITS_PER_LAYER(3) < 3)
+goodhdc1x2 = (HDC_HITS_PER_LAYER(4) > 0) && (HDC_HITS_PER_LAYER(4) < 3)
+goodhdc1v1 = (HDC_HITS_PER_LAYER(5) > 0) && (HDC_HITS_PER_LAYER(5) < 3)
+goodhdc1v2 = (HDC_HITS_PER_LAYER(6) > 0) && (HDC_HITS_PER_LAYER(6) < 3)
+#int goodhdc2u1, goodhdc2u2, goodhdc2x1, goodhdc2x2, goodhdc2v1, goodhdc2v2
+goodhdc2u1 = (HDC_HITS_PER_LAYER(7) > 0) && (HDC_HITS_PER_LAYER(7) < 3)
+goodhdc2u2 = (HDC_HITS_PER_LAYER(8) > 0) && (HDC_HITS_PER_LAYER(8) < 3)
+goodhdc2x1 = (HDC_HITS_PER_LAYER(9) > 0) && (HDC_HITS_PER_LAYER(9) < 3)
+goodhdc2x2 = (HDC_HITS_PER_LAYER(10) > 0) && (HDC_HITS_PER_LAYER(10) < 3)
+goodhdc2v1 = (HDC_HITS_PER_LAYER(11) > 0) && (HDC_HITS_PER_LAYER(11) < 3)
+goodhdc2v2 = (HDC_HITS_PER_LAYER(12) > 0) && (HDC_HITS_PER_LAYER(12) < 3)
+
+#int goodhdc1, goodhdc2, bothgoodhdc
+goodhdc1 = goodhdc1u1 && goodhdc1u2 && goodhdc1x1 && goodhdc1x2 && goodhdc1v1 && goodhdc1v2
+goodhdc2 = goodhdc2u1 && goodhdc2u2 && goodhdc2x1 && goodhdc2x2 && goodhdc2v1 && goodhdc2v2
+bothgoodhdc = goodhdc1 && goodhdc2
+
+;real here means that there is a hit in the layer with a high chance of being understandable
+; AND a space point was found (the drift time varable is filled only if a space point
+;  was found).
+
+#int realhdc1u1, realhdc1u2, realhdc1x1, realhdc1x2, realhdc1v1, realhdc1v2
+realhdc1u1 = goodhdc1u1 && (hnspace_points_tot != 0)
+realhdc1u2 = goodhdc1u2 && (hnspace_points_tot != 0)
+realhdc1x1 = goodhdc1x1 && (hnspace_points_tot != 0)
+realhdc1x2 = goodhdc1x2 && (hnspace_points_tot != 0)
+realhdc1v1 = goodhdc1v1 && (hnspace_points_tot != 0)
+realhdc1v2 = goodhdc1v2 && (hnspace_points_tot != 0)
+#int realhdc2u1, realhdc2u2, realhdc2x1, realhdc2x2, realhdc2v1, realhdc2v2
+realhdc2u1 = goodhdc2u1 && (hnspace_points_tot != 0)
+realhdc2u2 = goodhdc2u2 && (hnspace_points_tot != 0)
+realhdc2x1 = goodhdc2x1 && (hnspace_points_tot != 0)
+realhdc2x2 = goodhdc2x2 && (hnspace_points_tot != 0)
+realhdc2v1 = goodhdc2v1 && (hnspace_points_tot != 0)
+realhdc2v2 = goodhdc2v2 && (hnspace_points_tot != 0)
+
+#int realhdc1u1coin
+realhdc1u1coin = realhdc1u1 && ctrig
+
+; need test telling if a residual was found for the given layer.  Since
+; a track must be found, and the residual is initialized to 1000,
+; use foundtrack && resid. != 1000
+
+#int hdcres(12)
+#int hlowchi2
+
+hlowchi2 = (hschi2perdeg<10) && hcleantrack
+hdcres(1) = (hdc_single_residual(1) != 1000) && hlowchi2
+hdcres(2) = (hdc_single_residual(2) != 1000) && hlowchi2
+hdcres(3) = (hdc_single_residual(3) != 1000) && hlowchi2
+hdcres(4) = (hdc_single_residual(4) != 1000) && hlowchi2
+hdcres(5) = (hdc_single_residual(5) != 1000) && hlowchi2
+hdcres(6) = (hdc_single_residual(6) != 1000) && hlowchi2
+hdcres(7) = (hdc_single_residual(7) != 1000) && hlowchi2
+hdcres(8) = (hdc_single_residual(8) != 1000) && hlowchi2
+hdcres(9) = (hdc_single_residual(9) != 1000) && hlowchi2
+hdcres(10) = (hdc_single_residual(10) != 1000) && hlowchi2
+hdcres(11) = (hdc_single_residual(11) != 1000) && hlowchi2
+hdcres(12) = (hdc_single_residual(12) != 1000) && hlowchi2
+
+#int anyhh1x, anyhh1y, anyhh2x
+anyhh1x = (hscin_hits_per_layer(1) > 0)
+anyhh1y = (hscin_hits_per_layer(2) > 0)
+anyhh2x = (hscin_hits_per_layer(3) > 0)
+
+#int goodhh1x, goodhh1y, goodhh1, goodhh2x, goodhh2y, goodhh2, goodhh1s2
+goodhh1x = (hscin_hits_per_layer(1) > 0) && (hscin_hits_per_layer(1) < 3)
+goodhh1y = (hscin_hits_per_layer(2) > 0) && (hscin_hits_per_layer(2) < 3)
+goodhh1 = goodhh1x && goodhh1y
+goodhh2x = (hscin_hits_per_layer(3) > 0) && (hscin_hits_per_layer(3) < 3)
+goodhh1s2 = goodhh1 && goodhh2
+
+end test hks_tests
+
+begin test coin_tests group=both
+
+#int coincut, ccleantrack
+coincut     = (c_cointime_low < ctime_coin_cor) && (ctime_coin_cor < c_cointime_high)
+ccleantrack = ecleantrack && hcleantrack
+
+end   test coin_tests
+
+#include CTP/htrackeff.test
+#include CTP/kaon_exp.test

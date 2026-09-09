@@ -1,0 +1,29 @@
+begin hist sos_decoded_dc_track_statistics group=sos group=both
+
+rf25ps,gmisc_dec_data(116),1,0,1 $### SOS DC RESIDUALS
+
+ssres_hdc1u1,hdc_sing_res(1),80,-.15,.15,hdcres(1)   $hdc1u1 residual t=hdcres(1)
+ssres_hdc1u2,hdc_sing_res(2),80,-.15,.15,hdcres(2)   $hdc1u2 residual t=hdcres(2)
+ssres_hdc1x1,hdc_sing_res(3),80,-.15,.15,hdcres(3)   $hdc1x1 residual t=hdcres(3)
+ssres_hdc1x2,hdc_sing_res(4),80,-.15,.15,hdcres(4)   $hdc1x2 residual t=hdcres(4)
+ssres_hdc1v1,hdc_sing_res(5),80,-.15,.15,hdcres(5)   $hdc1v1 residual t=hdcres(5)
+ssres_hdc1v2,hdc_sing_res(6),80,-.15,.15,hdcres(6)   $hdc1v2 residual t=hdcres(6)
+ssres_hdc2u1,hdc_sing_res(7),80,-.15,.15,hdcres(7)   $hdc2u1 residual t=hdcres(7)
+ssres_hdc2u2,hdc_sing_res(8),80,-.15,.15,hdcres(8)   $hdc2u2 residual t=hdcres(8)
+ssres_hdc2x1,hdc_sing_res(9),80,-.15,.15,hdcres(9)   $hdc2x1 residual t=hdcres(9)
+ssres_hdc2x2,hdc_sing_res(10),80,-.15,.15,hdcres(10) $hdc2x2 residual t=hdcres(10)
+ssres_hdc2v1,hdc_sing_res(11),80,-.15,.15,hdcres(11) $hdc2v1 residual t=hdcres(11)
+ssres_hdc2v2,hdc_sing_res(12),80,-.15,.15,hdcres(12) $hdc2v2 residual t=hdcres(12)
+
+shits_hdc1,sncham_hits(1),25,-0.5,24.5               $hdc1 hits  t=strig
+shits_hdc2,sncham_hits(2),25,-0.5,24.5               $hdc2 hits  t=strig
+
+hdc_raw_tot_hits,hdc_raw_tot_hits,51,-0.5,50.5       $hdc raw tot hits t=strig
+hdc_tot_hits,hdc_tot_hits,51,-0.5,50.5               $hdc     tot hits t=strig
+
+;sdelta_x,sdelta_x,100,-5.,5.,slowchi2      $sdelta x t=slowchi2
+;sdelta_y,sdelta_y,100,-2.,2.,slowchi2      $sdelta y t=slowchi2
+;sdelta_tmp,sdelta_tmp,160,-.8,.8,slowchi2  $sdelta tmp t=slowchi2
+;sdelta_xp,sdelta_xp,100,-.4,.4,slowchi2    $xp(stubs)-xp(track) t=slowchi2
+
+end   hist hks_decoded_dc_track_statistics

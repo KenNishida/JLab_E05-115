@@ -1,0 +1,30 @@
+*       coin_id_histid.cmn
+*       
+*       The following include statments must precede the inclusion of this
+*       file in each routine that uses it.  The *%% syntax is also a
+*       directive to makereg to tell it to include the code in the program
+*       that it generates.
+*       
+*%%     include 'coin_data_structures.cmn'
+*       
+*       CTPTYPE=parm             
+*       Probably don't really want the following registered
+*       
+	
+      Integer*4 cidnphys
+      Integer*4 cidmissmassh
+      Integer*4 cidmissmassc,cidmissmassczoom
+      Integer*4 cidpeppk
+      Integer*4 cidhksmulti,cidhesmulti
+      Integer*4 cidcointime,cidcointimezoom
+
+      COMMON/coin_id_histid/
+     &     cidnphys,
+     &     cidmissmassh,
+     &     cidmissmassc,
+     &     cidmissmassczoom,
+     &     cidpeppk,
+     &     cidhksmulti,
+     &     cidhesmulti,
+     &     cidcointime,
+     &     cidcointimezoom

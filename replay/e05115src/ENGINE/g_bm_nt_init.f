@@ -1,0 +1,217 @@
+      subroutine g_bm_Nt_init(ABORT,err)
+*----------------------------------------------------------------------
+*
+*     Creates an GEN beam slit Ntuple
+*
+*     Purpose : Books an beam Ntuple; defines structure of it
+*
+*     Output: ABORT      - success or failure
+*           : err        - reason for failure, if any
+*
+*     Created: 28-Feb-2000  
+*
+* Revision 1.0  2000/02/28 12:28:20  jinghua
+* Initial revision
+*----------------------------------------------------------------------
+      implicit none
+      save
+*
+      character*13 here
+      parameter (here='g_bm_Nt_init')
+*
+      logical ABORT
+      character*(*) err
+*
+      INCLUDE 'gen_routines.dec'
+      INCLUDE 'gen_run_info.cmn'
+*
+      character*80 default_name
+      parameter (default_name= 'gbeamntuple')
+      character*80 default_title
+      parameter (default_title= 'gBeamMonitor')   
+      integer default_bank,default_recL
+      parameter (default_bank= 8000)    !4 bytes/word
+      parameter (default_recL= 1024)    !record length
+      character*80 title,file
+      character*80 directory,name
+      character*1000 pat,msg
+      integer status,size,io,id,bank,recL,iv(10),m
+*      parameter (id = 1)
+      real rv(10)
+*
+      logical HEXIST           !CERNLIB function
+      INCLUDE 'g_beam_ntuple.cmn'
+      INCLUDE 'g_beam_ntuple.dte'
+*
+*--------------------------------------------------------
+      err= ' '
+      ABORT = .FALSE.
+*
+      IF(g_beam_Ntuple_exists) THEN    
+        call g_bm_Nt_shutdown(ABORT,err)
+        If(ABORT) Then
+          call G_add_path(here,err)
+          RETURN
+        EndIf
+      ENDIF
+*
+
+      g_beam_Ntuple_ID= default_g_beam_Ntuple_ID
+      g_beam_Ntuple_name= default_name
+      g_beam_Ntuple_title= default_title
+
+      call NO_nulls(g_beam_Ntuple_file)     !replace null characters with blanks
+*
+*-if name blank, just forget it
+      IF(g_beam_Ntuple_file.EQ.' ') RETURN   !do nothing
+*
+*- get any free IO channel
+*
+      call g_IO_control(io,'ANY',ABORT,err)
+      g_beam_Ntuple_exists= .NOT.ABORT
+      IF(ABORT) THEN
+        call G_add_path(here,err)
+        RETURN
+      ENDIF
+      g_beam_Ntuple_IOchannel= io
+*
+      id= g_beam_Ntuple_ID
+*
+
+      ABORT= HEXIST(id)
+      IF(ABORT) THEN
+        call g_IO_control(g_beam_Ntuple_IOchannel,'FREE',ABORT,err)
+        call G_build_note(':HBOOK id#$ already in use',
+     &                                 '$',id,' ',rv,' ',err)
+        call G_add_path(here,err)
+        RETURN
+      ENDIF
+*
+
+      CALL HCDIR(directory,'R')       !CERNLIB read current directory
+ 
+*
+*
+      id= g_beam_Ntuple_ID
+      name= g_beam_Ntuple_name
+
+      file= g_beam_Ntuple_file
+      call g_sub_run_number(file,gen_run_number)
+
+      recL= default_recL
+      io= g_beam_Ntuple_IOchannel
+*
+*-open New *.rzdat file-
+      call HROPEN(io,name,file,'N',recL,status)       !CERNLIB
+*                                       !directory set to "//TUPLE"
+      io= g_beam_Ntuple_IOchannel
+      ABORT= status.NE.0
+      IF(ABORT) THEN
+        call g_IO_control(g_beam_Ntuple_IOchannel,'FREE',ABORT,err)
+        iv(1)= status
+        iv(2)= io
+        pat= ':HROPEN error#$ opening IO#$ "'//file//'"'
+        call G_build_note(pat,'$',iv,' ',rv,' ',err)
+        call G_add_path(here,err)
+        RETURN
+      ENDIF
+      g_beam_Ntuple_file= file
+*
+**********begin insert description of contents of BEAM tuple ******
+      m= 0
+*  
+      m=m+1
+      g_beam_Ntuple_tag(m)= 'AC07X'		! X focal plane position 
+      m= m+1
+      g_beam_Ntuple_tag(m)= 'AC07Y'
+      m= m+1
+      g_beam_Ntuple_tag(m)= 'AC12X'
+      m= m+1
+      g_beam_Ntuple_tag(m)= 'AC12Y'
+      m= m+1
+      g_beam_Ntuple_tag(m)= 'AC17X'
+      m= m+1
+      g_beam_Ntuple_tag(m)= 'AC17Y'
+      m= m+1
+      g_beam_Ntuple_tag(m)= 'TEMP1'
+      m= m+1
+      g_beam_Ntuple_tag(m)= 'TEMP2'
+      m= m+1
+      g_beam_Ntuple_tag(m)= 'TEMP3'
+      m=m+1
+      g_beam_ntuple_tag(m)= 'TEMP4'
+      m=m+1
+      g_beam_ntuple_tag(m)= 'TEMP5'
+      m=m+1
+      g_beam_ntuple_tag(m)= 'OKNMR'
+      m=m+1
+      g_beam_ntuple_tag(m)= 'RDNMR'
+      m=m+1
+      g_beam_ntuple_tag(m)= 'OTRX'
+      m=m+1
+      g_beam_ntuple_tag(m)= 'OTRDX'
+      m=m+1
+      g_beam_ntuple_tag(m)= 'OTRY'
+      m=m+1
+      g_beam_ntuple_tag(m)= 'OTRDY'
+      m=m+1
+      g_beam_ntuple_tag(m)= 'DPP'
+      m=m+1
+      g_beam_ntuple_tag(m)= 'BCM1'
+      m=m+1
+      g_beam_ntuple_tag(m)= 'BCM2'
+      m=m+1
+      g_beam_ntuple_tag(m)= 'EVTID'
+      m=m+1
+      g_beam_ntuple_tag(m)= 'EVTIME'
+
+*
+      g_beam_Ntuple_size= m     !total size
+***********end insert description of contents of BEAM tuple********
+*
+      title= g_beam_Ntuple_title
+      IF(title.EQ.' ') THEN
+        msg= name//' '//g_beam_Ntuple_file
+        call only_one_blank(msg)
+        title= msg   
+        g_beam_Ntuple_title= title
+      ENDIF
+*
+
+      id= g_beam_Ntuple_ID
+      io= g_beam_Ntuple_IOchannel
+      name= g_beam_Ntuple_name
+      title= g_beam_Ntuple_title
+      size= g_beam_Ntuple_size
+      file= g_beam_Ntuple_file
+      bank= default_bank
+ 
+      call HBOOKN(id,title,size,name,bank,g_beam_Ntuple_tag)      !create Ntuple
+*
+      call HCDIR(g_beam_Ntuple_directory,'R')      !record Ntuple directory
+*
+
+      CALL HCDIR(directory,' ')       !reset CERNLIB directory
+
+*
+      g_beam_Ntuple_exists= HEXIST(g_beam_Ntuple_ID)
+      ABORT= .NOT.g_beam_Ntuple_exists
+*
+      iv(1)= id
+      iv(2)= io
+      pat= 'Ntuple id#$ [' // g_beam_Ntuple_directory // '/]' // 
+     &                         name // ' IO#$ "' // file // '"'
+      call G_build_note(pat,'$',iv,' ',rv,' ',msg)
+      call sub_string(msg,' /]','/]')
+*
+      IF(ABORT) THEN
+        err= ':unable to create '//msg
+        call G_add_path(here,err)
+C      ELSE
+C        pat= ':created '//msg
+C        call G_add_path(here,pat)
+C        call G_log_message('INFO: '//pat)
+      ENDIF
+*
+      RETURN
+      END  

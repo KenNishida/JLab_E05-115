@@ -1,0 +1,263 @@
+*     hes_geometry.cmn
+*
+*     This include file has all the geometrical coefficients for the
+*     HES wire chambers.
+*
+*     converted sdc to edc T. Miyoshi 10/07/2003
+*
+*     d.f. geesaman        1 September 1993
+*     
+*     converted sdc to kdc T. Miyoshi 10/07/2003
+*     modifed    dfg       14 Feb 1994
+*                change SLAYER_PARAM(2,)  to sdc_zpos
+*                change SLAYER_PARAM(3,)  to sdc_alpha_angle
+*                change SLAYER_PARAM(4,)  to sdc_beta_angle
+*                change SLAYER_PARAM(5,)  to sdc_gamma_angle
+*                change SLAYER_PARAM(6,)  to sdc_pitch
+*                change SLAYER_PARAM(7,)  to sdc_nrwire
+*                change SLAYER_PARAM(8,)  to sdc_central_wire
+*                change SLAYER_PARAM(9,)  to sdc_sigma
+*                change SLAYER_LABEL      to sdc_layer_name
+*                add     sdc_xcenter
+*                        sdc_ycenter
+* $Log: hes_geometry.cmn,v $
+* Revision 1.1.1.1  2009/06/23 13:55:43  kawama
+*
+* e05115 src repository for software development
+*
+* Revision 1.1.1.1  2005/05/14 21:44:37  miyoshi
+*
+*
+* Revision 1.2  2005/01/24 19:47:27  miyoshi
+* change offset coeff to do by slot
+*
+* Revision 1.1.1.1  2004/08/30 21:21:37  miyoshi
+* new dir
+*
+* Revision 1.8  1996/09/04 16:28:21  saw
+* (JRA) Make hdc_nrwire integer
+*
+* Revision 1.7  1995/05/22 19:07:14  cdaq
+* (SAW) Split gen_data_data_structures into gen, hms, sos, and coin parts
+*
+* Revision 1.6  1995/01/27  20:21:25  cdaq
+* (JRA) Remove no longer used drift time->distance parameters
+*
+* Revision 1.5  1994/11/22  18:44:30  cdaq
+* (SPB) Brought up to date with hms_geometry.cmn
+* (SAW) Cleaned up ?DC_NUM_CHAMBERS and ?MAX_NUM_CHAMBERS stuff
+*
+* Revision 1.4  1994/08/05  20:36:42  cdaq
+* * (SAW) Add makereg directive with required include files
+*         Add "CTPTYPE=parm" directive for auto generation of CTP reg calls
+*
+* Revision 1.3  1994/06/14  03:23:06  cdaq
+* (DFG) Add sdc_layer_time_zero
+*
+* Revision 1.2  1994/03/24  18:37:29  cdaq
+* (DFG) Additional parameters
+*
+* Revision 1.1  1994/02/22  14:47:24  cdaq
+* Initial revision
+*                    
+*     The following include statments must precede the inclusion of this
+*     file in each routine that uses it.  The *%% syntax is also a
+*     directive to makereg to tell it to include the code in the program
+*     that it generates.
+*
+*%%   include 'hes_data_structures.cmn'
+*
+*     CTPTYPE=parm   
+**     Probably don't really want the following registered
+
+* number of layer track fit coefficients
+      integer*4 ENUM_LAYER_COEFF   
+      parameter (ENUM_LAYER_COEFF=9)
+* number of ray parameters
+      integer*4 ENUM_RAY_PARAM 
+      parameter (ENUM_RAY_PARAM=4)
+*
+
+* geometrical coefficients defining z-z0, and 
+* x and y for each wire layer. 
+      real*4 edc1zchi(EMAX_NUM_DC1_LAYERS),edc1zpsi(EMAX_NUM_DC1_LAYERS)       
+      real*4 edc1xchi(EMAX_NUM_DC1_LAYERS),edc1xpsi(EMAX_NUM_DC1_LAYERS)       
+      real*4 edc1ychi(EMAX_NUM_DC1_LAYERS),edc1ypsi(EMAX_NUM_DC1_LAYERS)
+      real*4 edc2zchi(EMAX_NUM_DC2_LAYERS),edc2zpsi(EMAX_NUM_DC2_LAYERS)       
+      real*4 edc2xchi(EMAX_NUM_DC2_LAYERS),edc2xpsi(EMAX_NUM_DC2_LAYERS)       
+      real*4 edc2ychi(EMAX_NUM_DC2_LAYERS),edc2ypsi(EMAX_NUM_DC2_LAYERS)
+
+*z coordinate of intersection of chamber with z axis
+      real*4 edc1z0(EMAX_NUM_DC1_LAYERS)               
+      real*4 edc2z0(EMAX_NUM_DC2_LAYERS)               
+
+* psi, chi and phi  coordinates  where a 
+* chamber normal passing through the origin
+* intersects the chamber. Used in stub fits
+      real*4 edc1psi0(EMAX_NUM_DC1_LAYERS)
+      real*4 edc1chi0(EMAX_NUM_DC1_LAYERS)
+      real*4 edc1phi0(EMAX_NUM_DC1_LAYERS) 
+      real*4 edc2psi0(EMAX_NUM_DC2_LAYERS)
+      real*4 edc2chi0(EMAX_NUM_DC2_LAYERS)
+      real*4 edc2phi0(EMAX_NUM_DC2_LAYERS) 
+
+* coefficents used in stub fits note these contain one power of sigma
+      real*4 edc1stubcoef(EMAX_NUM_DC1_LAYERS,ENUM_RAY_PARAM)         
+      real*4 edc2stubcoef(EMAX_NUM_DC2_LAYERS,ENUM_RAY_PARAM)         
+
+      real*4 edc1tanbeta(EMAX_NUM_DC1_LAYERS)
+      real*4 edc1sinbeta(EMAX_NUM_DC1_LAYERS)
+      real*4 edc1cosbeta(EMAX_NUM_DC1_LAYERS)
+      real*4 edc2tanbeta(EMAX_NUM_DC2_LAYERS)
+      real*4 edc2sinbeta(EMAX_NUM_DC2_LAYERS)
+      real*4 edc2cosbeta(EMAX_NUM_DC2_LAYERS)
+
+* coefficents used in space point fits.
+      real*4 edc1xsp(EMAX_NUM_DC1_LAYERS)              
+      real*4 edc1ysp(EMAX_NUM_DC1_LAYERS)
+      real*4 edc2xsp(EMAX_NUM_DC2_LAYERS)              
+      real*4 edc2ysp(EMAX_NUM_DC2_LAYERS)
+* coefficients used in final track fit
+      real*8 edc1layer_coeff(ENUM_LAYER_COEFF,EMAX_NUM_DC1_LAYERS)           
+      real*8 edc2layer_coeff(ENUM_LAYER_COEFF,EMAX_NUM_DC2_LAYERS)           
+
+
+      common/EDC1_GEOMETRY/
+     &     edc1layer_coeff,
+     &     edc1zpsi,edc1zchi,
+     &     edc1xpsi,edc1xchi,
+     &     edc1ypsi,edc1ychi,
+     &     edc1z0,edc1psi0,edc1chi0,edc1phi0,
+     &     edc1stubcoef,
+     &     edc1xsp,edc1ysp,
+     &     edc1tanbeta,edc1sinbeta,edc1cosbeta
+      
+		common/EDC2_GEOMETRY/
+     &     edc2layer_coeff,
+     &     edc2zpsi,edc2zchi,
+     &     edc2xpsi,edc2xchi,
+     &     edc2ypsi,edc2ychi,
+     &     edc2z0,edc2psi0,edc2chi0,edc2phi0,
+     &     edc2stubcoef,
+     &     edc2xsp,edc2ysp,
+     &     edc2tanbeta,edc2sinbeta,edc2cosbeta
+
+
+      real*4  edc1_zpos(EMAX_NUM_DC1_LAYERS)
+      real*4  edc1_alpha_angle(EMAX_NUM_DC1_LAYERS)
+      real*4  edc1_beta_angle(EMAX_NUM_DC1_LAYERS)
+      real*4  edc1_gamma_angle(EMAX_NUM_DC1_LAYERS)
+      real*4  edc1_pitch(EMAX_NUM_DC1_LAYERS)
+      real*4  edc1_central_wire(EMAX_NUM_DC1_LAYERS)
+      real*4  edc1_sigma(EMAX_NUM_DC1_LAYERS)
+      real*4  edc1_center(EMAX_NUM_DC1_LAYERS)
+      real*4  edc1_length_x
+      real*4  edc1_length_y	
+*      real*4 ELAYER_PARAM
+      integer*4 edc1_nrwire(EMAX_NUM_DC1_LAYERS)
+      integer*4 edc1_chamber_layers(EMAX_NUM_DC1_LAYERS)
+      character*16 edc1_layer_name(EMAX_NUM_DC1_LAYERS)
+
+      common/EDC1_LAYER_PARAMETERS/
+     &     edc1_zpos,
+     &     edc1_alpha_angle,
+     &     edc1_beta_angle,
+     &     edc1_gamma_angle,
+     &     edc1_pitch,
+     &     edc1_central_wire,
+     &     edc1_sigma,
+     &     edc1_center,
+     &	  edc1_length_x, 
+     &     edc1_length_y,
+     &     edc1_nrwire,
+     &     edc1_chamber_layers,
+     &     edc1_layer_name
+
+      real*4  edc2_zpos(EMAX_NUM_DC2_LAYERS)
+      real*4  edc2_alpha_angle(EMAX_NUM_DC2_LAYERS)
+      real*4  edc2_beta_angle(EMAX_NUM_DC2_LAYERS)
+      real*4  edc2_gamma_angle(EMAX_NUM_DC2_LAYERS)
+      real*4  edc2_pitch(EMAX_NUM_DC2_LAYERS)
+      real*4  edc2_central_wire(EMAX_NUM_DC2_LAYERS)
+      real*4  edc2_sigma(EMAX_NUM_DC2_LAYERS)
+      real*4  edc2_center(EMAX_NUM_DC2_LAYERS)
+      real*4  edc2_length_x
+      real*4  edc2_length_y	
+*      real*4 ELAYER_PARAM
+      integer*4 edc2_nrwire(EMAX_NUM_DC2_LAYERS)
+      integer*4 edc2_chamber_layers(EMAX_NUM_DC2_LAYERS)
+      character*16 edc2_layer_name(EMAX_NUM_DC2_LAYERS)
+
+      common/EDC2_LAYER_PARAMETERS/
+     &     edc2_zpos,
+     &     edc2_alpha_angle,
+     &     edc2_beta_angle,
+     &     edc2_gamma_angle,
+     &     edc2_pitch,
+     &     edc2_central_wire,
+     &     edc2_sigma,
+     &     edc2_center,
+     &	  edc2_length_x, 
+     &     edc2_length_y,
+     &     edc2_nrwire,
+     &     edc2_chamber_layers,
+     &     edc2_layer_name
+
+      real*4 elocrayzt
+      parameter (elocrayzt=0.)
+*
+*     CTPTYPE=parm
+*
+*     parameter file variables. Separate by type to make it easy to add
+*     at the end
+*     REAL*4
+*
+*      real*4 edrift_velocity        ! EDC1 drift velocity in cm/ns
+
+      real*4 edc1_tdc_time_per_channel
+      real*4 edc1_layer_time_zero(EMAX_NUM_DC1_SLOTS)
+      real*4 edc2_tdc_time_per_channel
+      real*4 edc2_layer_time_zero(EMAX_NUM_DC2_SLOTS)
+
+      common/EDC1_READOUT_REAL/
+*     &     edrift_velocity,
+     &     edc1_tdc_time_per_channel,
+     &     edc1_layer_time_zero
+
+      common/EDC2_READOUT_REAL/
+*     &     edrift_velocity,
+     &     edc2_tdc_time_per_channel,
+     &     edc2_layer_time_zero
+
+*    INTEGER*4
+*
+      integer*4 edc1_wire_counting(EMAX_NUM_DC1_LAYERS)      
+      integer*4 edc2_wire_counting(EMAX_NUM_DC2_LAYERS)      
+*  readout numbering order
+      common/EDC1_READOUT_INT/
+     &     edc1_wire_counting
+      common/EDC2_READOUT_INT/
+     &     edc2_wire_counting
+
+
+*
+*     CTPTYPE=parm
+*
+*     WIRE OFFSET. EDC1 has wires not reading out.
+*     All the wires which can be read out is counted.
+*     For example, wire number at layer 1 starts from 3.
+*
+      INTEGER*4 EDC1_WIRE_OFFSET_LOW
+      INTEGER*4 EDC1_WIRE_OFFSET_HIGH
+ 
+      COMMON/HES_EDC1_WIRE_OFFSET/
+     1     EDC1_WIRE_OFFSET_LOW(EMAX_NUM_DC1_LAYERS),
+     2     EDC1_WIRE_OFFSET_HIGH(EMAX_NUM_DC1_LAYERS)
+      
+		INTEGER*4 EDC2_WIRE_OFFSET_LOW
+      INTEGER*4 EDC2_WIRE_OFFSET_HIGH
+ 
+      COMMON/HES_EDC2_WIRE_OFFSET/
+     1     EDC2_WIRE_OFFSET_LOW(EMAX_NUM_DC2_LAYERS),
+     2     EDC2_WIRE_OFFSET_HIGH(EMAX_NUM_DC2_LAYERS)
+*                                                  

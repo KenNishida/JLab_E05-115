@@ -1,0 +1,51 @@
+; begin test beamline_tests group=hms group=sos group=both
+; #integer axp,axm,ayp,aym,bxp,bxm,byp,bym
+; axp=gmisc_dec_data(105)-433	
+; axm=gmisc_dec_data(106)-526
+; ayp=gmisc_dec_data(107)-408
+; aym=gmisc_dec_data(108)-500
+; bxp=gmisc_dec_data(109)-333
+; bxm=gmisc_dec_data(110)-351
+; byp=gmisc_dec_data(111)-364
+; bym=gmisc_dec_data(112)-291
+; #real axprime,ayprime,axbpm,aybpm,bxprime,byprime,bxbpm,bybpm
+; byprime=18.5*(bxp-.7330*bxm)/(bxp+.7330*bxm+.0001)
+; bxprime=-18.5*(byp-.8935*bym)/(byp+.8935*bym+.0001)
+; bxbpm=( bxprime+byprime)/1.414-.04
+; bybpm=(-bxprime+byprime)/1.414+.56
+; ayprime=18.5*(axp-1.8192*axm)/(axp+1.8192*axm+.0001)
+; axprime=-18.5*(ayp-1.0063*aym)/(ayp+1.0063*aym+.0001)
+; axbpm=( axprime+ayprime)/1.414-.11
+; aybpm=(-axprime+ayprime)/1.414+.52
+; end  test beamline_tests
+
+; begin test hks_chamber_offsets group=hks group=both
+; #real hdelta_xp,hdelta_x,hdelta_y
+; hdelta_xp=(hsxp_sp1+hsxp_sp2)/2. - hsxp_fp
+; hdelta_x = hdelta_xp*(hdc_2_zpos-hdc_1_zpos)
+; hdelta_y = hsy_sp2 - hsy_sp1
+; end   test hks_chamber_offsets
+
+; begin test hes_chamber_offsets group=hks group=both
+; #real edelta_xp,edelta_x,edelta_y,edelta_tmp
+; edelta_xp=(eexp_sp1+eexp_sp2)/2. - eexp_fp
+; edelta_x = edelta_xp*(edc_2_zpos-edc_1_zpos)
+; edelta_y = eey_sp2 - eey_sp1
+; edelta_tmp = (eey_sp2-eey_sp1)-eeyp_fp*(edc_2_zpos-edc_1_zpos)
+; end   test hes_chamber_offsets
+
+begin test hks_misc_vars group=hks group=both
+#real hdelta_beta
+hdelta_beta = hhbeta - hhbeta_p
+hhmass2=hhp*hhp*(1/(hhbeta+.000001)/(hhbeta+.000001)-1)
+#real hhx_aero
+hhx_aero=hhx_fp+253.8*hhxp_fp
+#real hhy_aero
+hhy_aero=hhy_fp+253.8*hhyp_fp
+end   test hks_misc_vars
+
+begin test hks_collim_optics_check group=hks group=both
+#real hks_x_collim,hks_y_collim
+hks_x_collim=hhxp_tar*(126.3+hhy_tar/tan(htheta_lab))
+hks_y_collim=hhyp_tar*(126.3+hhy_tar/tan(htheta_lab))+hhy_tar
+end test hks_collim_optics_check

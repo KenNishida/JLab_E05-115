@@ -1,0 +1,14 @@
+; mode=0(normal)/mode=1(high) resolution mode
+; see gen_rocid.cmn
+
+  escin_f1tdc_mode = 1
+
+; Miyoshi's value 12/23/2004
+; for chamber data.
+
+  f1tdc_HR_gate_width = 64937
+  f1tdc_LR_gate_width = 65158
+  f1tdc_HR_tdc_to_time = 0.0566
+  f1tdc_LR_tdc_to_time = 0.1132
+
+;

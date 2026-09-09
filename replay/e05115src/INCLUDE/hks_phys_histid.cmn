@@ -1,0 +1,137 @@
+*_______________________________________________________________________
+*      hks_phys_histid.cmn
+*
+*      This common block contains the HBOOK histogram id numbers
+*      for all hks particle id histograms in which direct hfill 
+*      calls are made.
+
+*     Revision 1.10 yez
+*     Add Lucite info for E05-115
+*
+*     CTPTYPE=parm
+*
+      
+*     h_fill_phys_hist.f
+
+      Integer*4 hidnphysics
+      Integer*4 hidphysscinhit
+      Integer*4 hidsxfp
+      Integer*4 hidsyfp
+      Integer*4 hidsxpfp
+      Integer*4 hidsypfp
+      Integer*4 hidsxtar
+      Integer*4 hidsytar
+      Integer*4 hidsxptar
+      Integer*4 hidsyptar
+      Integer*4 hidsdelta
+      Integer*4 hidstimeatfp
+      Integer*4 hidsbeta
+      Integer*4 hidstof
+      Integer*4 hidsdedx(3)
+      Integer*4 hidsp
+      Integer*4 hidsenergy
+      Integer*4 hidsdc1_xy
+      Integer*4 hidsdc2_xy
+      Integer*4 hids1x_xy
+      Integer*4 hids1y_xy
+      Integer*4 hids2x_xy
+      Integer*4 hidsac1_xy
+      Integer*4 hidsac2_xy
+      Integer*4 hidsac3_xy
+      Integer*4 hidswc1_xy
+      Integer*4 hidswc2_xy
+      Integer*4 hidslc_xy
+      Integer*4 hidsac1npe
+      Integer*4 hidsac2npe
+      Integer*4 hidsac3npe
+      Integer*4 hidswc1npe
+      Integer*4 hidswc2npe
+      Integer*4 hidslcnpe
+      Integer*4 hidswc1ac1
+      Integer*4 hidsac1s1x
+      Integer*4 hidswc1s1x
+      Integer*4 hidsbetak
+      Integer*4 hidsbetae
+      Integer*4 hidsbetapi
+      Integer*4 hidsbetapr
+      Integer*4 hidsdeltabetak
+      Integer*4 hidspathlength
+      Integer*4 hidstimeattar
+      Integer*4 hidschi2perdeg
+      Integer*4 hidseloss
+      Integer*4 hidscorre
+      Integer*4 hidscorrp
+      Integer*4 hidspz
+      Integer*4 hidstheta
+      Integer*4 hidskpvec1
+      Integer*4 hidskpvec2
+      Integer*4 hidskpvec3
+      Integer*4 hidskpvec4
+      Integer*4 hidsphi
+      Integer*4 hidszbeam
+
+      Common/HKS_PHYS_HIST1/
+     &     hidnphysics,
+     &     hidphysscinhit,
+     &     hidsxfp,
+     &     hidsyfp,
+     &     hidsxpfp,
+     &     hidsypfp,
+     &     hidsxtar,
+     &     hidsytar,
+     &     hidsxptar,
+     &     hidsyptar,
+     &     hidsdelta,
+     &     hidstimeatfp,
+     &     hidsbeta,
+     &     hidstof,
+     &     hidsdedx,
+     &     hidsp,
+     &     hidsenergy
+
+      Common/hks_physics_hist2/
+     &     hidsac1npe,
+     &     hidsac2npe,
+     &     hidsac3npe,
+     &     hidswc1npe,
+     &     hidswc2npe,
+     &     hidslcnpe,
+     &     hidsbetak,
+     &     hidsbetae,
+     &     hidsbetapi,
+     &     hidsbetapr,
+     &     hidspathlength,
+     &     hidstimeattar,
+     &     hidschi2perdeg,
+     &     hidseloss,
+     &     hidscorre,
+     &     hidscorrp,
+     &     hidspz,
+     &     hidstheta,
+     &     hidskpvec1,
+     &     hidskpvec2,
+     &     hidskpvec3,
+     &     hidskpvec4,
+     &     hidsphi,
+     &     hidszbeam
+
+      Common/hks_physics_2d/
+     &     hidsdc1_xy,
+     &     hidsdc2_xy,
+     &     hids1x_xy,
+     &     hids1y_xy,
+     &     hids2x_xy,
+     &     hidsac1_xy,
+     &     hidsac2_xy,
+     &     hidsac3_xy,
+     &     hidswc1_xy,
+     &     hidswc2_xy,
+     &     hidslc_xy,
+     &     hidswc1ac1,
+     &     hidsac1s1x,
+     &     hidswc1s1x,
+     &     hidsdeltabetak
+
+
+
+

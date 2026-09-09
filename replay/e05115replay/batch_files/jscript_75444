@@ -1,0 +1,8 @@
+PROJECT     e01011
+COMMAND     /home/gogami/tags/batch_files/batch_75444
+JOBNAME     hks.analysis.75444
+TRACK       analysis
+TIME        4000
+OS          linux
+MAIL:       gogami@jlab.org
+INPUT_FILES: /home/gogami/tags/REPLAY.PARM

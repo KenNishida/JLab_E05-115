@@ -1,0 +1,138 @@
+begin hist hks_raw group=hks group=both
+
+hscinrawtothits, 200,-0.5,199.5   $HKS HTF raw tot hits
+hscinrawlayer,  3,0.5,3.5       $HKS HTF layer raw hitpat
+hscinrawcounters1,17,0.5,17.5   $HKS HTF counter 1 raw hitpat
+hscinrawcounters2, 9,0.5,9.5    $HKS HTF counter 2 raw hitpat
+hscinrawcounters3,18,0.5,18.5   $HKS HTF counter 3 raw hitpat
+hscinrawadchitpatpos1, 17, 0.5, 17.5  $HKS HTF1X+ raw ADC hitpat
+hscinrawadchitpatneg1, 17, 0.5, 17.5  $HKS HTF1X- raw ADC hitpat
+hscinrawadchitpatpos2,  9, 0.5,  9.5  $HKS HTF1Y+ raw ADC hitpat
+hscinrawadchitpatneg2,  9, 0.5,  9.5  $HKS HTF1Y- raw ADC hitpat
+hscinrawadchitpatpos3, 18, 0.5, 18.5  $HKS HTF2X+ raw ADC hitpat
+hscinrawadchitpatneg3, 18, 0.5, 18.5  $HKS HTF2X- raw ADC hitpat
+hscinrawtdchitpatpos1, 17, 0.5, 17.5  $HKS HTF1X+ raw TDC hitpat
+hscinrawtdchitpatneg1, 17, 0.5, 17.5  $HKS HTF1X- raw TDC hitpat
+hscinrawtdchitpatpos2,  9, 0.5,  9.5  $HKS HTF1Y+ raw TDC hitpat
+hscinrawtdchitpatneg2,  9, 0.5,  9.5  $HKS HTF1Y- raw TDC hitpat
+hscinrawtdchitpatpos3, 18, 0.5, 18.5  $HKS HTF2X+ raw TDC hitpat
+hscinrawtdchitpatneg3, 18, 0.5, 18.5  $HKS HTF2X- raw TDC hitpat
+hscinsumposadc1, 128, 0.,8192.  $HKS HTF1X pos ADC
+hscinsumposadc2, 128, 0.,8192.  $HKS HTF1Y pos ADC
+hscinsumposadc3, 128, 0.,8192.  $HKS HTF2X pos ADC
+hscinsumnegadc1, 128, 0.,8192.  $HKS HTF1X neg ADC
+hscinsumnegadc2, 128, 0.,8192.  $HKS HTF1Y neg ADC
+hscinsumnegadc3, 128, 0.,8192.  $HKS HTF2X neg ADC
+hscinsumpostdc1, 128, 10000.,30000.  $HKS HTF1X pos TDC
+hscinsumpostdc2, 128, 10000.,30000.  $HKS HTF1Y pos TDC
+hscinsumpostdc3, 128, 10000.,30000.  $HKS HTF2X pos TDC
+hscinsumnegtdc1, 128, 10000.,30000.  $HKS HTF1X neg TDC
+hscinsumnegtdc2, 128, 10000.,30000.  $HKS HTF1Y neg TDC
+hscinsumnegtdc3, 128, 10000.,30000.  $HKS HTF2X neg TDC
+
+hstarttime,200,0.,200.          $HKS start time
+
+haerrawtothits, 100,-0.5,99.5    $HKS AC raw tot hits
+haerrawlayer, 3,0.5,3.5         $HKS AC layer raw hitpat
+haerrawhitpat1,7,0.5,7.5        $HKS AC1 raw hitpat
+haerrawhitpat2,7,0.5,7.5        $HKS AC2 raw hitpat
+haerrawhitpat3,7,0.5,7.5        $HKS AC3 raw hitpat
+haerrawadchitpatpos1, 7, 0.5, 7.5      $HKS AC1+ raw ADC hitpat
+haerrawadchitpatneg1, 7, 0.5, 7.5      $HKS AC1- raw ADC hitpat
+haerrawadchitpatpos2, 7, 0.5, 7.5      $HKS AC2+ raw ADC hitpat
+haerrawadchitpatneg2, 7, 0.5, 7.5      $HKS AC2- raw ADC hitpat
+haerrawadchitpatpos3, 7, 0.5, 7.5      $HKS AC3+ raw ADC hitpat
+haerrawadchitpatneg3, 7, 0.5, 7.5      $HKS AC3- raw ADC hitpat
+haerrawtdchitpatpos1, 7, 0.5, 7.5      $HKS AC1+ raw TDC hitpat
+haerrawtdchitpatneg1, 7, 0.5, 7.5      $HKS AC1- raw TDC hitpat
+haerrawtdchitpatpos2, 7, 0.5, 7.5      $HKS AC2+ raw TDC hitpat
+haerrawtdchitpatneg2, 7, 0.5, 7.5      $HKS AC2- raw TDC hitpat
+haerrawtdchitpatpos3, 7, 0.5, 7.5      $HKS AC3+ raw TDC hitpat
+haerrawtdchitpatneg3, 7, 0.5, 7.5      $HKS AC3- raw TDC hitpat
+haersumposadc1, 128, 0.,8192.   $HKS AC1 all pos ADC
+haersumposadc2, 128, 0.,8192.   $HKS AC2 all pos ADC
+haersumposadc3, 128, 0.,8192.   $HKS AC3 all pos ADC
+haersumnegadc1, 128, 0.,8192.   $HKS AC1 all neg ADC
+haersumnegadc2, 128, 0.,8192.   $HKS AC2 all neg ADC
+haersumnegadc3, 128, 0.,8192.   $HKS AC3 all neg ADC
+haersumpostdc1, 300,500.,1100.   $HKS AC1 all pos TDC
+haersumpostdc2, 300,500.,1100.   $HKS AC2 all pos TDC
+haersumpostdc3, 300,500.,1100.   $HKS AC3 all pos TDC
+haersumnegtdc1, 300,500.,1100.   $HKS AC1 all neg TDC
+haersumnegtdc2, 300,500.,1100.   $HKS AC2 all neg TDC
+haersumnegtdc3, 300,500.,1100.   $HKS AC3 all neg TDC
+
+hwatrawtothits, 100,-0.5,99.5    $HKS WC raw tot hits
+hwatrawlayer, 2,0.5,2.5         $HKS WC layer raw hitpat
+hwatrawhitpat1,12,0.5,12.5      $HKS WC1 raw hitpat
+hwatrawhitpat2,12,0.5,12.5      $HKS WC2 raw hitpat
+hwatrawadchitpatpos1, 12, 0.5, 12.5      $HKS WC1+ raw ADC hitpat
+hwatrawadchitpatneg1, 12, 0.5, 12.5      $HKS WC1- raw ADC hitpat
+hwatrawadchitpatpos2, 12, 0.5, 12.5      $HKS WC2+ raw ADC hitpat
+hwatrawadchitpatneg2, 12, 0.5, 12.5      $HKS WC2- raw ADC hitpat
+hwatrawtdchitpatpos1, 12, 0.5, 12.5      $HKS WC1+ raw TDC hitpat
+hwatrawtdchitpatneg1, 12, 0.5, 12.5      $HKS WC1- raw TDC hitpat
+hwatrawtdchitpatpos2, 12, 0.5, 12.5      $HKS WC2+ raw TDC hitpat
+hwatrawtdchitpatneg2, 12, 0.5, 12.5      $HKS WC2- raw TDC hitpat
+hwatsumposadc1, 128, 0.,8192.   $HKS WC1 all pos ADC
+hwatsumposadc2, 128, 0.,8192.   $HKS WC2 all pos ADC
+hwatsumnegadc1, 128, 0.,8192.   $HKS WC1 all neg ADC
+hwatsumnegadc2, 128, 0.,8192.   $HKS WC2 all neg ADC
+hwatsumpostdc1, 128, 0.,4096.   $HKS WC1 all pos TDC
+hwatsumpostdc2, 128, 0.,4096.   $HKS WC2 all pos TDC
+hwatsumnegtdc1, 128, 0.,4096.   $HKS WC1 all neg TDC
+hwatsumnegtdc2, 128, 0.,4096.   $HKS WC2 all neg TDC
+
+hlucrawtothits, 25,-0.5,24.5    $HKS LC raw tot hits
+hlucrawlayer, 2,0.5,2.5         $HKS LC layer raw hitpat
+hlucrawhitpat1,12,0.5,12.5      $HKS LC raw hitpat
+hlucrawadchitpatpos, 12, 0.5, 12.5      $HKS LC+ raw ADC hitpat
+hlucrawadchitpatneg, 12, 0.5, 12.5      $HKS LC- raw ADC hitpat
+hlucrawadchitpattot, 12, 0.5, 12.5      $HKS LC raw ADC hitpat
+hlucrawtdchitpatpos, 12, 0.5, 12.5      $HKS LC+ raw TDC hitpat
+hlucrawtdchitpatneg, 12, 0.5, 12.5      $HKS LC- raw TDC hitpat
+hlucrawtdchitpattot, 12, 0.5, 12.5      $HKS LC raw TDC hitpat
+hlucsumposadc1, 128, 0.,8192.   $HKS LC all pos ADC
+hlucsumnegadc1, 128, 0.,8192.   $HKS LC all neg ADC
+hlucsumpostdc1, 128, 0.,4096.   $HKS LC all pos TDC
+hlucsumnegtdc1, 128, 0.,4096.   $HKS LC all neg TDC
+
+; HDC hit pattern
+; Filled in h_fill_dc_raw_hist
+
+hdcrawtothit,130,-0.5,1299.5     $HDC raw tot hits
+hdcrawtothitzoom,500,-0.5,499.5    $HDC raw tot hits (zoom)
+hdcrawtdcall,50,-100.,6400.  $HDC raw tdc (all)
+
+hdcrawhitpat01,88,0.,88.         $HDC1u  raw hitpat layer-1  
+hdcrawhitpat02,88,0.,88.         $HDC1up raw hitpat layer-2 
+hdcrawhitpat03,123,0.,123.       $HDC1x  raw hitpat layer-3 
+hdcrawhitpat04,123,0.,123.       $HDC1xp raw hitpat layer-4
+hdcrawhitpat05,88,0.,88.         $HDC1v  raw hitpat layer-5 
+hdcrawhitpat06,88,0.,88.         $HDC1vp raw hitpat layer-6 
+hdcrawhitpat07,88,0.,88.         $HDC2u  raw hitpat layer-7 
+hdcrawhitpat08,88,0.,88.         $HDC2up raw hitpat layer-8 
+hdcrawhitpat09,123,0.,123.       $HDC2x  raw hitpat layer-9 
+hdcrawhitpat10,123,0.,123.       $HDC2xp raw hitpat layer-10 
+hdcrawhitpat11,88,0.,88.         $HDC2v  raw hitpat layer-11 
+hdcrawhitpat12,88,0.,88.         $HDC2vp raw hitpat layer-12 
+
+
+hdcrawlayertdc01,100,1500.,3000.    $HDC1u  raw tdc layer-1  
+hdcrawlayertdc02,100,1500.,3000.    $HDC1up raw tdc layer-2 
+hdcrawlayertdc03,100,1500.,3000.    $HDC1x  raw tdc layer-3 
+hdcrawlayertdc04,100,1500.,3000.    $HDC1xp raw tdc layer-4
+hdcrawlayertdc05,100,1500.,3000.    $HDC1v  raw tdc layer-5 
+hdcrawlayertdc06,100,1500.,3000.    $HDC1vp raw tdc layer-6 
+hdcrawlayertdc07,100,1500.,3000.    $HDC2u  raw tdc layer-7 
+hdcrawlayertdc08,100,1500.,3000.    $HDC2up raw tdc layer-8 
+hdcrawlayertdc09,100,1500.,3000.    $HDC2x  raw tdc layer-9 
+hdcrawlayertdc10,100,1500.,3000.    $HDC2xp raw tdc layer-10 
+hdcrawlayertdc11,100,1500.,3000.    $HDC2v  raw tdc layer-11 
+hdcrawlayertdc12,100,1500.,3000.    $HDC2vp raw tdc layer-12 
+
+;f1 trigger time
+
+gf1trigtime2-1,64,0.,65536    $HKS F1 trigger time roc13-1
+
+end   hist hks_raw

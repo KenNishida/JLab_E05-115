@@ -1,0 +1,64 @@
+begin hist hes_tracking group=hes
+
+dtime_edc101,200,-100,300   $EDC1 x drift time  1
+dtime_edc102,200,-100,300   $EDC1 x drift time  2
+dtime_edc103,200,-100,300   $EDC1 u drift time  3
+dtime_edc104,200,-100,300   $EDC1 u drift time  4
+dtime_edc105,200,-100,300   $EDC1 x drift time  5
+dtime_edc106,200,-100,300   $EDC1 x drift time  6
+dtime_edc107,200,-100,300   $EDC1 v drift time  7
+dtime_edc108,200,-100,300   $EDC1 v drift time  8
+dtime_edc109,200,-100,300   $EDC1 x drift time  9
+dtime_edc110,200,-100,300   $EDC1 x drift time 10
+
+edc1driftdis01,100,-1.,1.     $EDC1 drift dis 01
+edc1driftdis02,100,-1.,1.     $EDC1 drift dis 02
+edc1driftdis03,100,-1.,1.     $EDC1 drift dis 03
+edc1driftdis04,100,-1.,1.     $EDC1 drift dis 04
+edc1driftdis05,100,-1.,1.     $EDC1 drift dis 05
+edc1driftdis06,100,-1.,1.     $EDC1 drift dis 06
+edc1driftdis07,100,-1.,1.     $EDC1 drift dis 07
+edc1driftdis08,100,-1.,1.     $EDC1 drift dis 08
+edc1driftdis09,100,-1.,1.     $EDC1 drift dis 09
+edc1driftdis10,100,-1.,1.     $EDC1 drift dis 10
+
+edc1wcoord01,1000,-50.,50.     $EDC1 wire coordinate 01
+edc1wcoord02,1000,-50.,50.     $EDC1 wire coordinate 02
+edc1wcoord03,1000,-50.,50.     $EDC1 wire coordinate 03
+edc1wcoord04,1000,-50.,50.     $EDC1 wire coordinate 04
+edc1wcoord05,1000,-50.,50.     $EDC1 wire coordinate 05
+edc1wcoord06,1000,-50.,50.     $EDC1 wire coordinate 06
+edc1wcoord07,1000,-50.,50.     $EDC1 wire coordinate 07
+edc1wcoord08,1000,-50.,50.     $EDC1 wire coordinate 08
+edc1wcoord09,1000,-50.,50.     $EDC1 wire coordinate 09
+edc1wcoord10,1000,-50.,50.     $EDC1 wire coordinate 10
+
+entracksfp,100,0.,1000.     $EDC1 ntrack fp
+entracksfpzoom,20,0.,20.    $EDC1 ntrack fp (zoom)
+edc1chi2perdoffp,100,0.,500.           $EDC1 chi2perdof fp
+edc1chi2perdoffpzoom,100,0.,20.        $EDC1 chi2perdof fp (zoom)
+edc2chi2perdoffp,100,0.,500.           $EDC2 chi2perdof fp
+edc2chi2perdoffpzoom,100,0.,20.        $EDC2 chi2perdof fp (zoom)
+esingres01,200,-1.,1.     $EDC1 single residual 01
+esingres02,200,-1.,1.     $EDC1 single residual 02
+esingres03,200,-1.,1.     $EDC1 single residual 03
+esingres04,200,-1.,1.     $EDC1 single residual 04
+esingres05,200,-1.,1.     $EDC1 single residual 05
+esingres06,200,-1.,1.     $EDC1 single residual 06
+esingres07,200,-1.,1.     $EDC1 single residual 07
+esingres08,200,-1.,1.     $EDC1 single residual 08
+esingres09,200,-1.,1.     $EDC1 single residual 09
+esingres10,200,-1.,1.     $EDC1 single residual 10
+
+exfp,100,-60.,60.                $EDC1 x fp
+eyfp,100,-10.,10.                $EDC1 y fp
+expfp,100,-0.5,0.5               $EDC1 xp fp
+eypfp,120,-0.10,0.10               $EDC1 yp fp
+efpxy,500,-60.,60.,500,-10.,10.   $EDC1 x vs y at fp
+efpxpyp,200, -0.3,0.3,  200,-0.10,0.10  $EDC1 xp vs yp at fp
+efpxxp, 200, -50., 50., 200, -0.3, 0.3    $EDC1 x vs xp at fp
+efpxyp, 200, -50., 50., 200, -0.1, 0.1  $EDC1 x vs yp at fp
+efpyxp, 200,  -7.,  7., 200, -0.3, 0.3    $EDC1 y vs xp at fp
+efpyyp, 200,  -7.,  7., 200, -0.07, 0.07  $EDC1 y vs yp at fp
+
+end hist hes_tracking

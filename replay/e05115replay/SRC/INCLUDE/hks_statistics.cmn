@@ -1,0 +1,204 @@
+*      hks_statistics.cmn
+*      common blocks containing event statistics for s_reconstruction
+* $Log: hks_statistics.cmn,v $
+* Revision 1.1.1.1  2009/06/23 13:55:43  kawama
+*
+* e05115 src repository for software development
+*
+* Revision 1.1.1.1  2005/05/14 21:44:37  miyoshi
+*
+*
+* Revision 1.2  2004/12/24 21:18:50  miyoshi
+* change name plane to layer
+*
+* Revision 1.1.1.1  2004/08/30 21:21:38  miyoshi
+* new dir
+*
+* Revision 1.12  1996/09/04 16:31:47  saw
+* (SAW) Change ' to '' in comments
+*
+* Revision 1.11  1996/01/17 15:07:45  cdaq
+* (JRA) Remove some obsolete common blocks
+*
+* Revision 1.10  1995/09/01 13:04:45  cdaq
+* (JRA) Add counter efficiency variables
+*
+* Revision 1.9  1995/08/11  16:36:47  cdaq
+* (JRA) Add sstat_mineff as a ctp parameter
+*
+* Revision 1.8  1995/07/28  14:42:37  cdaq
+* (JRA) Add pos/neg/both good arrays
+*
+* Revision 1.7  1995/05/22  19:02:13  cdaq
+* (SAW) Split gen_data_data_structures into gen, hms, hks, and coin parts
+* Fix a conflicting common block name
+*
+* Revision 1.6  1995/04/06  20:21:08  cdaq
+* (SAW) Remove hms isms and hardwired array sizes7
+*
+* Revision 1.5  1995/03/13  19:15:42  cdaq
+* (JRA) Add many new statistics
+*
+* Revision 1.4  1994/11/21  18:02:39  cdaq
+* * (SPB) Recopied from hms file and modified names for HKS
+*
+* Revision 1.3  1994/08/05  21:19:32  cdaq
+* (SAW) Add makereg directive with required include files
+*       Add "CTPTYPE=event" directive for auto generation of CTP reg calls
+*
+* Revision 1.2  1994/06/14  03:34:25  cdaq
+* (DFG) add chamber efficiency and sigma
+*
+* Revision 1.1  1994/06/07  02:00:48  cdaq
+* Initial revision
+*
+*     The following include statments must precede the inclusion of this
+*     file in each routine that uses it.  The *%% syntax is also a
+*     directive to makereg to tell it to include the code in the program
+*     that it generates.
+*
+*%%   include 'hks_data_structures.cmn'
+
+*
+*     CTPTYPE=parm
+*
+      real*4 hstat_maxchisq
+      real*4 hstat_slop
+      real*4 hstat_mineff
+*
+*     CTPTYPE=event
+*
+      integer*4 hstat_numevents
+      integer*4 hstat_trk(hnum_scin_layers,hnum_scin_elements)
+      integer*4 hstat_poshit(hnum_scin_layers,hnum_scin_elements)
+      integer*4 hstat_neghit(hnum_scin_layers,hnum_scin_elements)
+      integer*4 hstat_orhit(hnum_scin_layers,hnum_scin_elements)
+      integer*4 hstat_andhit(hnum_scin_layers,hnum_scin_elements)
+      integer*4 hstat_trksum(hnum_scin_layers)
+      integer*4 hstat_possum(hnum_scin_layers)
+      integer*4 hstat_negsum(hnum_scin_layers)
+      integer*4 hstat_orsum(hnum_scin_layers)
+      integer*4 hstat_andsum(hnum_scin_layers)
+      real*4 hstat_peff(hnum_scin_layers,hnum_scin_elements)
+      real*4 hstat_neff(hnum_scin_layers,hnum_scin_elements)
+      real*4 hstat_oeff(hnum_scin_layers,hnum_scin_elements)
+      real*4 hstat_aeff(hnum_scin_layers,hnum_scin_elements)
+      real*4 hstat_poseff(hnum_scin_layers)
+      real*4 hstat_negeff(hnum_scin_layers)
+      real*4 hstat_oreff(hnum_scin_layers)
+      real*4 hstat_andeff(hnum_scin_layers)
+      real*4 heff_h1
+      real*4 heff_h2
+      real*4 heff_htof
+      real*4 heff_3_of_3
+
+
+*       hstat_trk,         !# of times track points near center of scin.
+*       hstat_poshit,      !# of times the pos tube on scintillator fired
+*       hstat_neghit,      !# of times the pos tube on scintillator fired
+*       hstat_orhit,       !# of times either tube fired
+*       hstat_andhit,      !# of times both tubes fired
+*       hstat_trksum,      !summed over all counters on layer
+*       hstat_possum,      !summed over all counters on layer
+*       hstat_negsum,      !summed over all counters on layer
+*       hstat_orsum,       !summed over all counters on layer
+*       hstat_andsum,      !summed over all counters on layer
+*       hstat_peff,        !pos efficiency for given counter.
+*       hstat_neff,        !neg efficiency for given counter.
+*       hstat_oeff,        !or  efficiency for given counter.
+*       hstat_aeff,        !and efficiency for given counter.
+*       hstat_poseff,      !efficiency over all counters on layer
+*       hstat_negeff,      !efficiency over all counters on layer
+*       hstat_oreff,       !efficiency over all counters on layer
+*       hstat_andeff,      !efficiency over all counters on layer
+*       hstat_slop,        !distance allowed from center of scintillator.
+*       hstat_mineff,      !give warning if effic. < hstat_mineff
+*       hstat_maxchisq,    !maximum chisq allowed to use track for eff. calc.
+*       seff_s1,           !calculated trigger eff. for s1 =(s1x .or. s1y).
+*       seff_s2,           !calculated trigger eff. for s2 =(s2x .or. s2y).
+*       seff_stof,         !calculated trigger eff. for stof =(s1 .and. s2).
+
+      common/sscin_statistics/
+     &  hstat_numevents,
+     &  hstat_trk,        
+     &  hstat_poshit,     
+     &  hstat_neghit,     
+     &  hstat_orhit,      
+     &  hstat_andhit,     
+     &  hstat_trksum,      
+     &  hstat_possum,      
+     &  hstat_negsum,      
+     &  hstat_orsum,      
+     &  hstat_andsum,     
+     &  hstat_peff,       
+     &  hstat_neff,       
+     &  hstat_oeff,        
+     &  hstat_aeff,        
+     &  hstat_poseff,      
+     &  hstat_negeff,      
+     &  hstat_oreff,       
+     &  hstat_andeff,      
+     &  hstat_slop,        
+     &  hstat_mineff,     
+     &  hstat_maxchisq,    
+     &  heff_h1,          
+     &  heff_h2,          
+     &  heff_htof,         
+     &  heff_3_of_3
+
+
+*
+*     CTPTYPE=event
+*
+      integer hbothgood(hnum_scin_layers,hnum_scin_elements)
+      integer hposgood(hnum_scin_layers,hnum_scin_elements)
+      integer hneggood(hnum_scin_layers,hnum_scin_elements)
+
+      common/hscin_posneg_stats/
+     &   hbothgood,
+     &   hposgood,
+     &   hneggood
+*
+*     CTPTYPE=parm
+*
+      real*4 hdc_min_eff(hmax_num_dc_layers)   
+*!''warning'' value for layer eff.
+*
+*     CTPTYPE=event
+*
+      integer*4 hdc_tot_events                 
+*!total number of events examined
+      integer*4 hdc_events(hmax_num_dc_layers) 
+*!counter of times layer was hit
+      integer*4 hdc_cham_hits(hmax_num_chambers)
+      real*4 hdc_layer_eff(hmax_num_dc_layers) 
+*!effic=events(pln)/tot_events
+      real*4 hdc_cham_eff(hmax_num_chambers)
+
+      common/hdc_statistics/
+     &   hdc_tot_events,
+     &   hdc_events,
+     &   hdc_min_eff,
+     &   hdc_layer_eff,
+     &   hdc_cham_hits,
+     &   hdc_cham_eff
+
+c		 comment out --DK
+*      Integer*4 htrkeff_good_trig(2)
+*      Integer*4 htrkeff_good_trig2(2)
+*      Integer*4 htrkeff_bad_trig(2)
+*      Integer*4 htrkeff_bad_trig2(2)
+*      Integer*4 htrkeff_flag(2,25,25)
+*      Integer*4 htrkeff_flag2(2,25,25)
+*      Real*4 htrk_eff(4)
+*      Real*4 htrk_eff_err(4)
+      
+*      common /htrk_statistics/
+*     &     htrkeff_good_trig,
+*     &     htrkeff_good_trig2,
+*     &     htrkeff_bad_trig,
+*     &     htrkeff_bad_trig2,
+*     &     htrkeff_flag,
+*     &     htrkeff_flag2,
+*     &     htrk_eff,
+*     &     htrk_eff_err

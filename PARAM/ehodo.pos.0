@@ -1,0 +1,50 @@
+      epathlength_central = 368.76
+
+; Geometrical parameters input by V.M. Rodriguez 05/28/05
+; Z positions of hodoscopes
+  escin_zpos = 46.653, 76.713, 80.0
+
+; Scintillator width for EHOD1 and EHOD2
+  escin_width     =  5.
+  escin_height    = 30.
+  escin_thickness =  1.
+
+; Note, EHOD3 geometry is 107.9 x 2 x 2 (x, y, z) and stays at (7.55, 0, 28)
+;
+
+; Program assumes that each ENGE hodoscope has 25 counters
+; HOWEVER, third one, EHOD3, is only one counter and stays like HHOD(HTOF) 1Y.
+; Therefore, I (Masashi Kaneta) set same values for 25 counters on layer 3 as dummy
+;
+
+  escin_xcenter =   56.0,  56.0 , 0.0,
+                    52.0,  52.0 , 0.0,
+                    48.0,  48.0 , 0.0,
+                    44.0,  44.0 , 0.0,
+                    40.0,  40.0 , 0.0,
+                    36.0,  36.0 , 0.0,
+                    32.0,  32.0 , 0.0,
+                    28.0,  28.0 , 0.0,
+                    24.0,  24.0 , 0.0,
+                    20.0,  20.0 , 0.0,
+                    16.0,  16.0 , 0.0,
+                    12.0,  12.0 , 0.0,
+                     8.0,   8.0 , 0.0,
+                     4.0,   4.0 , 0.0,
+                     0.0,   0.0 , 0.0,
+                    -4.0,  -4.0 , 0.0,
+                    -8.0,  -8.0 , 0.0,
+                   -12.0, -12.0 , 0.0,
+                   -16.0, -16.0 , 0.0,
+                   -20.0, -20.0 , 0.0,
+                   -24.0, -24.0 , 0.0,
+                   -28.0, -28.0 , 0.0,
+                   -32.0, -32.0 , 0.0,
+                   -36.0, -36.0 , 0.0,
+                   -40.0, -40.0 , 0.0,
+                   -44.0, -44.0 , 0.0,
+                   -48.0, -48.0 , 0.0,
+                   -52.0, -52.0 , 0.0,
+                   -56.0, -56.0 , 0.0 
+ 
+

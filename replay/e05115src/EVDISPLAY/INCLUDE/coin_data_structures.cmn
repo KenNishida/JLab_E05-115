@@ -1,0 +1,125 @@
+*****************begin: coin_data_structures.cmn*************************
+*     
+*     include file     coin_data_structures.cmn
+*     
+*     Author:	Jinghua Liu		15 September 1999
+*     
+*     Revision 1.0  1999/09/15 10:42:27  jinghua
+*     Initial revision
+*     
+      
+****************************************************************************
+*     COIN_PHYSICS COMMON BLOCKS
+*     
+*     These are filled by C_PHYSICS. All kinematic quantities are calculated
+*     only for the HNSS track within the coincedence window and with
+*     C_MULTIP=1, which means if more than one HNSS tracks within the
+*     window, we will not calculate the missing mass unless we have
+*     a good mathod to pick up the right track.
+*     
+*     CTPTYPE=event
+*     
+      Integer*4 cnphysics_max
+      Parameter(cnphysics_max=50)
+      
+c     --- missing mass - proton mass in elementary reaction configuration
+c     --- missing mass - target nuclear mass 
+c     in binding energy scale
+      Real*4 cmissmass_h(cnphysics_max)
+      Real*4 cmissmass_c(cnphysics_max)
+      Real*4 cmissmass_tar(cnphysics_max)
+
+      REAL*4 CMASSDIFF(cnphysics_max)             
+*     ! Mass difference
+      REAL*4 CMISSING_MASS(cnphysics_max)           
+*     ! Missing mass of undetected hadron system
+      REAL*4 CMISSING_MOM(cnphysics_max)            
+*     ! Magnitude of missing momentum 
+      REAL*4 CMISSING_MOMX(cnphysics_max)           
+*     ! X component of missing momentum
+      REAL*4 CMISSING_MOMY(cnphysics_max)           
+*     ! Y component of missing momentum
+      REAL*4 CMISSING_MOMZ(cnphysics_max)           
+*     ! Z component of missing momentum
+      REAL*4 CMISSING_E(cnphysics_max)              
+*     ! Missing E
+      REAL*4 CTIME_COIN_COR(cnphysics_max)          
+*     ! Corrected Coincidence time
+      REAL*4 C_S(cnphysics_max)                     
+*     ! s computed from spectrometers only
+      REAL*4 CTHETAPQ(cnphysics_max)                
+*     ! Angle between q and hadron
+      REAL*4 CPHIPQ(cnphysics_max)                  
+*     ! Azimuthal angle of hadron about q
+      REAL*4 C_BIGQ2(cnphysics_max)  		   
+*     ! Four-momentum transfer
+      REAL*4 C_OMEGA(cnphysics_max)  		   
+*     ! Energy of virtual photon
+
+      INTEGER*4 cnphysics
+      Integer*4 cnhks(cnphysics_max)
+      Integer*4 cnhes(cnphysics_max)
+      Integer*4 c_hks_multi,c_hes_multi
+      
+      
+      COMMON/COIN_PHYSICS/
+     &     CMASSDIFF,
+     &     CMISSING_MASS, 
+     &     cmissmass_tar,
+     &     cmissmass_h, 
+     &     cmissmass_c, 
+     &     CMISSING_MOM,
+     &     CMISSING_MOMX,
+     &     CMISSING_MOMY,
+     &     CMISSING_MOMZ,
+     &     CMISSING_E,
+     &     CTIME_COIN_COR,
+     &     C_S,
+     &     CTHETAPQ,
+     &     CPHIPQ,
+     &     C_BIGQ2,
+     &     C_OMEGA,
+     &     cnhks, 
+     &     cnhes,
+     &     c_hks_multi,
+     &     c_hes_multi,
+     &     cnphysics
+      
+*     
+*     CTPTYPE=parm
+*     
+      integer*4 c_coin_bypass     
+*!    >0 skip the entire coincidence part
+*
+      common/coin_bypass_switches/
+     $     c_coin_bypass
+*
+*
+      integer*4 c_coin_task
+      integer*4 c_target_eloss_on
+      real*4 c_cointime_low, c_cointime_high
+      
+*
+      common/coin_params/
+     $     c_coin_task,
+     $     c_target_eloss_on,
+     $     c_cointime_low,
+     $     c_cointime_high
+
+      Real*4 cbeam_cor,chpcent_cor,cepcent_cor
+
+      Common/coin_pcorr/
+     $     cbeam_cor,     
+     $     chpcent_cor,
+     $     cepcent_cor
+
+      Real*4 c_rfpeak, coinrf
+      common/coinrf/c_rfpeak, coinrf
+
+*                                          
+*******************end: coin_data_structures.cmn*************************
+*     Local Variables:
+*     mode: fortran
+*     fortran-continuation-string: "&"
+*     comment-column: 35
+*     End:

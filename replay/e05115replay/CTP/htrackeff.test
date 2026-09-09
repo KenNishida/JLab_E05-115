@@ -1,0 +1,64 @@
+********************************************************************************
+begin test esingles_trackeff group=hnss group=both
+#int escinshould,edid
+
+escinshould = entracks_fp
+edid = escinshould
+
+end test esingles_etrackeff
+
+begin test hsingles_trackeff group=hks group=both
+
+#int h1hit1,h1hit2,h1hit3,h1hit4,h1hit5,h1hit6
+#int h1hit7,h1hit8,h1hit9,h1hit10,h1hit11,h1hit12
+#int h1hitslt,h2hitslt,h1layersgt,h2layersgt
+#int hhitslt,hlayersgt
+#int hstublt
+#int f1hspacepoints,f2hspacepoints,fhspacepoints
+#int hhitslayers,hhitslayerssps,hhitslayersspsstubs
+#int hspacepoints
+#int htest1,htest2
+#int hsfoundtrack, hscleantrack
+#int hgoodbeta
+#int hscinshould,hdid
+
+h1hit1 = (HDC_HITS_PER_LAYER(1) >= 1)
+h1hit2 = (HDC_HITS_PER_LAYER(2) >= 1)
+h1hit3 = (HDC_HITS_PER_LAYER(3) >= 1)
+h1hit4 = (HDC_HITS_PER_LAYER(4) >= 1)
+h1hit5 = (HDC_HITS_PER_LAYER(5) >= 1)
+h1hit6 = (HDC_HITS_PER_LAYER(6) >= 1)
+h1hit7 = (HDC_HITS_PER_LAYER(7) >= 1)
+h1hit8 = (HDC_HITS_PER_LAYER(8) >= 1)
+h1hit9 = (HDC_HITS_PER_LAYER(9) >= 1)
+h1hit10 = (HDC_HITS_PER_LAYER(10) >= 1)
+h1hit11 = (HDC_HITS_PER_LAYER(11) >= 1)
+h1hit12 = (HDC_HITS_PER_LAYER(12) >= 1)
+
+h1layersgt = ((h1hit1 && h1hit2 && h1hit3 && h1hit4 && h1hit5) ||  (h1hit1 && h1hit2 && h1hit3 && h1hit4 && h1hit6) ||  (h1hit1 && h1hit2 && h1hit3 && h1hit5 && h1hit6) ||  (h1hit1 && h1hit2 && h1hit4 && h1hit5 && h1hit6) ||   (h1hit1 && h1hit3 && h1hit4 && h1hit5 && h1hit6) ||  (h1hit2 && h1hit3 && h1hit4 && h1hit5 && h1hit6))
+
+h2layersgt = ((h1hit7 && h1hit8 && h1hit9 && h1hit10 && h1hit11) ||  (h1hit7 && h1hit8 && h1hit9 && h1hit10 && h1hit12) ||  (h1hit7 && h1hit8 && h1hit9 && h1hit11 && h1hit12) ||   (h1hit7 && h1hit8 && h1hit10 && h1hit11 && h1hit12) ||  (h1hit7 && h1hit9 && h1hit10 && h1hit11 && h1hit12) ||  (h1hit8 && h1hit9 && h1hit10 && h1hit11 && h1hit12))
+
+h1hitslt = (HDC_HITS_PER_LAYER(1) + HDC_HITS_PER_LAYER(2) + HDC_HITS_PER_LAYER(3 ) + HDC_HITS_PER_LAYER(4) + HDC_HITS_PER_LAYER(5) + HDC_HITS_PER_LAYER(6)) <= hmax_pr_hits(1)
+h2hitslt = (HDC_HITS_PER_LAYER(7) + HDC_HITS_PER_LAYER(8) + HDC_HITS_PER_LAYER(9) + HDC_HITS_PER_LAYER(10) + HDC_HITS_PER_LAYER(11) + HDC_HITS_PER_LAYER(12)) <= hmax_pr_hits(2)
+
+hsfoundtrack = (hntracks_fp != 0)
+hhitslt = h1hitslt && h2hitslt
+hlayersgt = h1layersgt && h2layersgt
+hspacepoints = ((hnspace_points(1) >= 1) && (hnspace_points(2) >= 1))
+hstublt = hstubtest
+hhitslayers = hhitslt && hlayersgt
+hhitslayerssps = hhitslayers && hspacepoints
+hhitslayersspsstubs = hhitslayerssps && hstublt
+f1hspacepoints = h1hitslt && h1layersgt && (hnspace_points(1) == 0)
+f2hspacepoints = h2hitslt && h2layersgt && (hnspace_points(2) == 0)
+fhspacepoints = f1hspacepoints || f2hspacepoints
+htest1 = hhitslayers  && !hspacepoints
+htest2 = hspacepoints && !hstublt
+hscleantrack = (hntracks_fp != 0)
+hgoodbeta = hbeta_notrk > 0.7
+hscinshould = hgoodscinhits && (hbeta_notrk>=(-0.1))
+hdid = hscinshould && (hntracks_fp !=0)
+
+end test hsingles_htrackeff
+

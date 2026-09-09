@@ -1,0 +1,726 @@
+*_______________________________________________________________________
+*      hks_id_histid.cmn
+*
+*      This common block contains the HBOOK histogram id numbers
+*      for all hks particle id histograms in which direct hfill 
+*      calls are made.
+*
+*      It also contains the paramter flags to turn on and off histograming
+*      of each of the hard coded blocks.
+*
+*      Created 9 April 1994	D. F. Geesaman
+*
+* $Log: hks_id_histid.cmn,v $
+* Revision 1.1.1.1  2009/08/17 22:03:05  yez
+* Add Lucite sum channels,*_tot_*
+*
+* Revision 1.1.1.1  2009/07/09 16:38:55  yez
+* Add Lucite Counters for E05115 
+*
+* Revision 1.1.1.1  2009/06/23 13:55:43  kawama
+*
+* e05115 src repository for software development
+*
+* Revision 1.9  2005/07/08 13:46:00  sumihama
+* Mod. AC hist
+*
+* Revision 1.6  2005/07/03 04:19:51  sumihama
+* Mod. hbook sor s.s
+*
+* Revision 1.5  2005/06/14 04:32:19  cdaq
+* Mod. rf histgram
+*
+* Revision 1.4  2005/06/10 18:54:02  cdaq
+* add trig,tul variables
+*
+* Revision 1.3  2005/05/30 22:27:51  miyoshi
+* add/delete histgram
+*
+* Revision 1.2  2005/05/30 17:40:17  miyoshi
+* change hist name for ac and wc
+*
+* Revision 1.1.1.1  2005/05/14 21:44:37  miyoshi
+*
+*
+* Revision 1.15  2005/04/19 17:38:12  miyoshi
+* add histogram
+*
+* Revision 1.14  2005/04/08 17:36:20  miyoshi
+* separate hks physics hist from main cmn file
+*
+* Revision 1.13  2005/03/14 19:46:38  miyoshi
+* add histogram for EDC and HDC
+*
+* Revision 1.12  2005/03/08 14:56:18  miyoshi
+* add link stub debug hist
+*
+* Revision 1.11  2005/03/07 16:32:57  miyoshi
+* add hdc histogram
+*
+* Revision 1.10  2005/03/02 22:13:16  miyoshi
+* add hist for hdc decording
+*
+* Revision 1.9  2005/03/02 17:20:11  miyoshi
+* add scin hist
+*
+* Revision 1.8  2005/03/01 23:51:25  miyoshi
+* add hdc raw hist
+*
+* Revision 1.7  2005/02/11 18:51:33  miyoshi
+* clean up used/unused hist
+*
+* Revision 1.6  2005/01/11 15:53:56  sumihama
+* Mod. tof-INCLUDE files
+*
+* Revision 1.5  2004/12/24 21:19:21  miyoshi
+* change common block
+*
+* Revision 1.4  2004/12/24 19:41:47  miyoshi
+* add some variables and parameters
+*
+* Revision 1.3  2004/12/23 23:38:52  sumihama
+* Add fll_raw files
+*
+* Revision 1.2  2004/12/23 19:50:50  sumihama
+* Add raw-variables
+*
+* Revision 1.1.1.1  2004/08/30 21:21:37  miyoshi
+* new dir
+*
+* Revision 1.3  2000/02/11 20:30:09  ysato
+* Minor corrections and misc signals were moved to HKS crate
+*
+* Revision 1.2  2000/01/07 01:31:25  ysato
+* Lucite raw data dump/histgram added
+*
+* Revision 1.1.1.1  1999/11/01 13:54:49  ysato
+* Upgrade for HNSS
+*
+* Revision 1.11  1999/02/23 19:20:42  csa
+* (JRA) Add sidscindpos_pid, cleanup
+*
+* Revision 1.10  1999/02/03 21:13:34  saw
+* Code for new Shower counter tubes
+*
+* Revision 1.9  1996/09/04 16:28:58  saw
+* (JRA) Add sidmisctdcs
+*
+* Revision 1.8  1996/01/17 15:09:34  cdaq
+* (JRA) Add sidscintimes histogram
+*
+* Revision 1.7  1995/09/01 13:02:48  cdaq
+* (JRA) Add dpos histid's
+*
+* Revision 1.6  1995/08/11  16:31:11  cdaq
+* (JRA) Add dpos (track pos - hit pos) histograms
+*
+* Revision 1.5  1995/07/28  14:27:26  cdaq
+* (JRA) Add sidsum histogram id holders
+*
+* Revision 1.4  1995/05/22  19:07:42  cdaq
+* (SAW) Split gen_data_data_structures into gen, hms, hks, and coin parts
+*
+* Revision 1.3  1995/05/12  12:23:46  cdaq
+* (JRA) Modify/add user histograms
+*
+* Revision 1.2  1994/08/05  21:05:04  cdaq
+* (SAW) Add makereg directive with required include files
+*       Add "CTPTYPE=parm" directive for auto generation of CTP reg calls
+*
+* Revision 1.1  1994/04/12  21:16:27  cdaq
+* Initial revision
+*
+*%%   include 'hks_data_structures.cmn'
+*%%   include 'hks_scin_parms.cmn'
+*
+*     CTPTYPE=parm
+*
+      
+************************
+*     HDC
+************************
+*     h_fill_dc_raw_hist
+	
+      Integer*4 hiddcrawtothit
+      Integer*4 hiddcrawtothitzoom
+      Integer*4 hiddcrawhitpat(HMAX_NUM_DC_LAYERS)
+      Integer*4 hiddcrawtdc(HMAX_NUM_DC_SLOTS)
+      Integer*4 hiddcrawlayertdc(HMAX_NUM_DC_LAYERS)
+      Integer*4 hiddcrawtdcall
+      Integer*4 hidstarttime
+	
+      COMMON/hks_dc_raw_histid/
+     1  hiddcrawtothit,
+     2  hiddcrawtothitzoom,
+     3  hiddcrawhitpat,
+     4  hiddcrawtdc,
+     5  hiddcrawlayertdc,
+     6  hiddcrawtdcall,
+     7  hidstarttime
+
+*     --- h_fill_dc_dec_hist
+
+      Integer*4 hiddcdectothit
+      Integer*4 hiddcdectothitzoom
+      Integer*4 hiddcwirecenter(HMAX_NUM_DC_LAYERS)
+*     --- 'sl' is per slot, normal drift time hist is per layer(12).
+      Integer*4 hiddcdrifttimesl(HMAX_NUM_DC_SLOTS)
+      Integer*4 hiddcdectdcall
+*     --- debug histogram	
+      Integer*4 hiddcearlymult
+      Integer*4 hiddclatemult
+      Integer*4 hiddcextramult
+      Integer*4 hiddccluster(HMAX_NUM_DC_LAYERS)
+      Integer*4 hiddclayerhit(HMAX_NUM_DC_LAYERS)
+
+*     --- fill in h_fill_dc_sp_hist
+      Integer*4 hiddcnspacepoint
+      Integer*4 hiddcnspacepointzoom
+      Integer*4 hiddcnspacepointhits
+*     --- fill in h_find_space_points
+      Integer*4 hidsqdistance
+*	--- fill in h_link_stubs
+      Integer*4 hidxtcriterion
+      Integer*4 hidytcriterion
+      Integer*4 hidxptcriterion
+      Integer*4 hidyptcriterion
+
+      COMMON/hks_dc_dec_histid/
+     &     hiddcdectothit,
+     &     hiddcdectothitzoom,
+     &     hiddcwirecenter,
+     &     hiddcdrifttimesl,
+     &     hiddcdectdcall,
+     &     hiddcearlymult,
+     &     hiddclatemult,
+     &     hiddcextramult,
+     &     hiddccluster,
+     &     hiddclayerhit,
+     &     hiddcnspacepoint,
+     &     hiddcnspacepointzoom,
+     &     hiddcnspacepointhits,
+     &     hidsqdistance,
+     &     hidxtcriterion,
+     &     hidytcriterion,
+     &     hidxptcriterion,
+     &     hidyptcriterion
+
+*     --- hks tracking histgram 
+
+       Integer*4 hidhntracksfp
+       Integer*4 hidhntracksfpzoom
+       Integer*4 hidchi2perdofpre
+       Integer*4 hidchi2perdofprezoom
+       Integer*4 hidchi2perdoffp
+       Integer*4 hidchi2perdoffpzoom
+       Integer*4 hidhxfp,hidhyfp
+       Integer*4 hidhxpfp,hidhypfp
+       Integer*4 hidfpxy,hidfpxpyp
+       Integer*4 hidfpxxp,hidfpxyp
+       Integer*4 hidfpyxp,hidfpyyp
+       Integer*4 hiddcdriftdis(HMAX_NUM_DC_LAYERS)
+       Integer*4 hidresidualpre(HMAX_NUM_DC_LAYERS)
+       Integer*4 hidsingresidual(HMAX_NUM_DC_LAYERS)
+       integer*4 hiddcwiremap(hmax_num_dc_layers)
+       integer*4 hiddcdrifttime(hmax_num_dc_layers)
+       integer*4 hiddcwirecent(hmax_num_dc_layers)
+       integer*4 hidhlogchi2_fp,
+     &     hidhnfree_fp,hidhchi2perdeg_fp
+       integer*4 hidsingres_fp(hmax_num_dc_layers)
+       integer*4 hidrawtdc
+       integer*4 hidcuttdc
+
+      Common/hks_tracking_histid/
+     &     hidhntracksfp,
+     &     hidhntracksfpzoom,
+     &     hidchi2perdofpre,
+     &     hidchi2perdofprezoom,
+     &     hidchi2perdoffp,
+     &     hidchi2perdoffpzoom,
+     &     hidhxfp,
+     &     hidhyfp,
+     &     hidhxpfp,
+     &     hidhypfp,
+     &     hidfpxy,
+     &     hidfpxpyp,
+     &	   hidfpxxp,
+     &     hidfpxyp,
+     &     hidfpyxp,
+     &     hidfpyyp,
+     &     hiddcdriftdis,
+     &     hidresidualpre,
+     &     hidsingresidual,     
+     &     hiddcwiremap,
+     &     hiddcdrifttime,
+     &     hiddcwirecent,
+     &     hidhlogchi2_fp,
+     &     hidhnfree_fp,
+     &     hidhchi2perdeg_fp,
+     &     hidsingres_fp,
+     &     hidrawtdc,
+     &     hidcuttdc
+
+      integer*4 hidhx_tar, hidhy_tar, hidhz_tar
+      integer*4 hidhxp_tar, hidhyp_tar
+      integer*4 hidhdelta_tar, hidhp_tar
+      integer*4 hidtarxpyp,hidhpwide
+      integer*4 hidxsv, hidysv, hidxysv
+	
+      common/hks_target_recon/
+     &     hidhx_tar,
+     &     hidhy_tar,
+     &     hidhz_tar,
+     &     hidhxp_tar,
+     &     hidhyp_tar,
+     &     hidhdelta_tar,
+     &     hidhp_tar,
+     &     hidhpwide,
+     &     hidtarxpyp,
+     &	   hidxsv,
+     &	   hidysv,
+     &	   hidxysv
+
+*  temporary junk common block.
+*
+*     CTPTYPE=event
+*
+      real*4 hx_sp1(hntracks_max), hy_sp1(hntracks_max), hxp_sp1(hntracks_max)
+      real*4 hx_sp2(hntracks_max), hy_sp2(hntracks_max), hxp_sp2(hntracks_max)
+      real*4 hhx_sp1, hhy_sp1, hhxp_sp1
+      real*4 hhx_sp2, hhy_sp2, hhxp_sp2
+*
+      common/htemp_junk_cb/hx_sp1,hy_sp1,hxp_sp1,hx_sp2,hy_sp2,hxp_sp2,
+     &     hhx_sp1,hhy_sp1,hhxp_sp1,hhx_sp2,hhy_sp2,hhxp_sp2
+
+*
+*     CTPTYPE=parm
+*
+
+*************************************
+*     HKS hodoscope
+*************************************
+c     --- scin raw hist
+
+      integer*4 hidscinrawtothits
+      integer*4 hidscinrawlayer
+      integer*4 hidscinrawcounters(HNUM_SCIN_LAYERS)
+      integer*4 hidscinrawadchitpatpos(HNUM_SCIN_LAYERS)
+      integer*4 hidscinrawadchitpatneg(HNUM_SCIN_LAYERS)
+      integer*4 hidscinrawtdchitpatpos(HNUM_SCIN_LAYERS)
+      integer*4 hidscinrawtdchitpatneg(HNUM_SCIN_LAYERS)
+      integer*4 hidscinsumposadc(HNUM_SCIN_LAYERS)
+      integer*4 hidscinsumnegadc(HNUM_SCIN_LAYERS)
+      integer*4 hidscinsumpostdc(HNUM_SCIN_LAYERS)
+      integer*4 hidscinsumnegtdc(HNUM_SCIN_LAYERS)
+      integer*4 hidscinrawpostdc(HNUM_SCIN_LAYERS,hnum_scin_elements)
+      integer*4 hidscinrawnegtdc(HNUM_SCIN_LAYERS,hnum_scin_elements)
+      integer*4 hidscinrawposadc(HNUM_SCIN_LAYERS,hnum_scin_elements)
+      integer*4 hidscinrawnegadc(HNUM_SCIN_LAYERS,hnum_scin_elements)
+      integer*4 hidscinrawposped(HNUM_SCIN_LAYERS,hnum_scin_elements)
+      integer*4 hidscinrawnegped(HNUM_SCIN_LAYERS,hnum_scin_elements)
+
+      Common/HKS_SCIN_RAW_HISTID/
+     &     hidscinrawtothits,
+     &     hidscinrawlayer,
+     &     hidscinrawcounters,
+     &     hidscinrawadchitpatpos,
+     &     hidscinrawadchitpatneg,
+     &     hidscinrawtdchitpatpos,
+     &     hidscinrawtdchitpatneg,
+     &     hidscinsumposadc,
+     &     hidscinsumnegadc,
+     &     hidscinsumpostdc,
+     &     hidscinsumnegtdc,     
+     &     hidscinrawpostdc,
+     &     hidscinrawnegtdc,
+     &     hidscinrawposadc,
+     &     hidscinrawnegadc,
+     &     hidscinrawposped,
+     &     hidscinrawnegped
+
+c     --- scin dec hist
+
+      integer*4 hidscindectothits
+      integer*4 hidscindeclayerhits(HNUM_SCIN_LAYERS)
+      integer*4 hidscinlayer
+      integer*4 hidscinposadc(HNUM_SCIN_LAYERS,hnum_scin_elements)
+      integer*4 hidscinnegadc(HNUM_SCIN_LAYERS,hnum_scin_elements)
+      integer*4 hidscinpostime(HNUM_SCIN_LAYERS,hnum_scin_elements)
+      integer*4 hidscinnegtime(HNUM_SCIN_LAYERS,hnum_scin_elements)
+      integer*4 hidscincounters(HNUM_SCIN_LAYERS)
+      integer*4 hidscinalltime
+      integer*4 hidscinfptime
+      integer*4 hidscindpos(HNUM_SCIN_LAYERS)
+      integer*4 hidscindpos_pid(HNUM_SCIN_LAYERS)
+      integer*4 hidscinpattdcpos(HNUM_SCIN_LAYERS)
+      integer*4 hidscinpattdcneg(HNUM_SCIN_LAYERS)
+      integer*4 hidscinpatadcpos(HNUM_SCIN_LAYERS)
+      integer*4 hidscinpatadcneg(HNUM_SCIN_LAYERS)
+      integer*4 hidscinpattdcboth(HNUM_SCIN_LAYERS)
+      integer*4 hidscinpatadcboth(HNUM_SCIN_LAYERS)
+      integer*4 hiddcdposx,hiddcdposy,hiddcdposxp,hiddcdposyp
+      integer*4 hidmisctdcs(6)
+*
+      common/HKS_ID_HISTID/
+     &     hidscindectothits,
+     &     hidscindeclayerhits,
+     &     hidscinlayer,
+     &     hidscincounters,
+     &     hidscinposadc,
+     &     hidscinnegadc,
+     &     hidscinpostime,
+     &     hidscinnegtime,
+     &     hidscinpattdcpos,
+     &     hidscinpattdcneg,
+     &     hidscinpatadcpos,
+     &     hidscinpatadcneg,
+     &     hidscinpattdcboth,
+     &     hidscinpatadcboth,
+     &     hidscinalltime,
+     &     hidscinfptime,
+     &     hidscindpos,
+     &     hiddcdposx,hiddcdposy,hiddcdposxp,hiddcdposyp,
+     &     hidmisctdcs,
+     &     hidscindpos_pid
+
+
+****************************
+* HKS CHERENKOV
+****************************
+
+c     --- aer raw hist
+
+      integer*4 hidaerrawtothits
+      integer*4 hidaerrawlayer
+      integer*4 hidaerrawhitpat(HNUM_AER_LAYERS)
+      integer*4 hidaerrawposadc(HNUM_AER_LAYERS,HNUM_AER_COUNTERS)
+      integer*4 hidaerrawnegadc(HNUM_AER_LAYERS,HNUM_AER_COUNTERS)
+      integer*4 hidaerrawposped(HNUM_AER_LAYERS,HNUM_AER_COUNTERS)
+      integer*4 hidaerrawnegped(HNUM_AER_LAYERS,HNUM_AER_COUNTERS)
+      integer*4 hidaerrawpostdc(HNUM_AER_LAYERS,HNUM_AER_COUNTERS)
+      integer*4 hidaerrawnegtdc(HNUM_AER_LAYERS,HNUM_AER_COUNTERS)
+      integer*4 hidaerrawadchitpatpos(HNUM_AER_LAYERS)
+      integer*4 hidaerrawadchitpatneg(HNUM_AER_LAYERS)
+      integer*4 hidaerrawtdchitpatpos(HNUM_AER_LAYERS)
+      integer*4 hidaerrawtdchitpatneg(HNUM_AER_LAYERS)
+      integer*4 hidaersumposadc(HNUM_AER_LAYERS)
+      integer*4 hidaersumnegadc(HNUM_AER_LAYERS)
+      integer*4 hidaersumpostdc(HNUM_AER_LAYERS)
+      integer*4 hidaersumnegtdc(HNUM_AER_LAYERS)
+
+c     --- wat raw hist
+
+      integer*4 hidwatrawtothits
+      integer*4 hidwatrawlayer
+      integer*4 hidwatrawhitpat(HNUM_WAT_LAYERS)
+      integer*4 hidwatrawposadc(HNUM_WAT_LAYERS,HNUM_WAT_COUNTERS)
+      integer*4 hidwatrawnegadc(HNUM_WAT_LAYERS,HNUM_WAT_COUNTERS)
+      integer*4 hidwatrawposped(HNUM_WAT_LAYERS,HNUM_WAT_COUNTERS)
+      integer*4 hidwatrawnegped(HNUM_WAT_LAYERS,HNUM_WAT_COUNTERS)
+      integer*4 hidwatrawpostdc(HNUM_WAT_LAYERS,HNUM_WAT_COUNTERS)
+      integer*4 hidwatrawnegtdc(HNUM_WAT_LAYERS,HNUM_WAT_COUNTERS)
+      integer*4 hidwatrawadchitpatpos(HNUM_WAT_LAYERS)
+      integer*4 hidwatrawadchitpatneg(HNUM_WAT_LAYERS)
+      integer*4 hidwatrawtdchitpatpos(HNUM_WAT_LAYERS)
+      integer*4 hidwatrawtdchitpatneg(HNUM_WAT_LAYERS)
+      integer*4 hidwatsumposadc(HNUM_WAT_LAYERS)
+      integer*4 hidwatsumnegadc(HNUM_WAT_LAYERS)
+      integer*4 hidwatsumpostdc(HNUM_WAT_LAYERS)
+      integer*4 hidwatsumnegtdc(HNUM_WAT_LAYERS)
+
+c     --- luc raw hist
+
+      integer*4 hidlucrawtothits
+      integer*4 hidlucrawlayer
+      integer*4 hidlucrawhitpat(HNUM_LUC_LAYERS)
+      integer*4 hidlucrawposadc(HNUM_LUC_LAYERS,HNUM_LUC_COUNTERS)
+      integer*4 hidlucrawnegadc(HNUM_LUC_LAYERS,HNUM_LUC_COUNTERS)
+      integer*4 hidlucrawtotadc(HNUM_LUC_LAYERS,HNUM_LUC_COUNTERS)	
+      integer*4 hidlucrawposped(HNUM_LUC_LAYERS,HNUM_LUC_COUNTERS)
+      integer*4 hidlucrawnegped(HNUM_LUC_LAYERS,HNUM_LUC_COUNTERS)
+      integer*4 hidlucrawtotped(HNUM_LUC_LAYERS,HNUM_LUC_COUNTERS)	
+      integer*4 hidlucrawpostdc(HNUM_LUC_LAYERS,HNUM_LUC_COUNTERS)
+      integer*4 hidlucrawnegtdc(HNUM_LUC_LAYERS,HNUM_LUC_COUNTERS)
+      integer*4 hidlucrawtottdc(HNUM_LUC_LAYERS,HNUM_LUC_COUNTERS)
+      integer*4 hidlucrawadchitpatpos(HNUM_LUC_LAYERS)
+      integer*4 hidlucrawadchitpatneg(HNUM_LUC_LAYERS)
+      integer*4 hidlucrawadchitpattot(HNUM_LUC_LAYERS)
+      integer*4 hidlucrawtdchitpatpos(HNUM_LUC_LAYERS)
+      integer*4 hidlucrawtdchitpatneg(HNUM_LUC_LAYERS)
+      integer*4 hidlucrawtdchitpattot(HNUM_LUC_LAYERS)
+      integer*4 hidlucsumposadc(HNUM_LUC_LAYERS)
+      integer*4 hidlucsumnegadc(HNUM_LUC_LAYERS)
+      integer*4 hidlucsumtotadc(HNUM_LUC_LAYERS)
+      integer*4 hidlucsumpostdc(HNUM_LUC_LAYERS)
+      integer*4 hidlucsumnegtdc(HNUM_LUC_LAYERS)
+      integer*4 hidlucsumtottdc(HNUM_LUC_LAYERS)
+
+
+      common/HKS_CHE_RAW_HISTID/
+     &     hidaerrawtothits,
+     &     hidaerrawlayer,
+     &     hidaerrawhitpat,
+     &     hidaerrawadchitpatpos,
+     &     hidaerrawadchitpatneg,
+     &     hidaerrawtdchitpatpos,
+     &     hidaerrawtdchitpatneg,
+     &     hidaersumposadc,
+     &     hidaersumnegadc,
+     &     hidaersumpostdc,
+     &     hidaersumnegtdc,
+     &     hidaerrawposadc,
+     &     hidaerrawnegadc,
+     &     hidaerrawposped,
+     &     hidaerrawnegped,
+     &     hidaerrawpostdc,
+     &     hidaerrawnegtdc,     
+     &     hidwatrawtothits,
+     &     hidwatrawlayer,
+     &     hidwatrawhitpat,
+     &     hidwatrawadchitpatpos,
+     &     hidwatrawadchitpatneg,
+     &     hidwatrawtdchitpatpos,
+     &     hidwatrawtdchitpatneg,
+     &     hidwatsumposadc,
+     &     hidwatsumnegadc,
+     &     hidwatsumpostdc,
+     &     hidwatsumnegtdc,
+     &     hidwatrawposadc,
+     &     hidwatrawnegadc,
+     &     hidwatrawpostdc,
+     &     hidwatrawnegped,
+     &     hidwatrawposped,
+     &     hidwatrawnegtdc,     
+     &     hidlucrawtothits,
+     &     hidlucrawlayer,
+     &     hidlucrawhitpat,
+     &     hidlucrawadchitpatpos,
+     &     hidlucrawadchitpatneg,
+     &     hidlucrawadchitpattot,
+     &     hidlucrawtdchitpatpos,
+     &     hidlucrawtdchitpatneg,
+     &     hidlucrawtdchitpattot,
+     &     hidlucsumposadc,
+     &     hidlucsumnegadc,
+     &     hidlucsumtotadc,
+     &     hidlucsumpostdc,
+     &     hidlucsumnegtdc,
+     &     hidlucsumtottdc,
+     &     hidlucrawposadc,
+     &     hidlucrawnegadc,
+     &     hidlucrawtotadc,
+     &     hidlucrawposped,
+     &     hidlucrawnegped,
+     &     hidlucrawtotped,
+     &     hidlucrawpostdc,
+     &     hidlucrawnegtdc,
+     &     hidlucrawtottdc
+
+*     HKS Aerogel dec
+
+      integer*4 hidaertothits
+      integer*4 hidaerlayer
+      integer*4 hidaerhitpat(HNUM_AER_LAYERS)
+      Integer*4 hidaerlayerhits(HNUM_AER_LAYERS)
+      integer*4 hidaerposnpe(HNUM_AER_LAYERS,HNUM_AER_COUNTERS)
+      integer*4 hidaernegnpe(HNUM_AER_LAYERS,HNUM_AER_COUNTERS)
+      integer*4 hidaersumnpe(HNUM_AER_LAYERS,HNUM_AER_COUNTERS)
+      integer*4 hidaerpostime(HNUM_AER_LAYERS,HNUM_AER_COUNTERS)
+      integer*4 hidaernegtime(HNUM_AER_LAYERS,HNUM_AER_COUNTERS)
+      integer*4 hidaernpesum(HNUM_AER_LAYERS)
+
+*     HKS Water dec
+
+      integer*4 hidwattothits
+      integer*4 hidwatlayer
+      integer*4 hidwathitpat(HNUM_WAT_LAYERS)
+      Integer*4 hidwatlayerhits(HNUM_WAT_LAYERS)
+      integer*4 hidwatposnpe(HNUM_WAT_LAYERS,HNUM_WAT_COUNTERS)
+      integer*4 hidwatnegnpe(HNUM_WAT_LAYERS,HNUM_WAT_COUNTERS)
+      integer*4 hidwatpostime(HNUM_WAT_LAYERS,HNUM_WAT_COUNTERS)
+      integer*4 hidwatnegtime(HNUM_WAT_LAYERS,HNUM_WAT_COUNTERS)
+      integer*4 hidwatnpesum(HNUM_WAT_LAYERS)
+
+*     HKS Lucite dec
+
+      integer*4 hidluctothits
+      integer*4 hidluclayer
+      integer*4 hidluchitpat(HNUM_LUC_LAYERS)
+      Integer*4 hidluclayerhits(HNUM_LUC_LAYERS)
+      integer*4 hidlucposnpe(HNUM_LUC_LAYERS,HNUM_LUC_COUNTERS)
+      integer*4 hidlucnegnpe(HNUM_LUC_LAYERS,HNUM_LUC_COUNTERS)
+      integer*4 hidlucsumnpe(HNUM_LUC_LAYERS,HNUM_LUC_COUNTERS)
+      integer*4 hidluctotnpe(HNUM_LUC_LAYERS,HNUM_LUC_COUNTERS)
+      integer*4 hidlucpostime(HNUM_LUC_LAYERS,HNUM_LUC_COUNTERS)
+      integer*4 hidlucnegtime(HNUM_LUC_LAYERS,HNUM_LUC_COUNTERS)
+      integer*4 hidluctottime(HNUM_LUC_LAYERS,HNUM_LUC_COUNTERS)
+      integer*4 hidlucnpesum(HNUM_LUC_LAYERS)
+
+      COMMON/HKS_CHE_DEC_HISTID/
+     &   hidaertothits,
+     &   hidaerlayer,
+     &   hidaerhitpat,
+     &   hidaerlayerhits,
+     &   hidaerposnpe,
+     &   hidaernegnpe,
+     &   hidaerpostime,
+     &   hidaernegtime,
+     &   hidaernpesum,
+     &   hidwattothits,
+     &   hidwatlayer,
+     &   hidwathitpat,
+     &   hidwatlayerhits,
+     &   hidwatposnpe,
+     &   hidwatnegnpe,
+     &   hidwatpostime,
+     &   hidwatnegtime,
+     &   hidwatnpesum,
+     &   hidluctothits,
+     &   hidluclayer,
+     &   hidluchitpat,
+     &   hidluclayerhits,
+     &   hidlucposnpe,
+     &   hidlucnegnpe,
+     &   hidlucsumnpe,
+     &   hidluctotnpe,
+     &   hidlucpostime,
+     &   hidlucnegtime,
+     &   hidluctottime,
+     &   hidlucnpesum,
+     &   hidaersumnpe
+
+*
+*     HKS TOF
+*
+
+      Integer*4 hidtrktof
+      Integer*4 hidtrkleng
+      Integer*4 hidtrkp
+      Integer*4 hidtrkbetap
+      Integer*4 hidtrkbetaall
+      Integer*4 hidtrkbeta(2)
+      Integer*4 hidtrkid
+      Integer*4 hidtrkdepo
+      Integer*4 hidtrkdeltabeta
+      Integer*4 hidscintrktime(hnum_scin_layers)
+      Integer*4 hidscintrkfptime(hnum_scin_layers)
+      Integer*4 hidtrktimeatfpall
+      Integer*4 hidtrktimeatfp(2)
+
+      Common/hks_tof/
+     &     hidtrktof,
+     &     hidtrkleng,
+     &     hidtrkp,
+     &     hidtrkbetap,
+     &     hidtrkbetaall,
+     &     hidtrkbeta,
+     &     hidtrkdepo,
+     &     hidtrkid,
+     &     hidtrkdeltabeta,
+     &     hidscintrktime,
+     &     hidscintrkfptime,
+     &     hidtrktimeatfpall, 
+     &     hidtrktimeatfp
+
+*     HKS link tracks
+*     Here I(Z.Ye)change the dimensions of wat from(3)to(2)
+*     ,since there only 2 layers of water cerenkov
+
+      Integer*4 hidtrknaer(3)
+      Integer*4 hidtrknwat(2)
+      Integer*4 hidtrknluc(1)
+      Integer*4 hidtrkaernum(3)
+      Integer*4 hidtrkwatnum(2)
+      Integer*4 hidtrklucnum(1)
+      Integer*4 hidtrkaernpesum(3)
+      Integer*4 hidtrkwatnpesum(2)
+      Integer*4 hidtrklucnpesum(1)
+
+      Common/hks_link_tracks/
+     &     hidtrknaer,
+     &     hidtrknwat,
+     &     hidtrknluc,
+     &     hidtrkaernum,
+     &     hidtrkwatnum,
+     &     hidtrklucnum,
+     &     hidtrkaernpesum,
+     &     hidtrkwatnpesum,
+     &     hidtrklucnpesum
+
+*
+*     HKS TUL hist.
+*
+      integer*4 hidtulrawtothits
+      integer*4 hidtulrawtotchannelnum
+*     fill as module number
+      integer*4 hidtulrawtdc
+      integer*4 hidtultothits
+*     --- 32*(module-1)+channel
+      integer*4 hidtultotchannelnum
+
+      COMMON/HTUL_HIST/
+     &    hidtulrawtothits,
+     &    hidtulrawtotchannelnum,
+     &    hidtulrawtdc,
+     &    hidtultothits,
+     &    hidtultotchannelnum
+
+*
+*     CTPTYPE=parm
+*
+*      flags to turn on (.eq.1) or off (.eq. 0) hard coded histograms
+*      defined in hdebug.param
+*
+
+       integer*4 hturnon_dc_raw_hist
+       integer*4 hturnon_dc_dec_hist
+       integer*4 hturnon_dc_fp_hist
+       integer*4 hturnon_dc_target_hist
+       integer*4 hturnon_scin_raw_hist
+       integer*4 hturnon_scin_dec_hist
+       integer*4 hturnon_ac_raw_hist
+       integer*4 hturnon_wc_raw_hist
+       integer*4 hturnon_lc_raw_hist
+       integer*4 hturnon_ac_dec_hist
+       integer*4 hturnon_wc_dec_hist
+       integer*4 hturnon_lc_dec_hist
+
+       common/hks_id_hist_flags/
+     &      hturnon_dc_raw_hist,
+     &      hturnon_dc_dec_hist,
+     &      hturnon_dc_fp_hist,
+     &      hturnon_dc_target_hist,
+     &      hturnon_scin_raw_hist,
+     &      hturnon_scin_dec_hist,
+     &      hturnon_ac_raw_hist,
+     &      hturnon_wc_raw_hist,
+     &      hturnon_lc_raw_hist,
+     &      hturnon_ac_dec_hist,
+     &      hturnon_wc_dec_hist,
+     &      hturnon_lc_dec_hist
+
+*******************************      
+* for test and calibration only
+*******************************
+*     ...layer : time difference between layer
+*     ...counter : time difference between counter
+
+      Integer*4 hidscindtlayer(HNUM_SCIN_elements)
+      Integer*4 hidscindtcounter(HNUM_SCIN_LAYERS,HNUM_SCIN_elements)
+
+      COMMON/hks_scin_test/
+     &     hidscindtlayer,
+     &     hidscindtcounter
+
+      Integer*4 hidtrkdx,hidtrkdy,hidtrkdxp,hidtrkdyp,hidtrkdiff
+      COMMON/hks_dc_trk_test/
+     &     hidtrkdx,
+     &     hidtrkdy,
+     &     hidtrkdxp,
+     &     hidtrkdyp,
+     &     hidtrkdiff
+
+
+
+      Integer*4 hidsrfdiff, hidsrftime
+      Common/hrf/ hidsrfdiff,hidsrftime

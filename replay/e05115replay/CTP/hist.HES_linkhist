@@ -1,0 +1,4 @@
+begin hist hes_linkhist group=hes
+etrkhodohit,20,0.,20. $hes trk hodo hit
+etrkfptime,200,-60.,60. $hes trk fptime
+end hist hes_linkhist

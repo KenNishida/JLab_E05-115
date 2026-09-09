@@ -1,0 +1,119 @@
+macro lcrawhist run adclow=0. adchig=9000. tdclow=-100000. tdchig=100000.
+igset *
+Option STAT
+Set STAT 1001111
+*Set FILE 1
+*Option FILE
+Set DATE 2
+Option DATE
+
+set xwin 1
+set ywin 1
+set ygti 0.5
+set xmgr 0.5
+set ymgl 1.0
+set yhti 0.65
+set tsiz 0.14
+set csiz 0.4
+
+close 0
+his/fil 1 paw/[run].hbook
+exec paw/paw[run] 
+opt logy
+
+*only one layer
+ila=1
+* First all Pedestals by layer
+tit 'LC Pedestal Distributions Run'[run]
+ zone 4 4
+
+ do ico=1,9
+  set hcol 1
+  his/plo hlucrawposped[ila]_0[ico]([adclow]:[adchig])
+  set hcol 2
+  his/plo hlucrawnegped[ila]_0[ico]([adclow]:[adchig]) s
+ enddo
+ do ico=10,16
+  set hcol 1
+  his/plo hlucrawposped[ila]_[ico]([adclow]:[adchig])
+  set hcol 2
+  his/plo hlucrawnegped[ila]_[ico]([adclow]:[adchig]) s
+ enddo
+ pic/print pictures/lcrawhistped.gif
+ wait
+
+ do ico=1,9
+  set hcol 4
+  his/plo hlucrawtotped[ila]_0[ico]([adclow]:[adchig])
+ enddo
+ do ico=10,16
+  set hcol 4
+  his/plo hlucrawtotped[ila]_[ico]([adclow]:[adchig])
+ enddo
+ pic/print pictures/lcrawhisttotped.gif
+ wait
+
+
+* Next all ADC by layer
+tit 'LC ADC Distributions'
+ zone 4 4
+
+ do ico=1,9
+  set hcol 1
+  his/plo hlucrawposadc[ila]_0[ico]([adclow]:[adchig])
+  set hcol 2
+  his/plo hlucrawnegadc[ila]_0[ico]([adclow]:[adchig]) s
+ enddo
+ do ico=10,16
+  set hcol 1
+  his/plo hlucrawposadc[ila]_[ico]([adclow]:[adchig])
+  set hcol 2
+  his/plo hlucrawnegadc[ila]_[ico]([adclow]:[adchig]) s
+ enddo
+ pic/print pictures/lcrawhistadc.gif
+ wait
+
+
+ do ico=1,9
+  set hcol 4
+  his/plo hlucrawtotadc[ila]_0[ico]([adclow]:[adchig])
+ enddo
+ do ico=10,16
+  set hcol 4
+  his/plo hlucrawtotadc[ila]_[ico]([adclow]:[adchig])
+ enddo
+ pic/print pictures/lcrawhisttotadc.gif
+ wait
+
+
+* Now all TDC by layer
+tit 'LC TDC Distributions'
+ zone 4 4
+ do ico=1,9
+  set hcol 1
+  his/plo hlucrawpostdc[ila]_0[ico]([tdclow]:[tdchig])
+  set hcol 2
+  his/plo hlucrawnegtdc[ila]_0[ico]([tdclow]:[tdchig]) s
+ enddo
+ do ico=10,16
+  set hcol 1
+  his/plo hlucrawpostdc[ila]_[ico]([tdclow]:[tdchig])
+  set hcol 2
+  his/plo hlucrawnegtdc[ila]_[ico]([tdclow]:[tdchig]) s
+ enddo
+ pic/print pictures/lcrawhisttdc.gif
+ wait
+
+ do ico=1,9
+  set hcol 1
+  his/plo hlucrawtottdc[ila]_0[ico]([tdclow]:[tdchig])
+ enddo
+ do ico=10,16
+  set hcol 1
+  his/plo hlucrawtottdc[ila]_[ico]([tdclow]:[tdchig])
+ enddo
+ pic/print pictures/lcrawhisttottdc.gif
+ wait
+
+set hcol 1
+return

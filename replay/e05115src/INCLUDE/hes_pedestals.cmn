@@ -1,0 +1,105 @@
+* eneg_pedestals.cmn -  counters used for calculating pedestals from the set
+*                       of pedestal events at the beginning of each run.
+*
+* $Log: hes_pedestals.cmn,v $
+* Revision 1.1.1.1  2009/06/23 13:55:43  kawama
+*
+* e05115 src repository for software development
+*
+* Revision 1.2  2005/06/12 20:34:16  cdaq
+* change
+*
+* Revision 1.1.1.1  2005/05/14 21:44:37  miyoshi
+*
+*
+* Revision 1.1.1.1  2004/08/30 21:21:37  miyoshi
+* new dir
+*
+* Revision 1.1  1999/12/23 19:59:22  ysato
+* Compiled on Redhat Linux
+*
+*
+*     The following include statments must precede the inclusion of this
+*     file in each routine that uses it.  The *%% syntax is also a
+*     directive to makereg to tell it to include the code in the program
+*     that it generates.
+*
+*%%   include 'hes_data_structures.cmn'
+*
+*     CTPTYPE=event
+*
+*
+* HODOSCOPE PEDESTALS
+* replace kscin_all_ped with float(kscin_ped_sum/kscin_ped_num)
+* if kscin_ped_num > kscin_min_peds.
+*
+      integer*4 escin_pos_ped_sum2(enum_scin_layers,enum_scin_counters)
+      integer*4 escin_pos_ped_sum(enum_scin_layers,enum_scin_counters)
+      integer*4 escin_pos_ped_num(enum_scin_layers,enum_scin_counters)
+      integer*4 escin_neg_ped_sum2(enum_scin_layers,enum_scin_counters)
+      integer*4 escin_neg_ped_sum(enum_scin_layers,enum_scin_counters)
+      integer*4 escin_neg_ped_num(enum_scin_layers,enum_scin_counters)
+      integer*4 escin_num_ped_changes
+      integer*4 escin_changed_layer(2*enum_scin_layers*enum_scin_counters)
+      integer*4 escin_changed_counter(2*enum_scin_layers*enum_scin_counters)
+
+      common/hes_scin_pedestals/
+     &   escin_pos_ped_sum2, 
+     &   escin_pos_ped_sum,  
+     &   escin_pos_ped_num,  
+     &   escin_neg_ped_sum2, 
+     &   escin_neg_ped_sum,  
+     &   escin_neg_ped_num,  
+     &   escin_num_ped_changes,
+     &   escin_changed_layer,
+     &   escin_changed_counter
+
+      real*4 escin_pos_ped_change(2*enum_scin_layers*enum_scin_counters)
+      real*4 escin_neg_ped_change(2*enum_scin_layers*enum_scin_counters)
+      real*4 escin_new_sig_pos(enum_scin_layers,enum_scin_counters)
+      real*4 escin_new_ped_pos(enum_scin_layers,enum_scin_counters)
+      real*4 escin_new_sig_neg(enum_scin_layers,enum_scin_counters)
+      real*4 escin_new_ped_neg(enum_scin_layers,enum_scin_counters)
+
+      Common/hes_scin_ped_real/
+     &   escin_new_sig_pos,
+     &   escin_new_ped_pos,
+     &   escin_new_sig_neg,
+     &   escin_new_ped_neg,
+     &   escin_pos_ped_change,
+     &   escin_neg_ped_change
+
+*
+*     CTPTYPE=parm
+*
+      integer*4 escin_pos_min_peds
+      integer*4 escin_neg_min_peds
+      integer*4 escin_pos_ped_limit(enum_scin_layers,enum_scin_counters)
+      integer*4 escin_neg_ped_limit(enum_scin_layers,enum_scin_counters)
+
+*
+*       escin_ped_sum2,  !sum of squares
+*       escin_ped_sum,   !sum of peds
+*       escin_ped_num,   !number of peds
+*       escin_ped_limit, !max. allowed ped (reject hits during ped trig)
+*       escin_min_peds,      !# of peds required to override default pedestals
+*       escin_num_ped_changes,!# of peds with 2 sigma change from param file.
+*
+      Common/hes_scin_ped2/
+     &   escin_pos_min_peds,
+     &   escin_neg_min_peds,
+     &   escin_pos_ped_limit,
+     &   escin_neg_ped_limit
+
+*
+*     CTPTYPE=event
+*
+      real*4 escin_new_threshold_pos(enum_scin_layers,enum_scin_counters)
+      real*4 escin_new_threshold_neg(enum_scin_layers,enum_scin_counters)
+*
+      common/hes_adc_thresholds/
+     &   escin_new_threshold_pos,
+     &   escin_new_threshold_neg
+
+
+

@@ -1,0 +1,94 @@
+macro wcrawhist run adclow=0. adchig=9000. tdclow=-100000. tdchig=100000.
+igset *
+Option STAT
+Set STAT 1001111
+*Set FILE 1
+*Option FILE
+Set DATE 2
+Option DATE
+
+set xwin 1
+set ywin 1
+set ygti 0.5
+set xmgr 0.5
+set ymgl 1.0
+set yhti 0.65
+set tsiz 0.14
+
+close 0
+his/fil 1 paw/[run].hbook
+exec paw/paw[run] 
+opt logy
+
+* First all Pedestals by layer
+tit 'WC Pedestal Distributions Run [run]'
+do ila=1,2
+ zone 3 4
+
+ do ico=1,9
+  set hcol 1
+  his/plo hwatrawposped[ila]_0[ico]([adclow]:[adchig])
+  set hcol 2
+  his/plo hwatrawnegped[ila]_0[ico]([adclow]:[adchig]) s
+ enddo
+ do ico=10,12
+  set hcol 1
+  his/plo hwatrawposped[ila]_[ico]([adclow]:[adchig])
+  set hcol 2
+  his/plo hwatrawnegped[ila]_[ico]([adclow]:[adchig]) s
+ enddo
+
+ pic/print pictures/wcrawhistped[ila].gif
+ wait
+enddo
+
+* Next all ADC by layer
+tit 'WC ADC Distributions'
+do ila=1,2
+ zone 3 4
+
+ do ico=1,9
+  set hcol 1
+  his/plo hwatrawposadc[ila]_0[ico]([adclow]:[adchig])
+  set hcol 2
+  his/plo hwatrawnegadc[ila]_0[ico]([adclow]:[adchig]) s
+ enddo
+ do ico=10,12
+  set hcol 1
+  his/plo hwatrawposadc[ila]_[ico]([adclow]:[adchig])
+  set hcol 2
+  his/plo hwatrawnegadc[ila]_[ico]([adclow]:[adchig]) s
+ enddo
+
+ pic/print pictures/wcrawhistadc[ila].gif
+ wait
+enddo
+
+* Now all TDC by layer
+tit 'WC TDC Distributions'
+do ila=1,2
+ zone 3 4
+
+ do ico=1,9
+  set hcol 1
+  his/plo hwatrawpostdc[ila]_0[ico]([tdclow]:[tdchig])
+  set hcol 2
+  his/plo hwatrawnegtdc[ila]_0[ico]([tdclow]:[tdchig]) s
+ enddo
+ do ico=10,12
+  set hcol 1
+  his/plo hwatrawpostdc[ila]_[ico]([tdclow]:[tdchig])
+  set hcol 2
+  his/plo hwatrawnegtdc[ila]_[ico]([tdclow]:[tdchig]) s
+ enddo
+
+ pic/print pictures/wcrawhisttdc[ila].gif
+ wait
+enddo
+
+
+
+
+
+set hcol 1
+return

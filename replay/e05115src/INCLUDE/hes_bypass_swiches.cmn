@@ -1,0 +1,61 @@
+*      hes_bypass_switches.cmn
+*
+*      common blocks of CTP switches to bypass reconstruction code
+*      elements.
+*
+*      Created:     Y.Sato         3 Nov 1999
+*
+* $Log: hes_bypass_swiches.cmn,v $
+* Revision 1.1.1.1  2009/06/23 13:55:43  kawama
+*
+* e05115 src repository for software development
+*
+* Revision 1.1.1.1  2005/05/14 21:44:37  miyoshi
+*
+*
+* Revision 1.2  2005/02/11 23:01:13  sumihama
+* Mod. e-ntuple, Mod. etracking
+*
+* Revision 1.1.1.1  2004/08/30 21:21:38  miyoshi
+* new dir
+*
+* Revision 1.3 2004/03/03 Miyoshi
+* for E01-011
+*
+* Revision 1.2  1999/12/23 19:59:21  ysato
+* Compiled on Redhat Linux
+*
+* Revision 1.1  1999/11/03 16:51:42  ysato
+* Internal modification
+*
+* Revision 1.1.1.1  1999/11/01 13:54:46  ysato
+* Upgrade for HNSS
+*
+*
+*     CTPTYPE=parm
+*
+      integer*4 ebypass_trans_scin
+      integer*4 ebypass_track
+      integer*4 ebypass_good_tracks
+      integer*4 ebypass_targ_trans
+      integer*4 ebypass_link_tracks
+      integer*4 ebypass_physics
+      integer*4 ebypass_dc1_layer_eff
+      integer*4 ebypass_dc2_layer_eff
+      integer*4 ebypass_track_eff
+      integer*4 ebypass_scin_eff
+      integer e_debugnt(10)
+
+*
+      common/hes_bypass_switches/
+     &     ebypass_trans_scin,
+     &     ebypass_track,
+     &     ebypass_good_tracks,
+     &     ebypass_targ_trans,
+     &     ebypass_link_tracks,
+     &     ebypass_physics,
+     &     ebypass_dc1_layer_eff,
+     &     ebypass_dc2_layer_eff,
+     &     ebypass_track_eff,
+     &     ebypass_scin_eff,
+     &     e_debugnt

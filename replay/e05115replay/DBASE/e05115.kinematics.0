@@ -1,0 +1,20 @@
+; If the same run occurs in multiple ranges, 
+; ALL ctp commands get executed
+;
+; NOTE:  Currently, the engine first takes values from the
+;   runinfoevent, and then overwritten if they appear here.
+
+;--------------------------------------
+;  E01-011 kinematics
+;---------------------------------------
+; target number 1    2     3     4     5
+;               C12  CH2
+
+1-99999
+gpbeam         = 2.344
+gtarg_num      = 1
+epartmass      = 0.0005099
+hpartmass      = 0.493677
+hpcentral      = 1.2
+epcentral      = 0.844
+

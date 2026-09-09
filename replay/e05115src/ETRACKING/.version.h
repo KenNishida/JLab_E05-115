@@ -1,0 +1,1 @@
+#define CSOFT_VERSION sep0596

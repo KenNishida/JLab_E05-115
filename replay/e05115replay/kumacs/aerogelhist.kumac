@@ -1,0 +1,37 @@
+macro aerogelhist run
+close 0
+his/fil 1 paw/[run].hbook
+exec paw/paw[run] 
+opt logy
+
+do ila=1,3
+ zone 3 3
+ do ico=1,7
+  set hcol 1
+  his/plo haerposnpe[ila]_[ico]
+  set hcol 2
+  his/plo haernegnpe[ila]_[ico] s
+ enddo
+ pic/print haerposnegnpe[ila].gif
+ wait
+enddo
+
+do ila=1,3
+ zone 3 3
+ do ico=1,7
+  set hcol 3
+  his/plo haersumnpe[ila]_[ico]
+ enddo
+ pic/print haersumnpe[ila].gif
+ wait
+enddo
+
+zone 1 3
+do ila=1,3
+  set hcol 3
+  his/plo haernpesum[ila]
+enddo
+ pic/print haernpesum[ila].gif
+
+return 
+endkumac

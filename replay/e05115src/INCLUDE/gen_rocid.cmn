@@ -1,0 +1,43 @@
+*
+*     Kawama add parameters,
+*     HKS_FB_ROCID 
+*     HES_FB_ROCID 
+*     CH_FB_ROCID 
+*     HR_VME_ROCID 
+*     LR_VME_ROCID 
+*
+*     CTPTYPE=parm
+*
+*     values should be set in gdebug.param
+*
+*     HKS chamber has 80 cards. use 1 FB crate.
+*     HES chamber has 110 cards. use 1 FB crate.
+*		use 1 VME crate for High Resolution F1TDC.
+*		use 1 VME crate for Low Resolution F1TDC.
+*		Also use 1 FB crate in CH		
+      INTEGER*4 HKS_FB_ROCID
+      INTEGER*4 HES_FB_ROCID
+      INTEGER*4 CH_FB_ROCID
+      INTEGER*4 HR_VME_ROCID
+      INTEGER*4 LR_VME_ROCID
+*     We have no clue to distinguish F1 and c794.
+*     Thus, we have to specify slot number for adc.
+      Integer*4 HES_C794_SLOT_NUMBER(5)
+      Integer*4 HKS_C794_SLOT_NUMBER(5)
+      
+      COMMON/GEN_ROCID/
+     &     HKS_FB_ROCID,
+     &     HES_FB_ROCID,
+     &     CH_FB_ROCID,
+     &     HR_VME_ROCID,
+     &     LR_VME_ROCID,
+     &     HES_C794_SLOT_NUMBER,
+     &     HKS_C794_SLOT_NUMBER
+
+*
+*                                          
+*******************end: gen_rocid.cmn *************************
+*     Local Variables:
+*     mode: fortran
+*     fortran-continuation-string: "&"
+*     End:

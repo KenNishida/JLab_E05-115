@@ -1,0 +1,20 @@
+**************************begin: g_beam_ntuple.dte ***********************
+*- 
+*........................................................................
+*- leave clean field for GEN beam Ntuple
+* Revision 1.0  2000/02/28 16:24:52  jinghua
+* Initial revision
+*
+*
+      data g_beam_Ntuple_exists/.FALSE./
+      data g_beam_Ntuple_ID/0/
+      data g_beam_Ntuple_file/' '/
+      data g_beam_Ntuple_name/' '/
+      data g_beam_Ntuple_title/' '/
+      data g_beam_Ntuple_directory/' '/
+      data g_beam_Ntuple_IOchannel/0/
+      data g_beam_Ntuple_size/0/
+      data g_beam_Ntuple_tag/SMAX_bm_Ntuple_size*' '/
+      data g_beam_Ntuple_contents/SMAX_bm_Ntuple_size*0/
+*
+****************************end: g_beam_Ntuple.dte ***********************

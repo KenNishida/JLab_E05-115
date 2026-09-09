@@ -1,0 +1,123 @@
+begin hist hes_dc_raw_tdc group=hes
+
+edc1rawtdc01,200,3300.,3900.           $EDC1 raw TDC slot 01
+edc1rawtdc02,200,3300.,3900.           $EDC1 raw TDC slot 02
+edc1rawtdc03,200,3300.,3900.           $EDC1 raw TDC slot 03
+edc1rawtdc04,200,3300.,3900.           $EDC1 raw TDC slot 04
+edc1rawtdc05,200,3300.,3900.           $EDC1 raw TDC slot 05
+edc1rawtdc06,200,3300.,3900.           $EDC1 raw TDC slot 06
+edc1rawtdc07,200,3300.,3900.           $EDC1 raw TDC slot 07
+edc1rawtdc08,200,3300.,3900.           $EDC1 raw TDC slot 08
+edc1rawtdc09,200,3300.,3900.           $EDC1 raw TDC slot 09
+edc1rawtdc10,200,3300.,3900.           $EDC1 raw TDC slot 10
+edc1rawtdc11,200,3300.,3900.           $EDC1 raw TDC slot 11
+edc1rawtdc12,200,3300.,3900.           $EDC1 raw TDC slot 12
+edc1rawtdc13,200,3300.,3900.           $EDC1 raw TDC slot 13
+edc1rawtdc14,200,3300.,3900.           $EDC1 raw TDC slot 14
+edc1rawtdc15,200,3300.,3900.           $EDC1 raw TDC slot 15
+edc1rawtdc16,200,3300.,3900.           $EDC1 raw TDC slot 16
+edc1rawtdc17,200,3300.,3900.           $EDC1 raw TDC slot 17
+edc1rawtdc18,200,3300.,3900.           $EDC1 raw TDC slot 18
+edc1rawtdc19,200,3300.,3900.           $EDC1 raw TDC slot 19
+edc1rawtdc20,200,3300.,3900.           $EDC1 raw TDC slot 20
+edc1rawtdc21,200,3300.,3900.           $EDC1 raw TDC slot 21
+edc1rawtdc22,200,3300.,3900.           $EDC1 raw TDC slot 22
+edc1rawtdc23,200,3300.,3900.           $EDC1 raw TDC slot 23
+edc1rawtdc24,200,3300.,3900.           $EDC1 raw TDC slot 24
+edc1rawtdc25,200,3300.,3900.           $EDC1 raw TDC slot 25
+edc1rawtdc26,200,3300.,3900.           $EDC1 raw TDC slot 26
+edc1rawtdc27,200,3300.,3900.           $EDC1 raw TDC slot 27
+edc1rawtdc28,200,3300.,3900.           $EDC1 raw TDC slot 28
+edc1rawtdc29,200,3300.,3900.           $EDC1 raw TDC slot 29
+edc1rawtdc30,200,3300.,3900.           $EDC1 raw TDC slot 30
+edc1rawtdc31,200,3300.,3900.           $EDC1 raw TDC slot 31
+edc1rawtdc32,200,3300.,3900.           $EDC1 raw TDC slot 32
+edc1rawtdc33,200,3300.,3900.           $EDC1 raw TDC slot 33
+edc1rawtdc34,200,3300.,3900.           $EDC1 raw TDC slot 34
+edc1rawtdc35,200,3300.,3900.           $EDC1 raw TDC slot 35
+edc1rawtdc36,200,3300.,3900.           $EDC1 raw TDC slot 36
+edc1rawtdc37,200,3300.,3900.           $EDC1 raw TDC slot 37
+edc1rawtdc38,200,3300.,3900.           $EDC1 raw TDC slot 38
+edc1rawtdc39,200,3300.,3900.           $EDC1 raw TDC slot 39
+edc1rawtdc40,200,3300.,3900.           $EDC1 raw TDC slot 40
+edc1rawtdc41,200,3300.,3900.           $EDC1 raw TDC slot 41
+edc1rawtdc42,200,3300.,3900.           $EDC1 raw TDC slot 42
+edc1rawtdc43,200,3300.,3900.           $EDC1 raw TDC slot 43
+edc1rawtdc44,200,3300.,3900.           $EDC1 raw TDC slot 44
+edc1rawtdc45,200,3300.,3900.           $EDC1 raw TDC slot 45
+edc1rawtdc46,200,3300.,3900.           $EDC1 raw TDC slot 46
+edc1rawtdc47,200,3300.,3900.           $EDC1 raw TDC slot 47
+edc1rawtdc48,200,3300.,3900.           $EDC1 raw TDC slot 48
+edc1rawtdc49,200,3300.,3900.           $EDC1 raw TDC slot 49
+edc1rawtdc50,200,3300.,3900.           $EDC1 raw TDC slot 50
+edc1rawtdc51,200,3300.,3900.           $EDC1 raw TDC slot 51
+edc1rawtdc52,200,3300.,3900.           $EDC1 raw TDC slot 52
+edc1rawtdc53,200,3300.,3900.           $EDC1 raw TDC slot 53
+edc1rawtdc54,200,3300.,3900.           $EDC1 raw TDC slot 54
+edc1rawtdc55,200,3300.,3900.           $EDC1 raw TDC slot 55
+edc1rawtdc56,200,3300.,3900.           $EDC1 raw TDC slot 56
+edc1rawtdc57,200,3300.,3900.           $EDC1 raw TDC slot 57
+edc1rawtdc58,200,3300.,3900.           $EDC1 raw TDC slot 58
+edc1rawtdc59,200,3300.,3900.           $EDC1 raw TDC slot 59
+edc1rawtdc60,200,3300.,3900.           $EDC1 raw TDC slot 60
+edc1rawtdc61,200,3300.,3900.           $EDC1 raw TDC slot 61
+edc1rawtdc62,200,3300.,3900.           $EDC1 raw TDC slot 62
+edc1rawtdc63,200,3300.,3900.           $EDC1 raw TDC slot 63
+edc1rawtdc64,200,3300.,3900.           $EDC1 raw TDC slot 64
+edc1rawtdc65,200,3300.,3900.           $EDC1 raw TDC slot 65
+edc1rawtdc66,200,3300.,3900.           $EDC1 raw TDC slot 66
+edc1rawtdc67,200,3300.,3900.           $EDC1 raw TDC slot 67
+edc1rawtdc68,200,3300.,3900.           $EDC1 raw TDC slot 68
+edc1rawtdc69,200,3300.,3900.           $EDC1 raw TDC slot 69
+edc1rawtdc70,200,3300.,3900.           $EDC1 raw TDC slot 70
+edc2rawtdc01,200,3000.,4000.           $EDC2 raw TDC slot 01
+edc2rawtdc02,200,3000.,4000.           $EDC2 raw TDC slot 02
+edc2rawtdc03,200,3000.,4000.           $EDC2 raw TDC slot 03
+edc2rawtdc04,200,3000.,4000.           $EDC2 raw TDC slot 04
+edc2rawtdc05,200,3000.,4000.           $EDC2 raw TDC slot 05
+edc2rawtdc06,200,3000.,4000.           $EDC2 raw TDC slot 06
+edc2rawtdc07,200,3000.,4000.           $EDC2 raw TDC slot 07
+edc2rawtdc08,200,3000.,4000.           $EDC2 raw TDC slot 08
+edc2rawtdc09,200,3000.,4000.           $EDC2 raw TDC slot 09
+edc2rawtdc10,200,3000.,4000.           $EDC2 raw TDC slot 10
+edc2rawtdc11,200,3000.,4000.           $EDC2 raw TDC slot 11
+edc2rawtdc12,200,3000.,4000.           $EDC2 raw TDC slot 12
+edc2rawtdc13,200,3000.,4000.           $EDC2 raw TDC slot 13
+edc2rawtdc14,200,3000.,4000.           $EDC2 raw TDC slot 14
+edc2rawtdc15,200,3000.,4000.           $EDC2 raw TDC slot 15
+edc2rawtdc16,200,3000.,4000.           $EDC2 raw TDC slot 16
+edc2rawtdc17,200,3000.,4000.           $EDC2 raw TDC slot 17
+edc2rawtdc18,200,3000.,4000.           $EDC2 raw TDC slot 18
+edc2rawtdc19,200,3000.,4000.           $EDC2 raw TDC slot 19
+edc2rawtdc20,200,3000.,4000.           $EDC2 raw TDC slot 20
+edc2rawtdc21,200,3000.,4000.           $EDC2 raw TDC slot 21
+edc2rawtdc22,200,3000.,4000.           $EDC2 raw TDC slot 22
+edc2rawtdc23,200,3000.,4000.           $EDC2 raw TDC slot 23
+edc2rawtdc24,200,3000.,4000.           $EDC2 raw TDC slot 24
+edc2rawtdc25,200,3000.,4000.           $EDC2 raw TDC slot 25
+edc2rawtdc26,200,3000.,4000.           $EDC2 raw TDC slot 26
+edc2rawtdc27,200,3000.,4000.           $EDC2 raw TDC slot 27
+edc2rawtdc28,200,3000.,4000.           $EDC2 raw TDC slot 28
+edc2rawtdc29,200,3000.,4000.           $EDC2 raw TDC slot 29
+edc2rawtdc30,200,3000.,4000.           $EDC2 raw TDC slot 30
+edc2rawtdc31,200,3000.,4000.           $EDC2 raw TDC slot 31
+edc2rawtdc32,200,3000.,4000.           $EDC2 raw TDC slot 32
+edc2rawtdc33,200,3000.,4000.           $EDC2 raw TDC slot 33
+edc2rawtdc34,200,3000.,4000.           $EDC2 raw TDC slot 34
+edc2rawtdc35,200,3000.,4000.           $EDC2 raw TDC slot 35
+edc2rawtdc36,200,3000.,4000.           $EDC2 raw TDC slot 36
+edc2rawtdc37,200,3000.,4000.           $EDC2 raw TDC slot 37
+edc2rawtdc38,200,3000.,4000.           $EDC2 raw TDC slot 38
+edc2rawtdc39,200,3000.,4000.           $EDC2 raw TDC slot 39
+edc2rawtdc40,200,3000.,4000.           $EDC2  raw TDC slot 40
+
+            
+end hist hes_dc_raw_tdc
+            
+            
+            
+            
+            
+            
+            
+            

@@ -1,0 +1,10 @@
+#include "PARAM/gconfig.param.0"
+#include "PARAM/gbeam.param.0"
+#include "PARAM/gf1tdc.param.0"
+#include "PARAM/gdebug.param.0"
+#include "PARAM/edebug.param.0"
+#include "PARAM/hdebug.param.0"
+#include "PARAM/gmisc.param.0"
+#include "PARAM/gconstants.param.0"
+#include "PARAM/gtarget.param.0"
+

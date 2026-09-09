@@ -1,0 +1,4 @@
+c_cointime_low  = -5000.0
+c_cointime_high = +5000.0
+
+c_target_eloss_on = 0

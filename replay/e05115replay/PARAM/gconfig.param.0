@@ -1,0 +1,8 @@
+; if you not use vme, set -1 
+
+HKS_FB_ROCID = 7
+HES_FB_ROCID = 11
+HR_VME_ROCID = 13
+LR_VME_ROCID = 14
+CH_FB_ROCID = 1
+

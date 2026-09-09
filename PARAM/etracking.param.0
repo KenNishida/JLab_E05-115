@@ -1,0 +1,77 @@
+; hes pattern recognition and tracking code parameters
+; eminhit(i)   minimum number of hits in each space point
+; (one for each chamber)
+; emin_combos(i) minimum number of pairs in each space point
+; (one per chamber)
+; espace_point_criterion(i) minimum separation 
+; of distinct space points
+;
+
+;include seva's correction or not
+;"0" does not include the correction
+;"1" include the correction 
+	esevaflag = 0
+	edc1trackingflag = 0
+	edc2flag = 1
+
+	edc1max_pr_hits = 60
+   edc1min_hit     = 8 
+   edc1min_combos  = 4
+	
+	edc2max_pr_hits = 40 
+   edc2min_hit     = 4
+   edc2min_combos  = 2
+;
+; for close space point such as (1,3) and (1,4),
+;	(1,3) and (2,4)
+; 2 * pitch  * 1.2 = 2 * 0.5 * 1.7320508 *1.2
+; 
+
+        edc1space_point_criterion = 1.2*1.7320508
+        
+		  edc2space_point_criterion = 2 ;!Pay attention! DK 
+
+;
+;	we parmit particles with incident angle of 30deg.
+;	chamber z = 32 cm 
+;	dz/dx = 32 / 1.7320508 = 18.47...
+ 
+;	edc1space_point_crit_loose = 19.
+	
+
+; ssingle_stub            If .ne. 0 make a track of all single stubs
+
+  esingle_stub = 1
+
+; chi2 min threshold called in e_select_good_tracks.f
+  edc1track_chi2min = 200.
+
+; turn on/off small angle approximation to left/right decision for y
+; turn off for HKS chamber test      L.Yuan 07/21/03
+
+  eSmallAngleApprox = 0   
+
+; criterion checking closer track 
+
+ hes_dx_min = 0.3
+ hes_dy_min = 0.3
+ hes_dxp_min = 0.1
+ hes_dyp_min = 0.1
+
+; epath_length correction matrix
+; By Mizuki July 7 TimeAtFp - > TimeAtTar
+
+;epath_coeff =  -0.0570609234,  0.00042237356,  3.79604793, -3.53237224, -0.0129404319,
+;  0.00249746279,  0.234348327,  1.62257481, -0.000275449478,  6.44115134E-05,
+; -0.0017375903,  0.0129749877, -0.0604310557, -0.224332064,  17.1237755,
+;  0.0, 0.0, 0.0, 0.0, 0.0
+
+
+  e_track_output_on = 0
+
+  e_tar_output_on = 0
+
+  dex_fp=0.
+  dey_fp=0.
+  dexp_fp=0.
+  deyp_fp=0.

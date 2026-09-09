@@ -1,0 +1,45 @@
+# HKS simulation parameter
+HBOOK: ../ana/root/ch2_raster_small.root
+SplitterMAP: param/SPL_12May09.map 1.00 
+DMAP: param/KD_30Jan09_0911.map 0.965
+Q1MAP: param/KQ1_48.map 1.02
+Q2MAP: param/KQ2_65.map 1.055
+CentralMomentum(GeV): 1.2
+MomentumWidth(GeV): 0.37
+#Theta>0
+ThetaCentral(rad): 0.124
+ThetaWidth(rad): 0.124
+#PhiCentral(rad): 2.64159
+#PhiWidth(rad): 0.5
+PhiCentral(rad): 1.570795
+PhiWidth(rad): 1.570795
+RasterX(cm): 0.0
+RasterY(cm): 0.0
+#RasterZ:450.8 [mg/cm2] --> 0.506879[cm]
+#RasterZ:500 [mg/cm2] --> 0.522846[cm]
+#RasterZ:184 [mg/cm2] --> 0.360313[cm]
+#RasterZ:188.1 [mg/cm2] --> 0.106436[cm]
+#RasterZ:56.1 [mg/cm2] --> 0.0250698[cm]
+#RasterZ:112.5 [mg/cm2] --> 0.0522846[cm]
+#RasterZ:154 [mg/cm2] --> 0.0225226[cm]
+RasterZ(cm): 0.506879
+#Target information
+#Material should be 
+#"Vanadium" or "Yttrium" or "Lead" or "Carbon" or "Silicon" or "Polyethylene" 
+#TargetMaterial & Thickness(mg/cm^2):Carbon 100
+TargetMaterial & Thickness(mg/cm^2):Polyethylene 450.8
+#Event Flag:0 for normal HKS event
+#others for only target event
+EventFlag: 0
+KDCFlag: 0
+EMFlag: 1
+#SSFlag=0:Nothing
+#SSFlag=1:SS
+#SSFlag=2:Collimator
+SSFlag: 2
+DecayFlag: 0
+HadronFlag: 0
+#Particle ID:1 for Proton, 
+#ID:2 for Kaon
+#ID:3 for Pion
+Particle ID: 2

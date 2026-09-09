@@ -1,0 +1,180 @@
+begin parm grep
+
+g_report_blockname = 'grep'
+
+end parm grep
+
+begin report grep
+The name of this report template file is {g_report_template_filename}.
+All efficiencies are normalized to "etrig" or "htrig".
+Values in parenthesis are rates ( Hz )
+hardware scalers have rates in square brackets [ Hz ].
+
+Run #: {gen_run_number}
+Time of run = {g_run_time:%8.2f} sec.
+first event = {gen_run_starting_event:%7d}
+last event  = {gen_event_id_number:%7d}
+
+dmytst      = {dmytst.scaler:%8d} ( {dmytst.scaler/g_run_time:%7.1f} )
+atrig       = {atrig.scaler:%8d} ( {atrig.scaler/g_run_time:%7.1f} )
+etrig       = {etrig.scaler:%8d} ( {etrig.scaler/g_run_time:%7.1f} )
+htrig       = {htrig.scaler:%8d} ( {htrig.scaler/g_run_time:%7.1f} )
+ctrig       = {ctrig.scaler:%8d} ( {ctrig.scaler/g_run_time:%7.1f} )
+all adcgates= {gscaler(175):%8d} [ {gscaler(175)/g_run_time:%7.1f} ]
+enge adcgates= {gscaler(176):%8d} [ {gscaler(176)/g_run_time:%7.1f} ]
+hks adcgates= {gscaler(336):%8d} [ {gscaler(336)/g_run_time:%7.1f} ]
+==> coin adc= {(gscaler(176)+gscaler(336)-gscaler(175)):%8d} [ {(gscaler(176)+gscaler(336)-gscaler(175))/g_run_time:%7.1f} ]
+
+***********
+* SUMMARY *
+***********
+E_beam      = {gebeam:%8.4f} GeV (after energy loss in target)
+P ENGE      = { epcentral:%8.4f} GeV/c
+Theta ENGE  = {etheta_lab:%8.3f} degrees
+ENGE prtmss = { epartmass:%8.6f} GeV
+P HKS       = { hpcentral:%8.4f} GeV/c
+Theta HKS   = {htheta_lab:%8.3f} degrees
+HKS prtmss  = { hpartmass:%8.6f} GeV
+targ num    = {gtarg_num:%8d}
+tgt Z:A:M   = {  gtarg_z(gtarg_num):%8d} : {gtarg_a(gtarg_num):%4d} : {gtarg_mass(gtarg_num):%8.4f}
+thickness  = {gtarg_lrad(gtarg_num):%8.3f} % r.l, {(gtarg_thick(gtarg_num)/gtarg_dens(gtarg_num)):%7.4f} cm, {gtarg_thick(gtarg_num):%6.4f} g/cm^2
+gtarg_theta= {gtarg_theta/raddeg:%8.3f} degrees
+
+hpre      = {gscaler(346):%11d} [ {gscaler(346)/g_run_time:%7.1f} ]
+htrg      = {gscaler(350):%11d} [ {gscaler(350)/g_run_time:%7.1f} ]
+aadc-hadc = {(gscaler(175)-gscaler(176)):%11d} [ {(gscaler(175)-gscaler(176))/g_run_time:%7.1f} ]
+
+goodhs1x  = {goodhs1x.scaler:%7d}        {goodhs1x.scaler/(htrig.scaler+.0001):%5.3f}  BAD = .99
+goodhs1y  = {goodhs1y.scaler:%7d}        {goodhs1y.scaler/(htrig.scaler+.0001):%5.3f}  BAD = .99
+goodhs2x  = {goodhs2x.scaler:%7d}        {goodhs2x.scaler/(htrig.scaler+.0001):%5.3f}  BAD = .99
+goodhs2y  = {goodhs2y.scaler:%7d}        {goodhs2y.scaler/(htrig.scaler+.0001):%5.3f}  BAD = .99
+
+*HKS     effic  = {heff_3_of_3:%9.3f}
+*HKS fid effic  = {hdid.scaler/(hscinshould.scaler+.0001):%9.3f}
+*hcomputer D.T. = {100*(1-gscaler(350)/(gscaler(346)+.0001)):%9.2f} % ( {100*(1-gscaler(190)/(gscaler(186)+.0001)):%9.2f} % from HMS scaler)
+*select    D.T. = {100*((gscaler(311)-gscaler(314))/2)/(gscaler(306)+.0001):%9.2f} %
+ PS2(calc)      = {(gscaler(350)/(gscaler(175)-gscaler(176)+.00001)):%9.1f}
+*PS2(programmed)= {gps2:%9.1f}
+*SCORR TOTAL    = {(gps2/(heff_3_of_3+.00001)*(hscinshould.scaler/(sdid.scaler+.00001))*(gscaler(346)/(gscaler(350)+.00001))*(1+((gscaler(311)-gscaler(314))/2)/(gscaler(306)+.00001))):%9.4f}
+
+PS3(programmed)= {gps3:%6d}
+hks coin  D.T. = {100*(1-gscaler(347)/(gscaler(351)+.0001)):%6.2f} %
+NEW coin  L.T. = {100*(gscaler(669)/(gscaler(667)+.0001)):%6.2f} %
+
+Q_tot(microCoulombs) BCM1:{gbcm1_charge:%8.0f}  BCM2:{gbcm2_charge:%8.0f}  BCM3:{gbcm3_charge:%8.0f}
+
+         I_avg           Q_tot             Q_tot
+      (microAmps)   (microCoulombs)   (microAmp-hours)
+BCM1 {gbcm1_charge/g_run_time:%10.3f}        {gbcm1_charge:%10.3f}      {gbcm1_charge/3600:%10.3f}
+BCM2 {gbcm2_charge/g_run_time:%10.3f}        {gbcm2_charge:%10.3f}      {gbcm2_charge/3600:%10.3f}
+BCM3 {gbcm3_charge/g_run_time:%10.3f}        {gbcm3_charge:%10.3f}      {gbcm3_charge/3600:%10.3f}
+
+
+******************
+* Drift Chambers *
+******************
+
+rawhdc1     = {hdc_cham_hits(1):%7d}   eff = {hdc_cham_eff(1):%5.3f}  BAD = .99
+rawhdc2     = {hdc_cham_hits(2):%7d}   eff = {hdc_cham_eff(2):%5.3f}  BAD = .99
+goodhdc1    = {goodhdc1.scaler:%7d}   eff = {goodhdc1.scaler/(strig.scaler+.0001):%5.3f}  BAD = .90
+goodhdc2    = {goodhdc2.scaler:%7d}   eff = {goodhdc2.scaler/(strig.scaler+.0001):%5.3f}  BAD = .90
+bothgoodhdc = {bothgoodhdc.scaler:%7d}   eff = {bothgoodhdc.scaler/(strig.scaler+.0001):%5.3f}  BAD = .80
+
+**************
+* Hodoscopes *
+**************
+
+goodhs1x    = {goodhs1x.scaler:%7d}   eff = {goodhs1x.scaler/(strig.scaler+.0001):%5.3f}  BAD = .98
+goodhs1y    = {goodhs1y.scaler:%7d}   eff = {goodhs1y.scaler/(strig.scaler+.0001):%5.3f}  BAD = .98
+goodhs1     = {goodhs1.scaler:%7d}   eff = {goodhs1.scaler/(strig.scaler+.0001):%5.3f}  BAD = .96
+goodhs2x    = {goodhs2x.scaler:%7d}   eff = {goodhs2x.scaler/(strig.scaler+.0001):%5.3f}  BAD = .98
+goodhs2     = {goodhs2.scaler:%7d}   eff = {goodhs2.scaler/(strig.scaler+.0001):%5.3f}  BAD = .96
+goodhs1s2   = {goodhs1s2.scaler:%7d}   eff = {goodhs1s2.scaler/(strig.scaler+.0001):%5.3f}  BAD = .95
+
+************
+* Tracking *
+************
+
+hfoundtrack = {hfoundtrack.scaler:%7d}   eff = {hfoundtrack.scaler/(strig.scaler+.0001):%5.3f}  BAD = .95
+hcleantrack = {hcleantrack.scaler:%7d}   eff = {hcleantrack.scaler/(strig.scaler+.0001):%5.3f}  BAD = .95
+HKS fid eff.=              {hdid.scaler/(hscinshould.scaler+.0001):%8.3f}
+ccleantrack = {ccleantrack.scaler:%7d}   eff = {ccleantrack.scaler/(strig.scaler+.0001):%5.3f}
+
+********************
+* Hardware Scalers *
+********************
+
+hSTOF    = {gscaler(315):%11d} [ {gscaler(315)/g_run_time:%7.1f} ]
+hSCIN    = {gscaler(316):%11d} [ {gscaler(316)/g_run_time:%7.1f} ]
+hPION    = {gscaler(327):%11d} [ {gscaler(327)/g_run_time:%7.1f} ]
+hPIPRE   = {gscaler(318):%11d} [ {gscaler(318)/g_run_time:%7.1f} ]
+HKSPRE   = {gscaler(346):%11d} [ {gscaler(346)/g_run_time:%7.1f} ]
+HKSTRG   = {gscaler(350):%11d} [ {gscaler(350)/g_run_time:%7.1f} ]
+hADCGATES= {gscaler(336):%11d} [ {gscaler(336)/g_run_time:%7.1f} ]
+hEL30    = {gscaler(306):%11d} [ {gscaler(306)/g_run_time:%7.1f} ]
+hEL60    = {gscaler(311):%11d} [ {gscaler(311)/g_run_time:%7.1f} ]
+hEL90    = {gscaler(308):%11d} [ {gscaler(308)/g_run_time:%7.1f} ]
+hEL120   = {gscaler(314):%11d} [ {gscaler(314)/g_run_time:%7.1f} ]
+hcomp D.T= {100*(1-gscaler(336)/(gscaler(346)+.0001)):%6.2f} %
+helec.D.T= {100*((gscaler(311)-gscaler(314))/2)/(gscaler(306)+.0001):%6.2f} %
+
+
+*******************************
+* Tracking based efficiencies *
+*******************************
+
+Plane POS eff NEG eff OR eff AND eff  Hits
+----- ------- ------- ------ -------  ----
+hS1X {sstat_poseff(1):%6.3f}  {sstat_negeff(1):%6.3f}  {sstat_oreff(1):%6.3f}  {sstat_andeff(1):%6.3f} {sstat_trksum(1):%6d}
+hS1Y {sstat_poseff(2):%6.3f}  {sstat_negeff(2):%6.3f}  {sstat_oreff(2):%6.3f}  {sstat_andeff(2):%6.3f} {sstat_trksum(2):%6d}
+hS2X {sstat_poseff(3):%6.3f}  {sstat_negeff(3):%6.3f}  {sstat_oreff(3):%6.3f}  {sstat_andeff(3):%6.3f} {sstat_trksum(3):%6d}
+
+Calculted Trigger efficiencies:
+hS1   = {heff_s1:%6.3f}
+hS2   = {heff_s2:%6.3f}
+hSTOF = {heff_stof:%6.3f}
+h3/3  = {heff_3_of_3:%6.3f}
+
+************
+* Cerenkov *
+************
+
+HKS Region 1 Efficiency: {haer_region_eff(1):%5.3f} = {haer_fired_counter(1):%6d} of {haer_track_counter(1):%6d} good tracks.
+HKS Region 2 Efficiency: {haer_region_eff(2):%5.3f} = {haer_fired_counter(2):%6d} of {haer_track_counter(2):%6d} good tracks.
+HKS Region 3 Efficiency: {haer_region_eff(3):%5.3f} = {haer_fired_counter(3):%6d} of {haer_track_counter(3):%6d} good tracks.
+HKS water 1 Efficiency: {hwat_region_eff(1):%5.3f} = {hwat_fired_counter(1):%6d} of {hwat_track_counter(1):%6d} good tracks.
+HKS water 2 Efficiency: {hwat_region_eff(2):%5.3f} = {hwat_fired_counter(2):%6d} of {hwat_track_counter(2):%6d} good tracks.
+
+*************
+* PID Tests *
+*************
+
+selec_bothcut.scaler={selec_bothcut.scaler:%10d}
+
+haer pi cut eff= {selec_bothcut.scaler/ (selec_picut.scaler+.0001):%7.4f}  = sum(cercut) / sum(cercut & calcut) for electron cuts
+hwat pr cut eff= {selec_bothcut.scaler/ (selec_prcut.scaler+.0001):%7.4f}  = sum(calcut) / sum(cercut & calcut) for electron cuts
+
+*****************
+*     trig      *
+*****************
+enge_pre={gscaler(641):%8d}
+groupsum={gscaler(642):%8d}
+group1={gscaler(643):%8d}
+group2={gscaler(644):%8d}
+group3={gscaler(645):%8d}
+group4={gscaler(646):%8d}
+group5={gscaler(647):%8d}
+group6={gscaler(648):%8d}
+ps_pi={gscaler(649):%8d}
+ps_pro={gscaler(650):%8d}
+hks_pre={gscaler(651):%8d}
+main={gscaler(652):%8d}
+hks_pre={gscaler(653):%8d}
+*****************
+UB(prescaled)={gscaler(650):%8d}
+UB(raw)={gscaler(655):%8d}
+UB(raw)/UB(prescaled)={gscaler(655)/gscaler(650):%7.1f}
+*****************
+time(sec)={gscaler(668)/10:%7.1f}
+
+end report grep

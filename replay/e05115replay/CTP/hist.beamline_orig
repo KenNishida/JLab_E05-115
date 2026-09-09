@@ -1,0 +1,23 @@
+begin hist beamline_hists group=both group=hms group=sos
+
+rf25ps,gmisc_dec_data(116),1,0,1 $### BEAMLINE DIAGN-BPM FR
+
+;rf25ps,smisc_dec_data(65),200,0,8000   $rf-25ps TDC t=strig
+
+axbpm,gbpm_x(1),100,-.5,.5       $bpm003A X  (mm)  t=atrig
+aybpm,gbpm_y(1),100,-.5,.5       $bpm003A Y  (mm)  t=atrig
+bxbpm,gbpm_x(2),100,-.5,.5       $bpm003B X  (mm)  t=atrig
+bybpm,gbpm_y(2),100,-.5,.5       $bpm003B Y  (mm)  t=atrig
+cxbpm,gbpm_x(3),100,-.5,.5       $bpm003C X  (mm)  t=atrig
+cybpm,gbpm_y(3),100,-.5,.5       $bpm003C Y  (mm)  t=atrig
+
+frx_sync,gmisc_dec_data(113),200,0,4000   $fast raster X slope  t=atrig
+frx,gmisc_dec_data(114),200,0,8000        $fast raster X current t=atrig
+frxcal,gfrx,100,-.2,.2,atrig              $fast raster X (cm) t=atrig
+fry_sync,gmisc_dec_data(115),200,0,4000   $fast raster Y slope t=atrig
+fry,gmisc_dec_data(116),200,0,8000        $fast raster Y current t=atrig
+frycal,gfry,100,-.2,.2,atrig              $fast raster Y (cm) t=atrig
+frxcalycal,gfrx,gfry,50,-.2,.2,50,-.2,.2,atrig $FR Y vs X (cm-if calibrated) t=atrig
+frxcalycal2,gfrx,gfry,40,-1.,1.,40,-1.,1.,atrig $FR Y vs X (cm-if calibrated) t=atrig
+
+end   hist beamline_hists

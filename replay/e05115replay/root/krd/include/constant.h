@@ -1,0 +1,43 @@
+#ifndef constant_h 
+#define constant_h
+#include <stdio.h>
+  
+  double me=0.000511;
+  double mk=0.493667;
+  double mp=0.938272;
+  double amu=0.931494;
+  double mHe5=4.66783;
+  double mLi6=5.60152;
+  double mHe6=5.60554;
+  double mLi7=6.53383;
+  double mBe9=8.39275;
+  double mB10=9.32444;
+  double mB11=10.25255;
+  double mC12=11.17486;
+  double mAl27=25.12650;
+  double mSi28=26.05319;
+  double mV51=47.44224;
+  double mCr52=48.37001;
+  double mSr88=81.86414;
+  double mY89=82.79534;
+  double ml=1.115683;
+  double ms0=1.192642;
+  double Bl_B12gs=0.01137;
+  double Bl_B12ce1=0.009;
+  double Bl_B12ce2=0.005;
+  double Bl_B12ps=0.0;
+  double Bl_V52gs=0.020;
+  double mhy_B12gs=mB11+ml-Bl_B12gs;
+  double mhy_B12ce1=mB11+ml-Bl_B12ce1;
+  double mhy_B12ce2=mB11+ml-Bl_B12ce2;
+  double mhy_B12ps=mB11+ml-Bl_B12ps;
+  double mhy_V52gs=mV51+ml-Bl_V52gs;
+  double alpha=1./137.;
+  double pi=3.1415926;
+  double echarge=1.6*1e-19;
+  double AvoNum=6.02*1e23;
+  double BeamCurrent=30.*1e-6;
+  double TargetThick=100.;
+  double absCS=1e-31;
+
+#endif  

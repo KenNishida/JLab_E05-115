@@ -1,0 +1,25 @@
+begin hist hes_decoded_dc_tested group=hes group=both
+
+dtime_edc01,edc_sing_drifttime(1),200,-100,300,realedc1   $edc x drift time  1
+dtime_edc02,edc_sing_drifttime(2),200,-100,300,realedc2   $edc x drift time  2
+dtime_edc03,edc_sing_drifttime(3),200,-100,300,realedc3   $edc u drift time  3
+dtime_edc04,edc_sing_drifttime(4),200,-100,300,realedc4   $edc u drift time  4
+dtime_edc05,edc_sing_drifttime(5),200,-100,300,realedc5   $edc x drift time  5
+dtime_edc06,edc_sing_drifttime(6),200,-100,300,realedc6   $edc x drift time  6
+dtime_edc07,edc_sing_drifttime(7),200,-100,300,realedc7   $edc v drift time  7
+dtime_edc08,edc_sing_drifttime(8),200,-100,300,realedc8   $edc v drift time  8
+dtime_edc09,edc_sing_drifttime(9),200,-100,300,realedc9   $edc x drift time  9
+dtime_edc10,edc_sing_drifttime(10),200,-100,300,realedc10 $edc x drift time 10
+
+edc01_driftdis,edc_sing_driftdis(1),30,-.6,.6,realedc1   $edc x drift dist  1
+edc02_driftdis,edc_sing_driftdis(2),30,-.6,.6,realedc2   $edc x drift dist  2
+edc03_driftdis,edc_sing_driftdis(3),30,-.6,.6,realedc3   $edc u drift dist  3
+edc04_driftdis,edc_sing_driftdis(4),30,-.6,.6,realedc4   $edc u drift dist  4
+edc05_driftdis,edc_sing_driftdis(5),30,-.6,.6,realedc5   $edc x drift dist  5
+edc06_driftdis,edc_sing_driftdis(6),30,-.6,.6,realedc6   $edc x drift dist  6
+edc07_driftdis,edc_sing_driftdis(7),30,-.6,.6,realedc7   $edc v drift dist  7
+edc08_driftdis,edc_sing_driftdis(8),30,-.6,.6,realedc8   $edc v drift dist  8
+edc09_driftdis,edc_sing_driftdis(9),30,-.6,.6,realedc9   $edc x drift dist  9
+edc10_driftdis,edc_sing_driftdis(10),30,-.6,.6,realedc10 $edc x drift dist 10
+
+end hist hes_decoded_dc_tested

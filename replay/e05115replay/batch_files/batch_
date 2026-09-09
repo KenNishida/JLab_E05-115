@@ -1,0 +1,26 @@
+#!/bin/sh
+cd  /home/gogami/tags
+./replay_script grun= gstart=1 gstop=500000
+mv ./paw/coin.rzdat ./paw/coin_1.rzdat
+h2root ./paw/coin_1.rzdat
+./replay_script grun= gstart=500001 gstop=500000
+mv ./paw/coin.rzdat ./paw/coin_2.rzdat
+h2root ./paw/coin_2.rzdat
+./replay_script grun= gstart=1000001 gstop=500000
+mv ./paw/coin.rzdat ./paw/coin_3.rzdat
+h2root ./paw/coin_3.rzdat
+./replay_script grun= gstart=1500001 gstop=500000
+mv ./paw/coin.rzdat ./paw/coin_4.rzdat
+h2root ./paw/coin_4.rzdat
+./replay_script grun= gstart=2000001 gstop=500000
+mv ./paw/coin.rzdat ./paw/coin_5.rzdat
+h2root ./paw/coin_5.rzdat
+./replay_script grun= gstart=2500001 gstop=500000
+mv ./paw/coin.rzdat ./paw/coin_6.rzdat
+h2root ./paw/coin_6.rzdat
+./replay_script grun= gstart=3000001 gstop=500000
+mv ./paw/coin.rzdat ./paw/coin_7.rzdat
+h2root ./paw/coin_7.rzdat
+./replay_script grun= gstart=3500001 gstop=500000
+mv ./paw/coin.rzdat ./paw/coin_8.rzdat
+h2root ./paw/coin_8.rzdat

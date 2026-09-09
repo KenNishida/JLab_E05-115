@@ -1,0 +1,212 @@
+#!/bin/sh
+
+# Usage: farm_list
+#
+# This script creates batch_krun and jscript_krun in batch_files directory
+# and submits the job to the farms
+#
+# It assumes to be in the e01011-replay directory and the .tmpl.REPLAY file
+# exists
+#
+# Updates
+# November 02, 2006 Include recent changes due to Auger update
+# December 09, 2005 Read numbers for gstop
+# September 29, 2005 Read run numbers from file
+# September 10, 2005 Submit jobs for a range of runs
+# July 18, 2005 Validate integer input
+# July 10, 2005 Ask for the run number to the user
+# July 07, 2005 Victor M. Rodriguez
+# Sep. 20, 2009 Zhihong Ye
+#
+RAWDIR=/w/cache/mss/hallc/hks09/raw/
+
+#
+# Function to check if input is an integer
+#
+is_integer() {
+ case $1 in
+  *[!0-9]*) return 1;;
+  *) return 0;;
+ esac
+}
+#
+clear
+
+#
+# Verify if batch_files and .tmp.REPLAY exist
+#
+if ! [ -d batch_files ]
+ then 
+  echo 'I need batch_files directory. I am going to create it'
+  echo  
+  mkdir batch_files
+fi
+
+#
+# Ask for file name
+#
+echo 'Input the file name. It needs a list of run numbers and gstop'
+echo
+echo -n 'File name: '
+read fname
+#
+home=$PWD                    # The directory where replay_script is
+username=${USER}@jlab.org    # email which will be notify when the job is done
+#
+
+while read krun
+do
+ echo 'Working on run '${krun}
+ echo '---------------------'
+ 
+#
+# Write file batch_krun
+#
+############################################################
+echo '#!/bin/sh' > batch_files/batch_$krun
+echo 'cd ' $home >>batch_files/batch_$krun
+#echo './replay_script grun='$krun 'gstart=500001 gstop=500000' >>batch_files/batch_$krun
+#echo 'mv ./paw/hks'$krun'.rzdat ./paw/hks'$krun'_2.rzdat' >>batch_files/batch_$krun
+#echo 'h2root ./paw/hks'$krun'_2.rzdat'>>batch_files/batch_$krun
+
+#echo './replay_script grun='$krun 'gstart=500001 gstop=500000' >>batch_files/batch_$krun
+#echo 'mv ./paw/coin'$krun'.rzdat ./paw/coin'$krun'_2.rzdat' >>batch_files/batch_$krun
+#echo 'h2root ./paw/coin'$krun'_2.rzdat'>>batch_files/batch_$krun
+
+#echo './replay_script grun='$krun 'gstart=2000001 gstop=1000000' >>batch_files/batch_$krun
+#echo 'mv ./paw/coin'$krun'.rzdat ./paw/coin'$krun'_3.rzdat' >>batch_files/batch_$krun
+#echo 'h2root ./paw/coin'$krun'_3.rzdat'>>batch_files/batch_$krun
+
+#echo './replay_script grun='$krun 'gstart=3000001 gstop=1000000' >>batch_files/batch_$krun
+#echo 'mv ./paw/coin'$krun'.rzdat ./paw/coin'$krun'_4.rzdat' >>batch_files/batch_$krun
+#echo 'h2root ./paw/coin'$krun'_4.rzdat'>>batch_files/batch_$krun
+
+#######################500000################################
+echo './replay_script grun='$krun 'gstart=1 gstop=500000' >>batch_files/batch_$krun
+echo 'mv ./paw/coin'$krun'.rzdat ./paw/coin'$krun'_1.rzdat' >>batch_files/batch_$krun
+echo 'h2root ./paw/coin'$krun'_1.rzdat'>>batch_files/batch_$krun
+
+echo './replay_script grun='$krun 'gstart=500001 gstop=500000' >>batch_files/batch_$krun
+echo 'mv ./paw/coin'$krun'.rzdat ./paw/coin'$krun'_2.rzdat' >>batch_files/batch_$krun
+echo 'h2root ./paw/coin'$krun'_2.rzdat'>>batch_files/batch_$krun
+
+echo './replay_script grun='$krun 'gstart=1000001 gstop=500000' >>batch_files/batch_$krun
+echo 'mv ./paw/coin'$krun'.rzdat ./paw/coin'$krun'_3.rzdat' >>batch_files/batch_$krun
+echo 'h2root ./paw/coin'$krun'_3.rzdat'>>batch_files/batch_$krun
+
+echo './replay_script grun='$krun 'gstart=1500001 gstop=500000' >>batch_files/batch_$krun
+echo 'mv ./paw/coin'$krun'.rzdat ./paw/coin'$krun'_4.rzdat' >>batch_files/batch_$krun
+echo 'h2root ./paw/coin'$krun'_4.rzdat'>>batch_files/batch_$krun
+
+echo './replay_script grun='$krun 'gstart=2000001 gstop=500000' >>batch_files/batch_$krun
+echo 'mv ./paw/coin'$krun'.rzdat ./paw/coin'$krun'_5.rzdat' >>batch_files/batch_$krun
+echo 'h2root ./paw/coin'$krun'_5.rzdat'>>batch_files/batch_$krun
+
+echo './replay_script grun='$krun 'gstart=2500001 gstop=500000' >>batch_files/batch_$krun
+echo 'mv ./paw/coin'$krun'.rzdat ./paw/coin'$krun'_6.rzdat' >>batch_files/batch_$krun
+echo 'h2root ./paw/coin'$krun'_6.rzdat'>>batch_files/batch_$krun
+
+echo './replay_script grun='$krun 'gstart=3000001 gstop=500000' >>batch_files/batch_$krun
+echo 'mv ./paw/coin'$krun'.rzdat ./paw/coin'$krun'_7.rzdat' >>batch_files/batch_$krun
+echo 'h2root ./paw/coin'$krun'_7.rzdat'>>batch_files/batch_$krun
+
+echo './replay_script grun='$krun 'gstart=3500001 gstop=500000' >>batch_files/batch_$krun
+echo 'mv ./paw/coin'$krun'.rzdat ./paw/coin'$krun'_8.rzdat' >>batch_files/batch_$krun
+echo 'h2root ./paw/coin'$krun'_8.rzdat'>>batch_files/batch_$krun
+
+############################300000###########################
+
+#echo './replay_script grun='$krun 'gstart=1 gstop=300000' >>batch_files/batch_$krun
+#echo 'mv ./paw/coin'$krun'.rzdat ./paw/coin'$krun'_1.rzdat' >>batch_files/batch_$krun
+#echo 'h2root ./paw/coin'$krun'_1.rzdat'>>batch_files/batch_$krun
+
+#echo './replay_script grun='$krun 'gstart=300001 gstop=300000' >>batch_files/batch_$krun
+#echo 'mv ./paw/coin'$krun'.rzdat ./paw/coin'$krun'_2.rzdat' >>batch_files/batch_$krun
+#echo 'h2root ./paw/coin'$krun'_2.rzdat'>>batch_files/batch_$krun
+
+#echo './replay_script grun='$krun 'gstart=600001 gstop=300000' >>batch_files/batch_$krun
+#echo 'mv ./paw/coin'$krun'.rzdat ./paw/coin'$krun'_3.rzdat' >>batch_files/batch_$krun
+#echo 'h2root ./paw/coin'$krun'_3.rzdat'>>batch_files/batch_$krun
+
+#echo './replay_script grun='$krun 'gstart=900001 gstop=300000' >>batch_files/batch_$krun
+#echo 'mv ./paw/coin'$krun'.rzdat ./paw/coin'$krun'_4.rzdat' >>batch_files/batch_$krun
+#echo 'h2root ./paw/coin'$krun'_4.rzdat'>>batch_files/batch_$krun
+
+#echo './replay_script grun='$krun 'gstart=1200001 gstop=300000' >>batch_files/batch_$krun
+#echo 'mv ./paw/coin'$krun'.rzdat ./paw/coin'$krun'_5.rzdat' >>batch_files/batch_$krun
+#echo 'h2root ./paw/coin'$krun'_5.rzdat'>>batch_files/batch_$krun
+
+#echo './replay_script grun='$krun 'gstart=1500001 gstop=300000' >>batch_files/batch_$krun
+#echo 'mv ./paw/coin'$krun'.rzdat ./paw/coin'$krun'_6.rzdat' >>batch_files/batch_$krun
+#echo 'h2root ./paw/coin'$krun'_6.rzdat'>>batch_files/batch_$krun
+
+#echo './replay_script grun='$krun 'gstart=1800001 gstop=300000' >>batch_files/batch_$krun
+#echo 'mv ./paw/coin'$krun'.rzdat ./paw/coin'$krun'_7.rzdat' >>batch_files/batch_$krun
+#echo 'h2root ./paw/coin'$krun'_7.rzdat'>>batch_files/batch_$krun
+
+#echo './replay_script grun='$krun 'gstart=2100001 gstop=300000' >>batch_files/batch_$krun
+#echo 'mv ./paw/coin'$krun'.rzdat ./paw/coin'$krun'_8.rzdat' >>batch_files/batch_$krun
+#echo 'h2root ./paw/coin'$krun'_8.rzdat'>>batch_files/batch_$krun
+
+#echo './replay_script grun='$krun 'gstart=2400001 gstop=300000' >>batch_files/batch_$krun
+#echo 'mv ./paw/coin'$krun'.rzdat ./paw/coin'$krun'_9.rzdat' >>batch_files/batch_$krun
+#echo 'h2root ./paw/coin'$krun'_9.rzdat'>>batch_files/batch_$krun
+
+#echo './replay_script grun='$krun 'gstart=2700001 gstop=300000' >>batch_files/batch_$krun
+#echo 'mv ./paw/coin'$krun'.rzdat ./paw/coin'$krun'_10.rzdat' >>batch_files/batch_$krun
+#echo 'h2root ./paw/coin'$krun'_10.rzdat'>>batch_files/batch_$krun
+
+#echo './replay_script grun='$krun 'gstart=3000001 gstop=300000' >>batch_files/batch_$krun
+#echo 'mv ./paw/coin'$krun'.rzdat ./paw/coin'$krun'_11.rzdat' >>batch_files/batch_$krun
+#echo 'h2root ./paw/coin'$krun'_11.rzdat'>>batch_files/batch_$krun
+
+#echo './replay_script grun='$krun 'gstart=3000001 gstop=300000' >>batch_files/batch_$krun
+#echo 'mv ./paw/coin'$krun'.rzdat ./paw/coin'$krun'_12.rzdat' >>batch_files/batch_$krun
+#echo 'h2root ./paw/coin'$krun'_12.rzdat'>>batch_files/batch_$krun
+
+#echo './replay_script grun='$krun 'gstart=3300001 gstop=300000' >>batch_files/batch_$krun
+#echo 'mv ./paw/coin'$krun'.rzdat ./paw/coin'$krun'_13.rzdat' >>batch_files/batch_$krun
+#echo 'h2root ./paw/coin'$krun'_13.rzdat'>>batch_files/batch_$krun
+
+#echo './replay_script grun='$krun 'gstart=3600001 gstop=400000' >>batch_files/batch_$krun
+#echo 'mv ./paw/coin'$krun'.rzdat ./paw/coin'$krun'_14.rzdat' >>batch_files/batch_$krun
+#echo 'h2root ./paw/coin'$krun'_14.rzdat'>>batch_files/batch_$krun
+
+#################################################################
+chmod +x batch_files/batch_$krun
+echo 'batch_files/batch_'${krun}' has been created!'
+echo ' '
+
+#
+# Write the jsub script
+#
+echo 'PROJECT     e01011' > batch_files/jscript_$krun
+echo 'COMMAND     '$home'/batch_files/batch_'$krun >>batch_files/jscript_$krun
+echo 'JOBNAME     hks.analysis.'${krun} >>batch_files/jscript_$krun
+echo 'TRACK       analysis' >> batch_files/jscript_$krun
+echo 'TIME        4000' >>batch_files/jscript_$krun
+echo 'OS          linux' >>batch_files/jscript_$krun
+echo 'MAIL:       '$username >>batch_files/jscript_$krun
+echo 'INPUT_FILES: '$home'/REPLAY.PARM' >>batch_files/jscript_$krun
+
+#echo 'INPUT_FILES: '$RAWDIR'/hks09-coin_'$krun'.log.0' >>batch_files/jscript_$krun
+#echo 'OTHER_FILES: '$home'/REPLAY.PARM' >>batch_files/jscript_$krun
+
+echo 'batch_files/jscript_'${krun}' has been created.'
+echo ' ' 
+echo 'Now, let us wait for the farms...'
+echo ' '
+#
+# Submit job to the farm
+#
+jsub batch_files/jscript_$krun
+
+echo 'Job '$krun 'has been submited!'
+#
+sleep 2
+
+done < $fname
+echo
+echo '     ***** Good Bye and thank you for using the script *****'
+echo
+echo

@@ -1,0 +1,26 @@
+#!/bin/sh
+cd  /home/gogami/tags
+./replay_script grun=76678 gstart=1 gstop=500000
+mv ./paw/coin76678.rzdat ./paw/coin76678_1.rzdat
+h2root ./paw/coin76678_1.rzdat
+./replay_script grun=76678 gstart=500001 gstop=500000
+mv ./paw/coin76678.rzdat ./paw/coin76678_2.rzdat
+h2root ./paw/coin76678_2.rzdat
+./replay_script grun=76678 gstart=1000001 gstop=500000
+mv ./paw/coin76678.rzdat ./paw/coin76678_3.rzdat
+h2root ./paw/coin76678_3.rzdat
+./replay_script grun=76678 gstart=1500001 gstop=500000
+mv ./paw/coin76678.rzdat ./paw/coin76678_4.rzdat
+h2root ./paw/coin76678_4.rzdat
+./replay_script grun=76678 gstart=2000001 gstop=500000
+mv ./paw/coin76678.rzdat ./paw/coin76678_5.rzdat
+h2root ./paw/coin76678_5.rzdat
+./replay_script grun=76678 gstart=2500001 gstop=500000
+mv ./paw/coin76678.rzdat ./paw/coin76678_6.rzdat
+h2root ./paw/coin76678_6.rzdat
+./replay_script grun=76678 gstart=3000001 gstop=500000
+mv ./paw/coin76678.rzdat ./paw/coin76678_7.rzdat
+h2root ./paw/coin76678_7.rzdat
+./replay_script grun=76678 gstart=3500001 gstop=500000
+mv ./paw/coin76678.rzdat ./paw/coin76678_8.rzdat
+h2root ./paw/coin76678_8.rzdat

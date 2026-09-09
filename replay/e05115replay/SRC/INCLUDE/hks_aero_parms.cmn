@@ -1,0 +1,63 @@
+* $Log: hks_aero_parms.cmn,v $
+* Revision 1.1.1.1  2009/06/23 13:55:43  kawama
+*
+* e05115 src repository for software development
+*
+* Revision 1.1.1.1  2005/05/14 21:44:37  miyoshi
+*
+*
+* Revision 1.2  2005/04/08 17:02:00  miyoshi
+* add parameters for cherenkov
+*
+* Revision 1.1.1.1  2004/08/30 21:21:38  miyoshi
+* new dir
+*
+* Revision 1.3 03/16/2004 Miyoshi 
+* for E01-011
+*
+* Revision 1.2  1996/10/02 19:56:46  saw
+* (RMM) Add rawadc arrays for diagnostic purposes and saer_sumA/B
+* variables
+*
+* Revision 1.1  1996/04/30 13:44:22  saw
+* Initial revision
+*
+*%%   include 'hks_data_structures.cmn'
+*
+*      CTPTYPE = parm
+*
+      INTEGER*4 haer_tdc_pos_min
+      INTEGER*4 haer_tdc_pos_max
+      INTEGER*4 haer_tdc_neg_min
+      INTEGER*4 haer_tdc_neg_max
+
+      REAL*4 haer_pos_gain(HNUM_AER_LAYERS,HNUM_AER_COUNTERS)
+      REAL*4 haer_neg_gain(HNUM_AER_LAYERS,HNUM_AER_COUNTERS)
+      REAL*4 haer_pos_offset(HNUM_AER_LAYERS,HNUM_AER_COUNTERS)
+      REAL*4 haer_neg_offset(HNUM_AER_LAYERS,HNUM_AER_COUNTERS)
+      REAL*4 haer_box_zpos(HNUM_AER_LAYERS)
+      REAL*4 haer_box_xcenter(HNUM_AER_LAYERS,HNUM_AER_COUNTERS)
+      REAL*4 haer_box_ycenter(HNUM_AER_LAYERS,HNUM_AER_COUNTERS)
+      REAL*4 haer_width
+      REAL*4 haer_height
+      REAL*4 haer_thickness
+      REAL*4 haer_slope
+      Real*4 haer_npe_min
+
+      common/hks_aerogel_parms/
+     &  haer_tdc_pos_min,
+     &  haer_tdc_pos_max,
+     &  haer_tdc_neg_min,
+     &  haer_tdc_neg_max,
+     &  haer_pos_offset,
+     &  haer_neg_offset,
+     &  haer_pos_gain,
+     &  haer_neg_gain,
+     &  haer_box_zpos,
+     &  haer_box_xcenter,
+     &  haer_box_ycenter,
+     &  haer_width,
+     &  haer_height,
+     &  haer_thickness,
+     &  haer_slope,
+     &  haer_npe_min

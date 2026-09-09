@@ -1,0 +1,20 @@
+begin hist beamline_hists group=both group=hks group=enge
+
+g401,gmisc_dec_data(401),100,0.,8000. $bpm003A X+ t=atrig
+g402,gmisc_dec_data(402),100,0.,8000. $bpm003A X- t=atrig
+g403,gmisc_dec_data(403),100,0.,8000. $bpm003A Y+ t=atrig
+g404,gmisc_dec_data(404),100,0.,8000. $bpm003A Y- t=atrig
+g405,gmisc_dec_data(405),100,0.,8000. $bpm003B X+ t=atrig
+g406,gmisc_dec_data(406),100,0.,8000. $bpm003B X- t=atrig
+g407,gmisc_dec_data(407),100,0.,8000. $bpm003B Y+ t=atrig
+g408,gmisc_dec_data(408),100,0.,8000. $bpm003B Y- t=atrig
+g409,gmisc_dec_data(409),100,0.,8000. $bpm003C X+ t=atrig
+g410,gmisc_dec_data(410),100,0.,8000. $bpm003C X- t=atrig
+g411,gmisc_dec_data(411),100,0.,8000. $bpm003C Y+ t=atrig
+g412,gmisc_dec_data(412),100,0.,8000. $bpm003C Y- t=atrig
+g413,gmisc_dec_data(413),1000,0.,8000. $FR-X Sync
+g414,gmisc_dec_data(414),100,0.,8000. $FR-X
+g415,gmisc_dec_data(415),1000,0.,8000. $FR-Y Sync 
+g416,gmisc_dec_data(416),100,0.,8000. $FR-Y 
+frxy,gmisc_dec_data(414),gmisc_dec_data(416),50,0.,8000.,50,0.,8000. $FR Y vs X
+end   hist beamline_hists

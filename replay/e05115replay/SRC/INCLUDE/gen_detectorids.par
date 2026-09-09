@@ -1,0 +1,102 @@
+*
+*     detectorids.inc
+*
+*     It would be nice if the data file that set's up the unpacker could
+*     use symbolic names instead of numbers.
+*
+*     Revision 1.9 2009/07/09 yez
+*     Add Lucite info for E05-115
+*
+*     Revision 1.8 2004/03/09 Miyoshi
+*     for E01-011
+*
+*     Revision 1.7  1996/11/08 21:20:05  saw
+*     (WH) Add Lucite counter detector ID
+*
+*     Revision 1.6  1996/01/24 16:26:08  saw
+*     (JRA) Change CBPM_D to GMISC_ID
+*     
+*     Revision 1.5  1995/05/22 19:13:41  cdaq
+*     (SAW) Add Aerogel detector id
+*     
+*     Revision 1.4  1995/04/06  20:31:38  cdaq
+*     (SAW) Add BPM id
+*     
+*     Revision 1.3  1994/06/18  02:50:30  cdaq
+*     (SAW) Add code for miscleaneous data and uninstrumented channels and
+*     change name to gen_detectorids.par (was gen_detectorids.cmn)
+*     
+*     Revision 1.2  1994/04/11  15:11:25  cdaq
+*     (SAW) Add uninstrumented channel "detector" id
+*     
+*     Revision 1.1  1994/02/07  19:37:01  cdaq
+*     Initial revision
+*     
+*     Revision      1999/08/25  22:20:00  ysato
+*     Add HNSS part
+*     
+*
+      Integer MAXID, UNINST_ID, HDC_ID, HSCIN_ID, 
+     $     HAER_ID, HWAT_ID,HLUC_ID,HLUCSUM_ID,
+     $     HMISC_ID, GMISC_ID,
+     $     EDC1_ID, EDC2_ID,ESCIN_ID, EMISC_ID,
+     $     FIS1_ID,FIS2_ID,
+     $     htul_id,etul_id,gtrig_id
+      
+      parameter (MAXID=29)
+      parameter (UNINST_ID=-1)  ! Uninstrumented channels
+      parameter (HDC_ID=1)
+      parameter (HSCIN_ID=2)
+      parameter (HAER_ID=3)
+      parameter (HWAT_ID=4)
+      parameter (HLUC_ID=15)    !
+      parameter (HLUCSUM_ID=16)    !
+      parameter (HMISC_ID=5)    ! Misclaneous FB channels
+      parameter (GMISC_ID=6)    ! BPM/Raster data
+      parameter (EDC1_ID=11)
+      parameter (EDC2_ID=12)
+      parameter (ESCIN_ID=13)
+      parameter (EMISC_ID=14)   ! Miscilaneous FB channels
+
+      parameter (htul_id=17)    ! HTUL
+      parameter (etul_id=18)    ! ETUL
+      parameter (gtrig_id=19)   ! gtrig
+
+*
+*
+
+*     
+*     ROC Number
+*     this is called from h_calc_pedestal.f
+*     
+      
+      Integer HKS_ROCID,HES_ROCID,HDC_ROCID,EDC_ROCID
+      
+*     
+*     HKS_ROCID is ADC roc.
+*     this is to dump pedestal data.
+*     
+      Parameter (HKS_ROCID=6)
+      Parameter (EDC_ROCID=11)
+      
+*     
+*     SLOT number 
+*     This is called from h_calc_pedestal.f
+*     ADC slot no.
+*
+      
+      Integer HWAT_SLOT_ID,HAER_SLOT_ID,HLUC_SLOT_ID,
+     &     HSCIN_SLOT_ID1,HSCIN_SLOT_ID2,
+     &     ESCIN_SLOT_ID1,ESCIN_SLOT_ID2
+      
+      Parameter (HWAT_SLOT_ID=9)
+      Parameter (HAER_SLOT_ID=10)
+      Parameter (HLUC_SLOT_ID=11)    ! Lucite Slot ID is not determined yet
+      Parameter (HSCIN_SLOT_ID1=5)
+      Parameter (HSCIN_SLOT_ID2=7)
+      Parameter (ESCIN_SLOT_ID1=1)
+      Parameter (ESCIN_SLOT_ID2=3)
+
+*     Local Variables:
+*     mode: fortran
+*     End:

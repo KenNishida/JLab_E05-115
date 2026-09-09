@@ -1,0 +1,1033 @@
+*****************begin: hks_data_structures.cmn*************************
+*     
+*     include file     hks_data_structures.cmn
+*     
+*     Author:	D. F. Geesaman		1 September 1993
+*     
+*     Revision 2.3 2009/08/17 yez
+*     Add Lucite sum channels from TDC and ADC, *tot*=*neg*+*pos*
+*
+*     Revision 2.3 2009/07/09 yez
+*     Add Lucite tracking info for E05-115
+*
+*     Revision 2.2 2004/03/05 Miyoshi
+*     for E01-011
+*     
+*     Revision 2.1  2000/03/12 19:05:54  jinghua
+*     (JLiu) Added Lucite tracking info
+*     
+*     Revision 2.0  2000/02/16 15:20:34  jinghua
+*     (JLiu) Modified the data structure of Lucite.
+*
+*     Revision 1.9  1999/02/23 19:19:57  csa
+*     Change some physics vars
+*     
+*     Revision 1.8  1999/01/29 17:34:23  saw
+*     Add variables for second tubes on shower counter
+*     
+*     Revision 1.7  1996/11/19 18:49:15  saw
+*     (WH) Add data structures for Lucite counter
+*     
+*     Revision 1.6  1996/09/04 16:29:41  saw
+*     (JRA) Add energies for layers of shower counter
+*     
+*     Revision 1.5  1996/04/30 13:54:42  saw
+*     (JRA) Change array sizes to two chambers instead of 3
+*     
+*     Revision 1.4  1996/01/24 16:19:27  saw
+*     (JRA) Double size of misc hits data structures
+*     
+*     Revision 1.3  1996/01/17 15:12:27  cdaq
+*     (JRA) ADD SCER_RAW_ADC and SSCIN_FPTIME
+*     
+*     Revision 1.2  1995/08/11 16:29:08  cdaq
+*     (CC) Add structure for # of photoelectrons in Cerenkov
+*     
+*     Revision 1.1  1995/05/22  18:42:33  cdaq
+*     Initial revision
+*     
+*     
+*     CTPTYPE=parm
+*     
+*     HTHETA_LAB             HKS LAB ANGLE THETA (RADIANS)
+*     HPHI_LAB               HKS LAB ANGLE PHI 
+*     HPCENTRAL              HKS CENTRAL MOMENUTM (GEV)
+*     HBFIELD                HKS B FIELD INCLUDING SIGN
+*     
+      REAL*4  HTHETA_LAB     
+      REAL*4  HPHI_LAB       
+      REAL*4  HPCENTRAL      
+      REAL*4  HBFIELD        
+      REAL*4  HPARTMASS      
+      
+      COMMON/HKS_SPECTROMETER/
+     &     HTHETA_LAB,
+     &     HPHI_LAB,
+     &     HPCENTRAL,
+     &     HBFIELD,
+     &     HPARTMASS
+      
+*     
+*     HKS raw debug flags 
+*     data is dumped into hluno.
+*     
+      integer*4 hdebugprintscinraw
+      integer*4 hdebugprintscindec
+      integer*4 hdebugprintaerraw
+      integer*4 hdebugprintwatraw
+      integer*4 hdebugprintlucraw
+      integer*4 hdebugprintdcraw
+      integer*4 hdebugprintdcdec
+      integer*4 hluno
+      
+      COMMON/HKS_DEBUG_FLAG/
+     &     hdebugprintscinraw,
+     &     hdebugprintscindec,
+     &     hdebugprintaerraw,
+     &     hdebugprintwatraw,
+     &     hdebugprintlucraw,
+     &     hdebugprintdcraw,
+     &     hdebugprintdcdec,
+     &     hluno
+
+      Integer*4 htest_flag
+*     --- probably # of trigger counter <= 2
+      Integer*4 htrigger_channel(2)
+
+      Common/HKS_STIME_PAR/
+     &     htest_flag,
+     &     htrigger_channel
+
+*
+*     CTPTYPE=event
+*
+      Real*4 hstart_time
+      Integer*4 htrigger_flag
+
+      Common/HKS_START_TIME/
+     &     hstart_time,
+     &     htrigger_flag
+
+*     
+*     CTPTYPE=event
+*     
+*     
+*     HKS  DATA
+*     
+*     RAW DC DATA FILLED BY G_decode_event_by_banks
+*     HKS DRIFT CHAMBER HITS
+*     EACH CHAMBER HIT (TDC VALUE) HAS A 
+*     LAYER NUMBER
+*     WIRE NUMBER
+*     TDC VALUE
+*     THE TOTAL NUMBER OF HITS IS GIVEN IN HDC_RAW_TOT_HITS
+*     
+*     MAXIMUM of DC hits, layer hits, chamber hits.
+      INTEGER*4 HMAX_DC_HITS          
+      INTEGER*4 HMAX_NUM_DC_LAYERS    
+      INTEGER*4 HMAX_NUM_CHAMBERS     
+      PARAMETER(HMAX_DC_HITS=3600) 
+      PARAMETER(HMAX_NUM_DC_LAYERS=12)
+      PARAMETER(HMAX_NUM_CHAMBERS=2)
+      Integer*4 HMAX_NUM_DC_SLOTS
+      Parameter(HMAX_NUM_DC_SLOTS=80)
+      
+      INTEGER*4 HDC_RAW_LAYER_NUM(HMAX_DC_HITS)
+      INTEGER*4 HDC_RAW_WIRE_NUM(HMAX_DC_HITS)
+      INTEGER*4 HDC_RAW_TDC(HMAX_DC_HITS)
+      Integer*4 hdc_raw_tdc_sub_trig(HMAX_DC_HITS)
+      INTEGER*4 HDC_RAW_TOT_HITS
+
+*
+*     HDC use 2 crates. fill roc number to hdc_raw_roc
+*
+      Integer*4 HDC_RAW_ROCNO(HMAX_DC_HITS)
+
+
+      COMMON/HKS_RAW_DC/
+     1     HDC_RAW_TOT_HITS,
+     2     HDC_RAW_LAYER_NUM,
+     3     HDC_RAW_WIRE_NUM,
+     4     HDC_RAW_TDC,
+     5     HDC_RAW_TDC_SUB_TRIG,
+     6     HDC_RAW_ROCNO
+
+*     
+*     HKS DC DECODED DATA
+*
+*     FILLED BY S_TRANS_DC ROUTINE 
+*     HKS DRIFT CHAMBER HITS
+*     EACH CHAMBER HIT (TDC VALUE) HAS A 
+*     LAYER NUMBER
+*     WIRE NUMBER
+*     TDC VALUE
+*     DRIFT TIME
+*     DRIFT DISTANCE
+*     GENERALIZED COORDINATE OF HIT WIRE CENTER 
+*     GENERALIZED COORDINATE OF HIT PERPENDICULAR 
+*     TO WIRE DIRECTION
+*     
+*     THE TOTAL NUMBER OF HITS IN EACH LAYER IS 
+*     GIVEN IN HDC_HITS_PER_LAYER(I)
+*     THE TOTAL NUMBER OF HITS IS GIVEN IN HDC_TOT_HITS
+*     
+      INTEGER*4 HDC_LAYER_NUM(HMAX_DC_HITS)            
+      INTEGER*4 HDC_WIRE_NUM(HMAX_DC_HITS)             
+      INTEGER*4 HDC_TDC(HMAX_DC_HITS)                  
+      INTEGER*4 HDC_CLUSTER_SIZE(HMAX_DC_HITS)
+      INTEGER*4 HDC_HITS_PER_LAYER(HMAX_NUM_DC_LAYERS)
+      INTEGER*4 HDC_TOT_HITS
+      REAL*4 HDC_DRIFT_TIME(HMAX_DC_HITS)
+      REAL*4 HDC_DRIFT_DIS(HMAX_DC_HITS)
+      REAL*4 HDC_WIRE_CENTER(HMAX_DC_HITS)
+      REAL*4 HDC_WIRE_COORD(HMAX_DC_HITS)
+
+      COMMON/HKS_DECODED_DC/
+     9     HDC_TOT_HITS,
+     1     HDC_DRIFT_TIME,
+     2     HDC_DRIFT_DIS,
+     3     HDC_WIRE_CENTER,
+     4     HDC_WIRE_COORD,
+     5     HDC_LAYER_NUM,
+     6     HDC_WIRE_NUM,
+     7     HDC_CLUSTER_SIZE,
+     8     HDC_TDC,
+     9     HDC_HITS_PER_LAYER
+      
+*     
+*     HKS RAW SCINTILLATOR HITS
+*     FILLED BY G_decode_event_by_banks 
+*     HTF1X 17 : HTF1Y 9 : HTF2X 18 :HTF2Y 1 :F1REF 1= 46
+*     EACH SCINTILLATOR HIT IS SPECIFIED BY A
+*     SCINTILLATOR LAYER NUMBER
+*     SCINTILLATOR COUNTER NUMBER
+*     SCINTILLATOR ADC AT POSITIVE GENERALIZED COORDINATE END
+*     SCINTILLATOR ADC AT NEGATIVE GENERALIZED COORDINATE END
+*     SCINTILLATOR TDC AT POSITIVE GENERALIZED COORDINATE END
+*     SCINTILLATOR TDC AT NEGATIVE GENERALIZED COORDINATE END    
+*     THE TOTAL NUMBER OF HITS IS GIVEN BY HSCIN_TOT_HITS 
+*     
+*     MAXIMUM scin hits, # of layers
+      INTEGER*4 HMAX_RAW_SCIN_HITS           
+      PARAMETER (HMAX_RAW_SCIN_HITS=45*4*4*4) 
+      INTEGER*4 HNUM_RAW_SCIN_LAYERS          
+      PARAMETER (HNUM_RAW_SCIN_LAYERS=4)
+
+      INTEGER*4 HSCIN_RAW_LAYER_NUM(HMAX_RAW_SCIN_HITS)
+      INTEGER*4 HSCIN_RAW_COUNTER_NUM(HMAX_RAW_SCIN_HITS)
+      INTEGER*4 HSCIN_RAW_ADC_POS(HMAX_RAW_SCIN_HITS)
+      INTEGER*4 HSCIN_RAW_ADC_NEG(HMAX_RAW_SCIN_HITS)
+      INTEGER*4 HSCIN_RAW_TDC_POS(HMAX_RAW_SCIN_HITS)
+      INTEGER*4 HSCIN_RAW_TDC_NEG(HMAX_RAW_SCIN_HITS)
+      INTEGER*4 HSCIN_RAW_TOT_HITS 
+      INTEGER*4 hscin_rawtdc_pos_sub_trig(HMAX_RAW_SCIN_HITS)
+      INTEGER*4 hscin_rawtdc_neg_sub_trig(HMAX_RAW_SCIN_HITS)
+*
+      COMMON/HKS_RAW_SCIN/
+     &     HSCIN_RAW_TOT_HITS,
+     &     HSCIN_RAW_LAYER_NUM,
+     &     HSCIN_RAW_COUNTER_NUM,
+     &     HSCIN_RAW_TDC_POS,
+     &     HSCIN_RAW_TDC_NEG,
+     &     HSCIN_RAW_ADC_POS,
+     &     HSCIN_RAW_ADC_NEG,
+     & 	  hscin_rawtdc_pos_sub_trig,
+     &	  hscin_rawtdc_neg_sub_trig
+
+*
+*     HKS REAL SCINTILLATOR HITS (Hits with no TDC data stripped out)
+*     FILLED BY S_strip_scin (which is called by s_trans_scin) 
+*         EACH SCINTILLATOR HIT IS SPECIFIED BY A
+*              SCINTILLATOR LAYER NUMBER
+*              SCINTILLATOR COUNTER NUMBER
+*              SCINTILLATOR ADC AT POSITIVE GENERALIZED COORDINATE END
+*              SCINTILLATOR ADC AT NEGATIVE GENERALIZED COORDINATE END
+*              SCINTILLATOR TDC AT POSITIVE GENERALIZED COORDINATE END
+*              SCINTILLATOR TDC AT NEGATIVE GENERALIZED COORDINATE END    
+*     THE TOTAL NUMBER OF HITS IS GIVEN BY HSCIN_TOT_HITS 
+
+      INTEGER*4 HMAX_SCIN_HITS           
+*     ! MAXIMUM TOTAL NUMBER OF SCIN HITS
+      PARAMETER (HMAX_SCIN_HITS=45*4*4*4) 
+*     ! Should exceed # of paddles
+      INTEGER*4 HNUM_SCIN_LAYERS          
+*     ! TOTAL NUMBER OF SCIN LAYERS
+      PARAMETER (HNUM_SCIN_LAYERS=4)
+      INTEGER*4 HNUM_SCIN_ELEMENTS
+      PARAMETER (HNUM_SCIN_ELEMENTS=18)
+      INTEGER*4 HSCIN_LAYER_NUM
+      INTEGER*4 HSCIN_COUNTER_NUM
+      REAL*4 HSCIN_ADC_POS
+      REAL*4 HSCIN_ADC_NEG
+      INTEGER*4 HSCIN_TDC_POS
+      INTEGER*4 HSCIN_TDC_NEG
+      real*4 hscin_pos_time
+      real*4 hscin_neg_time
+      real*4 hscin_time
+      INTEGER*4 HSCIN_TOT_HITS 
+      INTEGER*4 HSCIN_SING_COUNTER
+*     !DJM''S registered hit counter
+      
+*     
+      COMMON/HKS_REAL_SCIN/
+     &     HSCIN_TOT_HITS,
+     &     HSCIN_LAYER_NUM(HMAX_SCIN_HITS),
+     &     HSCIN_COUNTER_NUM(HMAX_SCIN_HITS),
+     &     HSCIN_ADC_POS(HMAX_SCIN_HITS),
+     &     HSCIN_ADC_NEG(HMAX_SCIN_HITS),
+     &     HSCIN_TDC_POS(HMAX_SCIN_HITS),
+     &     HSCIN_TDC_NEG(HMAX_SCIN_HITS),
+     &     hscin_pos_time(HMAX_SCIN_HITS), 
+     &     hscin_neg_time(HMAX_SCIN_HITS),
+     &     hscin_time(HMAX_SCIN_HITS),
+     &     HSCIN_SING_COUNTER(HNUM_SCIN_LAYERS)
+*     
+*     DECODED SCIN HITS
+*     FILLED BY S_TRANS_SCIN
+*       THIS USES SCINTILLATOR INFORMATION ONLY TO CALCUATE   
+*     HSCIN_APPROX_HIT_COORD    GENERALIZED COORDINATE ALONG HIT
+*     SCINTILLATOR DETERMINED FROM TDC INFO.
+*     HSCIN_COR_ADC       CORRECTED PULSE HEIGHT AT HIT
+*     HSCIN_COR_TIME      CORRECTED TIME AT HIT
+*     THE TOTAL NUMBER OF HITS IN EACH LAYER IS GIVEN BY HSCIN_HITS_PER_LAYER
+*     THE SSTART_TIME IS DEFINED AS THE TIME IF THE TRACK HAD GONE THROUGH
+*     THE CENTER OF S1X. IT IS USED BY S_TRANS_DC FOR THE DRIFT TIME 
+*     CALCULATION.
+*     STWO_GOOD_TIMES  IS A LOGICAL VARIABLE WHICH IS TRUE IF BOTH ENDS
+*     OF THE SCINTILLATOR ARE HIT AND FALSE IF ONLY ONE END IS HIT. 
+*     SGOOD_START_TIME IS TRUE IF A START TIME WAS FOUND
+*
+
+      REAL*4    HSCIN_HIT_COORD(HMAX_SCIN_HITS)
+      REAL*4    HSCIN_COR_ADC(HMAX_SCIN_HITS)
+      REAL*4    HSCIN_COR_TIME(HMAX_SCIN_HITS)
+      INTEGER*4 HSTART_HITNUM
+      INTEGER*4 HSTART_HITSIDE
+      INTEGER*4 HSCIN_HITS_PER_LAYER(HNUM_SCIN_LAYERS)
+      LOGICAL*4 HTWO_GOOD_TIMES(HMAX_SCIN_HITS)
+      LOGICAL*4 HGOOD_START_TIME
+*      LOGICAL*4 SGOOD_START_LAYER
+
+      COMMON/HKS_DECODED_SCIN/
+     &     HSCIN_HIT_COORD,
+     &     HSCIN_COR_ADC,
+     &     HSCIN_COR_TIME,
+     &     HSCIN_HITS_PER_LAYER,
+     &     HSTART_HITNUM,
+     &     HSTART_HITSIDE,
+     &     HTWO_GOOD_TIMES,
+     &     HGOOD_START_TIME
+*     &     SGOOD_START_LAYER
+
+
+*     HKS DETECTOR TRACK QUANTITIES
+*     FILLED BY S_TRACK SUBROUTINE 
+*
+* hntracks_max : NUMBER OF TRACKS ALLOWED IN FOCAL PLANE
+* hntrackhits_max : MAXIMUM NUMBER OF HITS IN EACH TRACK
+
+      INTEGER*4 HNTRACKS_MAX       
+      PARAMETER (HNTRACKS_MAX=240)   
+      INTEGER*4 HNTRACKHITS_MAX    
+      PARAMETER (HNTRACKHITS_MAX=120) 
+
+* hntracks_fp :NUMBER OF FOCAL PLANE TRACKS FOUND
+* fp quantities : hx_fp,hy_fp,hz_fp,hxp_fp,hyp_fp
+*
+*   hx_fp  = the track position on the focus plane in x cordinate
+*   hy_fp  = the track position on the focus plane in y cordinate
+*   hz_fp  = the track position on the focus plane in z cordinate
+*   hxp_fp = dx/dz, how much a track shifts in x direction when the track moves +1 cm in z direction from the focus plane
+*   hyp_fp = dy/dz, how much a track shifts in y direction when the track moves +1 cm in z direction from the focus plane
+
+      INTEGER*4 HNTRACKS_FP         
+      REAL*4  HX_FP(HNTRACKS_MAX)       
+      REAL*4  HY_FP(HNTRACKS_MAX)                
+      REAL*4  HZ_FP(HNTRACKS_MAX)                
+      REAL*4  HXP_FP(HNTRACKS_MAX)               
+      REAL*4  HYP_FP(HNTRACKS_MAX)               
+
+* chi2 / chi2 per d.o.f / d.o.f
+      REAL*4  HCHI2_FP(HNTRACKS_MAX)    
+      REAL*4  HCHI2PERDOF_FP(HNTRACKS_MAX)       
+      INTEGER*4 HNFREE_FP(HNTRACKS_MAX)          
+
+*! LIST OF HITS ON EACH TRACK
+      INTEGER*4 HNTRACK_HITS(HNTRACKS_MAX,HNTRACKHITS_MAX+1)       
+*!  FOCAL PLANE ERROR MATRIX
+      REAL*4  HDEL_FP (4,4,HNTRACKS_MAX)       
+* x,y,xp,yp in rotated focal plane
+      REAL*4  HX_FP_rot(HNTRACKS_MAX)            
+      REAL*4  HY_FP_rot(HNTRACKS_MAX)            
+      REAL*4  HXP_FP_rot(HNTRACKS_MAX)           
+      REAL*4  HYP_FP_rot(HNTRACKS_MAX)           
+
+* THE FOCAL PLANE ERROR MATRIX IS A 4 BY 4 BY SNTRACK_MAX ARRAY
+* THE FOUR INDECIES FOR EACH TRACK ARE X, XP, Y,  YP
+* THE ERROR MATRIX FOR EACH TRACK IS SYMMETRIC ABOUT THE DIAGONAL
+*      DELXX   DELXXP   DELXY   DELXYP
+*      DELXPX  DELXPXP  DELXPY  DELXPYP
+*      DELYPX  DELYXP   DELYY   DELYYP
+*      DELYPX  DELYPXP  DELYPY  DELYPYP
+
+      COMMON/HKS_FOCAL_PLANE/
+     A     HNTRACKS_FP,
+     1     HX_FP,
+     2     HY_FP,
+     3     HZ_FP,
+     4     HXP_FP,
+     5     HYP_FP,
+     6     HCHI2_FP,
+     9     HNFREE_FP,
+     B     HCHI2PERDOF_FP,
+     >     HX_FP_rot,
+     >     HY_FP_rot, 
+     >     HXP_FP_rot,
+     >     HYP_FP_rot,
+     8     HNTRACK_HITS,
+     7     HDEL_FP
+ 
+*     HKS TARGET QUANTITIES
+*     ASSUME THE SAME NUMBER OF MAXIMUM TRACKS AS IN THE FOCAL PLANE
+*     HNTRACKS_MAX
+*
+*     FILLED BY S_TARG_TRANS SUBROUTINE
+      INTEGER*4 HNTRACKS_TAR        
+*! NUMBER OF TARGET TRACKS FOUND 
+*     ALL THE FOLLOWING VARIABLES ARE ARRAYS
+*
+*     hx_tar  = the track position on the target in x cordinate
+*     hy_tar  = the track position on the target in y cordinate
+*     hz_tar  = the track position on the target in z cordinate
+*     hxp_tar = dx/dz, how much a track shifts in x direction when the track moves +1 cm in z direction from the target
+*     hyp_tar = dy/dz, how much a track shifts in y direction when the track moves +1 cm in z direction from the target
+*
+      REAL*4  HX_TAR(HNTRACKS_MAX)                
+      REAL*4  HY_TAR(HNTRACKS_MAX)                
+      REAL*4  HZ_TAR(HNTRACKS_MAX)                
+
+      REAL*4  HXP_TAR(HNTRACKS_MAX)               
+      REAL*4  HYP_TAR(HNTRACKS_MAX)               
+
+      REAL*4  HDELTA_TAR(HNTRACKS_MAX)            
+      REAL*4  HP_TAR(HNTRACKS_MAX)                
+
+*! MOMENTUM OF TRACK AT TARGET
+      REAL*4  HCHI2_TAR(HNTRACKS_MAX)             
+*! FIT QUALITY AT TARGET
+      INTEGER*4 HNFREE_TAR(HNTRACKS_MAX)          
+*! NUMBER OF DEGREES OF FREEDOM IN FIT
+      REAL*4  HDEL_TAR(5,5,HNTRACKS_MAX)              
+*! TARGET  ERROR MATRIX
+* THE FOCAL PLANE ERROR MATRIX IS A 5 BY 5 BY SNTRACK_MAX ARRAY
+* THE FIVE INDECIES FOR EACH TRACK ARE X, Y , XP, YP and P
+* THE ERROR MATRIX FOR EACH TRACK IS SYMMETRIC ABOUT THE DIAGONAL
+*      DELXX  DELXXP  DELXY  DELXYP  DELXP
+*      DELXPX DELXPXP DELXPY DELXPYP DELXPP
+*      DELYX  DELYXPY DELYY  DELYYP  DELYP
+*      DELYPX DELYPXP DELYPY DELYPYP DELYPP
+*      DELPX  DELPXP  DELPY  DELPXP  DELPP
+      INTEGER*4 HLINK_TAR_FP(HNTRACKS_MAX)         
+*! LINK POINTER TO FOCAL PLANE TRACK NUMBER
+      COMMON/HKS_TARGET/
+     C     HNTRACKS_TAR,
+     1     HX_TAR,
+     2     HY_TAR,
+     3     HZ_TAR,
+     4     HXP_TAR,
+     5     HYP_TAR,
+     6     HDELTA_TAR,
+     7     HP_TAR,
+     8     HCHI2_TAR,
+     9     HDEL_TAR,
+     A     HNFREE_TAR,
+     B     HLINK_TAR_FP
+
+*
+*     HKS SIEVE SLIT
+*     used in h_targ_trans.f
+*
+      Real*4 hx_sv(HNTRACKS_MAX),hy_sv(HNTRACKS_MAX)
+      Real*4 hxp_sv(HNTRACKS_MAX),hyp_sv(HNTRACKS_MAX)
+
+      Common/HKS_SIEVE/
+     1     hx_sv,
+     2     hy_sv,
+     3     hxp_sv,
+     4     hyp_sv
+
+*
+*     HKS AEROGEL HITS
+*      FILLED BY G_decode_event_by_banks
+*
+*     THERE ARE 21 segmented AEROGEL with 42 PHOTOTUBES. 3 layers.
+* each
+*          TUBE Row
+
+*          ADC Left VALUE
+*          ADC Right VALUE
+*    THE TOTAL NUMBER OF PHOTOTUBE HITS IS HAER_TOT_HITS
+*    HOWEVER TO MAKE THE DECODERS SYMMETRICAL TO A SCINT WE MUST ADD
+*    A DUMMY LAYER NUMBER.
+
+*     Parameters
+      INTEGER*4 HMAX_AER_HITS
+      INTEGER*4 HNUM_AER_LAYERS
+      INTEGER*4 HNUM_AER_COUNTERS
+      PARAMETER(HMAX_AER_HITS=21*4*4*4)
+      PARAMETER(HNUM_AER_LAYERS=3)
+      PARAMETER(HNUM_AER_COUNTERS=7)
+
+*     Variables
+      INTEGER*4 HAER_RAW_TOT_HITS
+      INTEGER*4 HAER_RAW_LAYER_HITS(HNUM_AER_LAYERS)
+      INTEGER*4 HAER_RAW_LAYER_NUM(HMAX_AER_HITS)
+      INTEGER*4 HAER_RAW_COUNTER_NUM(HMAX_AER_HITS)
+      INTEGER*4 HAER_RAWADC_POS(HMAX_AER_HITS)
+      INTEGER*4 HAER_RAWADC_NEG(HMAX_AER_HITS)
+      INTEGER*4 HAER_RAWTDC_POS(HMAX_AER_HITS)
+      INTEGER*4 HAER_RAWTDC_NEG(HMAX_AER_HITS)
+      INTEGER*4 haer_rawtdc_pos_sub_trig(HMAX_AER_HITS)
+      INTEGER*4 haer_rawtdc_neg_sub_trig(HMAX_AER_HITS)
+
+      COMMON/HKS_RAW_AER/
+     &     HAER_RAW_TOT_HITS,
+     &     HAER_RAW_LAYER_NUM,
+     &     HAER_RAW_COUNTER_NUM,
+     &     HAER_RAWADC_POS,
+     &     HAER_RAWADC_NEG,
+     &     HAER_RAWTDC_POS,
+     &     HAER_RAWTDC_NEG,
+     &     haer_rawtdc_pos_sub_trig,
+     &     haer_rawtdc_neg_sub_trig,
+     &     HAER_RAW_LAYER_HITS
+
+      integer*4 haer_tot_hits
+      integer*4 haer_layer_hits(HNUM_AER_LAYERS)
+      integer*4 haer_layer_num(HMAX_AER_HITS)
+      integer*4 haer_counter_num(HMAX_AER_HITS)
+      integer*4 HAER_BOTH_HITS(HMAX_AER_HITS)
+      real*4 haer_pos_npe(HMAX_AER_HITS)
+      real*4 haer_neg_npe(HMAX_AER_HITS)
+      real*4 haer_pos_time(HMAX_AER_HITS)
+      real*4 haer_neg_time(HMAX_AER_HITS)
+      real*4 haer_npe_sum(HMAX_AER_HITS)
+
+      common /HKS_DECODED_AER/
+     &  haer_tot_hits,
+     &  haer_layer_num,
+     &  haer_counter_num,
+     &  HAER_BOTH_HITS,
+     &  haer_pos_npe,
+     &  haer_neg_npe,
+     &  haer_pos_time,
+     &  haer_neg_time,
+     &  haer_npe_sum,
+     &  haer_layer_hits
+
+*    
+*    HKS WATER HITS
+*    FILLED BY G_decode_event_by_banks
+*    
+*    THERE ARE 24 WATER with 48 PHOTOTUBES. 
+*          TUBE Row
+*          ADC Left VALUE
+*          ADC Right VALUE
+*    THE TOTAL NUMBER OF PHOTOTUBE HITS IS HWAT_TOT_HITS
+*    HOWEVER TO MAKE THE DECODERS SYMMETRICAL 
+*    TO A SCINT WE MUST ADD A DUMMY LAYER NUMBER.
+*    Since MHTDC is used, total hit depends on
+*    # of multihits in FASTBUS
+*
+*    Parameters
+      INTEGER*4 HMAX_WAT_HITS
+      INTEGER*4 HNUM_WAT_LAYERS
+      INTEGER*4 HNUM_WAT_COUNTERS
+      PARAMETER(HMAX_WAT_HITS=24*4*4)
+      PARAMETER(HNUM_WAT_LAYERS=2)
+      PARAMETER(HNUM_WAT_COUNTERS=12)
+
+*     Variables
+      INTEGER*4 HWAT_RAW_TOT_HITS
+      INTEGER*4 HWAT_RAW_LAYER_HITS(HNUM_WAT_LAYERS)
+      INTEGER*4 HWAT_RAW_LAYER_NUM(HMAX_WAT_HITS)
+      INTEGER*4 HWAT_RAW_COUNTER_NUM(HMAX_WAT_HITS)
+      INTEGER*4 HWAT_RAWADC_POS(HMAX_WAT_HITS)
+      INTEGER*4 HWAT_RAWADC_NEG(HMAX_WAT_HITS)
+      INTEGER*4 HWAT_RAWTDC_POS(HMAX_WAT_HITS)
+      INTEGER*4 HWAT_RAWTDC_NEG(HMAX_WAT_HITS)
+      INTEGER*4 hwat_rawtdc_pos_sub_trig(HMAX_WAT_HITS)
+      INTEGER*4 hwat_rawtdc_neg_sub_trig(HMAX_WAT_HITS)
+
+      COMMON/HKS_RAW_WATER/
+     &     HWAT_RAW_TOT_HITS,
+     &     HWAT_RAW_LAYER_NUM,
+     &     HWAT_RAW_COUNTER_NUM,
+     &     HWAT_RAWADC_POS,
+     &     HWAT_RAWADC_NEG,
+     &     HWAT_RAWTDC_POS,
+     &     HWAT_RAWTDC_NEG,
+     &     HWAT_RAW_LAYER_HITS,
+     & 	  hwat_rawtdc_pos_sub_trig,
+     &	  hwat_rawtdc_neg_sub_trig
+
+      integer*4 hwat_tot_hits
+      Integer*4 hwat_layer_hits(HNUM_WAT_LAYERS)
+      integer*4 hwat_layer_num(HMAX_WAT_HITS)
+      integer*4 hwat_counter_num(HMAX_WAT_HITS)
+      integer*4 hwat_both_hits(HMAX_WAT_HITS)
+      real*4 hwat_pos_npe(HMAX_WAT_HITS)
+      real*4 hwat_neg_npe(HMAX_WAT_HITS)
+      real*4 hwat_pos_time(HMAX_WAT_HITS)
+      real*4 hwat_neg_time(HMAX_WAT_HITS)
+      real*4 hwat_npe_sum(HMAX_WAT_HITS)
+
+      common /HKS_DECORDED_WATER/
+     &  hwat_tot_hits,
+     &  hwat_layer_num,
+     &  hwat_counter_num,
+     &  hwat_both_hits,
+     &  hwat_pos_npe,
+     &  hwat_neg_npe,
+     &  hwat_pos_time,
+     &  hwat_neg_time,
+     &  hwat_npe_sum,
+     &  hwat_layer_hits
+
+*    
+*    HKS LUCITE HITS   -- 2009/07/09 Z. Ye
+*    FILLED BY G_decode_event_by_banks
+*    
+*    THERE ARE 16 LUCITE with 32 PHOTOTUBES. 
+*          TUBE Row
+*          ADC Left VALUE
+*          ADC Right VALUE
+*    THE TOTAL NUMBER OF PHOTOTUBE HITS IS HWAT_TOT_HITS
+*    HOWEVER TO MAKE THE DECODERS SYMMETRICAL 
+*    TO A SCINT WE MUST ADD A DUMMY LAYER NUMBER.
+*    Since MHTDC is used, total hit depends on
+*    # of multihits in FASTBUS
+*
+*    Parameters
+      INTEGER*4 HMAX_LUC_HITS
+      INTEGER*4 HMAX_LUCSUM_HITS
+      INTEGER*4 HNUM_LUC_LAYERS
+      INTEGER*4 HNUM_LUC_COUNTERS
+      PARAMETER(HMAX_LUC_HITS=16*4*4*4*4) ! increase 4 times -Z.Ye 08/31/09
+      PARAMETER(HMAX_LUCSUM_HITS=16*4*4*4*4) ! increase 4 times -Z.Ye 08/31/09
+      PARAMETER(HNUM_LUC_LAYERS=1)
+      PARAMETER(HNUM_LUC_COUNTERS=16)
+
+*     Variables
+      INTEGER*4 HLUC_RAW_TOT_HITS
+      INTEGER*4 HLUCSUM_RAW_TOT_HITS
+      INTEGER*4 HLUC_RAW_LAYER_HITS(HNUM_LUC_LAYERS)
+      INTEGER*4 HLUCSUM_RAW_LAYER_HITS(HNUM_LUC_LAYERS)
+      INTEGER*4 HLUC_RAW_LAYER_NUM(HMAX_LUC_HITS)
+      INTEGER*4 HLUC_RAW_COUNTER_NUM(HMAX_LUC_HITS)
+      INTEGER*4 HLUCSUM_RAW_LAYER_NUM(HMAX_LUCSUM_HITS)
+      INTEGER*4 HLUCSUM_RAW_COUNTER_NUM(HMAX_LUCSUM_HITS)
+      INTEGER*4 HLUC_RAWADC_POS(HMAX_LUC_HITS)
+      INTEGER*4 HLUC_RAWADC_NEG(HMAX_LUC_HITS)
+      INTEGER*4 HLUC_RAWADC_TOT(HMAX_LUCSUM_HITS)
+      INTEGER*4 HLUC_RAWTDC_POS(HMAX_LUC_HITS)
+      INTEGER*4 HLUC_RAWTDC_NEG(HMAX_LUC_HITS)
+      INTEGER*4 HLUC_RAWTDC_TOT(HMAX_LUCSUM_HITS)
+      INTEGER*4 hluc_rawtdc_pos_sub_trig(HMAX_LUC_HITS)
+      INTEGER*4 hluc_rawtdc_neg_sub_trig(HMAX_LUC_HITS)
+      INTEGER*4 hluc_rawtdc_tot_sub_trig(HMAX_LUCSUM_HITS)
+      COMMON/HKS_RAW_LUCITE/
+     &     HLUC_RAW_TOT_HITS,
+     &     HLUCSUM_RAW_TOT_HITS,
+     &     HLUC_RAW_LAYER_NUM,
+     &     HLUC_RAW_COUNTER_NUM,
+     &     HLUC_RAWADC_POS,
+     &     HLUC_RAWADC_NEG,
+     &     HLUC_RAWADC_TOT,
+     &     HLUC_RAWTDC_POS,
+     &     HLUC_RAWTDC_NEG,
+     &     HLUC_RAWTDC_TOT,
+     &     hluc_rawtdc_pos_sub_trig,
+     &     hluc_rawtdc_neg_sub_trig,
+     &     hluc_rawtdc_tot_sub_trig,
+     &     HLUC_RAW_LAYER_HITS,
+     &     HLUCSUM_RAW_LAYER_HITS,
+     &     HLUCSUM_RAW_LAYER_NUM,
+     &     HLUCSUM_RAW_COUNTER_NUM
+
+      integer*4 hluc_tot_hits
+      Integer*4 hluc_layer_hits(HNUM_LUC_LAYERS)
+      integer*4 hluc_layer_num(HMAX_LUC_HITS)
+      integer*4 hluc_counter_num(HMAX_LUC_HITS)
+
+      integer*4 hlucsum_tot_hits
+      Integer*4 hlucsum_layer_hits(HNUM_LUC_LAYERS)
+      integer*4 hlucsum_layer_num(HMAX_LUC_HITS)
+      integer*4 hlucsum_counter_num(HMAX_LUC_HITS)
+
+      integer*4 hluc_both_hits(HMAX_LUC_HITS)
+      real*4 hluc_pos_npe(HMAX_LUC_HITS)
+      real*4 hluc_neg_npe(HMAX_LUC_HITS)
+      real*4 hluc_tot_npe(HMAX_LUC_HITS)
+      real*4 hluc_pos_time(HMAX_LUC_HITS)
+      real*4 hluc_neg_time(HMAX_LUC_HITS)
+      real*4 hluc_tot_time(HMAX_LUC_HITS)
+      real*4 hluc_npe_sum(HMAX_LUC_HITS)
+
+      common /HKS_DECORDED_LUCITE/
+     &  hluc_tot_hits,
+     &  hluc_layer_num,
+     &  hluc_counter_num,
+     &  hlucsum_tot_hits,
+     &  hlucsum_layer_num,
+     &  hlucsum_counter_num,
+     &  hluc_both_hits,
+     &  hluc_pos_npe,
+     &  hluc_neg_npe,
+     &  hluc_tot_npe,
+     &  hluc_pos_time,
+     &  hluc_neg_time,
+     &  hluc_tot_time,
+     &  hluc_npe_sum,
+     &  hluc_layer_hits,
+     &  hlucsum_layer_hits
+
+
+*                                          
+*     HKS_TRACK_TESTS
+*       
+*     PARTICLE ID INFORMATION FILLED BY H_TOF
+*     THIS STORES THE RESULTS OF SHOWER AND SCINTILLATOR CALCULATIONS
+*     FOR EACH OF THE TRACKS GENERATED BY S_TRACK
+*
+*
+      INTEGER*4 HSCIN_HIT(HNTRACKS_MAX,HMAX_SCIN_HITS)
+      
+*     Cherenkov information
+*     if a particle pass two counters, an extra number is recorded.
+      INTEGER*4 htrk_naer(HNTRACKS_MAX,HNUM_AER_LAYERS)
+      INTEGER*4 htrk_nwat(HNTRACKS_MAX,HNUM_WAT_LAYERS)
+      INTEGER*4 htrk_nluc(HNTRACKS_MAX,HNUM_LUC_LAYERS)
+      Real*4 htrk_aer_num(HNTRACKS_MAX,HNUM_AER_LAYERS)
+      Real*4 htrk_wat_num(HNTRACKS_MAX,HNUM_WAT_LAYERS)
+      Real*4 htrk_luc_num(HNTRACKS_MAX,HNUM_LUC_LAYERS)
+
+      REAL*4 HTRK_time_ATFP(HNTRACKS_MAX)
+      REAL*4 HSCIN_FPTIME(HNTRACKS_MAX,HMAX_SCIN_HITS)
+      REAL*4 htrk_pathlength(HNTRACKS_MAX)
+      
+*     Cherenkov information
+      REAL*4 Htrk_AER_NPE_SUM(HNTRACKS_MAX,HNUM_AER_LAYERS)
+      REAL*4 Htrk_WAT_NPE_SUM(HNTRACKS_MAX,HNUM_WAT_LAYERS)
+      REAL*4 Htrk_LUC_NPE_SUM(HNTRACKS_MAX,HNUM_LUC_LAYERS)
+      REAL*4 Htrk_AER_NPE_SUM2(HNTRACKS_MAX,HNUM_AER_LAYERS)
+      REAL*4 Htrk_WAT_NPE_SUM2(HNTRACKS_MAX,HNUM_WAT_LAYERS)
+      REAL*4 Htrk_LUC_NPE_SUM2(HNTRACKS_MAX,HNUM_LUC_LAYERS)
+      REAL*4 Htrk_AER_TIME(HNTRACKS_MAX,HNUM_AER_LAYERS)
+      REAL*4 Htrk_WAT_TIME(HNTRACKS_MAX,HNUM_WAT_LAYERS)
+      REAL*4 Htrk_LUC_TIME(HNTRACKS_MAX,HNUM_LUC_LAYERS)
+      REAL*4 Htrk_AER_TIME2(HNTRACKS_MAX,HNUM_AER_LAYERS)
+      REAL*4 Htrk_WAT_TIME2(HNTRACKS_MAX,HNUM_WAT_LAYERS)
+      REAL*4 Htrk_LUC_TIME2(HNTRACKS_MAX,HNUM_LUC_LAYERS)
+
+      COMMON/HKS_TRACK_TESTS/
+     1     HTRK_time_ATFP, 
+     2     HSCIN_FPTIME,
+     3     Htrk_aer_npe_sum,
+     4     Htrk_wat_npe_sum,
+     5     Htrk_luc_npe_sum,
+     6     Htrk_aer_npe_sum2,
+     7     Htrk_wat_npe_sum2,
+     8     Htrk_luc_npe_sum2,
+     9     Htrk_aer_time,
+     +     Htrk_wat_time,
+     +     Htrk_luc_time,
+     +     Htrk_aer_time2,
+     +     Htrk_wat_time2,
+     +     Htrk_luc_time2,
+     +     htrk_aer_num,
+     +     htrk_wat_num,
+     +     htrk_luc_num,
+     +     htrk_naer,
+     +     htrk_nwat,
+     +     htrk_nluc,
+     +     HSCIN_HIT,
+     +     htrk_pathlength
+
+*
+*     HKS SINGLES PHYSICS COMMON BLOCKS 'HS...'
+*     THESE ARE FILLED BY S_PHYSICS
+*
+*     HSP       Lab momentum of chosen track in GeV/c
+*     HSENERGY  Lab total energy of chosen track in GeV
+*     HSCORRP   electron momentum corrected for eloss
+*     HSCORRE   electron energy corrected for eloss
+*     HSDELTA   Spectrometer delta of chosen track
+
+      INTEGER*4 HNPHYSICS_MAX
+      Parameter(HNPHYSICS_MAX=HNTRACKS_MAX)
+      
+      REAL*4 HSP(HNPHYSICS_MAX)
+      REAL*4 HSENERGY(HNPHYSICS_MAX)               
+      REAL*4 HSE_E(HNPHYSICS_MAX)
+      REAL*4 HSE_PI(HNPHYSICS_MAX)
+      REAL*4 HSE_PR(HNPHYSICS_MAX)
+      REAL*4 HSCORRP(HNPHYSICS_MAX)                 
+      REAL*4 HSCORRE(HNPHYSICS_MAX)                 
+      REAL*4 HSDELTA(HNPHYSICS_MAX)                 
+      REAL*4 HSTHETA(HNPHYSICS_MAX)                   
+*! Lab Scattering angle in radians
+      REAL*4 HSPHI(HNPHYSICS_MAX)                 
+*! Lab Azymuthal angle in radians
+      REAL*4 HSMINV                
+*! Invariant Mass of remaing hadronic system
+      REAL*4 HSZBEAM(HNPHYSICS_MAX)                
+*! Lab Z coordinate of intersection of beam
+                                   ! track with spectrometer ray
+      REAL*4 HSDEDX(HNPHYSICS_MAX,HNUM_RAW_SCIN_LAYERS)             
+*! DEDX of chosen track in each layer
+      REAL*4 HSBETA(HNPHYSICS_MAX)                
+      REAL*4 HSTOF(HNPHYSICS_MAX)                
+*! BETA of chosen track
+      REAL*4 HSTIME_AT_FP(HNPHYSICS_MAX) 
+      REAL*4 HSX_FP(HNPHYSICS_MAX)                
+      REAL*4 HSY_FP(HNPHYSICS_MAX) 
+      REAL*4 HSXP_FP(HNPHYSICS_MAX) 
+      REAL*4 HSYP_FP(HNPHYSICS_MAX) 
+      REAL*4 HSCHI2PERDEG(HNPHYSICS_MAX)    
+*! CHI2 per degree of freedom of chosen track.
+      REAL*4 HSTIME_AT_TAR(HNPHYSICS_MAX)
+      REAL*4 HSX_TAR(HNPHYSICS_MAX) 
+      REAL*4 HSY_TAR(HNPHYSICS_MAX) 
+      REAL*4 HSXP_TAR(HNPHYSICS_MAX) 
+      REAL*4 HSYP_TAR(HNPHYSICS_MAX) 
+
+      REAL*4 HSX_SV (HNPHYSICS_MAX) 
+      REAL*4 HSY_SV(HNPHYSICS_MAX) 
+      REAL*4 HSXP_SV (HNPHYSICS_MAX) 
+      REAL*4 HSYP_SV(HNPHYSICS_MAX) 
+
+      Real*4 HSDC_TRACK_COORD(HNPHYSICS_MAX,HMAX_NUM_DC_LAYERS)
+      Real*4 HSDC_SING_RES(HNPHYSICS_MAX,HMAX_NUM_DC_LAYERS)
+      
+      REAL*4 HSBETA_CHISQ(HNPHYSICS_MAX)
+*     
+      REAL*4 HSMASS2(HNPHYSICS_MAX)                
+*     ! Mass squared
+      REAL*4 HST                   
+*     ! invariant t
+      REAL*4 HSU                   
+*     ! invariant u
+      REAL*4 HSELOSS(HNPHYSICS_MAX)
+      REAL*4 HSQ3                  
+*     ! Lab frame momentum transfer
+*     REAL*4 SSTHETAQ, SSPHIQ      ! Direction of q3
+      REAL*4 HSBIGQ2               
+*     ! Q**2
+      REAL*4 HSX                   
+*     ! fraction of nucleon p carried by quark
+      REAL*4 HSY                   
+*     ! fraction of lepton''s E lost in lab
+      REAL*4 HSW                   
+*     ! Invariant mass of recoil system
+      REAL*4 HSW2                  
+*     ! Invariant mass**2 of recoil system
+      
+      REAL*4  hsnco1(HNPHYSICS_MAX)
+      REAL*4  hsnco2(HNPHYSICS_MAX)
+      REAL*4  hsnco3(HNPHYSICS_MAX)
+      REAL*4  hsnt1(HNPHYSICS_MAX)
+      REAL*4  hsnt2(HNPHYSICS_MAX)
+      REAL*4  hsnt3(HNPHYSICS_MAX)
+      REAL*4  hsnt1m(HNPHYSICS_MAX)
+      REAL*4  hsnt2m(HNPHYSICS_MAX)
+      REAL*4  hsnt3m(HNPHYSICS_MAX)
+      REAL*4  hsna1(HNPHYSICS_MAX)
+      REAL*4  hsna2(HNPHYSICS_MAX)
+      REAL*4  hsna3(HNPHYSICS_MAX)
+      REAL*4  hsna1m(HNPHYSICS_MAX)
+      REAL*4  hsna2m(HNPHYSICS_MAX)
+      REAL*4  hsna3m(HNPHYSICS_MAX)
+*     
+*     
+      INTEGER*4 hnphysics
+*     
+      INTEGER*4 HSID_LUND          
+*     ! LUND particle ID code -- not yet filled
+      INTEGER*4 HSNFREE_FP(HNPHYSICS_MAX)
+      INTEGER*4 HSNUM_SCIN_HIT(HNPHYSICS_MAX)
+*     ! # OF SCINTILLATORS ON TRACK
+      INTEGER*4 HSNUM_PMT_HIT(HNPHYSICS_MAX)
+*     ! # OF HODOSCOPE PMTS ON TRACK
+      
+*     index of track in common/hks_focal_plane
+      Integer*4 hphys_ntrack(HNPHYSICS_MAX)
+      Real*4 hphys_scin_co(HNPHYSICS_MAX,HNUM_SCIN_LAYERS)
+      Integer*4 hphys_scin_hit(HNPHYSICS_MAX,HNUM_SCIN_LAYERS+1)
+*     
+      COMMON/HKS_PHYSICS_R4/
+     &     HSP,
+     &     HSENERGY,
+     &     HSE_E,
+     &     HSE_PI,
+     &     HSE_PR,
+     &     HSDELTA,
+     &     HSTHETA,
+     &     HSPHI,
+     &     HSMINV,
+     &     HSZBEAM,
+     &     HSBETA,
+     &     HSTOF,
+     &     HSDEDX,
+     &     HSTIME_AT_FP,
+     &     HSX_FP ,
+     &     HSY_FP ,
+     &     HSXP_FP ,
+     &     HSYP_FP ,
+     &     HSCHI2PERDEG ,
+     &     HSX_TAR ,
+     &     HSY_TAR ,
+     &     HSXP_TAR ,
+     &     HSYP_TAR ,
+     &     HSX_SV ,
+     &     HSY_SV ,
+     &     HSXP_SV ,
+     &     HSYP_SV ,
+     &     HSTIME_AT_TAR,
+     &     HSDC_TRACK_COORD,
+     &     HSDC_SING_RES,
+     &     HSBETA_CHISQ,
+     &     HSMASS2,
+     &     HST,
+     &     HSU,
+     &     HSELOSS,
+     &     HSQ3,
+     &     HSBIGQ2,
+     &     HSX,
+     &     HSY,
+     &     HSW,
+     &     HSW2,
+     &     HSCORRP,
+     &     HSCORRE,
+     &     hsnco1, 
+     &     hsnco2, 
+     &     hsnco3, 
+     &     hsnt1, 
+     &     hsnt2,
+     &     hsnt3,
+     &     hsnt1m, 
+     &     hsnt2m,
+     &     hsnt3m,
+     &     hsna1, 
+     &     hsna2,
+     &     hsna3,
+     &     hsna1m, 
+     &     hsna2m,
+     &     hsna3m
+      
+*     & HSTHETAQ, HSPHIQ,
+*     
+      COMMON/HKS_PHYSICS_I4/
+     &     HSID_LUND,
+     &     HSNFREE_FP,
+     &     HSNUM_SCIN_HIT,
+     &     HSNUM_PMT_HIT,
+     &     hphys_ntrack,
+     &     hphys_scin_hit,
+     &     hphys_scin_co,
+     &     hnphysics
+      
+*     
+*     TUL output htf1x1y, htf2x,htfac,htfwc = 4modules
+*     htul_tot_hits
+*     
+      Integer*4 HMAX_TUL_HITS
+*     --- 40x32=
+      Parameter(HMAX_TUL_HITS=4*32*8)
+      Integer*4 htul_raw_tot_hits
+      Integer*4 htul_raw_module_num(HMAX_TUL_HITS)
+      Integer*4 htul_raw_channel_num(HMAX_TUL_HITS)
+      Integer*4 htul_raw_tdc(HMAX_TUL_HITS)
+      
+      COMMON/HKS_RAW_TUL/
+     &     htul_raw_tot_hits,
+     &     htul_raw_module_num,
+     &     htul_raw_channel_num,
+     &     htul_raw_tdc
+      
+      Integer*4 htul_tot_hits
+      Integer*4 htul_module_num(HMAX_TUL_HITS)
+      Integer*4 htul_channel_num(HMAX_TUL_HITS)
+      Integer*4 htul_tdc(HMAX_TUL_HITS)
+      
+      COMMON/HKS_DEC_TUL/
+     &     htul_tot_hits,
+     &     htul_module_num,
+     &     htul_channel_num,
+     &     htul_tdc
+
+*     Non-Hits data with HKS gates or starts.
+*     (Energy SUMS, logic timing,...)
+*     
+      INTEGER HMAX_MISC_HITS
+      PARAMETER(HMAX_MISC_HITS=100)
+      INTEGER*4 HMISC_TOT_HITS
+      INTEGER*4 HMISC_RAW_ADDR1    
+*     ! "Layer" (1=TDC,2=ADC)
+      INTEGER*4 HMISC_RAW_ADDR2    
+*     ! "Counter"
+      INTEGER*4 HMISC_RAW_DATA
+      COMMON/H_RAW_MISC/
+     &     HMISC_RAW_ADDR1(HMAX_MISC_HITS),
+     &     HMISC_RAW_ADDR2(HMAX_MISC_HITS),
+     &     HMISC_RAW_DATA(HMAX_MISC_HITS),
+     &     HMISC_TOT_HITS
+*     
+*     
+*     hks_misc_parms.cmn -  misc tdc's filled as array over signal number
+*     (tdc is sparsified, so the raw signals are array over hits)
+*     
+*     CTPTYPE=parm
+*     
+      integer*4 hnum_misc_layers
+      parameter(hnum_misc_layers=2) !(1=TDC, 2=ADC)
+*     
+*     
+*     CTPTYPE=event
+*     
+      integer*4 hmisc_dec_data(hmax_misc_hits,hnum_misc_layers)
+      integer*4 hmisc_scaler(hmax_misc_hits,hnum_misc_layers)
+      
+      common/hks_misc_parms/
+     &     hmisc_dec_data,
+     &     hmisc_scaler
+      
+
+      real*4 hsrftime, hsrfdiff
+      Common/hrf/ hsrftime, hsrfdiff
+
+ccc   matsu 2007/01/31
+*      integer*4 hsrf2hit
+*      integer*4 hsrf2hit2(44)
+*      real*4 hsrf2time(44), hsrf2diff(44)
+*      Common/hrf2/ hsrf2hit, hsrf2time, hsrf2diff, hsrf2hit2
+ccc   matsu 2007/01/31
+
+*     TUL tdc cut condition
+*     CTPTYPE=parm
+*
+      Integer*4 htul_tdc_min,htul_tdc_max
+      
+      Common/HTUL_PARAM/
+     &     htul_tdc_min,htul_tdc_max
+      
+*     
+*     CTPTYPE=event
+*     
+****************** end: hks_data_structures.cmn ************************
+*     Local Variables:
+*     mode: fortran
+*     fortran-continuation-string: "&"
+*     comment-column: 35
+*     End:
+

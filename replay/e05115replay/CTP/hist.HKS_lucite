@@ -1,0 +1,71 @@
+begin hist hks_pid_lucite group=hks group=both
+hlucposnpe1_01,150,-2,100        $HKS LC1-01 npe+
+hlucposnpe1_02,150,-2,100        $HKS LC1-02 npe+
+hlucposnpe1_03,150,-2,100        $HKS LC1-03 npe+
+hlucposnpe1_04,150,-2,100        $HKS LC1-04 npe+
+hlucposnpe1_05,150,-2,100        $HKS LC1-05 npe+
+hlucposnpe1_06,150,-2,100        $HKS LC1-06 npe+
+hlucposnpe1_07,150,-2,100        $HKS LC1-07 npe+
+hlucposnpe1_08,150,-2,100        $HKS LC1-08 npe+
+hlucposnpe1_09,150,-2,100        $HKS LC1-09 npe+
+hlucposnpe1_10,150,-2,100        $HKS LC1-10 npe+
+hlucposnpe1_11,150,-2,100        $HKS LC1-11 npe+
+hlucposnpe1_12,150,-2,100        $HKS LC1-12 npe+
+hlucposnpe1_13,150,-2,100        $HKS LC1-13 npe+
+hlucposnpe1_14,150,-2,100        $HKS LC1-14 npe+
+hlucposnpe1_15,150,-2,100        $HKS LC1-15 npe+
+hlucposnpe1_16,150,-2,100        $HKS LC1-16 npe+
+
+hlucnegnpe1_01,150,-2,100        $HKS LC1-01 npe-
+hlucnegnpe1_02,150,-2,100        $HKS LC1-02 npe-
+hlucnegnpe1_03,150,-2,100        $HKS LC1-03 npe-
+hlucnegnpe1_04,150,-2,100        $HKS LC1-04 npe-
+hlucnegnpe1_05,150,-2,100        $HKS LC1-05 npe-
+hlucnegnpe1_06,150,-2,100        $HKS LC1-06 npe-
+hlucnegnpe1_07,150,-2,100        $HKS LC1-07 npe-
+hlucnegnpe1_08,150,-2,100        $HKS LC1-08 npe-
+hlucnegnpe1_09,150,-2,100        $HKS LC1-09 npe-
+hlucnegnpe1_10,150,-2,100        $HKS LC1-10 npe-
+hlucnegnpe1_11,150,-2,100        $HKS LC1-11 npe-
+hlucnegnpe1_12,150,-2,100        $HKS LC1-12 npe-
+hlucnegnpe1_13,150,-2,100        $HKS LC1-13 npe-
+hlucnegnpe1_14,150,-2,100        $HKS LC1-14 npe-
+hlucnegnpe1_15,150,-2,100        $HKS LC1-15 npe-
+hlucnegnpe1_16,150,-2,100        $HKS LC1-16 npe-
+
+hlucsumnpe1_01,150,-2,100        $HKS LC1-01 sum npe
+hlucsumnpe1_02,150,-2,100        $HKS LC1-02 sum npe
+hlucsumnpe1_03,150,-2,100        $HKS LC1-03 sum npe
+hlucsumnpe1_04,150,-2,100        $HKS LC1-04 sum npe
+hlucsumnpe1_05,150,-2,100        $HKS LC1-05 sum npe
+hlucsumnpe1_06,150,-2,100        $HKS LC1-06 sum npe
+hlucsumnpe1_07,150,-2,100        $HKS LC1-07 sum npe
+hlucsumnpe1_08,150,-2,100        $HKS LC1-08 sum npe
+hlucsumnpe1_09,150,-2,100        $HKS LC1-09 sum npe
+hlucsumnpe1_10,150,-2,100        $HKS LC1-10 sum npe
+hlucsumnpe1_11,150,-2,100        $HKS LC1-11 sum npe
+hlucsumnpe1_12,150,-2,100        $HKS LC1-12 sum npe
+hlucsumnpe1_13,150,-2,100        $HKS LC1-13 sum npe
+hlucsumnpe1_14,150,-2,100        $HKS LC1-14 sum npe
+hlucsumnpe1_15,150,-2,100        $HKS LC1-15 sum npe
+hlucsumnpe1_16,150,-2,100        $HKS LC1-16 sum npe
+ 
+hluctotnpe1_01,150,-2,100        $HKS LC1-01 tot npe
+hluctotnpe1_02,150,-2,100        $HKS LC1-02 tot npe
+hluctotnpe1_03,150,-2,100        $HKS LC1-03 tot npe
+hluctotnpe1_04,150,-2,100        $HKS LC1-04 tot npe
+hluctotnpe1_05,150,-2,100        $HKS LC1-05 tot npe
+hluctotnpe1_06,150,-2,100        $HKS LC1-06 tot npe
+hluctotnpe1_07,150,-2,100        $HKS LC1-07 tot npe
+hluctotnpe1_08,150,-2,100        $HKS LC1-08 tot npe
+hluctotnpe1_09,150,-2,100        $HKS LC1-09 tot npe
+hluctotnpe1_10,150,-2,100        $HKS LC1-10 tot npe
+hluctotnpe1_11,150,-2,100        $HKS LC1-11 tot npe
+hluctotnpe1_12,150,-2,100        $HKS LC1-12 tot npe
+hluctotnpe1_13,150,-2,100        $HKS LC1-13 tot npe
+hluctotnpe1_14,150,-2,100        $HKS LC1-14 tot npe
+hluctotnpe1_15,150,-2,100        $HKS LC1-15 tot npe
+hluctotnpe1_16,150,-2,100        $HKS LC1-16 tot npe
+
+hlucnpesum1,200,-2,100           $HKS LC1 npe sum
+end hist hks_pid_lucite

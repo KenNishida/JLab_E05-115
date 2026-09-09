@@ -1,0 +1,250 @@
+; For HES DC test
+;
+
+     edc1_length_x = 100.
+     edc1_length_y = 12.
+     edc2_length_x = 122.428
+     edc2_length_y = 30.48
+
+; Number of layers
+
+      edc1_num_layers = 10
+      edc2_num_layers = 6 
+
+; Number of chambers
+; edc1_num_chambers = 1
+; edc2_num_chambers = 1
+
+; Z positions of various layers in EDC
+; sdc_n_zpos is the surveyed Z position of the center of chamber n.
+
+      edc1_zpos   = 
+       -15.375,
+       -14.625,
+       -7.875,
+       -7.125,
+       -0.375,
+        0.375,
+        7.125,
+        7.875,
+       14.625,
+       15.375
+
+      edc2_zpos= 
+	   30.688-0.635*3,
+	   30.688-0.635*2,
+	   30.688-0.635,
+	   30.688+0.3175,
+	   30.688+0.3175+0.635,
+      30.688+0.3175+0.635*2
+
+; Angle alpha of wires 
+; in wire chamber planes (.051,.045 degrees roll in dc1,2)
+
+      edc1_alpha_angle =( 90)*raddeg 
+							  ( 90)*raddeg 
+		       			  (120)*raddeg	
+		       			  (120)*raddeg	
+		       			  ( 90)*raddeg	
+		       			  ( 90)*raddeg
+                       ( 60)*raddeg
+		      			  ( 60)*raddeg
+		       			  ( 90)*raddeg
+		       			  ( 90)*raddeg
+      edc2_alpha_angle =(150)*raddeg
+		       			  (150)*raddeg
+		       			  ( 90)*raddeg
+		       			  ( 90)*raddeg
+                       (30)*raddeg
+		      			  (30)*raddeg
+
+; Angle beta of wires in wire chamber planes
+
+      edc1_beta_angle =   0.0*raddeg
+                         0.0*raddeg
+                         0.0*raddeg
+                         0.0*raddeg
+                         0.0*raddeg
+                         0.0*raddeg
+                         0.0*raddeg
+                         0.0*raddeg
+                         0.0*raddeg
+                         0.0*raddeg
+      edc2_beta_angle =  0.0*raddeg
+                         0.0*raddeg
+                         0.0*raddeg
+                         0.0*raddeg
+                         0.0*raddeg
+                         0.0*raddeg
+
+
+; Angle gamma of wires in wire chamber planes
+
+      edc1_gamma_angle = 0.0*raddeg
+                        0.0*raddeg
+                        0.0*raddeg
+                        0.0*raddeg
+                        0.0*raddeg
+                        0.0*raddeg
+                        0.0*raddeg
+                        0.0*raddeg
+                        0.0*raddeg
+                        0.0*raddeg
+      edc2_gamma_angle = 0.0*raddeg
+                        0.0*raddeg
+                        0.0*raddeg
+                        0.0*raddeg
+                        0.0*raddeg
+                        0.0*raddeg
+
+
+; Pitch
+
+      edc1_pitch = 0.5000*1.7320508,
+                  0.5000*1.7320508,
+                  0.5000*1.7320508,
+                  0.5000*1.7320508,
+                  0.5000*1.7320508,
+                  0.5000*1.7320508,
+                  0.5000*1.7320508,
+                  0.5000*1.7320508,
+                  0.5000*1.7320508,
+                  0.5000*1.7320508,
+      edc2_pitch = 1.0000,
+                  1.0000,
+                  1.0000,
+                  1.0000,
+                  1.0000,
+                  1.0000
+
+; Number of wires per plane
+
+      edc1_nrwire = 114,
+                   114,
+                   107,
+                   106,
+                   114,
+                   114,
+		   			 106,
+                   107,
+                   114,
+                   114,
+      edc2_nrwire = 87,
+						  87,
+						 122,
+						 122,
+						  87,
+						  87
+                   
+                   
+; X,Y position of center of wire chamber
+; The given value is subtracted from the position of the wire (i.e.
+; the sign is opposite of the actual center position of the chamber).
+; Increasing dc2 coordinates increases dpos histograms.
+; Values are from jan17, 1996 survey memo.  values ARE corrected for
+; 18 degree (optical axis) vs 17.85 degree (survey axis) discrepensy.
+; One value per plane for HKS DC.    L.Yuan 07/03/2003
+
+;
+;  sdc_ycenter(2) was -.197 from survey.  -.087 is DD's correction 
+;   based on (e,e'p) data (centering Em,Pm).
+;
+
+; Wire number of center of wire chamber
+; Note the convention : x : low number =  -x , u,v : low number = "-x"
+; x1 and x2, u1 and u2, v1 and v2 are offset by half a cell length
+; new definition for E01-011
+; wire position = edc1_central_wire + (wire_number - 1) * edc_pitch
+;
+
+      edc1_central_wire = 50.2295+0.017,
+                         50.6625+0.017,
+                         46.7654+0.017*0.866-0.09*0.5+0.00534,
+                         46.3324+0.017*0.866-0.09*0.5-0.00664,
+                         50.2295+0.017,
+                         50.6625+0.017,
+                         46.3324+0.017*0.866+0.09*0.5-0.00554,
+                         46.7654+0.017*0.866+0.09*0.5+0.00465,
+                         50.2295+0.017,
+                        50.6625+0.017
+      edc2_central_wire =44.2500-0.062,
+								 43.7500-0.062-0.01359,
+								 61.2500-0.106,
+								 61.7500-0.106,
+								 44.2500-0.095+0.01773,
+								 43.7500-0.095-0.0151
+;     edc2_central_wire =44.2500-0.062,
+;   							 43.7500-0.062,
+;   							 61.2500-0.106,
+;   							 61.7500-0.106,
+;   							 44.2500-0.095,
+;  							 43.7500-0.095
+;      edc2_central_wire =44.2500-0.736*0.5+0.958*0.866,
+;								 43.7500-0.736*0.5+0.958*0.866,
+;								 61.2500-0.736,
+;								 61.7500-0.736,
+;								 44.2500-0.736*0.5+0.958*0.866,
+;								 43.7500-0.736*0.5+0.958*0.866
+
+
+
+; the HES readout numbers are in forward order
+; If edc1_wire_counting(plane) = 0
+;  the wire center is at (wire - sdc_central_wire) * pitch
+; If edc1_wire_counting(plane) = 1
+;  the wire center is at ( sdc_nrwire + 1 - wire - sdc_central_wire) * pitch
+
+        edc1_wire_counting = 0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+        edc2_wire_counting =0,
+									 0,
+									 0,
+									 0,
+									 0,
+									 0
+
+; The velocity correction is the distance from the center of the wire divided
+; by the velocity of propagation times sdc_drifttime_sign(pln).  +/-1
+; for disc. card at +/- coord. (i.e. top = -x direction, so top readout is +1)
+; THESE ARE NOTHING BUT BAD GUESSES AT THE MOMENT!!!!
+;
+
+       edc1_drifttime_sign = 1,
+                             1,
+                             1,
+                             1,
+                             1,
+                             1,
+                             1,
+                             1,
+                             1,
+                             1,
+       edc2_drifttime_sign = -1,
+									  1,
+									  -1,
+									  1,
+									  -1,
+									  1 
+
+;
+; correlation between card no. and wire number
+; card no. = (wire(layer)-offset(layer)-1)/16 + 1 
+;
+
+edc1_wire_offset_low = 2, 2, 0, -6, 2, 2, -6, 0, 2, 2
+edc2_wire_offset_low = -4, -5, -3, -3, -4, -5
+
+edc1_wire_offset_high = 0, 0, 1, 2, 0, 0, 2, 1, 0, 0
+edc2_wire_offset_low = -5, -5, -4, -4, -5, -5
+
+
+
+

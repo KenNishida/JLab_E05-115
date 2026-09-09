@@ -1,0 +1,520 @@
+*      hes_id_histid.cmn
+*       
+*       The following include statments must precede the inclusion of this
+*       file in each routine that uses it.  The *%% syntax is also a
+*       directive to makereg to tell it to include the code in the program
+*       that it generates.
+*       
+*       $Log: hes_id_histid.cmn,v $
+*       Revision 1.1.1.1  2009/06/23 13:55:43  kawama
+*
+*       e05115 src repository for software development
+*
+*       Revision 1.6  2005/07/06 19:21:58  sumihama
+*       Mod.hrf/erf
+*
+*       Revision 1.5  2005/07/03 04:19:46  sumihama
+*       Mod. hbook sor s.s
+*
+*       Revision 1.4  2005/06/23 17:16:46  cdaq
+*       Add histgrams for HES optics
+*
+*       Revision 1.3  2005/06/10 18:54:02  cdaq
+*       add trig,tul variables
+*
+*       Revision 1.2  2005/05/30 22:27:51  miyoshi
+*       add/delete histgram
+*
+*       Revision 1.1.1.1  2005/05/14 21:44:37  miyoshi
+*
+*
+*       Revision 1.13  2005/04/19 17:38:12  miyoshi
+*       add histogram
+*
+*       Revision 1.12  2005/04/08 17:01:00  miyoshi
+*       add new histogram
+*
+*       Revision 1.11  2005/03/14 19:46:38  miyoshi
+*       add histogram for EDC and HDC
+*
+*       Revision 1.10  2005/03/10 16:41:47  miyoshi
+*       add new common block for EDC analysis
+*
+*       Revision 1.9  2005/03/02 16:30:09  miyoshi
+*       move some hist id params
+*
+*       Revision 1.8  2005/02/10 19:08:25  miyoshi
+*       add new hist for hes
+*
+*       Revision 1.7  2005/01/24 19:45:47  miyoshi
+*       add new hist for link track
+*
+*       Revision 1.6  2005/01/18 23:38:28  miyoshi
+*       add histogram for hes track check
+*
+*       Revision 1.5  2005/01/14 22:41:07  miyoshi
+*       add escin decording variables
+*
+*       Revision 1.4  2005/01/11 15:26:02  miyoshi
+*       add hes_scin_test
+*
+*       Revision 1.3  2004/12/24 19:41:46  miyoshi
+*       add some variables and parameters
+*
+*       Revision 1.2  2004/10/13 22:15:44  miyoshi
+*       update for f1tdc
+*
+*       Revision 1.1.1.1  2004/08/30 21:21:37  miyoshi
+*       new dir
+*
+*       Revision 1.4  2000/03/09 01:32:38  ysato
+*       Update in the production run Mar.8
+*
+*       Revision 1.3  1999/12/23 19:59:22  ysato
+*       Compiled on Redhat Linux
+*       
+*       Revision 1.2  1999/11/02 15:55:23  ysato
+*       Upgrade for HNSS
+*       
+*       
+*%%     include 'hes_data_structures.cmn'
+*       
+*       
+*       CTPTYPE=parm             
+*       Probably don't really want the following registered
+*       
+	
+*************************************
+*       EDC	
+*************************************
+*       e_fill_dc_raw_hist
+	
+      Integer*4 eiddc1rawtothit
+      Integer*4 eiddc1rawtothitzoom
+      Integer*4 eiddc1rawhitpat(EMAX_NUM_DC1_LAYERS)
+      Integer*4 eiddc1rawtdc(EMAX_NUM_DC1_SLOTS)
+      Integer*4 eiddc1rawlayertdc(EMAX_NUM_DC1_LAYERS)
+      Integer*4 eiddc1rawtdcall
+	
+      COMMON/hes_dc1_raw_histid/
+     1  eiddc1rawtothit,
+     2  eiddc1rawtothitzoom,
+     3  eiddc1rawhitpat,
+     4  eiddc1rawtdc,
+     5  eiddc1rawlayertdc,
+     6  eiddc1rawtdcall
+      
+		Integer*4 eiddc2rawtothit
+      Integer*4 eiddc2rawtothitzoom
+      Integer*4 eiddc2rawhitpat(EMAX_NUM_DC2_LAYERS)
+      Integer*4 eiddc2rawtdc(EMAX_NUM_DC2_SLOTS)
+      Integer*4 eiddc2rawlayertdc(EMAX_NUM_DC2_LAYERS)
+      Integer*4 eiddc2rawtdcall
+	
+      COMMON/hes_dc2_raw_histid/
+     1  eiddc2rawtothit,
+     2  eiddc2rawtothitzoom,
+     3  eiddc2rawhitpat,
+     4  eiddc2rawtdc,
+     5  eiddc2rawlayertdc,
+     6  eiddc2rawtdcall
+
+* e_fill_dc_dec_hist
+
+      Integer*4 eiddc1dectothit
+      Integer*4 eiddc1dectothitzoom
+      Integer*4 eiddc1wirecenter(EMAX_NUM_DC1_LAYERS)
+      Integer*4 eiddc1drifttime(EMAX_NUM_DC1_SLOTS)
+      Integer*4 eiddc1singdtime(EMAX_NUM_DC1_SLOTS)
+*     --- debug histogram	
+      Integer*4 eiddc1earlymult
+      Integer*4 eiddc1latemult
+      Integer*4 eiddc1extramult
+      Integer*4 eiddc1cluster(EMAX_NUM_DC1_LAYERS)
+      Integer*4 eiddc1layerhit(EMAX_NUM_DC1_LAYERS)
+*     --- fill in e_fill_dc1_sp_hist
+      Integer*4 eiddc1nspacepoint
+      Integer*4 eiddc1nspacepointzoom
+      Integer*4 eiddc1nspacepointhits
+*     --- fill in e_pattern_recognition
+      Integer*4 eiddc1edistancetest
+
+      COMMON/hes_dc1_dec_histid/
+     &     eiddc1dectothit,
+     &     eiddc1dectothitzoom,
+     &     eiddc1wirecenter,
+     &     eiddc1drifttime,
+     &     eiddc1singdtime,
+     &     eiddc1earlymult,
+     &     eiddc1latemult,
+     &     eiddc1extramult,
+     &     eiddc1cluster,
+     &     eiddc1layerhit,
+     &     eiddc1nspacepoint,
+     &     eiddc1nspacepointzoom,
+     &     eiddc1nspacepointhits,
+     &     eiddc1edistancetest
+      
+		Integer*4 eiddc2dectothit
+      Integer*4 eiddc2dectothitzoom
+      Integer*4 eiddc2wirecenter(EMAX_NUM_DC2_LAYERS)
+      Integer*4 eiddc2drifttime(EMAX_NUM_DC2_SLOTS)
+      Integer*4 eiddc2singdtime(EMAX_NUM_DC2_LAYERS)
+*     --- debug histogram	
+      Integer*4 eiddc2earlymult
+      Integer*4 eiddc2latemult
+      Integer*4 eiddc2extramult
+      Integer*4 eiddc2cluster(EMAX_NUM_DC2_LAYERS)
+      Integer*4 eiddc2layerhit(EMAX_NUM_DC2_LAYERS)
+*     --- fill in e_fill_dc2_sp_hist
+      Integer*4 eiddc2nspacepoint
+      Integer*4 eiddc2nspacepointzoom
+      Integer*4 eiddc2nspacepointhits
+*     --- fill in e_pattern_recognition
+      Integer*4 eiddc2edistancetest
+
+      COMMON/hes_dc2_dec_histid/
+     &     eiddc2dectothit,
+     &     eiddc2dectothitzoom,
+     &     eiddc2wirecenter,
+     &     eiddc2drifttime,
+     &     eiddc2singdtime,
+     &     eiddc2earlymult,
+     &     eiddc2latemult,
+     &     eiddc2extramult,
+     &     eiddc2cluster,
+     &     eiddc2layerhit,
+     &     eiddc2nspacepoint,
+     &     eiddc2nspacepointzoom,
+     &     eiddc2nspacepointhits,
+     &     eiddc2edistancetest
+
+*     --- hes tracking histgram 
+
+       Integer*4 eidentrackspre
+       Integer*4 eidentracksprezoom
+       Integer*4 eiddc1chi2perdofpre
+       Integer*4 eiddc2chi2perdofpre
+       Integer*4 eiddc1chi2perdofprezoom
+       Integer*4 eiddc2chi2perdofprezoom
+       Integer*4 eidntracksfp
+       Integer*4 eidntracksfpzoom
+       Integer*4 eiddc1chi2perdoffp
+       Integer*4 eiddc2chi2perdoffp
+       Integer*4 eiddc1chi2perdoffpzoom
+       Integer*4 eiddc2chi2perdoffpzoom
+       Integer*4 eidexfp,eideyfp
+       Integer*4 eidexpfp,eideypfp
+       Integer*4 eidfpxy,eidfpxpyp
+       Integer*4 eidfpxxp,eidfpxyp
+       Integer*4 eidfpyxp,eidfpyyp
+
+       Integer*4 eiddc1driftdis(EMAX_NUM_DC1_LAYERS)
+       Integer*4 eiddc1wcoord(EMAX_NUM_DC1_LAYERS)
+       Integer*4 eiddc1residualpre(EMAX_NUM_DC1_LAYERS)
+       Integer*4 eiddc1singleresidual(EMAX_NUM_DC1_LAYERS)
+       Integer*4 eiddc1distime(EMAX_NUM_DC1_LAYERS)
+       Integer*4 eiddc2driftdis(EMAX_NUM_DC2_LAYERS)
+       Integer*4 eiddc2residualpre(EMAX_NUM_DC2_LAYERS)
+       Integer*4 eiddc2singleresidual(EMAX_NUM_DC2_LAYERS)
+       Integer*4 eiddc2distime(EMAX_NUM_DC2_LAYERS)
+
+      Common/hes_tracking_histid/
+     &     eidentrackspre,
+     &     eidentracksprezoom,
+     &     eiddc1chi2perdofpre,
+     &     eiddc2chi2perdofpre,
+     &     eiddc1chi2perdofprezoom,
+     &     eiddc2chi2perdofprezoom,
+     &     eidntracksfp,
+     &     eidntracksfpzoom,
+     &     eiddc1chi2perdoffp,
+     &     eiddc2chi2perdoffp,
+     &     eiddc1chi2perdoffpzoom,
+     &     eiddc2chi2perdoffpzoom,
+     &     eidexfp,
+     &     eideyfp,
+     &     eidexpfp,
+     &     eideypfp,
+     &     eidfpxy,
+     &     eidfpxpyp,
+     &     eidfpxxp,
+     &     eidfpxyp,
+     &     eidfpyxp,
+     &     eidfpyyp,
+     &     eiddc1driftdis,
+     &     eiddc1wcoord,
+     &     eiddc1residualpre,
+     &     eiddc1singleresidual,
+     &     eiddc1distime,
+     &     eiddc2driftdis,
+     &     eiddc2residualpre,
+     &     eiddc2singleresidual,
+     &     eiddc2distime
+
+c     --- hes target recon. hist
+
+      integer*4 eidxtar, eidytar, eidztar, 
+     &     eidxptar, eidyptar,
+     &     eiddeltatar, eidptar,
+     &	   eidtarxy,eidtarxpyp,
+     &	   eidtarxxp,eidtarxyp,
+     &	   eidtaryxp,eidtaryyp,
+     &     eidxsv,eidysv,eidxysv
+
+      common/hes_target_recon/
+     &     eidxtar,
+     &     eidytar,
+     &     eidztar,
+     &     eidxptar,
+     &     eidyptar,
+     &     eiddeltatar,
+     &     eidptar,
+     &     eidtarxy, 
+     &	   eidtarxpyp,
+     &	   eidtarxxp,
+     &	   eidtarxyp,
+     &	   eidtaryxp,
+     &	   eidtaryyp,
+     &     eidxsv,
+     &     eidysv,
+     &     eidxysv
+
+
+*************************************
+* HES Hodoscope
+*************************************
+
+* e_fill_scin_raw_hist
+      Integer*4 eidscinrawtothit
+      Integer*4 eidscinrawtothitzoom
+      Integer*4 eidscinrawtothitpos(ENUM_SCIN_LAYERS)
+      Integer*4 eidscinrawtothitneg(ENUM_SCIN_LAYERS)
+      Integer*4 eidscinrawtothitboth(ENUM_SCIN_LAYERS)
+      Integer*4 eidscinrawadchitpatpos(ENUM_SCIN_LAYERS)
+      Integer*4 eidscinrawadchitpatneg(ENUM_SCIN_LAYERS)
+      Integer*4 eidscinrawtdchitpatpos(ENUM_SCIN_LAYERS)
+      Integer*4 eidscinrawtdchitpatneg(ENUM_SCIN_LAYERS)
+      Integer*4 eidscinrawsumposadc(ENUM_SCIN_LAYERS)
+      Integer*4 eidscinrawsumnegadc(ENUM_SCIN_LAYERS)
+      Integer*4 eidscinrawsumpostdc(ENUM_SCIN_LAYERS)
+      Integer*4 eidscinrawsumnegtdc(ENUM_SCIN_LAYERS)
+      Integer*4 eidscinrawposadc(ENUM_SCIN_LAYERS,ENUM_SCIN_COUNTERS)
+      Integer*4 eidscinrawnegadc(ENUM_SCIN_LAYERS,ENUM_SCIN_COUNTERS)
+      Integer*4 eidscinrawpostdc(ENUM_SCIN_LAYERS,ENUM_SCIN_COUNTERS)
+      Integer*4 eidscinrawnegtdc(ENUM_SCIN_LAYERS,ENUM_SCIN_COUNTERS)
+
+      COMMON/hes_scin_raw_histid/
+     &     eidscinrawtothit,
+     &     eidscinrawtothitzoom,
+     &     eidscinrawtothitpos,
+     &     eidscinrawtothitneg,
+     &     eidscinrawtothitboth,
+     &     eidscinrawadchitpatpos,
+     &     eidscinrawadchitpatneg,
+     &     eidscinrawtdchitpatpos,
+     &     eidscinrawtdchitpatneg,
+     &     eidscinrawsumposadc,
+     &     eidscinrawsumnegadc,
+     &     eidscinrawsumpostdc,
+     &     eidscinrawsumnegtdc,
+     &     eidscinrawposadc,
+     &     eidscinrawpostdc,
+     &     eidscinrawnegadc,
+     &     eidscinrawnegtdc
+
+* e_fill_scin_dec_hist
+      Integer*4 eidscindectothit
+      Integer*4 eidscindectothitzoom
+      Integer*4 eidscindectothitpos(ENUM_SCIN_LAYERS)
+      Integer*4 eidscindectothitneg(ENUM_SCIN_LAYERS)
+      Integer*4 eidscindectothitboth(ENUM_SCIN_LAYERS)
+      Integer*4 eidscindechitpatpos(ENUM_SCIN_LAYERS)
+      Integer*4 eidscindechitpatneg(ENUM_SCIN_LAYERS)
+      Integer*4 eidscindechitpatboth(ENUM_SCIN_LAYERS)
+      Integer*4 eidscinphpos(ENUM_SCIN_LAYERS,ENUM_SCIN_COUNTERS)
+      Integer*4 eidscinphneg(ENUM_SCIN_LAYERS,ENUM_SCIN_COUNTERS)
+      Integer*4 eidscintimepos(ENUM_SCIN_LAYERS,ENUM_SCIN_COUNTERS)
+      Integer*4 eidscintimeneg(ENUM_SCIN_LAYERS,ENUM_SCIN_COUNTERS)
+      Integer*4 eidscinmeantime(ENUM_SCIN_LAYERS,ENUM_SCIN_COUNTERS)
+
+      COMMON/hes_scin_dec_histid/
+     &     eidscindectothit,
+     &     eidscindectothitzoom,
+     &     eidscindectothitpos,
+     &     eidscindectothitneg,
+     &     eidscindectothitboth,
+     &     eidscindechitpatpos,
+     &     eidscindechitpatneg,
+     &     eidscindechitpatboth,
+     &     eidscinphpos,
+     &     eidscinphneg,
+     &     eidscintimepos,
+     &     eidscintimeneg,
+     &     eidscinmeantime
+
+*     e_fill_link_hist.f and e_link_tracks.f
+      Integer*4 eidxla(ENUM_SCIN_LAYERS)
+      Integer*4 eidtrkhodohit
+      Integer*4 eidtrkfptime
+      Integer*4 eidxla1co(ENUM_SCIN_COUNTERS)
+
+      COMMON/hes_link_hist/
+     &     eidxla,
+     &     eidtrkhodohit,
+     &     eidtrkfptime,
+     &     eidxla1co
+
+*     RF TDC
+      Integer*4 eidmisctdcs(2)
+
+      COMMON/hes_misc_hist/
+     &     eidmisctdcs
+        
+*     e_fill_phys_hist.f
+      Integer*4 eidnphysics
+      Integer*4 eidphysscinhits
+      Integer*4 eidsxfp
+      Integer*4 eidsyfp
+      Integer*4 eidsxpfp
+      Integer*4 eidsypfp
+      Integer*4 eidsxtar
+      Integer*4 eidsytar
+      Integer*4 eidsxptar
+      Integer*4 eidsyptar
+      Integer*4 eidsdelta
+      Integer*4 eidstimeatfp
+      Integer*4 eidsp
+      Integer*4 eidsenergy
+      Integer*4 eidsxdc1layer1
+      Integer*4 eidsydc1layer1
+      Integer*4 eidsxs1
+      Integer*4 eidsys1
+      Integer*4 eidsxs2
+      Integer*4 eidsys2
+      Integer*4 eidspathlength
+      Integer*4 eidstimeattar
+      Integer*4 eidsrfdiff
+      Integer*4 eidsrftime
+      Integer*4 eidschi2perdeg
+      Integer*4 eidsnfreefp
+      Integer*4 eidseloss
+      Integer*4 eidscorre
+      Integer*4 eidscorrp
+      Integer*4 eidstheta
+      Integer*4 eidskpvec1
+      Integer*4 eidskpvec2
+      Integer*4 eidskpvec3
+      Integer*4 eidskpvec4
+      Integer*4 eidsphi
+      Integer*4 eidszbeam
+
+      Common/hes_physics_hist/
+     &     eidnphysics,
+     &     eidphysscinhits,
+     &     eidsxfp,
+     &     eidsyfp,
+     &     eidsxpfp,
+     &     eidsypfp,
+     &     eidsxtar,
+     &     eidsytar,
+     &     eidsxptar,
+     &     eidsyptar,
+     &     eidsdelta,
+     &     eidstimeatfp,
+     &     eidsp,
+     &     eidsenergy,
+     &     eidsxdc1layer1,
+     &     eidsydc1layer1,
+     &     eidsxs1,
+     &     eidsys1,
+     &     eidsxs2,
+     &     eidsys2,
+     &     eidspathlength,
+     &     eidstimeattar,
+     &     eidsrfdiff,
+     &     eidsrftime,
+     &     eidschi2perdeg,
+     &     eidsnfreefp,
+     &     eidseloss,
+     &     eidscorre,
+     &     eidscorrp,
+     &     eidstheta,
+     &     eidskpvec1,
+     &     eidskpvec2,
+     &     eidskpvec3,
+     &     eidskpvec4,
+     &     eidsphi,
+     &     eidszbeam
+
+*******************************      
+* for test and calibration only
+*******************************
+*     ...layer : time difference between layer
+*     ...counter : time difference between counter
+
+      Integer*4 eidscindtlayer(ENUM_SCIN_COUNTERS)
+      Integer*4 eidscindtcounter(ENUM_SCIN_LAYERS,ENUM_SCIN_COUNTERS)
+
+      COMMON/hes_scin_test/
+     &     eidscindtlayer,
+     &     eidscindtcounter
+
+      Integer*4 eidtrkdx,eidtrkdy,eidtrkdxp,eidtrkdyp,eidtrkdiff
+      COMMON/hes_dc1_trk_test/
+     &     eidtrkdx,
+     &     eidtrkdy,
+     &     eidtrkdxp,
+     &     eidtrkdyp,
+     &     eidtrkdiff
+
+*
+*     HES TUL hist.
+*
+      integer*4 eidtulrawtothits
+      integer*4 eidtulrawtotchannelnum
+*     fill as module number
+      integer*4 eidtulrawtdc
+      integer*4 eidtultothits
+*     --- 32*(module-1)+channel
+      integer*4 eidtultotchannelnum
+
+      COMMON/ETUL_HIST/
+     &    eidtulrawtothits,
+     &    eidtulrawtotchannelnum,
+     &    eidtulrawtdc,
+     &    eidtultothits,
+     &    eidtultotchannelnum
+
+*
+*     CTPTYPE=parm
+*
+*      flags to turn on (.eq.1) or off (.eq. 0) hard coded histograms
+*      defined in hdebug.param
+*
+
+       integer*4 eturnon_dc1_raw_hist
+       integer*4 eturnon_dc1_dec_hist
+       Integer*4 eturnon_dc1_track_hist
+       integer*4 eturnon_dc1_target_hist
+       integer*4 eturnon_dc2_raw_hist
+       integer*4 eturnon_dc2_dec_hist
+       Integer*4 eturnon_dc2_track_hist
+       integer*4 eturnon_dc2_target_hist
+       integer*4 eturnon_scin_raw_hist
+       integer*4 eturnon_scin_dec_hist
+       integer*4 eturnon_scin_dt_hist
+
+       common/hes_id_hist_flags/
+     &      eturnon_dc1_raw_hist,
+     &      eturnon_dc1_dec_hist,
+     &      eturnon_dc1_track_hist,
+     &      eturnon_dc1_target_hist,
+     &      eturnon_dc2_raw_hist,
+     &      eturnon_dc2_dec_hist,
+     &      eturnon_dc2_track_hist,
+     &      eturnon_dc2_target_hist,
+     &      eturnon_scin_raw_hist,
+     &      eturnon_scin_dec_hist,
+     &      eturnon_scin_dt_hist
+

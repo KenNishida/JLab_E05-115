@@ -1,0 +1,32 @@
+begin hist hes_linkdebug group=hes
+
+exla1,26,0.,26.,120.,-60.,60. $trackx vs la1 counter 
+exla2,26,0.,26.,120.,-60.,60. $trackx vs la2 counter 
+
+exla1co01,120,-60.,60. $x at la1 w. co  1
+exla1co02,120,-60.,60. $x at la1 w. co  2
+exla1co03,120,-60.,60. $x at la1 w. co  3
+exla1co04,120,-60.,60. $x at la1 w. co  4
+exla1co05,120,-60.,60. $x at la1 w. co  5
+exla1co06,120,-60.,60. $x at la1 w. co  6
+exla1co07,120,-60.,60. $x at la1 w. co  7
+exla1co08,120,-60.,60. $x at la1 w. co  8
+exla1co09,120,-60.,60. $x at la1 w. co  9
+exla1co10,120,-60.,60. $x at la1 w. co 10
+exla1co11,120,-60.,60. $x at la1 w. co 11
+exla1co12,120,-60.,60. $x at la1 w. co 12
+exla1co13,120,-60.,60. $x at la1 w. co 13
+exla1co14,120,-60.,60. $x at la1 w. co 14
+exla1co15,120,-60.,60. $x at la1 w. co 15
+exla1co16,120,-60.,60. $x at la1 w. co 16
+exla1co17,120,-60.,60. $x at la1 w. co 17
+exla1co18,120,-60.,60. $x at la1 w. co 18
+exla1co19,120,-60.,60. $x at la1 w. co 19
+exla1co20,120,-60.,60. $x at la1 w. co 20
+exla1co21,120,-60.,60. $x at la1 w. co 21
+exla1co22,120,-60.,60. $x at la1 w. co 22
+exla1co23,120,-60.,60. $x at la1 w. co 23
+exla1co24,120,-60.,60. $x at la1 w. co 24
+exla1co25,120,-60.,60. $x at la1 w. co 25
+
+end hist hes_linkdebug

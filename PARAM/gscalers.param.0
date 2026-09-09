@@ -1,0 +1,47 @@
+; PRELIMINARY
+; Charge calibrations from Run 9059: PRELIMINARY 7/25/96 (DJM)
+
+;gain factors for three cavity monitors
+;  gbcm1_gain = .00032738 ;uA/Hzbb
+;  gbcm2_gain = .00037985 ;uA/Hz
+;  gbcm1_gain = 0.00032688 ;uA/Hzbb
+;  gbcm2_gain = 0.00038827 ;uA/Hz
+;  gbcm3_gain = .0002501 ;uA/Hz
+;  gunser_gain = 0.00024980 ;uA/Hz  FROM BOCHNA UNSER CALIB LOG 8 PAGE 159
+
+;point to scaler indices for BCM's
+;  gbcm1_index = 659
+;  gbcm2_index = 658
+;  gbcm3_index = 657
+;  gunser_index = 657
+; For HKS09
+  gbcm1_index = 175+1024
+  gbcm2_index = 176+1024
+  gbcm3_index = 167+1024  ; Copy of BCM1
+  gunser_index = 174+1024
+  gbcm1_gain = 0.00011348
+  gbcm2_gain = 0.00011509
+  gbcm1_offset = 251086.
+  gbcm2_offset = 250810.
+  gunser_gain = 0.00025006
+  gunser_offset = 633087.
+
+;gbcm1_gain = 0.00010917
+;gbcm2_gain = 0.000126036
+;gbcm1_offset = 251426
+;gbcm2_offset = 251020 
+
+
+
+;zero offsets for BCM's
+;  gbcm1_offset = 250335
+;  gbcm2_offset = 250147
+;  gunser_offset = 533068
+;  gbcm1_offset = 250408. 
+;  gbcm2_offset = 250325. 
+  gbcm3_offset = 533068
+;  gunser_offset = 532598. 
+;point to hardware clock (1MHz scaler, scaler channel 660)
+;  gclock_index = 660
+  gclock_index = 169+1024
+  gclock_rate = 1.e+6

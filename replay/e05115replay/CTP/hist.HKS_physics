@@ -1,0 +1,62 @@
+begin hist hks_physics group=hks
+hnphysics,20,0.,20.        $number of events in hks
+hphysscinhit,20,0.,20.     $number of scin hits in hks
+hsxfp,70,-70.,70.          $hs x fp
+hsyfp,120,-20.,20.         $hs y fp
+hsxpfp,80,-1.,1.           $hs xp fp
+hsypfp,80,-0.2,0.2         $hs yp fp
+hsxtar,20,-20.,20.         $hs x tar
+hsytar,20,-20.,20.         $hs y tar
+hsxptar,120,-0.2,0.4       $hs xp tar
+hsyptar,120,-0.3,0.3       $hs yp tar
+hsdelta,120,-30.,30.       $hs delta
+hsbeta,200,0.2,1.2          $hs beta
+hstof,120,2.,8.           $hs tof
+hstimeatfp,200,10.,60.      $hstime at fp
+hsp,240,0.6,1.8            $hs momentum
+hsenergy,240,0.6,1.8       $hs energy
+
+hsdc1xy,50,-100.,100.,40,-40.,40.   $hs dc1 y-x
+hsdc2xy,50,-100.,100.,40,-40.,40.   $hs dc2 y-x
+hs1xxy, 50,-100.,100.,40,-40.,40.   $hs 1x  y-x
+hs1yxy, 50,-100.,100.,40,-40.,40.   $hs 1y  y-x
+hs2xxy, 50,-100.,100.,40,-40.,40.   $hs 2x  y-x
+hsac1xy,50,-100.,100.,40,-40.,40.   $hs ac1 y-x
+hsac2xy,50,-100.,100.,40,-40.,40.   $hs ac2 y-x
+hsac3xy,50,-100.,100.,40,-40.,40.   $hs ac3 y-x
+hswc1xy,50,-100.,100.,40,-40.,40.   $hs wc1 y-x
+hswc2xy,50,-100.,100.,40,-40.,40.   $hs wc2 y-x
+
+hsac1npe,60,0.,30.        $hs ac1 npe
+hsac2npe,60,0.,30.        $hs ac2 npe
+hsac3npe,60,0.,30.        $hs ac3 npe
+hswc1npe,80,0.,40.        $hs wc1 npe
+hswc2npe,80,0.,40.        $hs wc2 npe
+
+hswc1ac1,30,0.,30.,40,0.,40.    $hs wc1 vs ac1
+hsac1s1x,50,0.,3000.,30,0.,30.  $hs ac1 vs s1xdepo
+hswc1s1x,50,0.,3000.,40,0.,40.  $hs wc1 vs s1xdepo
+
+hsbetak,160,-0.4,0.4           $hs beta-betak
+hsbetae,160,-0.4,0.4           $hs beta-betae
+hsbetapi,160,-0.4,0.4          $hs beta-betapi
+hsbetapr,160,-0.4,0.4          $hs beta-betapr
+hsdeltabetak,50,-1.,1.,60,-30.0,30.0    $hs delta vs beta-betak
+
+hspathlength,100, 500.,1000.  $hs path length
+hstimeattar,200,-40.,10.      $hs time at tar
+hsrfdiff,200,-20.,20.         $hs rf timediff
+hsrftime,1000,0.,2000.         $hs rf time
+hschi2perdeg,50,0.,50.        $hs chi2 per dof at fp
+hseloss, 20,0.,0.1            $hs eloss
+hscorre, 150,0.5,2.           $hs corre  
+hscorrp, 150,0.5,2.           $hs corrp
+hstheta,80,0.,20.             $hs hstheta(deg)
+hskpvec1,200,0.,2.            $hs kpvec1
+hskpvec2,200,-1.,1.            $hs kpvec2
+hskpvec3,200,-1.,1.            $hs kpvec3
+hskpvec4,200,0.,2.            $hs kpvec4
+hsphi,100,0.,10.              $hs phi
+hszbeam,100,0.,1.             $hs zbeam
+
+end hist hks_physics   

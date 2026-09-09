@@ -1,0 +1,86 @@
+begin hist hes_raw group=hes
+
+;-------------------------------
+; HES hodo hit pattern
+; Filled in e_fill_scin_raw_hist
+
+escinrawtothit,102,-0.5,101.5       $HES HODO tot hits         (raw)
+escinrawtothitzoom,21,-0.5,20.5     $HES HODO tot hits zoom    (raw)
+escinrawtothitpos1,21,-0.5,20.5     $HES HODO tot hits pos 1   (raw)
+escinrawtothitneg1,21,-0.5,20.5     $HES HODO tot hits neg 1   (raw)
+escinrawtothitpos2,21,-0.5,20.5     $HES HODO tot hits pos 2   (raw)
+escinrawtothitneg2,21,-0.5,20.5     $HES HODO tot hits neg 2   (raw)
+escinrawtothitboth1,9,-0.5,8.5      $HES HODO tot hits both 1  (raw)
+escinrawtothitboth2,9,-0.5,8.5      $HES HODO tot hits both 2  (raw)
+escinrawadchitpatpos1,25,0.5,25.5   $HES HODO ADC hitpat pos 1 (raw)
+escinrawadchitpatneg1,25,0.5,25.5   $HES HODO ADC hitpat neg 1 (raw)
+escinrawadchitpatpos2,25,0.5,25.5   $HES HODO ADC hitpat pos 2 (raw)
+escinrawadchitpatneg2,25,0.5,25.5   $HES HODO ADC hitpat neg 2 (raw)
+escinrawtdchitpatpos1,25,0.5,25.5   $HES HODO TDC hitpat pos 1 (raw)
+escinrawtdchitpatneg1,25,0.5,25.5   $HES HODO TDC hitpat neg 1 (raw)
+escinrawtdchitpatpos2,25,0.5,25.5   $HES HODO TDC hitpat pos 2 (raw)
+escinrawtdchitpatneg2,25,0.5,25.5   $HES HODO TDC hitpat neg 2 (raw)
+escinrawsumposadc1,128,0.,8192.     $HES HODO layer 1 pos adc (raw)
+escinrawsumposadc2,128,0.,8192.     $HES HODO layer 2 pos adc (raw)
+escinrawsumnegadc1,128,0.,8192.     $HES HODO layer 1 neg adc (raw)
+escinrawsumnegadc2,128,0.,8192.     $HES HODO layer 2 neg adc (raw)
+escinrawsumpostdc1,500,0.,4000.   $HES HODO layer 1 pos tdc (raw)
+escinrawsumpostdc2,500,0.,4000.   $HES HODO layer 2 pos tdc (raw)
+escinrawsumnegtdc1,500,0.,4000.   $HES HODO layer 1 neg tdc (raw)
+escinrawsumnegtdc2,500,0.,4000.   $HES HODO layer 2 neg tdc (raw)
+
+; EDC1 hit pattern
+; Filled in e_fill_dc1_raw_hist
+
+edc1rawtothit,130,-0.5,1299.5          $EDC1 raw tot hits
+edc1rawtothitzoom,30,-0.5,29.5         $EDC1 raw tot hits (zoom)
+edc1rawtdcall,2049,-1.,4096.     $EDC1 raw tdc (all)
+
+edc1rawhitpat01,120,0.,120.         $EDC1 raw hitpat layer 01 x 
+edc1rawhitpat02,120,0.,120.         $EDC1 raw hitpat layer 02 xp
+edc1rawhitpat03,120,0.,120.         $EDC1 raw hitpat layer 03 u
+edc1rawhitpat04,120,0.,120.         $EDC1 raw hitpat layer 04 up
+edc1rawhitpat05,120,0.,120.         $EDC1 raw hitpat layer 05 x
+edc1rawhitpat06,120,0.,120.         $EDC1 raw hitpat layer 06 xp
+edc1rawhitpat07,120,0.,120.         $EDC1 raw hitpat layer 07 v
+edc1rawhitpat08,120,0.,120.         $EDC1 raw hitpat layer 08 vp
+edc1rawhitpat09,120,0.,120.         $EDC1 raw hitpat layer 09 x
+edc1rawhitpat10,120,0.,120.         $EDC1 raw hitpat layer 10 xp
+
+edc1rawlayertdc01,500,3000.,4000.   $EDC1 raw tdc layer 01 x 
+edc1rawlayertdc02,500,3000.,4000.   $EDC1 raw tdc layer 02 xp
+edc1rawlayertdc03,500,3000.,4000.   $EDC1 raw tdc layer 03 u
+edc1rawlayertdc04,500,3000.,4000.   $EDC1 raw tdc layer 04 up
+edc1rawlayertdc05,500,3000.,4000.   $EDC1 raw tdc layer 05 x
+edc1rawlayertdc06,500,3000.,4000.   $EDC1 raw tdc layer 06 xp
+edc1rawlayertdc07,500,3000.,4000.   $EDC1 raw tdc layer 07 v
+edc1rawlayertdc08,500,3000.,4000.   $EDC1 raw tdc layer 08 vp
+edc1rawlayertdc09,500,3000.,4000.   $EDC1 raw tdc layer 09 x
+edc1rawlayertdc10,500,3000.,4000.   $EDC1 raw tdc layer 10 xp
+
+; EDC2 hit pattern
+; Filled in e_fill_dc2_raw_hist
+
+edc2rawtothit,130,-0.5,1299.5          $EDC2 raw tot hits
+edc2rawtothitzoom,30,-0.5,29.5         $EDC2 raw tot hits (zoom)
+edc2rawtdcall,100,-20000.,0.     $EDC2 raw tdc (all)
+
+edc2rawhitpat01,120,0.,120.         $EDC2 raw hitpat layer 01 u 
+edc2rawhitpat02,120,0.,120.         $EDC2 raw hitpat layer 02 up
+edc2rawhitpat03,120,0.,120.         $EDC2 raw hitpat layer 03 x
+edc2rawhitpat04,120,0.,120.         $EDC2 raw hitpat layer 04 xp
+edc2rawhitpat05,120,0.,120.         $EDC2 raw hitpat layer 05 v
+edc2rawhitpat06,120,0.,120.         $EDC2 raw hitpat layer 06 vp
+
+edc2rawlayertdc01,100,3000.,4000.   $EDC2 raw tdc layer 01 u 
+edc2rawlayertdc02,100,3000.,4000.   $EDC2 raw tdc layer 02 up
+edc2rawlayertdc03,100,3000.,4000.   $EDC2 raw tdc layer 03 x
+edc2rawlayertdc04,100,3000.,4000.   $EDC2 raw tdc layer 04 xp
+edc2rawlayertdc05,100,3000.,4000.   $EDC2 raw tdc layer 05 v
+edc2rawlayertdc06,100,3000.,4000.   $EDC2 raw tdc layer 06 vp
+
+;f1 trigger time
+
+gf1trigtime1-1,64,0.,65536        $HES F1 trigger time roc11-1
+
+end hist hes_raw
