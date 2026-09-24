@@ -38,6 +38,7 @@
 *
       call G_reg_C('hks_Ntuple',h_Ntuple_file,ABORT,err)
       call G_reg_C('hks_DCntuple',h_dc_Ntuple_file,ABORT,err)
+      call G_reg_C('hks_TRACKntuple',h_track_Ntuple_file,ABORT,err)
       call G_reg_C('hks_SCINntuple',h_scin_Ntuple_file,ABORT,err)
       call G_reg_C('hks_WATntuple',h_wat_Ntuple_file,ABORT,err)
       call G_reg_C('hks_AERntuple',h_aer_Ntuple_file,ABORT,err)

@@ -160,10 +160,21 @@ c         if(ABORT)  then
 c            call G_add_path(here,err)
 c         endif                  ! end test on SCIN ABORT
       endif                     ! end test on hbypass_trans_scin
+c
+c     ////////////////////////////////////////////
+*     TEST by gogami
+      if(hbypass_aero.eq.0) then
+         call H_AERO(ABORT,err)
+         if(ABORT) then
+            call G_add_path(here,err)
+*     return
+         endif                  ! end test of H_AERO ABORT
+      endif                     ! end test on hbypass_aero
+c     ////////////////////////////////////////////
 *     
-*     TRANLATE DRIFT CHAMBERS
+*     TRANSLATE DRIFT CHAMBERS
 *     HKS_RAW_DC + HKS_DECODED_SCIN ====>  HKS_DECODED_DC
-*     
+
       if(hbypass_trans_dc.eq.0) then
          call H_TRANS_DC(ABORT,err)
          if(ABORT) then
@@ -232,13 +243,13 @@ c         EndIf
 *     Next Aerogel Cerenkov information
 *     HKS_DECODED_AER ====> HKS_TRACK_TESTS
 *     
-      if(hbypass_aero.eq.0) then
-         call H_AERO(ABORT,err)
-         if(ABORT) then
-            call G_add_path(here,err)
-*     return
-         endif                  ! end test of H_AERO ABORT
-      endif                     ! end test on hbypass_aero
+ccc      if(hbypass_aero.eq.0) then
+ccc         call H_AERO(ABORT,err)
+ccc         if(ABORT) then
+ccc            call G_add_path(here,err)
+ccc*     return
+ccc         endif                  ! end test of H_AERO ABORT
+ccc      endif                     ! end test on hbypass_aero
 *     
 *     Next Water Cerenkov information
 *     HKS_DECODED_WAT ====> HKS_TRACK_TESTS
@@ -285,6 +296,7 @@ c     endif
       
       if(hbypass_physics.eq.0) then
          call h_physics(ABORT,err)
+c         call h_dc_eff_out(ABORT,err) ! ( 3Mar2011 , T.Gogami )
          if(ABORT) then
             call G_add_path(here,err)
          endif                  ! end test of H_PHYSICS ABORT

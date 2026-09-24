@@ -117,7 +117,7 @@
       include 'hks_geometry.cmn'
       include 'hks_bypass_switches.cmn'
       include 'hks_id_histid.cmn'
-         INCLUDE 'gen_data_structures.cmn'
+      INCLUDE 'gen_data_structures.cmn'
 *     
 *--------------------------------------------------------
       real*4 h_drift_dist_calc
@@ -125,8 +125,24 @@
       integer*4 ihit,gh,old_wire,old_pln,wire,pln,chamber
       integer*4 pol,i,k,vec_no,hdc_tot_hit_dc1,hdc_tot_hit_dc2
       real*4 histval,cut_min(12,6),cut_max(12,6)
-      integer*4 gh1,gh2,nt,j,whichgroup
-*     
+      integer*4 gh1,gh2,nt,j,whichgroup,sl
+      real*4 hdc_tdc_offset_cable(80) 
+      data hdc_tdc_offset_cable /0.0,2.5,-1.0,-2.5,1.0,0.0,
+     +                          0.0,-0.5,-0.5,-1.0,2.5,0.0,
+     +                          0.5,-0.5,1.0,1.0,-4.0,-0.5,1.5,0.5,
+     +                          0.0,-1.5,-1.0,-0.5,2.0,0.0,-1.0,-1.5,
+     +                          0.0,-1.0,0.0,0.0,2.5,0.0,
+     +                          0.0,-1.5,0.0,0.5,1.0,0.0,
+     +                          1.0,-0.5,0.5,0.0,0.5,3.0,
+     +                          0.0,-2.0,1.5,0.0,0.5,2.5,
+     +                          -1.0,-0.5,2.0,-1.0,0.0,0.0,-1.0,-1.5,
+     +                         1.0,-0.5,1.5,0.0,0.0,-1.5,-2.5,1.0,
+     +                         3.5,1.0,0.0,-1.0,1.0,4.0,
+     +                         4.0,0.0,-1.5,-1.0,3.0,0.0/
+
+
+* 
+    
       ABORT= .FALSE.
       err= ' '
       old_wire = -1
@@ -134,6 +150,10 @@
       gh = 0
       gh1=0
       gh2=0
+c   check valid the start time which due to the physics that the particle goes through both 1x and 2x in valid time difference
+
+c      if(h1start_time.le.-100.0.or.h2start_time.le.-100.0) Return
+      if(ntof.eq.0) return
 
       Do i=1,hmax_num_dc_layers
          hdc_hits_per_layer(i) = 0
@@ -175,9 +195,39 @@ cc            chamber = hdc_chamber_layers(pln)
       if(hdc_raw_tot_hits.le.0) Return
       
 *     loop over all raw hits
+c      hdc_rate_gtrig = hdc_rate_gtrig + 1.0
+
+c     ============ RATE per wire (T.Gogami, 12/Oct/2011)==================c     
+c      if(gen_event_ID_number.eq.1)then
+c         open(22,file='kdc_WireRate.dat',status='replace') ! Test (T.Gogami,12/Oct/2011)
+c         close(22)
+c      endif
+c      open(22,file='kdc_WireRate.dat',access='append')
+c      write(22,*)hdc_raw_tot_hits
+c      close(22)
+      
+      
       do ihit=1,hdc_raw_tot_hits
          pln = hdc_raw_layer_num(ihit)
          wire  = hdc_raw_wire_num(ihit)
+
+c     ============ RATE per wire (T.Gogami, 12/Oct/2011)==================
+c         open(22,file='kdc_WireRate.dat',access='append')
+c         write(22,*)float(hdc_raw_tdc_sub_trig(ihit)),pln,wire
+c         close(22)
+
+c     ============  RATE  calculation  (T.Gogami,9/Mar/2011)==============
+         if(float(hdc_raw_tdc_sub_trig(ihit)).ge.2100. .and.
+     &        float(hdc_raw_tdc_sub_trig(ihit)).le.2400.)then
+            hdc_rate_hit_acc(pln) = hdc_rate_hit_acc(pln) + 1.0            
+         endif
+         if(float(hdc_raw_tdc_sub_trig(ihit)).ge.2600. .and.
+     &        float(hdc_raw_tdc_sub_trig(ihit)).le.2800.)then
+            hdc_rate_hit_sig(pln) = hdc_rate_hit_sig(pln) + 1.0
+         endif
+
+c
+         
 *     check valid layer and wire number
          if(pln.gt.0 .and. pln.le. hdc_num_layers) then
 c     histval=float(hdc_raw_tdc_sub_trig(ihit))
@@ -221,8 +271,8 @@ c     call hf1(hidrawtdcall,histval,1.)
                         Else
                            hdc_cluster_size(gh) = 1
                         EndIf
-
-
+                        
+                        
 *     if hdc_wire_counting(pln) is 1 then wires are number in reverse order
                         if(hdc_wire_counting(pln).eq.0) then !normal ordering
                            hdc_wire_center(gh) = hdc_pitch(pln)
@@ -235,18 +285,67 @@ c     call hf1(hidrawtdcall,histval,1.)
      &                          - hdc_central_wire(pln) ) 
      &                          - hdc_center(pln)
                         endif
-c In F1TDC larger number means later time, we need to minus the hstart_time 
-c during calculate the the drift time.    
-c C.chen Oct. 10,2009                  
-                       
-                        hdc_drift_time(gh) = - hstart_time
-     &                       + float(hdc_tdc(gh)) * pol
-     &                       *hdc_tdc_time_per_channel
-     &                       - hdc_layer_time_zero(pln) * pol
-
+c     In F1TDC larger number means later time, we need to minus the hstart_time 
+c     during calculate the the drift time.    
+c     C.chen Oct. 10,2009     
+                        
+                        
+                        
+                        if(pln .eq. 1 .or. pln .eq. 2) then
+                           sl = 6*(pln-1) 
+     &                          + int((wire-hdc_wire_offset_low(pln)-1)/16) + 1
+                        Else if(pln .eq. 3 .or. pln .eq. 4) then
+                           sl = 12 + 8*(pln-3) 
+     &                          + int((wire-hdc_wire_offset_low(pln)-1)/16) + 1
+                        Else if(pln .eq. 5 .or. pln .eq. 6) then
+                           sl = 28 + 6*(pln-5) 
+     &                          + int((wire-hdc_wire_offset_low(pln)-1)/16) + 1
+                        Else if(pln .eq. 7 .or. pln .eq. 8) then
+                           sl = 40 + 6*(pln-7) 
+     &                          + int((wire-hdc_wire_offset_low(pln)-1)/16) + 1
+                        Else if(pln .eq. 9 .or. pln .eq. 10) then
+                           sl = 52 + 8*(pln-9) 
+     &                          + int((wire-hdc_wire_offset_low(pln)-1)/16) + 1
+                        Else if(pln .eq. 11 .or. pln .eq. 12) then
+                           sl = 68 + 6*(pln-11) 
+     &                          + int((wire-hdc_wire_offset_low(pln)-1)/16) + 1
+                        Endif
+c     print*,sl,pln,hdc_tdc_offset_cable(sl)
+                        
+                        if(pln.le.6) then
+                           hdc_drift_time(gh) =
+     &                          float(hdc_tdc(gh)) * pol
+     &                          *hdc_tdc_time_per_channel
+     &                          - hdc_layer_time_zero(pln) * pol
+     &                          +hdc_tdc_offset_cable(sl)
+                        else
+                           hdc_drift_time(gh) =
+     &                          float(hdc_tdc(gh)) * pol
+     &                          *hdc_tdc_time_per_channel
+     &                          - hdc_layer_time_zero(pln) * pol
+     &                          +hdc_tdc_offset_cable(sl)
+                        endif
+                        
+                        
+                        if(pln.le.6) then
+                           hdc_drift_time_pre(gh) =-h1start_pre+
+     &                          float(hdc_tdc(gh)) * pol
+     &                          *hdc_tdc_time_per_channel
+     &                          - hdc_layer_time_zero(pln) * pol
+     &                          +hdc_tdc_offset_cable(sl)
+                           
+                           
+                        else
+                           hdc_drift_time_pre(gh) =-h2start_pre+
+     &                          float(hdc_tdc(gh)) * pol
+     &                          *hdc_tdc_time_per_channel
+     &                          - hdc_layer_time_zero(pln) * pol
+     &                          +hdc_tdc_offset_cable(sl)
+                        endif
+                        
                         hdc_hits_per_layer(pln) = 
      &                       hdc_hits_per_layer(pln)+1
-
+                        
                      endif      ! end test on duplicate wire
                      old_pln = pln
                      old_wire = wire
@@ -261,10 +360,12 @@ c C.chen Oct. 10,2009
 *     
 *     set total number of good hits
 *     
-       hdc_tot_hits = gh
+      hdc_tot_hits = gh
 *     
-c       if (hbypass_dc_eff.eq.0) call h_dc_eff !only call if there was a hit.
-
+*      call h_dc_tofcut(ABORT,err) ! by Gogami
+      
+c     if (hbypass_dc_eff.eq.0) call h_dc_eff !only call if there was a hit.
+      
       if(gtrig_flag_kaonseg1.ge.1) then
          whichgroup=1
       elseif(gtrig_flag_kaonseg2.ge.1) then

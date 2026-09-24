@@ -52,6 +52,7 @@
       INCLUDE 'h_ntuple.cmn'
       INCLUDE 'gen_constants.par'
       INCLUDE 'hks_data_structures.cmn'
+      INCLUDE 'gen_data_structures.cmn'
       INCLUDE 'gen_event_info.cmn'
       INCLUDE 'gen_run_info.cmn'
       INCLUDE 'hks_tracking.cmn'
@@ -64,6 +65,8 @@
       logical HEXIST            !CERNLIB function
 *     
       integer m,i,j,k,hitn
+      real*4 ts(5)
+      real*4 hmsq
       
 *--------------------------------------------------------
       err= ' '
@@ -82,57 +85,61 @@ c         h_Ntuple_contents(m)= HSTHETA(i) ! 3
 c         m= m+1
 c         h_Ntuple_contents(m)= HSPHI(i) ! 4
          m= m+1
-         h_Ntuple_contents(m)= hphys_scin_hit(i,1) ! 5
+         h_Ntuple_contents(m)= hphys_scin_hit(i,1) ! 3
          m= m+1
-         h_Ntuple_contents(m)= hsna1(i) ! 6
+         h_Ntuple_contents(m)= hsna1(i) ! 4
          m= m+1
-         h_Ntuple_contents(m)= hsna2(i) ! 7
+         h_Ntuple_contents(m)= hsna2(i) ! 5
          m= m+1
-         h_Ntuple_contents(m)= hsna3(i) ! 8
+         h_Ntuple_contents(m)= hsna3(i) ! 6
          m= m+1
-         h_Ntuple_contents(m)= hsnt1(i) ! 6
+         h_Ntuple_contents(m)= hsnt1(i) ! 7
          m= m+1
-         h_Ntuple_contents(m)= hsnt2(i) ! 7
+         h_Ntuple_contents(m)= hsnt2(i) ! 8
          m= m+1
-         h_Ntuple_contents(m)= hsnt3(i) ! 8
+         h_Ntuple_contents(m)= hsnt3(i) ! 9
          m= m+1
-         h_Ntuple_contents(m)= hsnco1(i) ! 6
+         h_Ntuple_contents(m)= hsnco1(i) ! 10
          m= m+1
-         h_Ntuple_contents(m)= hsnco2(i) ! 7
+         h_Ntuple_contents(m)= hsnco2(i) ! 11
          m= m+1
-         h_Ntuple_contents(m)= hsnco3(i) ! 8
+         h_Ntuple_contents(m)= hsnco3(i) ! 12
          m= m+1
-         h_Ntuple_contents(m)= HSBETA(i) ! 9
+         h_Ntuple_contents(m)= HSBETA(i) ! 13
          m= m+1
-         h_Ntuple_contents(m)= hstof(i) ! 9
+         h_Ntuple_contents(m)= HSBETA1Y(i) ! 14
+c      ----- calculate mass for HKS
+         hmsq= (hsp(i)*hsp(i)*(1/hsbeta(i)/hsbeta(i)-1))
          m= m+1
-         h_Ntuple_contents(m)= HSX_FP(i) ! 10 
+         h_Ntuple_contents(m)= hmsq ! 15
          m= m+1
-         h_Ntuple_contents(m)= HSY_FP(i) ! 11
+         h_Ntuple_contents(m)= hstof(i) ! 16
          m= m+1
-         h_Ntuple_contents(m)= HSXP_FP(i) ! 12
+         h_Ntuple_contents(m)= HSX_FP(i) ! 17 
          m= m+1
-         h_Ntuple_contents(m)= HSYP_FP(i) ! 13
+         h_Ntuple_contents(m)= HSY_FP(i) ! 18
          m= m+1
-         h_Ntuple_contents(m)= hstime_at_fp(i) ! 14
+         h_Ntuple_contents(m)= HSXP_FP(i) ! 19
          m= m+1
-         h_Ntuple_contents(m)= hspathlength(i) ! 15
+         h_Ntuple_contents(m)= HSYP_FP(i) ! 20
          m= m+1
-         h_Ntuple_contents(m)= HSY_TAR(i) ! 16
+         h_Ntuple_contents(m)= hstime_at_fp(i) ! 21
          m= m+1
-         h_Ntuple_contents(m)= HSXP_TAR(i) ! 17
+         h_Ntuple_contents(m)= hspathlength(i) ! 22
          m= m+1
-         h_Ntuple_contents(m)= HSYP_TAR(i) ! 18
+         h_Ntuple_contents(m)= HSXP_TAR(i) ! 23
+         m= m+1
+         h_Ntuple_contents(m)= HSYP_TAR(i) ! 24
 
          m= m+1
-         h_Ntuple_contents(m)= HX_SV(i) ! 19
+         h_Ntuple_contents(m)= HX_SV(i) ! 25
          m= m+1
-         h_Ntuple_contents(m)= HY_SV(i) ! 20
+         h_Ntuple_contents(m)= HY_SV(i) ! 26
 
          m= m+1
-         h_Ntuple_contents(m)= float(gen_event_ID_number) ! 21
+         h_Ntuple_contents(m)= float(gen_event_ID_number) ! 27
          m= m+1
-         h_Ntuple_contents(m)= float(gen_run_number) ! 22
+         h_Ntuple_contents(m)= float(gen_run_number) ! 28
          
 c     --- number of hit aerogel layer
          hitn=0
@@ -142,28 +149,86 @@ c     --- number of hit aerogel layer
             EndIf
          EndDo
          m= m+1
-         h_Ntuple_contents(m)= float(hitn) ! 23
+         h_Ntuple_contents(m)= float(hitn) ! 29
 
          m= m+1
-         h_Ntuple_contents(m)= hsaer_num(i,1) ! 24
+         h_Ntuple_contents(m)= hsaer_num(i,1) ! 30
          m= m+1
-         h_Ntuple_contents(m)= hsaer_num(i,2) ! 25
+         h_Ntuple_contents(m)= hsaer_num(i,2) ! 31
          m= m+1
-         h_Ntuple_contents(m)= hsaer_num(i,3) ! 26
-
+         h_Ntuple_contents(m)= hsaer_num(i,3) ! 32
          m= m+1
-         h_Ntuple_contents(m)= hsaer_npe(i,1) ! 27
+         h_Ntuple_contents(m)= hsaer_npe(i,1) ! 33
          m= m+1
-         h_Ntuple_contents(m)= hsaer_npe(i,2) ! 28
+         h_Ntuple_contents(m)= hsaer_npe(i,2) ! 34
          m= m+1
-         h_Ntuple_contents(m)= hsaer_npe(i,3) ! 29
-         
+         h_Ntuple_contents(m)= hsaer_npe(i,3) ! 35
          m= m+1
-         h_Ntuple_contents(m)= hsaer_time(i,1) ! 27
+         h_Ntuple_contents(m)= HSAER_NPE2(i,1) ! 36 
          m= m+1
-         h_Ntuple_contents(m)= hsaer_time(i,2) ! 28
+         h_Ntuple_contents(m)= HSAER_NPE2(i,2) ! 37
          m= m+1
-         h_Ntuple_contents(m)= hsaer_time(i,3) ! 29
+         h_Ntuple_contents(m)= HSAER_NPE2(i,3) ! 38
+         m= m+1
+         h_Ntuple_contents(m)= HSAER_NPE_POS(i,1) ! 39
+         m= m+1
+         h_Ntuple_contents(m)= HSAER_NPE_POS(i,2) ! 40
+         m= m+1
+         h_Ntuple_contents(m)= HSAER_NPE_POS(i,3) ! 41
+         m= m+1
+         h_Ntuple_contents(m)= HSAER_NPE_POS2(i,1) ! 42 
+         m= m+1
+         h_Ntuple_contents(m)= HSAER_NPE_POS2(i,2) ! 43
+         m= m+1
+         h_Ntuple_contents(m)= HSAER_NPE_POS2(i,3) ! 44
+         m= m+1
+         h_Ntuple_contents(m)= HSAER_NPE_NEG(i,1) ! 45
+         m= m+1
+         h_Ntuple_contents(m)= HSAER_NPE_NEG(i,2) ! 46
+         m= m+1
+         h_Ntuple_contents(m)= HSAER_NPE_NEG(i,3) ! 47
+         m= m+1
+         h_Ntuple_contents(m)= HSAER_NPE_NEG2(i,1) ! 48 
+         m= m+1
+         h_Ntuple_contents(m)= HSAER_NPE_NEG2(i,2) ! 49
+         m= m+1
+         h_Ntuple_contents(m)= HSAER_NPE_NEG2(i,3) ! 50
+         m= m+1
+         h_Ntuple_contents(m)= hsaer_time(i,1) ! 51
+         m= m+1
+         h_Ntuple_contents(m)= hsaer_time(i,2) ! 52
+         m= m+1
+         h_Ntuple_contents(m)= hsaer_time(i,3) ! 53
+         m= m+1
+         h_Ntuple_contents(m)= HSAER_TIME2(i,1) ! 54 
+         m= m+1
+         h_Ntuple_contents(m)= HSAER_TIME2(i,2) ! 55
+         m= m+1
+         h_Ntuple_contents(m)= HSAER_TIME2(i,3) ! 56
+         m= m+1
+         h_Ntuple_contents(m)= HSAER_TIME_POS(i,1) ! 57
+         m= m+1
+         h_Ntuple_contents(m)= HSAER_TIME_POS(i,2) ! 58
+         m= m+1
+         h_Ntuple_contents(m)= HSAER_TIME_POS(i,3) ! 59
+         m= m+1
+         h_Ntuple_contents(m)= HSAER_TIME_POS2(i,1) ! 60
+         m= m+1
+         h_Ntuple_contents(m)= HSAER_TIME_POS2(i,2) ! 61 
+         m= m+1
+         h_Ntuple_contents(m)= HSAER_TIME_POS2(i,3) ! 62 
+         m= m+1
+         h_Ntuple_contents(m)= HSAER_TIME_NEG(i,1) ! 63
+         m= m+1
+         h_Ntuple_contents(m)= HSAER_TIME_NEG(i,2) ! 64
+         m= m+1
+         h_Ntuple_contents(m)= HSAER_TIME_NEG(i,3) ! 65
+         m= m+1
+         h_Ntuple_contents(m)= HSAER_TIME_NEG2(i,1) ! 66
+         m= m+1
+         h_Ntuple_contents(m)= HSAER_TIME_NEG2(i,2) ! 67
+         m= m+1
+         h_Ntuple_contents(m)= HSAER_TIME_NEG2(i,3) ! 68
          
 c     --- number of hit water layer
          hitn=0
@@ -173,22 +238,56 @@ c     --- number of hit water layer
             EndIf
          EndDo
          m= m+1
-         h_Ntuple_contents(m)= float(hitn) ! 30
+         h_Ntuple_contents(m)= float(hitn) ! 69
 
          m= m+1
-         h_Ntuple_contents(m)= hswat_num(i,1) ! 31
+         h_Ntuple_contents(m)= hswat_num(i,1) ! 70
          m= m+1
-         h_Ntuple_contents(m)= hswat_num(i,2) ! 32
+         h_Ntuple_contents(m)= hswat_num(i,2) ! 71
 
          m= m+1
-         h_Ntuple_contents(m)= hswat_npe(i,1) ! 33
+         h_Ntuple_contents(m)= hswat_npe(i,1) ! 72
          m= m+1
-         h_Ntuple_contents(m)= hswat_npe(i,2) ! 34
+         h_Ntuple_contents(m)= hswat_npe(i,2) ! 73
+         m= m+1
+         h_Ntuple_contents(m)= HSWAT_NPE2(i,1) ! 74
+         m= m+1
+         h_Ntuple_contents(m)= HSWAT_NPE2(i,2) ! 75
+*add normalized kaon NPE 
+         m= m+1
+         h_Ntuple_contents(m)= hswat_npe_k_ratio(i,1) ! 76
+         m= m+1
+         h_Ntuple_contents(m)= hswat_npe_k_ratio(i,2) ! 77
+         m= m+1
+         h_Ntuple_contents(m)= HSWAT_NPE_K_RATIO2(i,1) ! 78
+         m= m+1
+         h_Ntuple_contents(m)= HSWAT_NPE_K_RATIO2(i,2) ! 79
+*end
+         m= m+1
+         h_Ntuple_contents(m)= HSWAT_NPE_POS(i,1) ! 80
+         m= m+1
+         h_Ntuple_contents(m)= HSWAT_NPE_POS(i,2) ! 81
+         m= m+1
+         h_Ntuple_contents(m)= HSWAT_NPE_POS2(i,1) ! 82
+         m= m+1
+         h_Ntuple_contents(m)= HSWAT_NPE_POS2(i,2) ! 83
+         m= m+1
+         h_Ntuple_contents(m)= HSWAT_NPE_NEG(i,1) ! 84
+         m= m+1
+         h_Ntuple_contents(m)= HSWAT_NPE_NEG(i,2) ! 85
+         m= m+1
+         h_Ntuple_contents(m)= HSWAT_NPE_NEG2(i,1) ! 86
+         m= m+1
+         h_Ntuple_contents(m)= HSWAT_NPE_NEG2(i,2) ! 87
          
          m= m+1
-         h_Ntuple_contents(m)= hswat_time(i,1) ! 33
+         h_Ntuple_contents(m)= hswat_time(i,1) ! 88
          m= m+1
-         h_Ntuple_contents(m)= hswat_time(i,2) ! 34
+         h_Ntuple_contents(m)= hswat_time(i,2) ! 89
+         m= m+1
+         h_Ntuple_contents(m)= HSWAT_TIME2(i,1) ! 90
+         m= m+1
+         h_Ntuple_contents(m)= HSWAT_TIME2(i,2) ! 91
  
 c     --- number of hit lucite layer
          hitn=0
@@ -198,33 +297,103 @@ c     --- number of hit lucite layer
             EndIf
          EndDo
          m= m+1
-         h_Ntuple_contents(m)= float(hitn) ! 44
+         h_Ntuple_contents(m)= float(hitn) ! 92
          m= m+1
-         h_Ntuple_contents(m)= hsluc_num(i,1) ! 45
+         h_Ntuple_contents(m)= hsluc_num(i,1) ! 93
          m= m+1
-         h_Ntuple_contents(m)= hsluc_npe(i,1) ! 47
+         h_Ntuple_contents(m)= hsluc_npe(i,1) ! 94
          
          m= m+1
-         h_Ntuple_contents(m)= hschi2perdeg(i) ! 35
+         h_Ntuple_contents(m)= hschi2perdeg(i) ! 95
          m= m+1
-         h_Ntuple_contents(m)= hsnfree_fp(i) ! 20
+         h_Ntuple_contents(m)= hsnfree_fp(i) ! 96
+         do j = 1, hdc_num_layers
+            m=m+1
+            h_Ntuple_contents(m)=hdc_hits_per_layer(j)    
+         enddo
+         do j = 1, hdc_num_layers
+            m=m+1
+            h_Ntuple_contents(m)=hsdc_drift_distance(i,j)    
+         enddo
+         do j = 1, hdc_num_layers
+            m=m+1
+            h_Ntuple_contents(m)=hsdc_layer_drift_time(i,j)    
+         enddo
+c         do j = 1, hdc_num_layers
+c            m=m+1
+c            h_Ntuple_contents(m)=hsdc_layer_sigma(i,j)    
+c         enddo
+         do j = 1, hdc_num_layers
+            m=m+1
+            h_Ntuple_contents(m)=hsdc_sing_res(i,j)    
+         enddo
+         do j = 1 , hdc_num_layers
+            m=m+1
+            h_Ntuple_contents(m)=hsdc_track_coord(i,j) 
+         enddo
+         do j = 1, hdc_num_layers
+            m=m+1
+            h_Ntuple_contents(m)=hsdc_wire_center(i,j)
+         enddo
+c         do j = 1, hdc_num_layers
+c            m=m+1
+c            h_Ntuple_contents(m)=hsdc_wire_numb(i,j)
+c         enddo
+         do j = 1, hdc_num_layers
+            m=m+1
+            h_Ntuple_contents(m)=hsdc_wire_coord(i,j)
+         enddo
          m= m+1
-         h_Ntuple_contents(m)= hsbeta_k(i) ! 36
+         h_Ntuple_contents(m)= hsdc_track_numb(i) ! 97
          m= m+1
-         h_Ntuple_contents(m)= hsbeta_pi(i) ! 37
+         h_Ntuple_contents(m)= hsbeta_k(i) ! 97
          m= m+1
-         h_Ntuple_contents(m)= hsbeta_pr(i) ! 38
+         h_Ntuple_contents(m)= hsbeta_pi(i) ! 98
+         m= m+1
+         h_Ntuple_contents(m)= hsbeta_pr(i) ! 99
          m = m+1
-         h_Ntuple_contents(m)= hmisc_dec_data(65,1)*0.025 ! 39
+         h_Ntuple_contents(m)= hmisc_dec_data(65,1)*0.025 ! 100
          m = m+1
-         h_Ntuple_contents(m)= hstime_at_tar(i) ! 40
+         h_Ntuple_contents(m)= hstime_at_tar(i) ! 101
          m = m+1 
-         h_Ntuple_contents(m)= hnphysics ! 41
+         h_Ntuple_contents(m)= hnphysics ! 102
          m = m+1 
-         h_Ntuple_contents(m)= hsrftime ! 42
+         h_Ntuple_contents(m)= hsrftime ! 103
          m = m+1 
-         h_Ntuple_contents(m)= hsrfdiff ! 43
-
+         h_Ntuple_contents(m)= hsrfdiff ! 104
+         m= m+1
+         h_Ntuple_contents(m)= gfrx !GBEAM_X ! 105
+         m= m+1
+         h_Ntuple_contents(m)= gfry !GBEAM_Y ! 106
+         do j=1,5
+            ts(j)=0.
+            if(gen_event_ts_flag(j)) ts(j)=1
+         enddo
+         m= m+1
+         h_Ntuple_contents(m)= ts(1) ! 107
+         m= m+1
+         h_Ntuple_contents(m)= ts(2) ! 108
+         m= m+1
+         h_Ntuple_contents(m)= ts(3) ! 109
+         m= m+1
+         h_Ntuple_contents(m)= ts(5) ! 110
+*     Add to analtyze grouping 0918/2010 chiba
+         m= m+1
+         h_Ntuple_contents(m)= gtrig_flag_hes ! 111
+         m= m+1
+         h_Ntuple_contents(m)= gtrig_flag_kaonsum ! 112
+         m= m+1
+         h_Ntuple_contents(m)= gtrig_flag_kaonseg1 ! 113
+         m= m+1
+         h_Ntuple_contents(m)= gtrig_flag_kaonseg2 ! 114
+         m= m+1
+         h_Ntuple_contents(m)= gtrig_flag_kaonseg3 ! 115
+         m= m+1
+         h_Ntuple_contents(m)= gtrig_flag_kaonseg4 ! 116
+         m= m+1
+         h_Ntuple_contents(m)= gtrig_flag_kaonseg5 ! 117
+         m= m+1
+         h_Ntuple_contents(m)= gtrig_flag_kaonseg6 ! 118
          
 *     Experiment dependent entries start here.
          

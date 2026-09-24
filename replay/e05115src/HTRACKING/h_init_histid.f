@@ -246,6 +246,13 @@ c     --- drift time per layer
       
       Do i=1,HMAX_NUM_DC_LAYERS
          if(i .le. 9) then
+            Write(histname,'(15Hhdcrawlayerhit0,I1)') i
+            hiddcrawlayerhit(i) = thgetid(histname)
+         Else
+            Write(histname,'(14Hhdcrawlayerhit,I2)') i
+            hiddcrawlayerhit(i) = thgetid(histname)
+         EndIf
+         if(i .le. 9) then
             Write(histname,'(12Hhdclayerhit0,I1)') i
             hiddclayerhit(i) = thgetid(histname)
          Else
@@ -301,6 +308,15 @@ c     --- drift time per layer
          Else
             Write(histname,'(17Hhdcsingleresidual,i2)') i
             hidresidualpre(i) = thgetid(histname)
+         EndIf
+      EndDo
+      Do i=1,hmax_num_dc_layers
+         if(i .le. 9) then
+            Write(histname,'(11Hhdcdistime0,i1)') i
+            hiddcdistime(i) = thgetid(histname)
+         Else
+            Write(histname,'(10Hhdcdistime,i2)') i
+            hiddcdistime(i) = thgetid(histname)
          EndIf
       EndDo
       
@@ -509,6 +525,8 @@ c     --- define in hist.HKS_hodoraw
       do layer = 1, HNUM_SCIN_LAYERS
          Write(histname,'(13Hhscincounters,i1)') layer
          hidscincounters(layer) = thgetid(histname)
+         Write(histname,'(17Hhscindeclayerhits,i1)') layer
+         hidscindeclayerhits(layer) = thgetid(histname)
       EndDo
       
       do layer = 1, HNUM_SCIN_LAYERS
@@ -1019,6 +1037,8 @@ c     --- h_link_tracks
       hidtrkwatnum(2) = thgetid('htrkwatnum2')
       hidtrkwatnpesum(1) = thgetid('htrkwatnpesum1')
       hidtrkwatnpesum(2) = thgetid('htrkwatnpesum2')
+      hidtrkwatnpesumkratio(1) = thgetid('htrkwatnpesumkratio1')
+      hidtrkwatnpesumkratio(2) = thgetid('htrkwatnpesumkratio2')
       
       hidtrknluc(1) = thgetid('htrknluc')
       hidtrklucnum(1) = thgetid('htrklucnum')
@@ -1070,6 +1090,8 @@ c     --- cherenkov
       hidsac3npe = thgetid('hsac3npe')
       hidswc1npe = thgetid('hswc1npe')
       hidswc2npe = thgetid('hswc2npe')
+      hidswc1npekratio = thgetid('hswc1npekratio')
+      hidswc2npekratio = thgetid('hswc2npekratio')
       hidswc1ac1 = thgetid('hswc1ac1')
       hidsac1s1x = thgetid('hsac1s1x')
       hidswc1s1x = thgetid('hswc1s1x')
@@ -1110,6 +1132,20 @@ c
       hidtulrawtdc=thgetid('htulrawtdc')
       hidtultothits=thgetid('htultothits')
       hidtultotchannelnum=thgetid('htultotchannelnum')
+
+cccccc DK added              
+      call hbook1(7001,'test1',100.,-100.,250.,0.)
+      call hbook1(7002,'test2',100.,-100.,250.,0.)
+      call hbook1(7003,'test3',100.,-100.,250.,0.)
+      call hbook1(7004,'test4',100.,-100.,250.,0.)
+      call hbook1(7005,'test5',100.,-100.,250.,0.)
+      call hbook1(7006,'test6',100.,-100.,250.,0.)
+      call hbook1(7007,'test7',100.,-100.,250.,0.)
+      call hbook1(7008,'test8',100.,-100.,250.,0.)
+      call hbook1(7009,'test9',100.,-100.,250.,0.)
+      call hbook1(7010,'test10',100.,-100.,250.,0.)
+      call hbook1(7011,'test11',100.,-100.,250.,0.)
+      call hbook1(7012,'test12',100.,-100.,250.,0.)
 
       RETURN
       END

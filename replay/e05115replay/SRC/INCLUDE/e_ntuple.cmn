@@ -42,7 +42,7 @@
 *
 *
       integer*4 EMAX_Ntuple_size
-      parameter (EMAX_Ntuple_size= 60)
+      parameter (EMAX_Ntuple_size= 100)
       integer*4 default_e_Ntuple_ID
       parameter (default_e_Ntuple_ID= 9010)
       integer*4 default_e_dc_Ntuple_ID

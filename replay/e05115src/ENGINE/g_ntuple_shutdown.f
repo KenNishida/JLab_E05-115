@@ -46,12 +46,16 @@
 *     
       call h_ntuple_shutdown(ABORT,err)
       call h_dc_ntuple_shutdown(ABORT,err)
+      call h_track_ntuple_shutdown(ABORT,err) !commented out for test GOGAMI
       call h_scin_ntuple_shutdown(ABORT,err)
       call h_ch_ntuple_shutdown(ABORT,err)
       call h_wat_ntuple_shutdown(ABORT,err)
       call h_aer_ntuple_shutdown(ABORT,err)
       call h_luc_ntuple_shutdown(ABORT,err)
       call h_pid_ntuple_shutdown(ABORT,err)
+*
+      call h_dc_eff_out(ABORT,err) ! KDC efficiency (3Mar2011,Gogami)
+      call e_dc_eff_out(ABORT,err) ! EDC efficiency (3Mar2011,Gogami)
 
 *     call h_sv_nt_shutdown(ABORT,err)
 *     

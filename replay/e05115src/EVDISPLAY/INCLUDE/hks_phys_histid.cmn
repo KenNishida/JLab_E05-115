@@ -46,6 +46,8 @@
       Integer*4 hidsac3npe
       Integer*4 hidswc1npe
       Integer*4 hidswc2npe
+      Integer*4 hidswc1npekratio
+      Integer*4 hidswc2npekratio
       Integer*4 hidslcnpe
       Integer*4 hidswc1ac1
       Integer*4 hidsac1s1x
@@ -95,6 +97,8 @@
      &     hidsac3npe,
      &     hidswc1npe,
      &     hidswc2npe,
+     &     hidswc1npekratio,
+     &     hidswc2npekratio,
      &     hidslcnpe,
      &     hidsbetak,
      &     hidsbetae,

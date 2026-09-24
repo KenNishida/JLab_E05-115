@@ -55,6 +55,7 @@ c        fractinterp = -1.0
 c        s_drift_dist_calc = 0.5*fractinterp
 c        return
 c      endif      
+c     hdriftbinsz [ns/bin]
       ilo = int((time-hdrift1stbin)/hdriftbinsz) + 1
       ihi = ilo + 1
       if( ilo.ge.1 .and. ihi.le.hdriftbins)then 
@@ -63,9 +64,11 @@ c      endif
      &    (time - hdrift1stbin - (ilo-1)*hdriftbinsz)
       else
         if( ilo.lt.1 )then
-          fractinterp = 0.0
+cDK          fractinterp = 0.0
+          fractinterp = -1000.
         else
-          if( ihi.gt.hdriftbins ) fractinterp = 1.0
+cDK          if( ihi.gt.hdriftbins ) fractinterp = 1.0
+          if( ihi.gt.hdriftbins ) fractinterp = 1000.
         endif
       endif
 

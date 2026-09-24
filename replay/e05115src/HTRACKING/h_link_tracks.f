@@ -58,6 +58,9 @@
       Real*4 x1_min,x1_max,x2_min,x2_max
       Real*4 y1_min,y1_max,y2_min,y2_max
       Integer*4 la,co,naer(3),nwat(2),nluc(1)
+      !DK added to include T/B ADC/TDC of AC, WC and LC in ntuple 2010/1/14
+      Integer*4 naer_pos(3),nwat_pos(2),nluc_pos(1)
+      Integer*4 naer_neg(3),nwat_neg(2),nluc_neg(1)
       
       ABORT= .FALSE.
       err= ' '
@@ -71,14 +74,32 @@
             htrk_aer_npe_sum2(itrk,j) = 0.
             htrk_aer_time(itrk,j) = -1.
             htrk_aer_time2(itrk,j) = -1.
+            htrk_aer_npe_pos(itrk,j) = 0.
+            htrk_aer_npe_pos2(itrk,j) = 0.
+            htrk_aer_time_pos(itrk,j) = -1.
+            htrk_aer_time_pos2(itrk,j) = -1.
+            htrk_aer_npe_neg(itrk,j) = 0.
+            htrk_aer_npe_neg2(itrk,j) = 0.
+            htrk_aer_time_neg(itrk,j) = -1.
+            htrk_aer_time_neg2(itrk,j) = -1.
             htrk_aer_num(itrk,j) = 0.
          EndDo
          Do j=1,hnum_wat_layers
             htrk_nwat(itrk,j) = 0
             htrk_wat_npe_sum(itrk,j) = 0.
             htrk_wat_npe_sum2(itrk,j) = 0.
+            htrk_wat_npe_sum_k_ratio(itrk,j) = 0.
+            htrk_wat_npe_sum_k_ratio2(itrk,j) = 0.
             htrk_wat_time(itrk,j) = -1.
             htrk_wat_time2(itrk,j) = -1.
+            htrk_wat_npe_pos(itrk,j) = 0.
+            htrk_wat_npe_pos2(itrk,j) = 0.
+            htrk_wat_time_pos(itrk,j) = -1.
+            htrk_wat_time_pos2(itrk,j) = -1.
+            htrk_wat_npe_neg(itrk,j) = 0.
+            htrk_wat_npe_neg2(itrk,j) = 0.
+            htrk_wat_time_neg(itrk,j) = -1.
+            htrk_wat_time_neg2(itrk,j) = -1.
             htrk_wat_num(itrk,j) = 0.
          EndDo
          
@@ -88,6 +109,14 @@
             htrk_luc_npe_sum2(itrk,j) = 0.
             htrk_luc_time(itrk,j) = -1.
             htrk_luc_time2(itrk,j) = -1.
+            htrk_luc_npe_pos(itrk,j) = 0.
+            htrk_luc_npe_pos2(itrk,j) = 0.
+            htrk_luc_time_pos(itrk,j) = -1.
+            htrk_luc_time_pos2(itrk,j) = -1.
+            htrk_luc_npe_neg(itrk,j) = 0.
+            htrk_luc_npe_neg2(itrk,j) = 0.
+            htrk_luc_time_neg(itrk,j) = -1.
+            htrk_luc_time_neg2(itrk,j) = -1.
             htrk_luc_num(itrk,j) = 0.
          EndDo
 
@@ -103,6 +132,8 @@
          if(haer_tot_hits .gt. 0) then
             Do j=1,hnum_aer_layers
                naer(j)=0
+               naer_pos(j)=0
+               naer_neg(j)=0
             EndDo
             Do j = 1,haer_tot_hits        
                la = haer_layer_num(j)
@@ -155,6 +186,35 @@ c
                         endif
                      endif
                   EndIF
+!DK added to include T/B ADC/TDC of AC in ntuple 2010/1/14
+!From here-----------------------------------------------------------
+                  if(haer_pos_time(j) .gt. 0) then !For pos channel 
+                     htrk_aer_npe_pos(itrk,la) = 
+     &                    htrk_aer_npe_pos(itrk,la)
+     &                    + haer_pos_npe(j)
+                     naer_pos(la) = naer_pos(la) + 1
+                     if(naer_pos(la).eq.1) then
+                        htrk_aer_time_pos(itrk,la) = haer_pos_time(j)
+                     else if(naer_pos(la) .eq. 2) then
+                        htrk_aer_npe_pos2(itrk,la) = 
+     &                       + haer_pos_npe(j)
+                        htrk_aer_time_pos2(itrk,la) = haer_pos_time(j)
+                     endif
+                  EndIF
+                  if(haer_neg_time(j) .gt. 0) then !For neg channel
+                     htrk_aer_npe_neg(itrk,la) = 
+     &                    htrk_aer_npe_neg(itrk,la)
+     &                    + haer_neg_npe(j)
+                     naer_neg(la) = naer_neg(la) + 1
+                     if(naer_neg(la).eq.1) then
+                        htrk_aer_time_neg(itrk,la) = haer_neg_time(j)
+                     else if(naer_neg(la) .eq. 2) then
+                        htrk_aer_npe_neg2(itrk,la) = 
+     &                       + haer_neg_npe(j)
+                        htrk_aer_time_neg2(itrk,la) = haer_neg_time(j)
+                     endif
+                  EndIF
+!To here--------------------------------------------------------------
                EndIf
             EndDo               ! AC loop
             
@@ -173,6 +233,8 @@ c
          if(hwat_tot_hits .gt. 0) then
             Do j=1,hnum_wat_layers
                nwat(j)=0
+               nwat_pos(j)=0
+               nwat_neg(j)=0
             EndDo
             Do j = 1,hwat_tot_hits            
                la = hwat_layer_num(j)
@@ -201,7 +263,17 @@ c
                      htrk_wat_npe_sum(itrk,la) = 
      &                    htrk_wat_npe_sum(itrk,la)
      &                    + hwat_npe_sum(j)
+c normalized kaon NPE
+                     htrk_wat_npe_sum_k_ratio(itrk,la) = 
+     &                    htrk_wat_npe_sum_k_ratio(itrk,la)
+     &                    + hwat_npe_sum_k_ratio(j)
                      nwat(la) = nwat(la) + 1
+                     htrk_wat_npe_pos(itrk,la) = 
+     &                    htrk_wat_npe_pos(itrk,la)
+     &                    + hwat_pos_npe(j)
+                     htrk_wat_npe_neg(itrk,la) = 
+     &                    htrk_wat_npe_neg(itrk,la)
+     &                    + hwat_neg_npe(j)
                      if(nwat(la).eq.1) then
                         if(hwat_pos_time(j).gt.0..and.
      &                       hwat_neg_time(j).gt.0.) then
@@ -216,6 +288,13 @@ c
                      if(nwat(la).eq.2) then
                         htrk_wat_npe_sum2(itrk,la) = 
      &                       + hwat_npe_sum(j)
+c normalized kaon NPE
+                        htrk_wat_npe_sum_k_ratio2(itrk,la) = 
+     &                       + hwat_npe_sum_k_ratio(j)
+                        htrk_wat_npe_pos2(itrk,la) = 
+     &                       + hwat_pos_npe(j)
+                        htrk_wat_npe_neg2(itrk,la) = 
+     &                       + hwat_neg_npe(j)
                         if(hwat_pos_time(j).gt.0..and.
      &                       hwat_neg_time(j).gt.0.) then
                            htrk_wat_time2(itrk,la) = 
@@ -227,6 +306,35 @@ c
                         endif
                      endif
                   EndIF
+!DK added to include T/B ADC/TDC of WC in ntuple 2010/1/14
+!From here-----------------------------------------------------------
+c                  if(hwat_pos_time(j) .gt. 0) then !For pos channel
+c                     htrk_wat_npe_pos(itrk,la) = 
+c     &                    htrk_wat_npe_pos(itrk,la)
+c     &                    + hwat_pos_npe(j)
+c                     nwat_pos(la) = nwat_pos(la) + 1
+c                     if(nwat_pos(la).eq.1) then
+c                        htrk_wat_time_pos(itrk,la) = hwat_pos_time(j)
+c                     else if(nwat_pos(la) .eq. 2) then
+c                        htrk_wat_npe_pos2(itrk,la) = 
+c     &                       + hwat_pos_npe(j)
+c                        htrk_wat_time_pos2(itrk,la) = hwat_pos_time(j)
+c                     endif
+c                  EndIF
+c                  if(hwat_neg_time(j) .gt. 0) then !For neg channel
+c                     htrk_wat_npe_neg(itrk,la) = 
+c     &                    htrk_wat_npe_neg(itrk,la)
+c     &                    + hwat_neg_npe(j)
+c                     nwat_neg(la) = nwat_neg(la) + 1
+c                     if(nwat_neg(la).eq.1) then
+c                        htrk_wat_time_neg(itrk,la) = hwat_neg_time(j)
+c                     else if(nwat_neg(la) .eq. 2) then
+c                        htrk_wat_npe_neg2(itrk,la) = 
+c     &                       + hwat_neg_npe(j)
+c                        htrk_wat_time_neg2(itrk,la) = hwat_neg_time(j)
+c                     endif
+c                  EndIF
+!To here--------------------------------------------------------------
                EndIF            ! A track in WC
             EndDo               ! WC loop
 
@@ -344,6 +452,7 @@ c     Write(*,*) '(link)naer=',htrk_naer(itrk,j)
                Call HF1(hidtrkwatnum(j),htrk_wat_num(itrk,j),1.)
             endif
             Call HF1(hidtrkwatnpesum(j),htrk_wat_npe_sum(itrk,j),1.)
+            Call HF1(hidtrkwatnpesumkratio(j),htrk_wat_npe_sum_k_ratio(itrk,j),1.)
          EndDo
          Do j=1,hnum_luc_layers
             Call HF1(hidtrknluc(j),float(htrk_nluc(itrk,j)),1.)

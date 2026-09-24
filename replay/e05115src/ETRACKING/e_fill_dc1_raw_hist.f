@@ -22,9 +22,14 @@
       Include 'gen_rocid.cmn'
 
       Integer*4 i,la,wi,sl,t1
+      Integer*4 layerhit(10) 
 
       ABORT= .FALSE.
       err= ' '
+      
+      Do i = 1,10
+         layerhit(i)=0
+      enddo
 
       Call Hf1(eiddc1rawtothit,Float(edc1_raw_tot_hits),1.)
       Call Hf1(eiddc1rawtothitzoom,Float(edc1_raw_tot_hits),1.)
@@ -35,6 +40,7 @@
          Call HF1(eiddc1rawtdcall,float(edc1_raw_tdc_sub_trig(i)),1.)
          la = edc1_raw_layer_num(i)
          wi = edc1_raw_wire_num(i)
+         layerhit(la)=layerhit(la)+1
 *     --- ex.) layer=1&offset=2
 *     --- 3-18 is slot=1,19-34 is slot=2...
 *     --- layer2&offset2,3-18 is slot=8,...
@@ -49,6 +55,10 @@
          EndIf
 
       EndDo
+      
+      Do i = 1,10
+         Call HF1(eiddc1rawlayerhit(i),float(layerhit(i)),1.)
+      enddo
 
       Return
       end

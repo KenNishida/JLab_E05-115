@@ -1,0 +1,5 @@
+#!/bin/tcsh -f
+setenv ENGINE_CONFIG_FILE CHARGE_REPLAY.PARM
+
+EXE/engine_replay grun=$1 $2 $3 $4 $5
+

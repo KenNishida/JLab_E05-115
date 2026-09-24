@@ -5,6 +5,7 @@ rootfiles_gogami/
 tape/
 
 *.root
+*.rzdat
 
 # ----- Compiler output -----
 *.o
@@ -29,5 +30,14 @@ CMakeCache.txt
 core
 core.*
 
-# Large field maps
-Geant4_HKS/run/param/*.map
+# ----- Large Geant4 data -----
+Geant4/Geant4_HKS/run/param/*.map
+Geant4/Geant4_HES/run/param/*.map
+
+Geant4/Geant4_HKS/run/seed/*.seed
+Geant4/Geant4_HKS/run/seed/*.seed_
+Geant4/Geant4_HES/run/seed/*.seed
+Geant4/Geant4_HES/run/seed/*.seed_
+
+# ----- Replay generated data -----
+*.hbk

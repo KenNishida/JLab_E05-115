@@ -26,8 +26,8 @@
       ABORT= .FALSE.
       err= ' '
       
-      Call HF1(eidentrackspre,float(entracks_pre),1.)
-      Call HF1(eidentracksprezoom,float(entracks_pre),1.)
+      Call HF1(eiddc1ntrackspre,float(entracks_pre),1.)
+      Call HF1(eiddc1ntracksprezoom,float(entracks_pre),1.)
       
       if(entracks_pre .le. 0) Return
       Do i=1,entracks_pre

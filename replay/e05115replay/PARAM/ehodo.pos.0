@@ -2,12 +2,12 @@
 
 ; Geometrical parameters input by V.M. Rodriguez 05/28/05
 ; Z positions of hodoscopes
-  escin_zpos = 43.2, 73.2, 80.0
+  escin_zpos = 46.653, 76.713, 80.0
 
 ; Scintillator width for EHOD1 and EHOD2
   escin_width     =  5.
   escin_height    = 30.
-  escin_thickness =  2.
+  escin_thickness =  1.
 
 ; Note, EHOD3 geometry is 107.9 x 2 x 2 (x, y, z) and stays at (7.55, 0, 28)
 ;

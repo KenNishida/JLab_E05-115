@@ -16,7 +16,7 @@
 *
       integer CMAX_Ntuple_size
 c      parameter (CMAX_Ntuple_size= 100)
-      parameter (CMAX_Ntuple_size= 200)
+      parameter (CMAX_Ntuple_size= 250)
       integer default_c_Ntuple_ID
       parameter (default_c_Ntuple_ID= 9500)
 *
@@ -29,17 +29,24 @@ c      parameter (CMAX_Ntuple_size= 100)
       character*80 c_Ntuple_title
       character*132 c_Ntuple_directory
       character*50 c_Ntuple_file
-      character*8 c_Ntuple_tag(CMAX_Ntuple_size)
+      character*9 c_Ntuple_tag(CMAX_Ntuple_size)
 
       logical c_Ntuple_exists
 
       COMMON /COIN_Ntuple_par/
+     &       c_Ntuple_directory,c_Ntuple_file,
+     &       c_Ntuple_name,c_Ntuple_title,
+     &       c_Ntuple_tag,
      &       c_Ntuple_ID,
-     &            c_Ntuple_size,c_Ntuple_IOchannel,
-     &            c_Ntuple_name,c_Ntuple_title,
-     &            c_Ntuple_directory,c_Ntuple_file,
-     &            c_Ntuple_tag,
+     &       c_Ntuple_size,c_Ntuple_IOchannel,
      &       c_Ntuple_exists
+c      COMMON /COIN_Ntuple_par/
+c     &       c_Ntuple_ID,
+c     &       c_Ntuple_size,c_Ntuple_IOchannel,
+c     &       c_Ntuple_name,c_Ntuple_title,
+c     &       c_Ntuple_directory,c_Ntuple_file,
+c     &       c_Ntuple_tag,
+c     &       c_Ntuple_exists
 
 *
 *     CTPTYPE=event

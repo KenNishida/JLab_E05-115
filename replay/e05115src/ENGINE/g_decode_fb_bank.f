@@ -154,7 +154,7 @@
       if (gen_run_number.lt.50000) then
          roc = 1 !for EDC test bench DK
       else
-         roc = iand(stat_roc,'1F'X)                ! Get ROC from header
+         roc = iand(stat_roc,INT(Z'1F'))                ! Get ROC from header
       endif
 
       if(roc.eq.20) then
@@ -193,7 +193,7 @@
 *     
         last_first = pointer + bank(pointer) ! Last word in sub bank
         stat_roc = ishft(bank(pointer+1),-16) !2 words are fb roc header.
-        roc = iand(stat_roc,'1F'X)
+        roc = iand(stat_roc,INT(Z'1F'))
         pointer=pointer+2       !using parallel link, so next
       endif
       
@@ -202,12 +202,12 @@
         if(pointer.eq.(last_first+1)) then ! Second bank in a two bank bank
           last_first = banklength ! Reset to end of second bank
           stat_roc = ishft(bank(pointer+1),-16) !2 words are fb roc header
-          roc = iand(stat_roc,'1F'X) ! New roc
+          roc = iand(stat_roc,INT(Z'1F')) ! New roc
         endif
 *     
 *     Look for and report empty ROCs.
 *     
-        if (bank(pointer).EQ.X'DCFF0000') then
+        if (bank(pointer).EQ.INT(Z'DCFF0000')) then
           if (roc.eq.1 .or. roc.eq.2) then !missing hnss data
             if (gen_event_type.ne.2) then !event type 2 is sos only event.
               write(6,'(a,i3,a,i8,a,z8,a,i2)') 'roc',roc,' has no data for event'
@@ -223,13 +223,13 @@
           endif
         endif
 *     
-        slot = iand(ishft(bank(pointer),-27),'1F'X)
+        slot = iand(ishft(bank(pointer),-27),INT(Z'1F'))
         if(slot.gt.0.and.slot.le.G_DECODE_MAXSLOTS .and.
      $       roc.gt.0 .and. roc.le.g_decode_maxrocs) then
           subadd = iand(ishft(bank(pointer),
-     $         -g_decode_subaddbit(roc,slot)),'7F'X)
+     $         -g_decode_subaddbit(roc,slot)),INT(Z'7F'))
           
-          if (subadd .lt. X'7F') then ! Only valid subaddress
+          if (subadd .lt. INT(Z'7F')) then ! Only valid subaddress
                                 ! This skips module headers
             
             slotp = g_decode_slotpointer(roc,slot)

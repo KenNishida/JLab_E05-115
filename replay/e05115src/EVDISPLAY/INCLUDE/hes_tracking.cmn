@@ -39,6 +39,7 @@
 
 *     --- for honeycomb-type chamber
       Real*4 edrift_coeff(4,emax_num_dc1_slots)
+      Real*4 edc2_drift_coeff(4,emax_num_dc2_slots)
 
       common/HES_DRIFT/
      &        edc1fract,
@@ -46,7 +47,8 @@
      &        edriftbinsz,
      &        edrift1stbin,
      &        edriftbins,
-     &	     edrift_coeff
+     &	     edrift_coeff,
+     &	     edc2_drift_coeff
 
       equivalence (edc1wc01fract(1),edc1fract(1,1))
       equivalence (edc1wc02fract(1),edc1fract(1,2))
@@ -76,7 +78,7 @@
       Integer*4 entrackhits_pre_max
       Integer*4 enum_fitting
       Parameter(entracks_pre_max=5120)
-      Parameter(entrackhits_pre_max=512)
+      Parameter(entrackhits_pre_max=5120)
       Parameter(enum_fitting=4)
 
       integer*4 edc1max_chamber_hits
@@ -93,8 +95,8 @@
       parameter (edc1max_space_points=ENTRACKS_PRE_MAX)
       parameter (edc1max_hits_per_point=15)
 		parameter (edc2max_chamber_hits=272)
-      parameter (edc2max_space_points=50)
-      parameter (edc2max_hits_per_point=25)
+      parameter (edc2max_space_points=ENTRACKS_PRE_MAX)
+      parameter (edc2max_hits_per_point=50)
       parameter (enum_fpray_param=4)
       parameter (edc1_num_cards=70)
       parameter (edc2_num_cards=40)
@@ -186,6 +188,7 @@ c      logical edc_readout_x
 		integer*4 edc1space_point_hits(edc1max_space_points,edc1max_hits_per_point+2)  
 ** for 'pre link' by MIZUKI
       real*4 starttime(edc1max_space_points)
+      real*4 starttime2(edc1max_space_points)
 *     array of n rows of space points
 *     (n,1) = number of hits
 *     (n,2) = number of valid combinations
@@ -218,6 +221,7 @@ c      logical edc_readout_x
       
 		real*4 edc2space_points(edc2max_space_points,2)         
       real*4 edc2beststub(edc2max_space_points,enum_fpray_param)             
+		integer*4 edc2_besttrk(edc1max_space_points)         
       real*4 edc2_sing_drifttime(emax_num_dc1_layers)    
       real*4 edc2_sing_driftdis(emax_num_dc1_layers)     
 
@@ -234,6 +238,7 @@ c      logical edc_readout_x
      &     edc1nspace_points,
      &     edc1nspace_points_tot,
      &	  starttime,
+     &	  starttime2,
      &     edc1beststub,
      &     edc1ncham_hits,
      &     edc1track_fit_num,
@@ -262,6 +267,7 @@ c      logical edc_readout_x
      &     edc2_i_have_hit,
      &     edc2space_points,
      &     edc2space_point_hits,
+     &     edc2_besttrk,
      &     edc2nspace_points,
      &     edc2nspace_points_tot,
      &     edc2beststub,
@@ -341,7 +347,10 @@ c      logical edc_readout_x
       integer*4 esingle_stub         
 * switch for alternate L/R determ. of Y,Yprime layers
       integer*4 esmallAngleApprox    
-      integer*4 eluno                
+      integer*4 eluno
+* Include EDC2 or not
+      integer*4 edc1trackingflag                
+      integer*4 edc2flag                
 * logical unit number for debugging output
 
       common/HES_TRACKFLAGS/
@@ -358,7 +367,9 @@ c      logical edc_readout_x
      &     edebugprintdecodeddc1,
      &     edebugdumptof,
      &     esingle_stub,
-     &     esmallAngleApprox
+     &     esmallAngleApprox,
+     &     edc1trackingflag,
+     &     edc2flag
 
 *----------------------------------------------------------------------
 * DRIFT CHAMBER EFFICIENCY MEASUREMENTS.
@@ -439,7 +450,7 @@ c      logical edc_readout_x
 
 
 *----------------------------------------------------------------------
-*     EDC fittng test in e_track_fit
+*     EDC fittng test in e_dc1_track_fit & e_dc2_track_fit
 *
 *     CTPTYPE=event
 *
@@ -451,17 +462,21 @@ c      logical edc_readout_x
 
       Integer*4 entracks_pre
       Integer*4 entrack_hits_pre(entracks_pre_max,entrackhits_pre_max+1)
+      Integer*4 edc2ntrack_hits_pre(entracks_pre_max,entrackhits_pre_max+1)
       Integer*4 enfree_pre(entracks_pre_max)
+      Integer*4 edc2nfree(entracks_pre_max)
 
 *     this is best chi2perdof_pre
       Integer*4 edc1bestchi2_pre_index(enum_fitting)
-      Integer*4 edc2bestchi2_pre_index(enum_fitting)
+      Integer*4 edc2bestchi2_index
 
       real*4 edc1_residual_pre(entracks_pre_max,emax_num_dc1_layers,enum_fitting)
       real*4 edc1_track_coord_pre(entracks_pre_max,emax_num_dc1_layers,enum_fitting)
       real*4 edc1_drift_time_pre(entracks_pre_max,emax_num_dc1_layers,enum_fitting)
       real*4 edc1_drift_dis_pre(entracks_pre_max,emax_num_dc1_layers,enum_fitting)
+      real*4 edc1_wire_center_pre(entracks_pre_max,emax_num_dc1_layers,enum_fitting)
       real*4 edc1_z(entracks_pre_max,emax_num_dc1_layers)
+      real*4 edc1_spos(entracks_pre_max,emax_num_dc1_layers)
       real*4 edc2_residual_pre(entracks_pre_max,emax_num_dc2_layers)
       real*4 edc2_track_coord_pre(entracks_pre_max,emax_num_dc2_layers)
       real*4 edc2_drift_dis_pre(entracks_pre_max,emax_num_dc2_layers)
@@ -469,9 +484,13 @@ c      logical edc_readout_x
       real*4 edc1chi2_pre(entracks_pre_max,enum_fitting)
       real*4 edc1chi2perdof_pre(entracks_pre_max,enum_fitting)
       real*4 edc1bestchi2_pre(enum_fitting)
-      real*4 edc2chi2_pre(entracks_pre_max)
-      real*4 edc2chi2perdof_pre(entracks_pre_max)
-      real*4 edc2bestchi2_pre(enum_fitting)
+      real*4 edc2chi2(entracks_pre_max)
+      real*4 edc2chi2perdof(entracks_pre_max)
+      real*4 edc2bestchi2
+      real*4 ex_fp_pre(entracks_pre_max)
+      real*4 ey_fp_pre(entracks_pre_max)
+      real*4 exp_fp_pre(entracks_pre_max)
+      real*4 eyp_fp_pre(entracks_pre_max)
       real*4 ex_fp_pre1(entracks_pre_max,enum_fitting)
       real*4 ey_fp_pre1(entracks_pre_max,enum_fitting)
       real*4 exp_fp_pre1(entracks_pre_max,enum_fitting)
@@ -500,23 +519,30 @@ c      logical edc_readout_x
       common/HES_FITTING_TEST/
      &     entracks_pre,
      &     entrack_hits_pre,
+     &     edc2ntrack_hits_pre,
      &     enfree_pre,
      &     edc1bestchi2_pre_index,
      &     edc1bestchi2_pre,
-     &     edc2bestchi2_pre_index,
-     &     edc2bestchi2_pre,
+     &     edc2bestchi2_index,
+     &     edc2bestchi2,
      &     edc1_residual_pre,
      &     edc1_track_coord_pre,
      &  	  edc1_drift_time_pre,
      &     edc1_drift_dis_pre,
+     &     edc1_wire_center_pre,
      &     edc1_z,
+     &     edc1_spos,
      &     edc2_residual_pre,
      &     edc2_track_coord_pre,
      &     edc2_drift_dis_pre,
      &     edc1chi2_pre,
      &     edc1chi2perdof_pre,
-     &     edc2chi2_pre,
-     &     edc2chi2perdof_pre,
+     &     edc2chi2,
+     &     edc2chi2perdof,
+     &     ex_fp_pre,
+     &     ey_fp_pre,
+     &     exp_fp_pre,
+     &     eyp_fp_pre,
      &     ex_fp_pre1,
      &     ey_fp_pre1,
      &     exp_fp_pre1,
@@ -563,12 +589,20 @@ c      logical edc_readout_x
 *     closer track check in e_select_good_tracks.f
 *     CTPTYPE=parm
 
+      REAL*4  dex_fp                        
+      REAL*4  dey_fp                              
+      REAL*4  dexp_fp                          
+      REAL*4  deyp_fp                            
       Real*4  HES_DX_MIN 
       Real*4  HES_DY_MIN 
       Real*4  HES_DXP_MIN 
       Real*4  HES_DYP_MIN 
 
       Common/hes_good_tracks/
+     &   dex_fp,
+     &   dey_fp,
+     &   dexp_fp,
+     &   deyp_fp,
      &   HES_DX_MIN,
      &   HES_DY_MIN,
      &   HES_DXP_MIN,

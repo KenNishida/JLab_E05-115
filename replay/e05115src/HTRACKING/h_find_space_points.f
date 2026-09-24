@@ -93,17 +93,42 @@
             plane1=plane_number(ipair1)
             plane2=plane_number(ipair2)
             determinate=xsp(plane1)*ysp(plane2)-ysp(plane1)*xsp(plane2)
+c            determinate=-xsp(plane1)*ysp(plane2)+ysp(plane1)*xsp(plane2)
             if(abs(determinate) .gt. 0.3 ) then !0.3 is sin(alpha1-alpha2)=sin(17.5)
               ntest_points=ntest_points+1
               pair(ntest_points,1)=hit_number(ipair1)
               pair(ntest_points,2)=hit_number(ipair2)
+c              test_points(ntest_points,1)= 
+c     &             (wire_center(ipair2)*ysp(plane1)-wire_center(ipair1)
+c     $             *ysp(plane2))/ determinate
+c              test_points(ntest_points,2)= 
+c     &             (wire_center(ipair2)*xsp(plane1)-wire_center(ipair1)
+c     $             *xsp(plane2))/ determinate
               test_points(ntest_points,1)= 
      &             (wire_center(ipair1)*ysp(plane2)-wire_center(ipair2)
      $             *ysp(plane1))/ determinate
               test_points(ntest_points,2)= 
      &             (wire_center(ipair2)*xsp(plane1)-wire_center(ipair1)
      $             *xsp(plane2))/ determinate
-            endif                       ! end if for indeterminate planes
+c     ================================
+c     output to file for check testpoint
+c     ================================
+cc     Open file 
+c              if(ntest_points .eq. 1)then
+c                 open(23,file='spfile_np.dat',status='replace')
+c              else
+c                 open(23,file='spfile_np.dat',access='append')
+c              endif
+cc     Write to file
+c              write(23,*)ntest_points
+c              write(23,*)plane1,plane2
+c              write(23,*)wire_center(ipair1),wire_center(ipair2)
+c              write(23,*)test_points(ntest_points,1),
+c     &             test_points(ntest_points,2)
+c              close(23)
+c     ================================
+              
+           endif                ! end if for indeterminate planes
           endif                         ! end test on too many pairs 
         enddo                           ! end loop over pair2
       enddo                             ! end loop over pair1

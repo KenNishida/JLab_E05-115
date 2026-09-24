@@ -74,6 +74,18 @@
       include 'gen_f1tdc.cmn'
       include 'gen_rocid.cmn'
       integer*4 counter_hits(HNUM_WAT_LAYERS,HNUM_WAT_COUNTERS)
+*calculate normalized kaon NPE in this run
+      INTEGER start_time
+      real*4 k_gain(HNUM_WAT_LAYERS,HNUM_WAT_COUNTERS)
+      real*4 k_sigma(HNUM_WAT_LAYERS,HNUM_WAT_COUNTERS)
+
+      start_time = gen_run_UTC_start - 1250989200  !using this value, "beam start time" 8/23 1:00(GMT) equals zero
+      Do la=1,HNUM_WAT_LAYERS
+         Do co=1,HNUM_WAT_COUNTERS
+           k_gain(la,co)=hwat_k_gain_par1(la,co) + start_time * hwat_k_gain_par2(la,co)
+           k_sigma(la,co)=hwat_k_sigma_par1(la,co) + start_time * hwat_k_sigma_par2(la,co)
+          EndDo
+      EndDo
 
 *
 *--------------------------------------------------------
@@ -98,6 +110,7 @@
       EndDo
 
        num=0
+
        Do i=1,hwat_raw_tot_hits
           ttime=g_f1_trigger_time(LR_VME_ROCID)
           f1time=g_f1_refer_time(LR_VME_ROCID,1,1)
@@ -142,7 +155,7 @@ c     &              hwat_rawadc_neg(i)
       endif                   ! good trigger signal
 
 
-c      write(*,*) 'gen_event_id_number',gen_event_id_number ! matsu
+
       do ind = 1,HWAT_RAW_TOT_HITS
          la = hwat_raw_layer_num(ind)
          co = hwat_raw_counter_num(ind)
@@ -154,7 +167,6 @@ c     >        la,co,tdcpos,tdcneg,adcpos,adcneg ! matsu
 C     Calculate Npe no matter what!
          npepos = (adcpos-hwat_pos_ped_mean(la,co))/hwat_pos_gain(la,co)
          npeneg = (adcneg-hwat_neg_ped_mean(la,co))/hwat_neg_gain(la,co)
-
          hwat_raw_layer_hits(la) = hwat_raw_layer_hits(la) + 1
 
          if(counter_hits(la,co).eq.0)then
@@ -167,8 +179,8 @@ C     Calculate Npe no matter what!
             hwat_pos_npe(gh) = 0.
             hwat_neg_npe(gh) = 0.
             hwat_npe_sum(gh) = 0.
+            hwat_npe_sum_k_ratio(gh) = 0.
             hwat_pos_time(gh) = -1
-            hwat_layer_hits(la) = hwat_layer_hits(la) + 1
          endif
          
 C     ADCs have been evaluated. Now check for valid TDC hits. 
@@ -182,13 +194,20 @@ C     ADCs have been evaluated. Now check for valid TDC hits.
      &        tdcpos .lt. HWAT_TDC_POS_MAX) then
             hwat_pos_npe(counter_hits(la,co)) = npepos
             hwat_neg_npe(counter_hits(la,co)) = npeneg
-            hwat_npe_sum(counter_hits(la,co)) = 
-     &           hwat_npe_sum(counter_hits(la,co)) + npepos + npeneg
+            hwat_npe_sum(counter_hits(la,co)) = npepos + npeneg    ! chiba 2010/10/20
+*     &           hwat_npe_sum(counter_hits(la,co)) + npepos + npeneg
+*calculate normalized NPE
+            hwat_npe_sum_k_ratio(counter_hits(la,co)) = 
+     &           ((hwat_npe_sum(counter_hits(la,co)) / k_gain(la,co)) - 1.)*(0.2/k_sigma(la,co)) +1.
             hwat_pos_time(counter_hits(la,co)) = Real(tdcpos) 
             hwat_both_hits(counter_hits(la,co)) = 1
-         endif
+            hwat_layer_hits(la) = hwat_layer_hits(la) + 1
+       endif
       EndDo
+ 
 
+
+      
 *     fill the raw histogram as needed
       call h_fill_water_hist(abort,err)
       if (abort) then

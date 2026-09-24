@@ -9,5 +9,6 @@ float calcf2t(float* P, float xf, float xpf,
                  float yf, float ypf, int nMat);
 float calct2s(float* P, float xp, float yp, 
                  float mom, int nMat);
+double corRaster(float* P, double xt, double yt);
 
 #endif

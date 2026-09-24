@@ -78,6 +78,9 @@
       logical ABORT
       character*(*) err
 *     
+      INCLUDE 'hks_data_structures.cmn'
+      INCLUDE 'hks_tracking.cmn'
+      INCLUDE 'hes_data_structures.cmn'
       INCLUDE 'gen_data_structures.cmn'
       INCLUDE 'gen_event_info.cmn'
       INCLUDE 'gen_decode_common.cmn'
@@ -172,10 +175,14 @@
             err= why
          ENDIF
          ABORT= ABORT .or. FAIL
+         hks_event_counter(1)=hks_event_counter(1)+hnspace_points_tot
+         hks_event_counter(2)=hks_event_counter(2)+hntracks_fp
+         hks_event_counter(3)=hks_event_counter(3)+hnphysics
       ENDIF
       
 *     -HES reconstruction, 
       IF(
+     &     gen_event_type .eq. 1.or.  !test GOGAMI 28Dec2010
      &     gen_event_type .eq. 2.or. 
      &     gen_event_type .eq. 3.or.  
      &     gen_event_type .eq. 4  

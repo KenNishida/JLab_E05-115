@@ -30,11 +30,13 @@
 *
 *
       integer HMAX_Ntuple_size
-      parameter (HMAX_Ntuple_size= 60)
+      parameter (HMAX_Ntuple_size= 100)
       integer default_h_Ntuple_ID
       parameter (default_h_Ntuple_ID= 9020)
       integer default_h_dc_Ntuple_ID
       parameter (default_h_dc_Ntuple_ID= 9023)
+      integer default_h_track_Ntuple_ID
+      parameter (default_h_track_Ntuple_ID= 9021)
       integer default_h_scin_Ntuple_ID
       parameter (default_h_scin_Ntuple_ID= 9022)
       integer default_h_ch_Ntuple_ID
@@ -67,6 +69,15 @@
       character*132 h_dc_ntuple_directory
       character*256 h_dc_ntuple_file
       character*8 h_dc_ntuple_tag(HMAX_Ntuple_size)
+      
+      integer h_track_ntuple_ID
+      integer h_track_ntuple_size
+      integer h_track_ntuple_IOchannel
+      character*80 h_track_ntuple_name
+      character*80 h_track_ntuple_title
+      character*132 h_track_ntuple_directory
+      character*256 h_track_ntuple_file
+      character*8 h_track_ntuple_tag(HMAX_Ntuple_size)
 
       integer h_scin_ntuple_ID
       integer h_scin_ntuple_size
@@ -124,6 +135,7 @@
 
       logical h_Ntuple_exists
       logical h_dc_Ntuple_exists
+      logical h_track_Ntuple_exists
       logical h_scin_Ntuple_exists
       logical h_ch_Ntuple_exists
       logical h_wat_Ntuple_exists
@@ -135,6 +147,7 @@
 *
       real h_Ntuple_contents(HMAX_Ntuple_size)
       real h_dc_Ntuple_contents(HMAX_Ntuple_size)
+      real h_track_Ntuple_contents(HMAX_Ntuple_size)
       real h_scin_Ntuple_contents(HMAX_Ntuple_size)
       real h_ch_Ntuple_contents(HMAX_Ntuple_size)
       real h_wat_Ntuple_contents(HMAX_Ntuple_size)
@@ -154,6 +167,11 @@
      &                    h_dc_ntuple_name,h_dc_ntuple_title,
      &                    h_dc_ntuple_directory,h_dc_ntuple_file,
      &                    h_dc_ntuple_tag,h_dc_ntuple_contents,
+     &                    h_track_ntuple_ID,
+     &                    h_track_ntuple_size,h_track_ntuple_IOchannel,
+     &                    h_track_ntuple_name,h_track_ntuple_title,
+     &                    h_track_ntuple_directory,h_track_ntuple_file,
+     &                    h_track_ntuple_tag,h_track_ntuple_contents,
      &                    h_scin_ntuple_ID,
      &                    h_scin_ntuple_size,h_scin_ntuple_IOchannel,
      &                    h_scin_ntuple_name,h_scin_ntuple_title,
@@ -186,6 +204,7 @@
      &                    h_pid_ntuple_tag,h_pid_ntuple_contents,
      &                    h_Ntuple_exists,
      &                    h_dc_Ntuple_exists,
+     &                    h_track_Ntuple_exists,
      &                    h_scin_Ntuple_exists,
      &                    h_ch_Ntuple_exists,
      &                    h_wat_Ntuple_exists,

@@ -24,7 +24,7 @@
       parameter (default_name= 'HESTRACKntuple')
       integer default_bank,default_recL
       parameter (default_bank= 8000)    !4 bytes/word
-      parameter (default_recL= 1024)    !record length
+      parameter (default_recL= 4096)    !record length
       character*80 title
       character*80 directory,name
       character*256 file
@@ -182,6 +182,26 @@ c      INCLUDE 'e_ntuple.dte'
        e_track_ntuple_tag(m)= 'dtime9'    ! 10
        m= m+1
        e_track_ntuple_tag(m)= 'dtime10'    ! 10
+       m= m+1
+       e_track_ntuple_tag(m)= 'wc1'    ! 10
+       m= m+1
+       e_track_ntuple_tag(m)= 'wc2'    ! 10
+       m= m+1
+       e_track_ntuple_tag(m)= 'wc3'    ! 10
+       m= m+1
+       e_track_ntuple_tag(m)= 'wc4'    ! 10
+       m= m+1
+       e_track_ntuple_tag(m)= 'wc5'    ! 10
+       m= m+1
+       e_track_ntuple_tag(m)= 'wc6'    ! 10
+       m= m+1
+       e_track_ntuple_tag(m)= 'wc7'    ! 10
+       m= m+1
+       e_track_ntuple_tag(m)= 'wc8'    ! 10
+       m= m+1
+       e_track_ntuple_tag(m)= 'wc9'    ! 10
+       m= m+1
+       e_track_ntuple_tag(m)= 'wc10'    ! 10
        m= m+1
        e_track_ntuple_tag(m)= 'z1'    ! 10
        m= m+1

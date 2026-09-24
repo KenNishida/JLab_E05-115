@@ -6,17 +6,19 @@
 *      Created:     Y.Sato         3 Nov 1999
 *
 * $Log: hes_bypass_swiches.cmn,v $
+*
+* Revision 1.1.1.2  2011/02/03 10:55:00  Gogami
 * Revision 1.1.1.1  2009/06/23 13:55:43  kawama
 *
 * e05115 src repository for software development
 *
-* Revision 1.1.1.1  2005/05/14 21:44:37  miyoshi
+* Revision 1.6  2005/05/14 21:44:37  miyoshi
 *
 *
-* Revision 1.2  2005/02/11 23:01:13  sumihama
+* Revision 1.5  2005/02/11 23:01:13  sumihama
 * Mod. e-ntuple, Mod. etracking
 *
-* Revision 1.1.1.1  2004/08/30 21:21:38  miyoshi
+* Revision 1.4  2004/08/30 21:21:38  miyoshi
 * new dir
 *
 * Revision 1.3 2004/03/03 Miyoshi
@@ -45,8 +47,11 @@
       integer*4 ebypass_track_eff
       integer*4 ebypass_scin_eff
       integer e_debugnt(10)
+      integer*4 edc_hitinfo_flag
+      integer*4 edc_hitinfo_flag2
 
 *
+*    edc_hitinfo_flag added by Gogami
       common/hes_bypass_switches/
      &     ebypass_trans_scin,
      &     ebypass_track,
@@ -58,4 +63,7 @@
      &     ebypass_dc2_layer_eff,
      &     ebypass_track_eff,
      &     ebypass_scin_eff,
-     &     e_debugnt
+     &     e_debugnt,
+     &     edc_hitinfo_flag,
+     &     edc_hitinfo_flag2
+      

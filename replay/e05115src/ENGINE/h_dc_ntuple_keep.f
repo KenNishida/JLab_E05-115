@@ -55,8 +55,16 @@
                m= m+1
                h_dc_ntuple_contents(m)= hdc_raw_wire_num(i) ! 5 
                m= m+1
-               h_dc_ntuple_contents(m)= hdc_raw_tdc(i) ! 6 
-         
+               h_dc_ntuple_contents(m)= hdc_drift_time(i) ! 6 
+               m= m+1
+               h_dc_ntuple_contents(m)= hdc_drift_dis(i) ! 7 
+               m= m+1
+               h_dc_ntuple_contents(m)= hdc_wire_center(i) ! 8 
+               m= m+1
+               h_dc_ntuple_contents(m)= hdc_wire_coord(i) ! 9 
+               m= m+1
+               h_dc_ntuple_contents(m)= hdc_tdc(i) ! 10
+               
 *     Experiment dependent entries start here.
 *     Fill ntuple for this event
                ABORT= .NOT.HEXIST(h_dc_ntuple_ID)

@@ -129,13 +129,14 @@ c     endif                  ! end test on ebypass_trackeff
 *     note : existing SOS/HMS code is not adopted for
 *     multi-track analysis in default.
 *     
-      if(ebypass_good_tracks.eq. 0) then
-         call E_SELECT_GOOD_TRACKS(ABORT,err)
-         if(ABORT) then
-            call G_add_path(here,err)
-            return
-         endif                  ! end test on E_SELECT_GOOD_TRACKS ABORT
-      endif                     ! end test on ebypass_good_tracks
+
+c      if(ebypass_good_tracks.eq. 0) then
+c         call E_SELECT_GOOD_TRACKS(ABORT,err)
+c         if(ABORT) then
+c            call G_add_path(here,err)
+c            return
+c         endif                  ! end test on E_SELECT_GOOD_TRACKS ABORT
+c      endif                     ! end test on ebypass_good_tracks
       
 *     
 *     Project tracks back to target

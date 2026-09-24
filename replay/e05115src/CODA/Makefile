@@ -6,8 +6,8 @@ LIB= libcoda.a
 GCC=/usr/bin/gcc
 
 .c.o:
-#	$(GCC) -c $< -o $@
-	$(GCC) -m32 -c $< -o $@
+	$(GCC) -c $< -o $@
+#	$(GCC) -m32 -c $< -o $@
 
 none: $(LIB)
 

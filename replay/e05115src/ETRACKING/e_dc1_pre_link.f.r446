@@ -1,0 +1,397 @@
+      subroutine e_dc1_pre_link
+*
+* "pre_link" to find a correct hit in EHODO and get starttime by MIZUKI, 
+*
+
+      implicit none
+      save
+      INCLUDE 'hes_data_structures.cmn'
+      INCLUDE 'hes_tracking.cmn'
+      INCLUDE 'hes_geometry.cmn'
+      INCLUDE 'hes_scin_parms.cmn'
+      INCLUDE 'gen_event_info.cmn'
+      INCLUDE 'gen_constants.par'
+      INCLUDE 'hes_statistics.cmn'
+
+*For linefit_2d.cmn
+      integer MAX_STFIT_PT_2D
+      parameter (MAX_STFIT_PT_2D=10)
+      integer fnpos_2d
+      real    fxpos_2d(MAX_STFIT_PT_2D),
+     &        fzpos_2d(MAX_STFIT_PT_2D)
+      integer faxis_2d(MAX_STFIT_PT_2D)
+      real    ferr_2d(MAX_STFIT_PT_2D)
+      real    chi2_2d
+      integer dof_2d
+      common/linefit/fnpos_2d,fxpos_2d,fzpos_2d,faxis_2d,ferr_2d,chi2_2d,dof_2d
+      real A(10,11),DET
+      common/gaujor/A,DET
+* Local
+      real a1, b1
+      integer*4 isp, ihit, la, co, j,hits, pl, tco, num
+      integer*4 gh, new_hits(edc1max_space_points,edc1max_hits_per_point+2)
+      real*4 wc, xposi_at_hodo(edc1max_hits_per_point)
+      real*4 x_la,x_min,x_max, stime
+      Integer*4 goodtrack, test1(2),test2(2)
+      real*4 aa1,aa2,aa3
+      real*4 dx,dx_min
+      real*4 slope
+      real*4 estart_time,estart_time2
+
+      if(edc1nspace_points_tot .le. 0) Return
+      estart_time = -1000.
+      estart_time2 = -1000.
+      tco = 0
+
+      do isp = 1, edc1nspace_points_tot 
+
+         if(escin_tot_hits.le.0) then
+            estart_time = -1000.
+            estart_time2 = -1000.
+            goto 200
+         endif
+
+         estart_time=0
+         estart_time2=0
+         starttime(isp)=0
+c         goto 200
+
+         fnpos_2d = 0 
+         starttime(isp) = -1000
+         goodtrack=0
+
+         do ihit = 1, edc1space_point_hits(isp,1)
+            hits = edc1space_point_hits(isp,2+ihit)
+            pl   = EDC1_LAYER_NUM(hits)
+            wc   = EDC1_WIRE_CENTER(hits)
+* Use X plane only  
+            if(pl.eq.1.or.pl.eq.2.or.pl.eq.5.or.pl.eq.6.or.pl.eq.9.or.pl.eq.10) then
+               fnpos_2d = fnpos_2d + 1
+               fxpos_2d(fnpos_2d) = wc
+               fzpos_2d(fnpos_2d) = edc1_zpos(pl)
+               ferr_2d(fnpos_2d)  = 1.0
+            endif
+         enddo
+         
+         if(fnpos_2d.ge.3) then
+            call linefit2
+*  z -> -z
+            !a1 = -A(1,3)
+            a1 = A(1,3)
+            b1 = A(2,3)
+            slope=sqrt(1+a1*a1)
+
+            num   = 0
+            stime = 0
+            if (fnpos_2d.ge.5) then
+               escineff_good_trig(3,1)=escineff_good_trig(3,1)+1
+               goodtrack=1
+               Do la=1,2
+                  x_la=a1*escin_zpos(la)+b1
+                  Do co=1,29
+                     x_min=escin_xcenter(la,co)-0.5*escin_width-2*escin_xslop
+                     x_max=escin_xcenter(la,co)+0.5*escin_width+2*escin_xslop
+c                     x_min = escin_xcenter(la,co) -1.5*escin_width
+c                     x_max = escin_xcenter(la,co) +1.5*escin_width
+                     if(x_la .ge. x_min .and. x_la .le. x_max) then
+                          escineff_good_trig(la,co) =
+     &                      escineff_good_trig(la,co)+1
+                     endif
+                  enddo
+               enddo
+            endif
+            dx_min=10000
+            Do j = 1, escin_tot_hits
+               
+               la = escin_layer_num(j)
+               if(la.eq.3) goto 100
+               co = escin_counter_num(j)
+               
+               x_la = a1 *escin_zpos(la) + b1
+c               x_min = escin_xcenter(la,co) - 1.0*escin_width
+c               x_max = escin_xcenter(la,co) + 1.0*escin_width
+               x_min = escin_xcenter(la,co)-0.5*escin_width-escin_xslop*3
+               x_max = escin_xcenter(la,co)+0.5*escin_width+escin_xslop*3
+c               write(*,*) "x_la,x_min,x_max",x_la,x_min,x_max 
+               if( la.eq.1 .and.
+     &             x_la .ge. x_min .and. x_la .le. x_max ) then
+                  dx=abs(x_la-escin_xcenter(la,co))
+c                  write(*,*) "id,isp,j,dx,dx_min,mtime",
+c     &             gen_event_ID_number,isp,j,dx,dx_min,escin_mean_time(j)
+                  if ( num.eq.0 .or. dx.le.dx_min) then
+c                  write(*,*) "dx,mtime",dx,escin_mean_time(j)
+                     dx_min=dx
+                     stime = escin_mean_time(j)
+                     tco = escin_counter_num(j)
+c                     print *, "stime,la,co",stime,la,tco
+                  endif
+                  num = num + 1 
+c                  stime = stime + escin_mean_time(j)
+c                  tco = escin_counter_num(j)
+                  if(goodtrack.eq.1) then
+                       escineff_did_trig(la,co)=escineff_did_trig(la,co)+1
+                  endif
+               endif
+ 100           continue
+            Enddo
+           
+c            write(*,*) "num",num
+            if(num.gt.0) then
+c               estart_time = stime/num
+c               estart_time = stime-escin_zpos(1)*slope/speed_of_light+1.55
+               estart_time = stime-escin_zpos(1)*slope/speed_of_light
+               estart_time2 = stime-(escin_zpos(1)-edc2_zpos(3))*slope/speed_of_light
+               starttime(isp) = estart_time
+               starttime2(isp) = estart_time2
+            else
+               starttime(isp) = -1000.
+               starttime2(isp) = -1000.
+               estart_time = -1000.
+               estart_time2 = -1000.
+            endif
+         else
+            write(*,*) 'Less than 4'
+            starttime(isp) = -1000.
+            starttime2(isp) = -1000.
+            estart_time = -1000.
+            estart_time2 = -1000.
+            a1 = -1000
+            b1 = -1000
+         endif
+         
+ 200     continue
+      Enddo
+ 
+* Remove trackes w/o a hit in EHODO from track candidate     
+      gh  = 0 
+      do isp=1,edc1nspace_points_tot
+         if(starttime(isp).gt.-1000) then
+            gh = gh + 1 
+            starttime(gh)=starttime(isp) ! Seva's correction DK
+            do ihit = 1, edc1space_point_hits(isp,1)+2
+               new_hits(gh,ihit) = edc1space_point_hits(isp,ihit)
+            enddo
+         endif
+      enddo
+
+      edc1nspace_points_tot = gh
+      
+      if(gh.gt.0) then
+         do isp=1,edc1nspace_points_tot
+            do ihit=1,new_hits(isp,1)+2
+               edc1space_point_hits(isp,ihit) = new_hits(isp,ihit)
+            enddo               ! edc1space_point_hits(isp,1) loop
+         EndDo                  ! enspace_point_tot loop
+      endif
+      
+      
+      Do la=1,2
+         Do co=1,29
+            if( escineff_good_trig(la,co).gt.1 ) then
+               escin_layer_eff(la,co)=
+     >              real(escineff_did_trig(la,co))/real(escineff_good_trig(la,co))
+               if(escineff_did_trig(la,co) .gt. 0) then
+                  aa1=1.0/sqrt(real(escineff_did_trig(la,co)))
+               Else
+                  aa1=0.0
+               EndIf
+               aa2=1.0/sqrt(real(escineff_good_trig(la,co)))
+               aa3=sqrt(aa1*aa1+aa2*aa2)
+               escin_layer_eff_err(la,co) = escin_layer_eff(la,co) * aa3
+               if(gen_event_id_number.ge.10000) then
+c                  write(*,*) la, co,escineff_did_trig(la,co),
+c     >                 escineff_good_trig(la,co),escin_layer_eff(la,co),
+c     >                 escin_layer_eff_err(la,co)
+               endif
+            endif
+         enddo
+      enddo
+      do la=1,2
+         test1(la)=0
+         test2(la)=0
+      enddo
+      Do la=1,2
+         Do co=1,29
+            test1(la)=test1(la)+escineff_did_trig(la,co)
+            test2(la)=test2(la)+escineff_good_trig(la,co)
+         enddo
+      enddo
+      do la=1,2
+         test2(la)=escineff_good_trig(3,1)
+         escin_layer_eff(3,la)=
+     >        real(test1(la))/real(test2(la))
+         if(test1(la) .gt. 0) then
+            aa1=1.0/sqrt(real(test1(la)))
+         Else
+            aa1=0.0
+         EndIf
+         aa2=1.0/sqrt(real(test2(la)))
+         aa3=sqrt(aa1*aa1+aa2*aa2)
+         escin_layer_eff_err(3,la) = escin_layer_eff(3,la) * aa3
+c         write(*,*) 'layer=',la,'sum',test1(la),test2(la),
+c     >        escin_layer_eff(3,la),escin_layer_eff_err(3,la)
+      enddo
+
+      END
+
+**************************************************************
+      SUBROUTINE LINEFIT2
+**************************************************************
+
+      implicit none
+
+* Local
+      integer i,j,k
+      integer imbr
+      real    sumx_x, sumz_x, sumz2_x, sumxz_x, sum1_x
+      real    err2
+
+* For LInefit2
+      integer MAX_STFIT_PT_2D
+      parameter (MAX_STFIT_PT_2D=10)
+      integer fnpos_2d
+      real    fxpos_2d(MAX_STFIT_PT_2D),
+     &        fzpos_2d(MAX_STFIT_PT_2D)
+      integer faxis_2d(MAX_STFIT_PT_2D)
+      real    ferr_2d(MAX_STFIT_PT_2D)
+      real    chi2_2d
+      integer dof_2d
+
+      common/linefit/fnpos_2d,fxpos_2d,fzpos_2d,faxis_2d,ferr_2d,chi2_2d,dof_2d
+      real A(10,11),DET
+      common/gaujor/A,DET
+
+
+      SAVE
+
+        sumx_x  = 0.
+        sumz_x  = 0.
+        sumz2_x = 0.
+        sumxz_x = 0.
+        sum1_x  = 0.
+
+      do imbr = 1, fnpos_2d
+        err2 = ferr_2d(imbr) * ferr_2d(imbr)
+        sumx_x  = sumx_x  + fxpos_2d(imbr) / err2
+        sumz_x  = sumz_x  + fzpos_2d(imbr) / err2
+        sumz2_x = sumz2_x + fzpos_2d(imbr) * fzpos_2d(imbr) / err2
+        sumxz_x = sumxz_x + fxpos_2d(imbr) * fzpos_2d(imbr) / err2
+        sum1_x  = sum1_x  + 1. / err2
+      enddo
+      dof_2d = fnpos_2d - 2
+
+      A(1,1) = sumz2_x 
+      A(1,2) = sumz_x  
+      A(1,3) = sumxz_x 
+      A(2,1) = sumz_x  
+      A(2,2) = sum1_x  
+      A(2,3) = sumx_x  
+
+      call gauss_jordan(2) 
+      if(DET.eq.0.) then
+        chi2_2d = 9999999.
+        return
+      endif
+
+      chi2_2d = 0.
+      do imbr = 1, fnpos_2d
+        err2 = ferr_2d(imbr) * ferr_2d(imbr)
+        chi2_2d = chi2_2d + 
+     &       ((fxpos_2d(imbr) - (A(1,3)*fzpos_2d(imbr)+A(2,3)))**2)
+     &        / err2
+      enddo
+
+      if(fnpos_2d.gt.2) then
+        chi2_2d = chi2_2d/dof_2d
+      else
+        chi2_2d = 9999999.
+      endif
+
+      return
+      end
+
+**************************************************************
+      SUBROUTINE gauss_jordan(N)
+**************************************************************
+
+      IMPLICIT NONE
+     
+      real A(10,11),DET
+      common/gaujor/A,DET
+
+      integer N
+      integer i,j,k,l
+      real pivot, Aik
+      real M(100), IW, W
+
+      SAVE
+
+C.. Gauss-Jordan Method
+      do i = 1,N
+        M(i) = i
+      enddo
+      DET = 1.
+      do k = 1,N
+        pivot = 0.
+        do j = k,N
+          if(abs(pivot).lt.abs(A(k,j))) then
+            l = j
+            pivot = A(k,j)
+          endif
+        enddo
+        if(pivot.eq.0.) then
+ 1        FORMAT(' MATRIX IS SINGULAR RANK = ', I5)
+          DET = 0.
+          return
+        else
+          if(l.ne.k) then
+            IW = M(k)
+            M(k) = M(l)
+            M(l) = IW
+            do i = 1,N
+              W = A(i,k)
+              A(i,k) = A(i,l)
+              A(i,l) = W
+            enddo
+          endif
+          A(k,k) = 1
+          DET = DET * pivot
+          do j = 1,N+1
+            A(k,j) = A(k,j)/pivot
+          enddo
+          do i = 1,N
+            if(i.ne.k) then
+              Aik = A(i,k)
+              A(i,k) = 0.
+              do j = 1,N+1
+                A(i,j) = A(i,j) - Aik * A(k,j)
+              enddo
+            endif
+          enddo
+        endif
+      enddo
+
+      do i = 1,N-1
+ 100    k = M(i)
+        if(k.ne.i) then
+          IW = M(k)
+          M(k) = M(i)
+          M(i) = IW
+          do j = 1,N+1
+            W = A(k,j)
+            A(k,j) = A(i,j)
+            A(i,j) = W
+          enddo
+          DET = -DET
+          goto 100
+        endif
+      enddo
+
+      return
+      end
+
+**************************************************************
+
+
+
+

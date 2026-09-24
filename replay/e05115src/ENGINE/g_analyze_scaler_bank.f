@@ -43,7 +43,9 @@
 
       integer evtype, evnum, evlen, pointer
       integer scalid, countinmod, address, counter
-      integer ROCoffset(3)/0, 1024, 2048/
+      integer roc
+*      integer ROCoffset(3)/0, 1024, 2048/
+      integer ROCoffset(3)/0, 0, 1024/
 *     
 *     Temporary variables for beam current and charge calculations
 *     
@@ -53,16 +55,17 @@
 *     
 *     Find if hnss or sos scaler event (assumes first HNSS scaler is DA01).
 *     write(6,'("Scaler event: event(3)=",9z)') event(3)
-      if (jieor(jiand(jishft(event(3),-16),'FFFF'X),'0010'X).eq.0) then
+      roc = iand(ishft(event(2),-16),INT(Z'1F'))
+      if (roc.eq.20) then
         cratenum=3              !LeCroy - TS Crate
-      else if (jieor(jiand(jishft(event(3),-16),'FFFF'X),'0140'X).eq.0) then
+      else if (roc.eq.14) then
         cratenum=2              ! VMEC14
       else
         cratenum=1              ! VMEC13 
       endif
 *     
       evtype = jishft(event(2),-16)
-      evnum = jiand(event(2),X'FF') ! last 2 bytes give event number (mod 256)
+      evnum = jiand(event(2),INT(Z'FF')) ! last 2 bytes give event number (mod 256)
 *     
       gscal_lastevnum(cratenum)=evnum
 *     
@@ -77,8 +80,8 @@
 *     
         do while(pointer.lt.evlen)
 *     
-          scalid = jiand(jishft(event(pointer),-16),X'FF')
-          countinmod = jiand(event(pointer),X'FFFF')
+          scalid = jiand(jishft(event(pointer),-16),INT(Z'FF'))
+          countinmod = jiand(event(pointer),INT(Z'FFFF'))
           
 *          Get starting address from header
 
@@ -186,11 +189,24 @@ c     &       (gscaler_change(gbcm1_index)/delta_time)-gbcm1_offset))
         ave_current_bcm2 = gbcm2_gain*((gscaler_change(gbcm2_index)
      &       /delta_time) - gbcm2_offset)
 
-        if (delta_time.gt.0.0001) then
-          gbcm1_charge = gbcm1_charge + ave_current_bcm1*delta_time
-          gbcm2_charge = gbcm2_charge + ave_current_bcm2*delta_time
-          gbcm3_charge = gbcm3_charge + ave_current_bcm3*delta_time
-          gunser_charge = gunser_charge + ave_current_unser*delta_time
+        if (delta_time.gt.0.0001 .and. delta_time.lt.3.) then
+           if(ave_current_bcm1.ge.0.0) then
+              gbcm1_charge = gbcm1_charge + ave_current_bcm1*delta_time
+           endif
+           if(ave_current_bcm2.ge.0.0) then
+              gbcm2_charge = gbcm2_charge + ave_current_bcm2*delta_time
+           endif
+           if(ave_current_bcm3.ge.0.0) then
+              gbcm3_charge = gbcm3_charge + ave_current_bcm3*delta_time
+           endif
+           if(ave_current_unser.ge.0.0) then
+              gunser_charge = gunser_charge + ave_current_unser*delta_time
+           endif
+c           if(ave_current_bcm1.ge.0.0 .and. ave_current_bcm2.ge.0.0) then
+c              gbcm_mean_charge = gbcm_mean_charge 
+c     &             + (ave_current_bcm1+ave_current_bcm2)/2.*delta_time
+c           endif
+           gbcm_mean_charge = (gbcm1_charge+gbcm2_charge)/2.
 
 *     
 *     Check for the "beam on" condition, and update "beam on" variables if needed.
@@ -210,12 +226,18 @@ c     &       (gscaler_change(gbcm1_index)/delta_time)-gbcm1_offset))
 *     Write out pertinent charge scaler rates for each scaler event.
 
           if (g_charge_scaler_filename.ne.' ') then
-            write(G_LUN_CHARGE_SCALER,1001) gscaler_event_num, !scaler event num
-     &           gscaler_change(gunser_index)/delta_time, !scaler rate(Hz)
-     &           gscaler_change(gbcm1_index)/delta_time, !scaler rate(Hz)
-     &           gscaler_change(gbcm2_index)/delta_time, !scaler rate(Hz)
-     &           gscaler_change(gbcm3_index)/delta_time, !scaler rate(Hz)
-     &           delta_time     !time since last scaler event (sec)
+            write(G_LUN_CHARGE_SCALER,1001) 
+     &            gscaler_event_num, !scaler event num
+     &            g_beam_on_run_time,
+     &            gunser_charge,
+     &            gbcm1_charge,
+     &            gbcm2_charge,
+     &            gbcm_mean_charge
+c     &           gscaler_change(gunser_index)/delta_time, !scaler rate(Hz)
+c     &           gscaler_change(gbcm1_index)/delta_time, !scaler rate(Hz)
+c     &           gscaler_change(gbcm2_index)/delta_time, !scaler rate(Hz)
+c     &           gscaler_change(gbcm3_index)/delta_time, !scaler rate(Hz)
+c     &           delta_time     !time since last scaler event (sec)
           endif
           
         endif
@@ -224,7 +246,7 @@ c     &       (gscaler_change(gbcm1_index)/delta_time)-gbcm1_offset))
 
 
 *     
- 1001 format(i6,4f13.2,f12.6)
+ 1001 format(i6,5f13.3)
 
       return
       end

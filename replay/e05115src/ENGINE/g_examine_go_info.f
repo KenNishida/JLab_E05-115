@@ -61,7 +61,7 @@
 
 c	write(6,*) 'evlen=',buffer(1)
       pointer = 3                     !1=#/words, 2=event type
-      roc= (iand(buffer(2),X'FF'))
+      roc= (iand(buffer(2),INT(Z'FF')))
 c	write(6,*) 'roc=',roc,'evtype=',evtype
 
       do while (.not.found_thresholds .and. pointer.le.evlen)
@@ -70,16 +70,16 @@ c	write(6,*) '  sublen=',sublen
         subheader=buffer(pointer+1)
 c	write(6,'(a,z10)') '  subheader=',subheader
 
-        if (ishft(iand(subheader,X'FF0000'),-16) .eq. X'10') then !thresholds
+        if (ishft(iand(subheader,INT(Z'FF0000')),-16) .eq. INT(Z'10')) then !thresholds
           found_thresholds = .true.
 c	  write(6,*) '  THRESHOLDS!'
           subpntr=2                            !skip past main subheader.
 c	  write(6,*) '  subpntr=',subpntr
           do while (subpntr .lt. sublen)
             slotheader=buffer(pointer+subpntr)
-            slot=ishft(iand(slotheader,X'FF000000'),-24)
+            slot=ishft(iand(slotheader,INT(Z'FF000000')),-24)
 c	    write(6,'(a,z10)') '    slotheader=',slotheader
-            numvals=iand(slotheader,X'FF')
+            numvals=iand(slotheader,INT(Z'FF'))
 c	    write(6,*) '    slot#',slot,' has ',numvals,' thresholds'
             do ind=1,numvals
               subpntr=subpntr+1
@@ -91,7 +91,7 @@ c	    write(6,*) 'subpntr=',subpntr
           enddo   !NEED CHECK FOR NEXT HEADER.
           pointer=pointer+subpntr
         else if (roc.eq.0 .and.
-     &           ishft(iand(subheader,X'FF0000'),-16).eq.X'02') then
+     &           ishft(iand(subheader,INT(Z'FF0000')),-16).eq.INT(Z'02')) then
 c        write(6,*) 'PRESCALE FACTORS'
           found_prescale=.true.
           do ind=2,sublen

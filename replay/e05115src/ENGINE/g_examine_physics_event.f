@@ -47,11 +47,11 @@ ccc      LOGICAL process
       integer*4 iand,ishft
 *
       parameter (EventIDbank_size= 4)
-      parameter (EventIDbank_desc= X'C0000100')  !from CODA manual
+      parameter (EventIDbank_desc= INT(Z'C0000100'))  !from CODA manual
 *
       gen_event_sequence_N= gen_event_sequence_N+1  !from beginning
 *
-      if(iand(buffer(2),X'FFFF').ne.X'10CC') then
+      if(iand(buffer(2),INT(Z'FFFF')).ne.INT(Z'10CC')) then
          err = 'Event is not a physics event'
          ABORT = .true.
          call g_add_path(here,err)

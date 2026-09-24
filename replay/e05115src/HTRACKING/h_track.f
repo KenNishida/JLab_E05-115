@@ -148,13 +148,35 @@ c     Write(*,*) '(h_track) hntracks_fp=',hntracks_fp
          if(ABORT) then
             call G_add_path(here,err)
             return
-         endif      
+         endif  
+        call H_TOF_PRE(ABORT,err)
+         if(ABORT) then
+            call G_add_path(here,err)
+            return
+         endif
+*     
+      
+    
 *     
          call H_LEFT_RIGHT(ABORT,err)
          if(ABORT) then
             call G_add_path(here,err)
             return
          endif
+ 
+         call H_TRACK_SELECTION_PRE(ABORT,err)
+         if(ABORT) then
+            call G_add_path(here,err)
+            return
+         endif
+
+         call H_SELECT_GOOD_COMBINATION(ABORT,err)
+         if(ABORT) then
+            call G_add_path(here,err)
+            return
+         endif
+
+
 *     
          hstubminx = 999999.
          hstubminy = 999999.

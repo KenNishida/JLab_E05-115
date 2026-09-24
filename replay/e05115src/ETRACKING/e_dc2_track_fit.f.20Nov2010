@@ -1,0 +1,414 @@
+      subroutine E_DC2_TRACK_FIT(ABORT,err,ierr)
+*     primary track fitting routine for the HKS spectrometer
+*     
+*     Called by S_TRACK
+*     
+*     d.f. geesaman         8 Sept 1993
+*     $Log: e_dc2_track_fit.f,v $
+*     Revision 1.1.1.1  2009/06/23 13:55:45  kawama
+*
+*     e05115 src repository for software development
+*
+*     Revision 1.1.1.1  2005/05/14 21:44:37  miyoshi
+*
+*
+*     Revision 1.6  2005/04/08 20:56:38  miyoshi
+*     change subroutine location
+*
+*     Revision 1.5  2005/03/14 19:52:17  miyoshi
+*     change tracking variables and histogram names
+*
+*     Revision 1.4  2005/03/07 16:36:45  miyoshi
+*     add track hist
+*
+*     Revision 1.3  2005/03/02 22:32:43  miyoshi
+*     add best chi2 variables
+*
+*     Revision 1.2  2004/12/24 21:35:57  miyoshi
+*     change name plane to layer
+*
+*     Revision 1.1.1.1  2004/08/30 21:21:40  miyoshi
+*     new dir
+*
+*     Revision 1.8  1996/01/17 18:56:08  cdaq
+*     (JRA) Fill sdc_layer_wirecenter and sdc_layer_wirecoord arrays
+*     
+*     Revision 1.7  1995/10/11 18:15:12  cdaq
+*     (JRA) Comment out MINUIT track fitting for now.
+*     
+*     Revision 1.6  1995/08/31 20:44:56  cdaq
+*     (JRA) Don't fill single_residual arrray
+*     
+*     Revision 1.5  1995/07/20  19:06:05  cdaq
+*     (SAW) Move data statements for f2c compatibility
+*     
+*     Revision 1.4  1995/05/22  19:46:01  cdaq
+*     (SAW) Split gen_data_data_structures into gen, hms, hks, and coin parts"
+*     
+*     Revision 1.3  1995/04/06  19:45:16  cdaq
+*     (JRA) Rename residuals variables
+*     
+*     Revision 1.2  1994/11/23  14:24:18  cdaq
+*     (SPB) Recopied from hms file and modified names for HKS
+*     
+*     Revision 1.1  1994/02/21  16:42:27  cdaq
+*     Initial revision
+*     
+      implicit none
+      include "hes_data_structures.cmn"
+      include "hes_tracking.cmn"
+      include "hes_geometry.cmn"
+      include 'hes_id_histid.cmn'
+*     
+c     external S_FCNCHISQ
+c     external S_DPSIFUN
+c     real*8 S_DPSIFUN
+c     real*8 S_FCNCHISQ
+*
+*     local variables
+*     
+      logical ABORT
+      character*11 here
+      parameter (here='E_DC2_TRACK_FIT')
+      character*(*) err
+      integer*4 itrk            ! track loop index
+      integer*4 i,j             ! loop index
+      integer*4 ierr            ! error return flag
+c     integer*4 ivarbl                  ! dummy MINUIT variable
+      integer*4 ihit, pln, hit, pln1, pln2, hit1, hit2
+      real*8 z1, z2
+      real*8 dray(enum_fpray_param)
+      real*8 TT(enum_fpray_param)
+      real*8 AA(enum_fpray_param,enum_fpray_param)
+      real*8 chi2,chi2_all
+      
+      integer*4 remap(enum_fpray_param)
+      data remap/5,6,3,4/
+      save remap
+      real*4 raddeg
+      parameter (raddeg=3.14159265/180.)
+      real*8 s(emax_num_dc1_layers+emax_num_dc2_layers)
+      real*8 z(emax_num_dc1_layers+emax_num_dc2_layers)
+      real*8 a(emax_num_dc1_layers+emax_num_dc2_layers)
+      real*8 w(emax_num_dc1_layers+emax_num_dc2_layers)
+      real*4 param(enum_fpray_param)
+      real*4 dx,dy,ds,x,y,scal 
+      real*4 re,dt,ddis
+      integer*4 edc1_nhit,edc2_nhit
+*     
+      ABORT= .FALSE.
+      ierr=0
+*     initailize residuals
+      
+cc      print *, 'in edc2_track'
+      do pln=1,edc2_num_layers
+         do itrk=1,entracks_fp
+            edc2_single_residual(itrk,pln)=100000
+         enddo
+      enddo
+      
+      edc2bestchi2_index = -1
+      edc2bestchi2 = 10000000
+
+*     test for no tracks
+c      write(*,*) "entracks_fp,edc2nspace_points_tot",entracks_fp,edc2nspace_points_tot
+      if(edc2nspace_points_tot.ge.1) then
+         do itrk=1,edc2nspace_points_tot
+*     are there enough degrees of freedom
+c--            enfree_fp(itrk)=edc2ntrack_hits_pre(itrk,1)-enum_fpray_param
+            edc2nfree(itrk)=entrack_hits(itrk,1)-
+     &       -edc1_nhit-enum_fpray_param
+
+cc            print *, 'start', itrk, enfree_fp(itrk)
+
+            if(edc2nfree(itrk).gt.0) then
+*     initialize parameters
+               do i=1,enum_fpray_param
+                  TT(i)=0.
+                  do ihit=2,edc2ntrack_hits_pre(itrk,1)+1
+                     hit=edc2ntrack_hits_pre(itrk,ihit)
+                     pln=edc2_layer_num(hit)
+                     TT(i)=TT(i)+((edc2_wire_coord(hit)*
+     &                    edc2layer_coeff(remap(i),pln))
+     &                    /(edc2_sigma(pln)*edc2_sigma(pln)))
+                  enddo
+               enddo
+               do i=1,enum_fpray_param
+                  do j=1,enum_fpray_param
+                     AA(i,j)=0.
+                     if(j.lt.i)then
+                        AA(i,j)=AA(j,i)
+                     else
+                        do ihit=2,edc2ntrack_hits_pre(itrk,1)+1
+                           hit=edc2ntrack_hits_pre(itrk,ihit)
+                           pln=edc2_layer_num(hit)
+                           AA(i,j)=AA(i,j) + (
+     &                          edc2layer_coeff(remap(i),pln)
+     &                          *edc2layer_coeff(remap(j),pln)
+     &                          /(edc2_sigma(pln)*edc2_sigma(pln)))
+                        enddo   ! end loop on ihit
+                     endif      ! end test on j .lt. i
+                  enddo         ! end loop on j
+               enddo            ! end loop on i
+*     
+*     solve four by four equations
+               call solve_four_by_four(TT,AA,dray,ierr)
+               if (ierr.ne.0) then
+c                  write(*,*) "ERROR @ line 156, E_DC2_TRACK_FIT"
+                  dray(1)=10000.
+                  dray(2)=10000.
+                  dray(3)=2.
+                  dray(4)=2.
+                  ierr=0
+               else
+*     calculate chi2
+                  chi2=0.
+                  
+*     calculate hit coord at each layer for chisquared and efficiency calculations.
+                  do pln=1,edc2_num_layers
+                     edc2_track_coord_pre(itrk,pln)=
+     &                    edc2layer_coeff(remap(1),pln)*dray(1)
+     &                    +edc2layer_coeff(remap(2),pln)*dray(2)
+     &                    +edc2layer_coeff(remap(3),pln)*dray(3)
+     &                    +edc2layer_coeff(remap(4),pln)*dray(4)
+                  enddo
+                  do ihit=2,edc2ntrack_hits_pre(itrk,1)+1
+                     hit=edc2ntrack_hits_pre(itrk,ihit)
+                     pln=edc2_layer_num(hit)
+                     ddis=edc2_track_coord_pre(itrk,pln)-
+     &                edc2_wire_center(hit)
+                     dt=edc2_drift_time(hit)
+                     call HF2(5010+pln,abs(ddis),dt,1.) 
+                     call HF2(5110+pln,ddis,dt,1.)
+                     if (ddis.ge.0) then 
+                        call HF2(5150+pln,ddis,dt,1.)
+                     else
+                        call HF2(5130+pln,ddis,dt,1.)
+                     endif
+*     note chi2 is single precision
+cDK                     edc2_layer_wirecenter(itrk,pln)=edc2_wire_center(hit)
+cDK                     edc2_layer_wirecoord(itrk,pln)=edc2_wire_coord(hit)
+                     call HF1(eiddc2driftdis(pln),re,1.)
+                     edc2_residual_pre(itrk,pln)=
+     &                    edc2_wire_coord(hit)-edc2_track_coord_pre(itrk,pln)
+                     chi2=chi2+
+     &                    (edc2_residual_pre(itrk,pln)
+     &                    /edc2_sigma(pln))**2
+c--   Debug
+ccc                  print *,'track fit',pln, hit,edc2_wire_coord(hit), edc2_track_coord_pre(itrk,pln) 
+c--
+                  enddo
+               endif
+               
+               ex_fp_pre2(itrk)=dray(1)
+               ey_fp_pre2(itrk)=dray(2)
+c               hz_fp(itrk)=0.   ! z=0 of tracking.
+               exp_fp_pre2(itrk)=dray(3)
+               eyp_fp_pre2(itrk)=dray(4)
+               
+               edc2chi2(itrk)=chi2
+               edc2chi2perdof(itrk)=chi2/edc2nfree(itrk)
+               if(edc2chi2perdof(itrk) .le. edc2bestchi2) then
+                  edc2bestchi2_index = itrk
+                  edc2bestchi2 = edc2chi2perdof(itrk)
+               EndIf
+            endif               ! end test on degrees of freedom
+cc            Write(*,*) 'End', itrk, edc2chi2perdof_pre(itrk), ex_fp_pre2(itrk), ey_fp_pre2(itrk)
+         enddo                  ! end loop over tracks
+      
+c         call e_fill_dc2_pretrk_hist(ABORT,err)
+c         if (abort) then
+c            call g_prepend(here,err)
+c            return
+c         endif
+      endif
+      
+      chi2=0
+      call e_fill_dc2_track_hist(ABORT,err)
+      if (abort) then
+         call g_prepend(here,err)
+         return
+      endif
+
+      chi2=0
+      if (entracks_fp.gt.0.and.edc2nspace_points_tot.ge.1) then
+         do itrk=1,entracks_fp
+            if (enfree_fp(itrk).gt.0.and.edc2_besttrk(itrk).gt.0) then
+c              write(*,*) "itrk,edc2_besttrk(itrk)",itrk,edc2_besttrk(itrk)
+               edc2_nhit=edc2ntrack_hits_pre(edc2_besttrk(itrk),1)
+               edc1_nhit=entrack_hits(itrk,1)-edc2_nhit
+c              write(*,*)"itrk2,edc1_nhit,edc2_nhit",
+c     &           edc2_besttrk(itrk),edc1_nhit,edc2_nhit
+               do ihit=2,entrack_hits(itrk,1)+1
+                  hit=entrack_hits(itrk,ihit)
+                  if (ihit.le.edc1_nhit+1) then
+                     pln=edc1_layer_num(hit)
+                     z(pln)=edc1_zpos(pln)
+                     s(pln)=edc1_spos(itrk,pln)
+                     a(pln)=edc1_alpha_angle(pln)-90*raddeg
+                     w(pln)=edc1_sigma(pln)
+c                    write(*,*)"pln,s",pln,s(pln)
+                  else
+c                    write(*,*) "itrk,hit",itrk,hit
+                     pln=edc2_layer_num(hit)
+                     z(pln+10)=edc2_zpos(pln)
+                     s(pln+10)=edc2_wire_coord(hit)
+                     a(pln+10)=edc2_alpha_angle(pln)-90*raddeg
+                     w(pln+10)=edc2_sigma(pln)
+c                     write(*,*)"pln,s",pln+10,s(pln+10)
+                  endif
+               enddo
+            endif   
+         enddo
+               
+         do itrk=1,entracks_fp
+            enfree_fp(itrk)=entrack_hits(itrk,1)-enum_fpray_param
+            if (enfree_fp(itrk).gt.0.and.edc2_besttrk(itrk).gt.0) then
+               edc2_nhit=edc2ntrack_hits_pre(edc2_besttrk(itrk),1)
+               edc1_nhit=entrack_hits(itrk,1)-edc2_nhit
+               do i=1,enum_fpray_param
+                  TT(i)=0.
+                  do ihit=2,entrack_hits(itrk,1)+1
+                     hit=entrack_hits(itrk,ihit)
+                     if (ihit.le.edc1_nhit+1) then
+                        pln=edc1_layer_num(hit)
+                        TT(i)=TT(i)+((edc1_spos(itrk,pln)*
+     &                     edc1layer_coeff(remap(i),pln))
+     &                     /(edc1_sigma(pln)*edc1_sigma(pln)))
+                     else
+                        pln=edc2_layer_num(hit)
+                        TT(i)=TT(i)+((edc2_wire_coord(hit)*
+     &                  edc2layer_coeff(remap(i),pln))
+     &                     /(edc2_sigma(pln)*edc2_sigma(pln)))
+                     endif
+                  enddo
+               enddo
+               do i=1,enum_fpray_param
+                  do j=1,enum_fpray_param
+                     AA(i,j)=0.
+                     if(j.lt.i)then
+                        AA(i,j)=AA(j,i)
+                     else
+                        do ihit=2,entrack_hits(itrk,1)+1
+                           hit=entrack_hits(itrk,ihit)
+                           if (ihit.le.edc1_nhit+1) then
+                              pln=edc1_layer_num(hit)
+                              AA(i,j)=AA(i,j) + (
+     &                           edc1layer_coeff(remap(i),pln)
+     &                           *edc1layer_coeff(remap(j),pln)
+     &                           /(edc1_sigma(pln)*edc1_sigma(pln)))
+                           else
+                              pln=edc2_layer_num(hit)
+                              AA(i,j)=AA(i,j) + (
+     &                           edc2layer_coeff(remap(i),pln)
+     &                           *edc2layer_coeff(remap(j),pln)
+     &                           /(edc2_sigma(pln)*edc2_sigma(pln)))
+                           endif
+                        enddo   ! end loop on ihit
+                     endif      ! end test on j .lt. i
+                  enddo         ! end loop on j
+               enddo            ! end loop on i
+               dray(1)=0
+               dray(2)=0
+               dray(3)=0
+               dray(4)=0
+               call solve_four_by_four(TT,AA,dray,ierr)
+               if (ierr.ne.0) then
+                  write(*,*) "ERROR @ line316,E_DC2_TRACK_FIT"
+               endif
+               if (edc2flag.eq.1) then
+                  ex_fp(itrk)=dray(1)
+                  ey_fp(itrk)=dray(2)
+               endif
+               exp_fp(itrk)=dray(3)
+               eyp_fp(itrk)=dray(4)
+         
+               do ihit=2,entrack_hits(itrk,1)+1
+                  hit=entrack_hits(itrk,ihit)
+                  if (ihit.le.edc1_nhit+1) then
+                     pln=edc1_layer_num(hit)
+                     x=ex_fp(itrk)+exp_fp(itrk)*z(pln)
+                     y=ey_fp(itrk)+eyp_fp(itrk)*z(pln)
+                     scal=x*cos(a(pln))+y*sin(a(pln))
+                     dx=x-(s(pln)-y*sin(a(pln)))/cos(a(pln))
+                     dy=y-(s(pln)-x*cos(a(pln)))/sin(a(pln))
+                     ds=scal-s(pln)
+c                    write(*,*) "pln,s,scal,x,y",pln,s(pln),scal,x,y
+                     chi2=chi2+(ds/edc1_sigma(pln))**2
+c--   Debug
+                     Call HF1(5500+pln,dx,1.)
+                     Call HF1(5600+pln,dy,1.)
+                     Call HF1(5700+pln,ds,1.)
+                  else
+                     pln=edc2_layer_num(hit)
+                     dt=edc2_drift_time(hit)
+                     x=ex_fp(itrk)+exp_fp(itrk)*z(pln+10)
+                     y=ey_fp(itrk)+eyp_fp(itrk)*z(pln+10)
+                     scal=x*cos(a(pln+10))+y*sin(a(pln+10))
+                     ddis=scal-edc2_wire_center(hit)
+                     dx=x-(s(pln+10)-y*sin(a(pln+10)))/cos(a(pln+10))
+                     dy=y-(s(pln+10)-x*cos(a(pln+10)))/sin(a(pln+10))
+                     ds=scal-s(pln+10)
+c                    write(*,*) "pln,ds",pln+10,scal-s(pln+10)
+                     
+c                     call HF2(5010+pln,abs(ddis),dt,1.) 
+c                     call HF2(5110+pln,ddis,dt,1.)
+c                     if (ddis.ge.0) then 
+c                        call HF2(5150+pln,ddis,dt,1.)
+c                     else
+c                        call HF2(5130+pln,ddis,dt,1.)
+                     
+                     Call HF1(5500+pln+10,dx,1.)
+                     Call HF1(5600+pln+10,dy,1.)
+                     Call HF1(5700+pln+10,ds,1.)
+                     if (edc2flag.eq.1) then
+                        chi2=chi2+(ds/edc2_sigma(pln))**2
+                     endif
+                  endif
+               enddo   ! end loop on ihit
+               echi2perdof_fp(itrk)=chi2/enfree_fp(itrk)
+            endif
+         enddo 
+      endif
+      
+      do itrk=1,entracks_fp
+         eyp_fp(itrk)=eyp_fp(itrk)-deyp_fp
+         Call HF1(eidchi2perdoffp,echi2perdof_fp(itrk),1.)
+         Call HF1(eidchi2perdoffpzoom,echi2perdof_fp(itrk),1.)
+         Call HF1(eidfpx,ex_fp(itrk),1.)
+         Call HF1(eidfpy,ey_fp(itrk),1.)
+         Call HF1(eidfpxp,exp_fp(itrk),1.)
+         Call HF1(eidfpyp,eyp_fp(itrk),1.)
+         Call HF2(eidfpxy,ex_fp(itrk),ey_fp(itrk),1.)
+         Call HF2(eidfpxpyp,exp_fp(itrk),eyp_fp(itrk),1.)
+         Call HF2(eidfpxxp,ex_fp(itrk),exp_fp(itrk),1.)
+         Call HF2(eidfpxyp,ex_fp(itrk),eyp_fp(itrk),1.)
+         Call HF2(eidfpyxp,ey_fp(itrk),exp_fp(itrk),1.)
+         Call HF2(eidfpyyp,ey_fp(itrk),eyp_fp(itrk),1.)
+      enddo
+c      if (entracks_pre.gt.0) then
+c         write(*,*) "edc2fit"
+c         write(*,*) "z",z
+c         write(*,*) "s",s
+c         write(*,*) "a",a
+c         write(*,*) "w",w
+c         call linearFit(160,z,s,a,w,param,ierr)
+c         write(*,*) "param",param
+c      endif
+      
+
+c      Write(*,*) '---'
+      
+*     test if we want to dump out trackfit results
+c      if(edebugtrackprint.ne.0) then
+cc         call e_dc2_print_tracks
+c      endif                     ! end test on zero tracks
+
+       Call HF1(eidntracksfp,float(entracks_fp),1.)
+       Call HF1(eidntracksfpzoom,float(entracks_fp),1.)
+      
+
+
+ 1000 return
+      end
+

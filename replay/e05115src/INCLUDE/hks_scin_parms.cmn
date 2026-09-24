@@ -154,6 +154,8 @@
       real*4 hscin_neg_phc_coeff(hnum_scin_layers,hnum_scin_elements)
       real*4 hscin_pos_time_offset(hnum_scin_layers,hnum_scin_elements)
       real*4 hscin_neg_time_offset(hnum_scin_layers,hnum_scin_elements)
+      real*4 hscin_pos_phc_coeff2(hnum_scin_layers,hnum_scin_elements)
+      real*4 hscin_neg_phc_coeff2(hnum_scin_layers,hnum_scin_elements)
       real*4 hscin_pos_minph(hnum_scin_layers,hnum_scin_elements) 
       real*4 hscin_neg_minph(hnum_scin_layers,hnum_scin_elements) 
 *     ! ADC offset for PH correction
@@ -171,6 +173,8 @@
      &     hscin_neg_phc_coeff,
      &     hscin_pos_time_offset,
      &     hscin_neg_time_offset,
+     &     hscin_pos_phc_coeff2,
+     &     hscin_neg_phc_coeff2,
      $     hscin_pos_minph,
      $     hscin_neg_minph
       

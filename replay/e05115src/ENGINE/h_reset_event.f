@@ -184,6 +184,7 @@
          hwat_pos_time(i)   = -10000
          hwat_neg_time(i)   = -10000
          hwat_npe_sum(i)    = -1
+         hwat_npe_sum_k_ratio(i)    = -1
          hwat_layer_num(i)  = -1
          hwat_counter_num(i)= -1
          hwat_both_hits(i)  = -1

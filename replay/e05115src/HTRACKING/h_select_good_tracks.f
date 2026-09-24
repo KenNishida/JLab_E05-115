@@ -70,14 +70,17 @@ c
       INCLUDE 'hks_physics_sing.cmn'
       INCLUDE 'hks_tracking.cmn'
       Include 'hks_id_histid.cmn'
-      
+      include 'hks_geometry.cmn'
 *     
 *     local variables 
-      integer*4 i,j,tnew,ihit,hit,pln,itrk
+      integer*4 i,j,tnew,ihit,hit,pln,itrk,sl,wi
       integer*4 goodtrack,track
       integer*4 mark(HNTRACKS_MAX)
       integer*4 have_layer_hits(HMAX_NUM_DC_LAYERS)
       real*4 dx,dy,dxp,dyp,res
+      real*4 dt,wc
+      
+      
 *--------------------------------------------------------
 *     
       ABORT= .FALSE.
@@ -85,7 +88,10 @@ c
       
 
       if(hntracks_fp .gt. 0) then
-         
+         HKS_DX_MIN=1e-4
+         HKS_DY_MIN=1e-4
+         HKS_DXP_MIN=1e-4
+         HKS_DYP_MIN=1e-4
          Do i=1,HNTRACKS_MAX
             mark(i) = 1
          EndDo
@@ -113,6 +119,8 @@ c
                   Call HF1(hidtrkdy,dy,1.)
                   Call HF1(hidtrkdxp,dxp,1.)
                   Call HF1(hidtrkdyp,dyp,1.)
+c                   print*,HKS_DX_MIN,HKS_DY_MIN
+                   write(15,*) dx,dy,dxp,dyp
                   if(mark(i) .eq. 1 .and. mark(j) .eq. 1) then
                      if(
      &                    dx .lt. HKS_DX_MIN .and.
@@ -170,71 +178,120 @@ c
      &                 hdc_track_coord(i,pln)
                   hdc_layer_wirecenter(tnew,pln)=hdc_wire_center(hit)
                   hdc_layer_wirecoord(tnew,pln)=hdc_wire_coord(hit)
-               EndDo
+c                  hdc_drift_distance(tnew,pln)=HDC_DRIFT_DIS(hit)
+                  hdc_drift_distance(tnew,pln)=hdc_drift_dis(hit)
+                  dt=hdc_drift_time(hit)
+                  hdc_layer_drift_time(tnew,pln)=dt
+                  wi=hdc_wire_num(hit)
+
+                 if(hxp_fp(tnew).le.
+     +            0.16+0.25/100.0*hx_fp(tnew).and.
+     +           hxp_fp(tnew).ge.
+     +                 -0.25+0.25/100.0*hx_fp(tnew)) then
+
+             call hf1(hiddcdrifttime(pln),dt,1.)
+            if(hturnon_dc_dec_hist .ne. 0 ) then
+             if(pln .eq. 1 .or. pln .eq. 2) then
+               sl = 6*(pln-1) 
+     &              + int((wi-hdc_wire_offset_low(pln)-1)/16) + 1
+            Else if(pln .eq. 3 .or. pln .eq. 4) then
+               sl = 12 + 8*(pln-3) 
+     &              + int((wi-hdc_wire_offset_low(pln)-1)/16) + 1
+            Else if(pln .eq. 5 .or. pln .eq. 6) then
+               sl = 28 + 6*(pln-5) 
+     &              + int((wi-hdc_wire_offset_low(pln)-1)/16) + 1
+            Else if(pln .eq. 7 .or. pln .eq. 8) then
+               sl = 40 + 6*(pln-7) 
+     &              + int((wi-hdc_wire_offset_low(pln)-1)/16) + 1
+            Else if(pln .eq. 9 .or. pln .eq. 10) then
+               sl = 52 + 8*(pln-9) 
+     &              + int((wi-hdc_wire_offset_low(pln)-1)/16) + 1
+            Else if(pln .eq. 11 .or. pln .eq. 12) then
+               sl = 68 + 6*(pln-11) 
+     &              + int((wi-hdc_wire_offset_low(pln)-1)/16) + 1
+            EndIf
+            
+           Call HF1(hiddcdrifttimesl(sl),dt,1.)
+        EndIF
+      endif
+      
+      EndDo
 *     --- if have no hits, reset to default.
-               Do ihit=1,hdc_num_layers
-                  if(have_layer_hits(pln) .eq. 0) then
-                     hdc_single_residual(i,pln) = 10000.
-                     hdc_track_coord(i,pln)= 10000.
-                  EndIF
-               EndDo
-               if(hchi2perdof_fp(tnew) .le. hdc_bestchi2) then
-                  hdc_bestchi2_index = tnew
-                  hdc_bestchi2 = hchi2perdof_fp(itrk)
-               EndIF
-            EndIf               ! mark=1 : keep the track
-         EndDo                  ! track loop
-         
-         Call HF1(hidtrkdiff,float(hntracks_fp-tnew),1.)
-         
-         hntracks_fp = tnew
-         
+      Do ihit=1,hdc_num_layers
+         if(have_layer_hits(pln) .eq. 0) then
+            hdc_single_residual(i,pln) = 10000.
+            hdc_track_coord(i,pln)= 10000.
+            hdc_layer_wirecenter(i,pln)= 10000.
+            hdc_layer_wirecoord(i,pln)= 10000.
+         EndIF
+      EndDo
+      if(hchi2perdof_fp(tnew) .le. hdc_bestchi2) then
+         hdc_bestchi2_index = tnew
+c     hdc_bestchi2 = hchi2perdof_fp(itrk) !itrk should 
+
+         hdc_bestchi2 = hchi2perdof_fp(tnew)
+      EndIF
+      EndIf                     ! mark=1 : keep the track
+      
+      
+      EndDo                     ! track loop
+      
+      Call HF1(hidtrkdiff,float(hntracks_fp-tnew),1.)
+      
+      hntracks_fp = tnew
+      
       EndIf                     ! hntracks_fp>0
       
       Call HF1(hidhntracksfp,float(hntracks_fp),1.)
       Call HF1(hidhntracksfpzoom,float(hntracks_fp),1.)
       if(hntracks_fp .gt. 0) then
-         Call HF1(hidchi2perdoffp,hchi2perdof_fp(1),1.)
-         Call HF1(hidchi2perdoffpzoom,hchi2perdof_fp(1),1.)
-         Call HF1(hidhxfp,hx_fp(1),1.)
-         Call HF1(hidhyfp,hy_fp(1),1.)
-         Call HF1(hidhxpfp,hxp_fp(1),1.)
-         Call HF1(hidhypfp,hyp_fp(1),1.)
-         Call HF2(hidfpxy,hx_fp(1),hy_fp(1),1.)
-         Call HF2(hidfpxpyp,hxp_fp(1),hyp_fp(1),1.)
-         Call HF2(hidfpxxp,hx_fp(1),hxp_fp(1),1.)
-         Call HF2(hidfpxyp,hx_fp(1),hyp_fp(1),1.)
-         Call HF2(hidfpyxp,hy_fp(1),hxp_fp(1),1.)
-         Call HF2(hidfpyyp,hy_fp(1),hyp_fp(1),1.)
-         Do ihit=2,hntrack_hits(1,1)+1
-            hit = hntrack_hits(1,ihit)
-            pln = hdc_layer_num(hit)
-            res = hdc_single_residual(1,pln)
-            Call HF1(hidsingresidual(pln),res,1.)
-         EndDo
-
-c         itrk = hdc_bestchi2_index
-c         if(hdc_bestchi2_index .eq. 0) itrk=hntracks_fp
-c         if(itrk .gt. 0) then
-c            Call HF1(hidchi2final,hchi2perdof_fp(itrk),1.)
-c            Call HF1(hidchi2finalzoom,hchi2perdof_fp(itrk),1.)
-c            Do ihit=2,hntrack_hits(itrk,1)+1
-c               hit = hntrack_hits(itrk,ihit)
-c               pln = hdc_layer_num(hit)
-c               res = hdc_single_residual(itrk,pln)
-c               Call HF1(hidsingresfinal(pln),res,1.)
-c            EndDo
-c            Call HF1(hidhxfpfinal,hx_fp(itrk),1.)
-c            Call HF1(hidhyfpfinal,hy_fp(itrk),1.)
-c            Call HF1(hidhxpfpfinal,hxp_fp(itrk),1.)
-c            Call HF1(hidhypfpfinal,hyp_fp(itrk),1.)
-c            Call HF2(hidfpxyfinal,hx_fp(itrk),hy_fp(itrk),1.)
-c            Call HF2(hidfpxpypfinal,hxp_fp(itrk),hyp_fp(itrk),1.)
-c         EndIf                  ! itrk>0
+         if(hxp_fp(1).le.0.16+0.25/100.0*hx_fp(1).and.
+     +        hxp_fp(1).ge.-0.25+0.25/100.0*hx_fp(1)) then
+            Call HF1(hidchi2perdoffp,hchi2perdof_fp(1),1.)
+            Call HF1(hidchi2perdoffpzoom,hchi2perdof_fp(1),1.)
+            
+            Call HF1(hidhxfp,hx_fp(1),1.)
+            Call HF1(hidhyfp,hy_fp(1),1.)
+            Call HF1(hidhxpfp,hxp_fp(1),1.)
+            Call HF1(hidhypfp,hyp_fp(1),1.)
+            Call HF2(hidfpxy,hx_fp(1),hy_fp(1),1.)
+            Call HF2(hidfpxpyp,hxp_fp(1),hyp_fp(1),1.)
+            Call HF2(hidfpxxp,hx_fp(1),hxp_fp(1),1.)
+            Call HF2(hidfpxyp,hx_fp(1),hyp_fp(1),1.)
+            Call HF2(hidfpyxp,hy_fp(1),hxp_fp(1),1.)
+            Call HF2(hidfpyyp,hy_fp(1),hyp_fp(1),1.)
+            Do ihit=2,hntrack_hits(1,1)+1
+               hit = hntrack_hits(1,ihit)
+               pln = hdc_layer_num(hit)
+               res = hdc_single_residual(1,pln)
+               
+               Call HF1(hidsingresidual(pln),res,1.)
+            EndDo
+         endif
+         
+c     itrk = hdc_bestchi2_index
+c     if(hdc_bestchi2_index .eq. 0) itrk=hntracks_fp
+c     if(itrk .gt. 0) then
+c     Call HF1(hidchi2final,hchi2perdof_fp(itrk),1.)
+c     Call HF1(hidchi2finalzoom,hchi2perdof_fp(itrk),1.)
+c     Do ihit=2,hntrack_hits(itrk,1)+1
+c     hit = hntrack_hits(itrk,ihit)
+c     pln = hdc_layer_num(hit)
+c     res = hdc_single_residual(itrk,pln)
+c     Call HF1(hidsingresfinal(pln),res,1.)
+c     EndDo
+c     Call HF1(hidhxfpfinal,hx_fp(itrk),1.)
+c     Call HF1(hidhyfpfinal,hy_fp(itrk),1.)
+c     Call HF1(hidhxpfpfinal,hxp_fp(itrk),1.)
+c     Call HF1(hidhypfpfinal,hyp_fp(itrk),1.)
+c     Call HF2(hidfpxyfinal,hx_fp(itrk),hy_fp(itrk),1.)
+c     Call HF2(hidfpxpypfinal,hxp_fp(itrk),hyp_fp(itrk),1.)
+c     EndIf                  ! itrk>0
       EndIF                     ! hntracks_fp>0
       
-
+      
 c     Write(*,*) '(hselectgoodtrack) hntracks_fp=',hntracks_fp
-
+      
       return
       end
+      

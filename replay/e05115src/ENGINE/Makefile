@@ -50,6 +50,7 @@ R_OBJS=r_c_ntuple.o r_coin_data_structures.o r_coin_filenames.o \
 H_OBJS=h_clear_event.o h_initialize.o h_keep_results.o \
        h_ntuple_init.o h_ntuple_keep.o h_ntuple_shutdown.o \
        h_dc_ntuple_init.o h_dc_ntuple_keep.o h_dc_ntuple_shutdown.o \
+       h_track_ntuple_init.o h_track_ntuple_keep.o h_track_ntuple_shutdown.o \
        h_scin_ntuple_init.o h_scin_ntuple_keep.o h_scin_ntuple_shutdown.o \
        h_ch_ntuple_init.o h_ch_ntuple_keep.o h_ch_ntuple_shutdown.o \
        h_wat_ntuple_init.o h_wat_ntuple_keep.o h_wat_ntuple_shutdown.o \
@@ -63,12 +64,14 @@ ALLOBJS= $(C_OBJS) $(G_OBJS) $(E_OBJS) $(R_OBJS) $(H_OBJS)
 
 LIB= libengine.a
 
-F77=/usr/bin/g77
+F77=/usr/bin/gfortran
 
-FFLAGS=-m32 -g -ffixed-line-length-132
+#FFLAGS=-m32 -g -ffixed-line-length-132
 #FFLAGS= -m32 -g -ffixed-line-length-132 -fbounds-check
+FFLAGS= -g -ffixed-line-length-132 -fno-automatic -fallow-argument-mismatch
+#FFLAGS= -g -ffixed-line-length-132
 
-INC=-I../INCLUDE/
+INC=-I../INCLUDE/ 
 
 %.o:%.f
 	$(F77) $(FFLAGS) $(INC) -c $< -o $@

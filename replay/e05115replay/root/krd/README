@@ -1,0 +1,15 @@
+A program to create kaon redundant ntuple
+
+How to:
+0. Do "mkdir (Target)" and create "(Target.dat)".
+"Target.dat" is the list of coin ntuples.
+1. Specify the matrices and targetflag in "recondata.dat".
+2. Do "./createkrd.py (target)"
+
+Note:
+*Cuttent "./createkrd.py" is specified with Tohoku's farm condition. 
+You should make sure the root file position in "target.dat" and change the number in line 15 of createkrd.py.
+*Defalut matrices used in the krd.C is written in recondata.dat.
+You can change your prefered matrices in that file.
+*Targetflag is basically the Mass number of the target.
+You should read "krd.C" for detail.

@@ -106,7 +106,7 @@
       do while(pointer.le.length .and. did.eq.newdid)
 *     
 *     VME/FB event length mismatch
-        if(iand(evfrag(pointer),'FFFFFFFF'x).EQ.X'DCAA0000') then 
+        if(iand(evfrag(pointer),INT(Z'FFFFFFFF')).EQ.INT(Z'DCAA0000')) then 
           write(6,'(a,i10)') 
      &         'ERROR: VME/Fastbus event length mismatch for event #',
      &         gen_event_id_number
@@ -118,15 +118,15 @@
           goto 987
 
 !     Check for extra events in FB modules on sync events
-        else if(iand(evfrag(pointer),'FFFF0000'x).EQ.X'DCFE0000') then
+        else if(iand(evfrag(pointer),INT(Z'FFFF0000')).EQ.INT(Z'DCFE0000')) then
           write(6,'(a,i2,a,i3,a,i3,a,i10)') 'ROC',roc,': Slot'
-     $         ,iand(ishft(evfrag(pointer),-11),X'1F'),': '
-     $         ,iand(evfrag(pointer),X'7FF'),' extra events, event=',
+     $         ,iand(ishft(evfrag(pointer),-11),INT(Z'1F')),': '
+     $         ,iand(evfrag(pointer),INT(Z'7FF')),' extra events, event=',
      &         gen_event_id_number
           pointer = pointer + 1
           goto 987
 *     Catch arrington's headers
-        else if(iand(evfrag(pointer),'FF000000'x).EQ.X'DC000000') then
+        else if(iand(evfrag(pointer),INT(Z'FF000000')).EQ.INT(Z'DC000000')) then
           write(6,'(a,i2,a,i10,a,z10)') 'ROC',roc,
      &         ': no gate or too much data, event=',
      &         gen_event_id_number,' error dataword=',evfrag(pointer)
@@ -137,8 +137,8 @@
 *     
 *     Check for event by event scalers thrown in by the scaler hack.
 *     
-*     if(iand(evfrag(pointer),'FF000000'x).eq.X'DA000000') then ! Magic header
-*     nscalers = iand(evfrag(pointer),'FF'x)
+*     if(iand(evfrag(pointer),INT(Z'FF000000')).eq.INT(Z'DA000000')) then ! Magic header
+*     nscalers = iand(evfrag(pointer),INT(Z'FF'))
 *     do iscaler=1,nscalers
 *     evscalers(iscaler) = evfrag(pointer+iscaler)
 *     enddo
@@ -165,7 +165,7 @@ c     $             pointer,evfrag(pointer),roc,gen_event_id_number
           pointer = pointer + 1
           goto 987
         endif
-        slot = iand(ishft(evfrag(pointer),-27),X'1F')
+        slot = iand(ishft(evfrag(pointer),-27),INT(Z'1F'))
 c        write(*,*)"pointer=",pointer
 c        write(*,*)"slot=",slot
         if(roc.eq.11) then 
@@ -179,7 +179,7 @@ c        write(*,*)"slot=",slot
      &           slot,evfrag(pointer),
      $           '(p=',pointer,') for event #',gen_event_id_number
             write (6,'(a,i3)') '  Probably after slot',
-     $           iand(ishft(evfrag(pointer-1),-27),'1F'X)
+     $           iand(ishft(evfrag(pointer-1),-27),INT(Z'1F'))
             pointer = pointer + 1
             goto 987
           else
@@ -206,9 +206,9 @@ c     be discarded.  If it is an 1881 or 1876, then the the first word of a
 c     new slot will have a subaddress of '7F' and later be discarded.
 c     
           if(subaddbit.eq.17) then ! Is not an 1872A (which has not headers)
-            if(iand(evfrag(pointer),'00FE0000'X).eq.0) then ! probably a header
-              if(iand(evfrag(pointer),'07FF0000'X).ne.0) then
-                write(*,'(z10)') iand(evfrag(pointer),'07FF0000'X)
+            if(iand(evfrag(pointer),INT(Z'00FE0000')).eq.0) then ! probably a header
+              if(iand(evfrag(pointer),INT(Z'07FF0000')).ne.0) then
+                write(*,'(z10)') iand(evfrag(pointer),INT(Z'07FF0000'))
                 print *,"SHIT:misidentified real data word as a header"
                 print *,"DID=",did,", SLOT=",slot,", POINTER=",pointer
                 write(*,'(z10)') evfrag(pointer)
@@ -236,7 +236,7 @@ c     c              stop
 c     endif
 c     endif
 *************************
-        subadd = iand(ishft(evfrag(pointer),-subaddbit),'7F'X)
+        subadd = iand(ishft(evfrag(pointer),-subaddbit),INT(Z'7F'))
 c        if(roc.eq.5) then ! for HAPPEX
 c          subadd = iand(ishft(evfrag(pointer),-subaddbit),'1'X)
 c        endif
@@ -275,8 +275,10 @@ c              endif
             if(hitcount .lt. maxhits 
      $           .or.(hitcount .eq. maxhits .and. 
      $           signalcount .gt. 1)) then ! Don't overwrite arrays
+              
               if(signalcount .le. 1
      &           .and.((did.eq.1.and.signal.gt.2000.and.signal.lt.3000).or.
+c     &           .and.((did.eq.1.and.signal.gt.2300.and.signal.lt.2900).or.
      &            (did.eq.11.and.signal.gt.3000.and.signal.lt.4000).or.
      &            (did.eq.12.and.signal.gt.3000.and.signal.lt.4000))
      &           ) then ! single signal counter

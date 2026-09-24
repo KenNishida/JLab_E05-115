@@ -11,12 +11,12 @@ void evdisplay(char* filename){
 	TView3D *v1 = new TView3D();
 	v1->Front();
 	TFile *file = new TFile(filename);
-	//TFile *file = new TFile("coin59400.root");
-	TTree *tree=(TTree*)file->Get("h9020");
+	TTree *tree=(TTree*)file->Get("h9500");
 
 	const int nZ =9;
 	int flag=0;
 	int start=0,end=0;
+	int tg_g1=0;
 	float pointX[nZ];	
 	float pointY[nZ];	
 	float pointZ[nZ]={z_DC1,z_DC2,z_1X,z_AC1,z_AC2,z_AC3,
@@ -38,6 +38,7 @@ void evdisplay(char* filename){
 	tree->SetBranchAddress("hsxpfp",&hsxpfp);
 	tree->SetBranchAddress("hsyfp",&hsyfp);
 	tree->SetBranchAddress("hsypfp",&hsypfp);
+	tree->SetBranchAddress("tg_g1",&tg_g1);
 	Int_t Nevent=tree->GetEntries();
 	end=Nevent;
 
@@ -63,7 +64,7 @@ void evdisplay(char* filename){
 		//cout << int(hsnco1) <<" "<<int(haernum1)<<" "<<int(haernum2)
 		//<<" "<<int(haernum3)<<" "<<int(hsnco2)<<" "<<int(hwatnum1)
 		//<<" "<<int(hwatnum2)<<endl;
-		if (hsxpfp>3e-3*hsxfp+0.2){
+		if (hsxpfp>3e-3*hsxfp+0.2 && tg_g1>0){
 			for (int j=0;j<nZ;j++){
 				pointX[j]=hsxfp+hsxpfp*(pointZ[j]-z_FP);
 				pointY[j]=hsyfp+hsypfp*(pointZ[j]-z_FP);

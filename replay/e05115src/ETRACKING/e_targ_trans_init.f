@@ -87,7 +87,7 @@ c     call G_IO_control(chan,'ANY',ABORT,err) !"ASK"="ANY"
       
 !     Open and read in coefficients.
       
-      open (unit=chan,status='old',name='matrices/hes_recon_coeff.dat',err=92)
+      open (unit=chan,status='old',file='matrices/hes_recon_coeff.dat',err=92)
       Write(*,*) 'hes_recon_coeff.dat is opened successfully.' 
       
 !     Read header comments.
@@ -192,7 +192,7 @@ c     Read in target to collimator transfer matrix elements
       
 !     Open and read in coefficients.
       
-      open (unit=chan,status='old',name='matrices/hes_t2s_coeff.dat',err=97)
+      open (unit=chan,status='old',file='matrices/hes_t2s_coeff.dat',err=97)
       Write(*,*) 'hes_t2s_coeff.dat is opened successfully.' 
       
       line = '!'

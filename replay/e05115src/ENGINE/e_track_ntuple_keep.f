@@ -66,14 +66,15 @@ c         if(
 c     &        esp(i) .gt. 0
 c     &        edc1_layer_num(i) .gt. 0
 c     &     ) then
+         if (i.eq.edc1bestchi2_pre_index(enum_fitting)) then
             
             m= 0
             
             Do j=1,emax_num_dc1_layers 
                m= m+1
                e_track_ntuple_contents(m)= 
-     &          edc1eff_residual(i,j,enum_fitting) ! 11
-c     &          edc1_residual_pre(i,j,enum_fitting) ! 1
+c     &          edc1eff_residual(i,j,enum_fitting) ! 11
+     &          edc1_residual_pre(i,j,enum_fitting) ! 1
             Enddo
              
             Do j=1,emax_num_dc1_layers 
@@ -92,6 +93,12 @@ c     &          edc1_residual_pre(i,j,enum_fitting) ! 1
                m= m+1
                e_track_ntuple_contents(m)= 
      &          edc1_drift_time_pre(i,j,enum_fitting) ! 31
+            Enddo
+            
+            Do j=1,emax_num_dc1_layers 
+               m= m+1
+               e_track_ntuple_contents(m)= 
+     &          edc1_wire_center_pre(i,j,enum_fitting) ! 31
             Enddo
             
             Do j=1,emax_num_dc1_layers 
@@ -122,7 +129,7 @@ c     &          edc1_residual_pre(i,j,enum_fitting) ! 1
                call HFN(e_track_ntuple_ID,e_track_ntuple_contents)
             ENDIF
 *     
-c         EndIf
+         EndIf
       EndDo
       
       RETURN

@@ -16,6 +16,6 @@ eptar,200,0.65,1.15          $ep-tar
 
 exsv,100,-20.,20.         $ex-sv
 eysv,100,-50.,50.           $ey-sv
-esvxy,100,-20., 20., 100, -50, 50   $hes sv y vs x
+esvxy,500,-10., 10., 500, -20, 20   $hes sv y vs x
 
 end   hist hes_tar

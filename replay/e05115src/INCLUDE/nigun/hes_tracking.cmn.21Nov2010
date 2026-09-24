@@ -1,0 +1,710 @@
+*     hes_tracking.cmn
+*     include file for hes tracking intermediate results
+*	T. Miyoshi 
+*	this is copy of sos_tracking.cmn
+*
+*     The following include statments must precede the inclusion of this
+*     file in each routine that uses it.  The *%% syntax is also a
+*     directive to makereg to tell it to include the code in the program
+*     that it generates.
+*
+*%%   include 'hes_data_structures.cmn'
+
+*----------------------------------------------------------------------
+* PARAMETERS FOR DRIFT TIME TO DISTANCE CALCULATION
+*
+*      CTPTYPE=parm
+*
+* number of bins for drift time lookup table
+      integer*4 edriftbins_max
+      parameter (edriftbins_max=138)
+      real*4    edriftbins      
+* number of bins for drift time lookup table
+      real*4    edriftbinsz     
+* drift bin size in nsec of lookup table
+      real*4    edrift1stbin    
+* drift time of 1st bin in nsec of lookup
+      real*4    edc1fract(edriftbins_max,emax_num_dc1_layers)
+      real*4    edc2fract(edriftbins_max,emax_num_dc2_layers)
+* fraction of integrated time spectrum
+
+      real*4 edc1wc01fract(edriftbins_max),edc1wc02fract(edriftbins_max),
+     &       edc1wc03fract(edriftbins_max),edc1wc04fract(edriftbins_max),
+     &       edc1wc05fract(edriftbins_max),edc1wc06fract(edriftbins_max),
+     &       edc1wc07fract(edriftbins_max),edc1wc08fract(edriftbins_max),
+     &       edc1wc09fract(edriftbins_max),edc1wc10fract(edriftbins_max),
+     &       edc2wcu1fract(edriftbins_max),edc2wcu2fract(edriftbins_max),
+     &       edc2wcx1fract(edriftbins_max),edc2wcx2fract(edriftbins_max),
+     &       edc2wcv1fract(edriftbins_max),edc2wcv2fract(edriftbins_max)
+
+*     --- for honeycomb-type chamber
+      Real*4 edrift_coeff(4,emax_num_dc1_slots)
+      Real*4 edc2_drift_coeff(4,emax_num_dc2_slots)
+
+      common/HES_DRIFT/
+     &        edc1fract,
+     &        edc2fract,
+     &        edriftbinsz,
+     &        edrift1stbin,
+     &        edriftbins,
+     &	     edrift_coeff,
+     &	     edc2_drift_coeff
+
+      equivalence (edc1wc01fract(1),edc1fract(1,1))
+      equivalence (edc1wc02fract(1),edc1fract(1,2))
+      equivalence (edc1wc03fract(1),edc1fract(1,3))
+      equivalence (edc1wc04fract(1),edc1fract(1,4))
+      equivalence (edc1wc05fract(1),edc1fract(1,5))
+      equivalence (edc1wc06fract(1),edc1fract(1,6))
+      equivalence (edc1wc07fract(1),edc1fract(1,7))
+      equivalence (edc1wc08fract(1),edc1fract(1,8))
+      equivalence (edc1wc09fract(1),edc1fract(1,9))
+      equivalence (edc1wc10fract(1),edc1fract(1,10))
+      equivalence (edc2wcu1fract(1),edc2fract(1,1))
+      equivalence (edc2wcu2fract(1),edc2fract(1,2))
+      equivalence (edc2wcx1fract(1),edc2fract(1,3))
+      equivalence (edc2wcx2fract(1),edc2fract(1,4))
+      equivalence (edc2wcv1fract(1),edc2fract(1,5))
+      equivalence (edc2wcv2fract(1),edc2fract(1,6))
+
+
+*----------------------------------------------------------------------
+* INFORMATION ABOUT LAYER GEOMETRY AND TRACKING PARAMETERS
+*
+*     CTPTYPE=parm
+*
+* 
+      Integer*4 entracks_pre_max
+      Integer*4 entrackhits_pre_max
+      Integer*4 enum_fitting
+      Parameter(entracks_pre_max=5120)
+      Parameter(entrackhits_pre_max=5120)
+      Parameter(enum_fitting=4)
+
+      integer*4 edc1max_chamber_hits
+      integer*4 edc1max_space_points   
+      integer*4 edc1max_hits_per_point 
+      integer*4 edc2max_chamber_hits
+      integer*4 edc2max_space_points   
+      integer*4 edc2max_hits_per_point 
+      integer*4 enum_fpray_param    
+      integer*4 edc1_num_cards       
+      integer*4 edc2_num_cards       
+      
+		parameter (edc1max_chamber_hits=EMAX_DC1_HITS)
+      parameter (edc1max_space_points=ENTRACKS_PRE_MAX)
+      parameter (edc1max_hits_per_point=15)
+		parameter (edc2max_chamber_hits=272)
+      parameter (edc2max_space_points=ENTRACKS_PRE_MAX)
+      parameter (edc2max_hits_per_point=50)
+      parameter (enum_fpray_param=4)
+      parameter (edc1_num_cards=70)
+      parameter (edc2_num_cards=40)
+
+      integer*4 edc1_num_layers   
+      integer*4 edc1_layers_per_chamber
+      integer*4 edc1_tdc_min_win(emax_num_dc1_layers)  
+      integer*4 edc1_tdc_max_win(emax_num_dc1_layers)  
+      integer*4 edc2_num_layers   
+      integer*4 edc2_layers_per_chamber
+      integer*4 edc2_tdc_min_win(emax_num_dc2_layers)  
+      integer*4 edc2_tdc_max_win(emax_num_dc2_layers)  
+
+      Integer*4 edc1track_chi2min
+*      Integer*4 edc2track_chi2min
+
+      integer*4 edc1min_hit         
+      integer*4 edc2min_hit         
+* minimum hits for space point
+      integer*4 edc1min_combos      
+      integer*4 edc2min_combos      
+* minimum combos for space point
+      integer*4 edc1max_pr_hits     
+      integer*4 edc2max_pr_hits     
+* max number of hits in each layer for
+* pattern recognition to be done in that pla
+
+c      wire velocity corrections.
+c      logical edc_readout_x      
+* true = read out from side (like x layer)
+
+      real*4  edc1_readout_corr(emax_num_dc1_layers)   
+      real*4  edc2_readout_corr(emax_num_dc2_layers)   
+* wire path length/dist. to readout side
+      real*4  edc1_wire_velocity  
+      real*4  edc2_wire_velocity  
+* propogation velocity of signal on wire(cm/ns)
+      real*4  edc1_drifttime_sign(emax_num_dc1_layers) 
+      real*4  edc2_drifttime_sign(emax_num_dc2_layers) 
+* sign of correction term.
+      real*4  edc1_central_time(emax_num_dc1_layers)   
+      real*4  edc2_central_time(emax_num_dc2_layers)   
+* ave. time (ns) for signal to reach disc. card.
+* (both times are from center of the chamber)
+* timing offsets per card.
+      integer*4 edc1_sing_cardid(emax_num_dc1_layers)  
+      integer*4 edc2_sing_cardid(emax_num_dc2_layers)  
+*! array of card id''s so one can put cuts/test on a per/card basys
+      integer*4 edc1_card_no(edc1_max_wires_per_layer,emax_num_dc1_layers)      
+      integer*4 edc2_card_no(edc2_max_wires_per_layer,emax_num_dc2_layers)      
+* card number
+      real*4 edc1_card_delay(edc1_num_cards)      
+      real*4 edc2_card_delay(edc2_num_cards)      
+* delay for a given card
+      integer*4 edc1_card_pos(edc1_num_cards)
+      integer*4 edc2_card_pos(edc2_num_cards)
+
+      real*4 edc1space_point_criterion 
+      real*4 edc2space_point_criterion 
+* maximum distance**2 to join pairs/combos.
+*      real*4 edc1space_point_crit_loose 
+*      real*4 edc2space_point_crit_loose 
+* between pair-layers. 1&2 and 3&4 etc.
+
+*
+*     CTPTYPE=event
+*     enspace_points    number of space points in each chamber
+*     etrack_fit_num	track number in fitting loop
+*     enspace_points_tot total number of space points after select.
+*     elayeredc(emax_space_points)  good layer pattern unit, 
+*                                    set bit if respective layer hit
+*                                 replaced from glayeredc (Miyoshi)
+*                                 set bit if respective layer
+*                                 was hit.
+*
+      integer*4 edc1ncham_hits
+      integer*4 edc1nspace_points     
+      integer*4 edc1track_fit_num     
+      integer*4 edc1nspace_points_tot 
+      integer*4 glayeredc1(edc1max_space_points)   
+      integer*4 edc1_i_have_hit(emax_num_dc1_layers) 
+      integer*4 elayeredc11(edc1max_space_points)  
+      integer*4 elayeredc12(edc1max_space_points)  
+      integer*4 elayeredc13(edc1max_space_points)  
+      equivalence (elayeredc11(1),glayeredc1(1))
+      equivalence (elayeredc12(1),glayeredc1(2))
+      equivalence (elayeredc13(1),glayeredc1(3))
+      
+      integer*4 edc1space_point_hits(edc1max_space_points,edc1max_hits_per_point+2)  
+** for 'pre link' by MIZUKI
+      real*4 starttime(edc1max_space_points)
+*     array of n rows of space points
+*     (n,1) = number of hits
+*     (n,2) = number of valid combinations
+*     (n,3...) hit numbers for space point
+
+*     espace_points(i,1)--x (i,2) --y
+*     ebeststub(i,1-4), stubs in e_left_right.f
+*     final drift times and distances
+
+      real*4 edc1space_points(edc1max_space_points,2)         
+      real*4 edc1beststub(edc1max_space_points,enum_fpray_param)             
+      real*4 edc1_sing_drifttime(emax_num_dc1_layers)    
+      real*4 edc1_sing_driftdis(emax_num_dc1_layers)     
+      
+
+		integer*4 edc2ncham_hits
+      integer*4 edc2nspace_points     
+      integer*4 edc2track_fit_num     
+      integer*4 edc2nspace_points_tot 
+      integer*4 glayeredc2(edc2max_space_points)   
+      integer*4 edc2_i_have_hit(emax_num_dc1_layers) 
+      integer*4 elayeredc21(edc2max_space_points)  
+      integer*4 elayeredc22(edc2max_space_points)  
+      integer*4 elayeredc23(edc2max_space_points)  
+      equivalence (elayeredc21(1),glayeredc2(1))
+      equivalence (elayeredc22(1),glayeredc2(2))
+      equivalence (elayeredc23(1),glayeredc2(3))
+      
+      integer*4 edc2space_point_hits(edc2max_space_points,edc2max_hits_per_point+2)  
+      
+      real*4 edc2space_points(edc2max_space_points,2)         
+      real*4 edc2beststub(edc2max_space_points,enum_fpray_param)             
+      integer*4 edc2_besttrk(edc1max_space_points)         
+      real*4 edc2_sing_drifttime(emax_num_dc1_layers)    
+      real*4 edc2_sing_driftdis(emax_num_dc1_layers)     
+      
+      
+      
+      
+      common/EDC1_TRACKING/
+     &     edc1_num_layers,
+     &     edc1_layers_per_chamber,
+     &     glayeredc1,
+     &     edc1_i_have_hit,
+     &     edc1space_points,
+     &     edc1space_point_hits,
+     &     edc1nspace_points,
+     &     edc1nspace_points_tot,
+     &	  starttime,
+     &     edc1beststub,
+     &     edc1ncham_hits,
+     &     edc1track_fit_num,
+     &     edc1space_point_criterion,
+*     &     edc1space_point_crit_loose,
+     &     edc1_tdc_min_win, 
+     &     edc1_tdc_max_win,
+     &     edc1track_chi2min,
+     &     edc1min_hit,edc1min_combos,
+     &     edc1max_pr_hits,
+     &     edc1_sing_drifttime,
+     &     edc1_sing_driftdis,
+     &     edc1_wire_velocity,
+     &     edc1_central_time,
+     &     edc1_drifttime_sign,
+     &     edc1_readout_corr,
+     &     edc1_card_delay,
+     &     edc1_card_pos,
+     &     edc1_card_no,
+     &     edc1_sing_cardid
+      
+		common/EDC2_TRACKING/
+     &     edc2_num_layers,
+     &     edc2_layers_per_chamber,
+     &     glayeredc2,
+     &     edc2_i_have_hit,
+     &     edc2space_points,
+     &     edc2space_point_hits,
+     &     edc2_besttrk,
+     &     edc2nspace_points,
+     &     edc2nspace_points_tot,
+     &     edc2beststub,
+     &     edc2ncham_hits,
+     &     edc2track_fit_num,
+     &     edc2space_point_criterion,
+*     &     edc2space_point_crit_loose,
+     &     edc2_tdc_min_win, 
+     &     edc2_tdc_max_win,
+*     &     edc2track_chi2min,
+     &     edc2min_hit,edc2min_combos,
+     &     edc2max_pr_hits,
+     &     edc2_sing_drifttime,
+     &     edc2_sing_driftdis,
+     &     edc2_wire_velocity,
+     &     edc2_central_time,
+     &     edc2_drifttime_sign,
+     &     edc2_readout_corr,
+     &     edc2_card_delay,
+     &     edc2_card_pos,
+     &     edc2_card_no,
+     &     edc2_sing_cardid
+
+*  not used for EDC tracking.
+*     &     edc1_readout_x(emax_num_dc1_layers)
+
+*----------------------------------------------------------------------
+* MATRICES FOR 3 PARAMETER FITS.
+*
+*     CTPTYPE=parm
+*
+* matrix AA and its inverse AAINV 
+* array of determinants of AA
+
+      real*8 eaa3(3,3),eaainv3(3,3,emax_num_dc1_layers+1)      
+      real*8 edet3(emax_num_dc1_layers+1)             
+
+      common/HES_TFIT_MATRIX/
+     &     eaa3,
+     &     eaainv3,
+     &     edet3
+
+*----------------------------------------------------------------------
+* SEVA'S CORRECTION COMMON VALUES
+*
+*
+      integer*4 esevaflag
+      integer on_track_hits(entracks_pre_max,11) 
+      integer on_track_hits_pre(entracks_pre_max,11) 
+      
+		common/SEVA_CORRECTION/
+     &     esevaflag,
+     &     on_track_hits,
+     &     on_track_hits_pre
+
+*----------------------------------------------------------------------
+* DRIFT CHAMBER DEBUGGING FLAGS/INFO.
+*
+*     CTPTYPE=parm
+*
+* debug print flags, if flags .ne. 0 then execute debug code
+
+      integer*4 edebugprintrawdc1
+      integer*4 edebugprintdecodeddc1
+      integer*4 edebugflagpsi          
+      integer*4 edebugflaggeometry
+      integer*4 edebugflagpr
+      integer*4 edebugflagstubs
+      integer*4 edebuglinkstubs
+      integer*4 edebugtrackprint
+      integer*4 edebugstubchisq
+* call h_print_tar_track
+      integer*4 edebugtartrackprint  
+* dumps tof fitting data
+      integer*4 edebugdumptof         
+* switch to make tracks of all stubs
+      integer*4 esingle_stub         
+* switch for alternate L/R determ. of Y,Yprime layers
+      integer*4 esmallAngleApprox    
+      integer*4 eluno
+* Include EDC2 or not
+      integer*4 edc1trackingflag                
+      integer*4 edc2flag                
+* logical unit number for debugging output
+
+      common/HES_TRACKFLAGS/
+     &     eluno,
+     &     edebugflagpsi,
+     &     edebugflaggeometry,
+     &     edebugflagpr,
+     &     edebugflagstubs,
+     &     edebuglinkstubs,
+     &     edebugtrackprint,
+     &     edebugstubchisq,
+     &     edebugtartrackprint,
+     &     edebugprintrawdc1,
+     &     edebugprintdecodeddc1,
+     &     edebugdumptof,
+     &     esingle_stub,
+     &     esmallAngleApprox,
+     &     edc1trackingflag,
+     &     edc2flag
+
+*----------------------------------------------------------------------
+* DRIFT CHAMBER EFFICIENCY MEASUREMENTS.
+*
+*     CTPTYPE=parm
+*
+* warning levels for efficiency
+      real*4 edc1_min_layer_eff(emax_num_dc1_layers)
+      real*4 edc1_min_wire_eff
+      real*4 edc2_min_layer_eff(emax_num_dc2_layers)
+      real*4 edc2_min_wire_eff
+*
+*     CTPTYPE=event
+*
+* multiple hits per wire statistics.
+      integer*4 edc1wire_mult(edc1_max_wires_per_layer,emax_num_dc1_layers)
+      integer*4 edc1wire_early_mult(edc1_max_wires_per_layer,emax_num_dc1_layers)
+      integer*4 edc1wire_late_mult(edc1_max_wires_per_layer,emax_num_dc1_layers)
+      integer*4 edc1wire_extra_mult(edc1_max_wires_per_layer,emax_num_dc1_layers)
+      integer*4 edc2wire_mult(edc2_max_wires_per_layer,emax_num_dc2_layers)
+      integer*4 edc2wire_early_mult(edc2_max_wires_per_layer,emax_num_dc2_layers)
+      integer*4 edc2wire_late_mult(edc2_max_wires_per_layer,emax_num_dc2_layers)
+      integer*4 edc2wire_extra_mult(edc2_max_wires_per_layer,emax_num_dc2_layers)
+* stuff for calcualting efficiency per wire.
+      integer*4 edc1_shouldhit(emax_num_dc1_layers,edc1_max_wires_per_layer)
+      integer*4 edc1_didhit(emax_num_dc1_layers,edc1_max_wires_per_layer)
+      integer*4 edc1_shouldsum(emax_num_dc1_layers)
+      integer*4 edc1_didsum(emax_num_dc1_layers)
+      integer*4 edc1_eff(emax_num_dc1_layers)
+*     --- track position per layer, in x,y,u,v directions.
+*     --- edc1...:for each track, edc1...:final.
+      real*4 eedc1_track_coord(emax_num_dc1_layers)
+      real*4 eedc2_track_coord(emax_num_dc2_layers)
+
+*        edc1_shouldhit,     !times a wire should have fired.
+*        edc1_didhit,        !times a wire did fire.
+*        edc1_shouldsum,     !sum over layer.
+*        edc1_didsum,        !sum over layer.
+*        edc1_eff,           !effic. per layer.
+*        edc1_min_wire_eff,  !warning level for wire effic.
+*        edc1_min_layer_eff, !warning level for layer effic.
+      integer*4 edc2_shouldhit(emax_num_dc2_layers,edc2_max_wires_per_layer)
+      integer*4 edc2_didhit(emax_num_dc2_layers,edc2_max_wires_per_layer)
+      integer*4 edc2_shouldsum(emax_num_dc2_layers)
+      integer*4 edc2_didsum(emax_num_dc2_layers)
+      integer*4 edc2_eff(emax_num_dc2_layers)
+
+      common/hes_dc1_track_efficiency/
+     &   eedc1_track_coord,
+     &   edc1_shouldhit,    
+     &   edc1_didhit,       
+     &   edc1_shouldsum,    
+     &   edc1_didsum,        
+     &   edc1_eff,         
+     &   edc1_min_wire_eff,  
+     &   edc1_min_layer_eff,
+     &   edc1wire_mult,
+     &   edc1wire_early_mult,
+     &   edc1wire_late_mult,
+     &   edc1wire_extra_mult
+      
+		common/hes_dc2_track_efficiency/
+     &   eedc2_track_coord,
+     &   edc2_shouldhit,    
+     &   edc2_didhit,       
+     &   edc2_shouldsum,    
+     &   edc2_didsum,        
+     &   edc2_eff,         
+     &   edc2_min_wire_eff,  
+     &   edc2_min_layer_eff,
+     &   edc2wire_mult,
+     &   edc2wire_early_mult,
+     &   edc2wire_late_mult,
+     &   edc2wire_extra_mult
+
+
+*----------------------------------------------------------------------
+
+
+*----------------------------------------------------------------------
+*     EDC fittng test in e_dc1_track_fit & e_dc2_track_fit
+*
+*     CTPTYPE=event
+*
+*     3 times fitting is enough to obtain good chi2.
+*     
+*     before final vectors are filled, 
+*     fitting results are put in entracks_pre common block.
+*
+
+      Integer*4 entracks_pre
+      Integer*4 entrack_hits_pre(entracks_pre_max,entrackhits_pre_max+1)
+      Integer*4 edc2ntrack_hits_pre(entracks_pre_max,entrackhits_pre_max+1)
+      Integer*4 enfree_pre(entracks_pre_max)
+      Integer*4 edc2nfree(entracks_pre_max)
+
+*     this is best chi2perdof_pre
+      Integer*4 edc1bestchi2_pre_index(enum_fitting)
+      Integer*4 edc2bestchi2_index
+
+      real*4 edc1_residual_pre(entracks_pre_max,emax_num_dc1_layers,enum_fitting)
+      real*4 edc1_track_coord_pre(entracks_pre_max,emax_num_dc1_layers,enum_fitting)
+      real*4 edc1_drift_time_pre(entracks_pre_max,emax_num_dc1_layers,enum_fitting)
+      real*4 edc1_drift_dis_pre(entracks_pre_max,emax_num_dc1_layers,enum_fitting)
+      real*4 edc1_z(entracks_pre_max,emax_num_dc1_layers)
+      real*4 edc1_spos(entracks_pre_max,emax_num_dc1_layers)
+      real*4 edc2_residual_pre(entracks_pre_max,emax_num_dc2_layers)
+      real*4 edc2_track_coord_pre(entracks_pre_max,emax_num_dc2_layers)
+      real*4 edc2_drift_dis_pre(entracks_pre_max,emax_num_dc2_layers)
+      real*4 edc2_drift_time_pre(entracks_pre_max,emax_num_dc2_layers)
+      real*4 edc1chi2_pre(entracks_pre_max,enum_fitting)
+      real*4 edc1chi2perdof_pre(entracks_pre_max,enum_fitting)
+      real*4 edc1bestchi2_pre(enum_fitting)
+      real*4 edc2chi2(entracks_pre_max)
+      real*4 edc2chi2perdof(entracks_pre_max)
+      real*4 edc2bestchi2
+      real*4 ex_fp_pre(entracks_pre_max)
+      real*4 ey_fp_pre(entracks_pre_max)
+      real*4 exp_fp_pre(entracks_pre_max)
+      real*4 eyp_fp_pre(entracks_pre_max)
+      real*4 ex_fp_pre1(entracks_pre_max,enum_fitting)
+      real*4 ey_fp_pre1(entracks_pre_max,enum_fitting)
+      real*4 exp_fp_pre1(entracks_pre_max,enum_fitting)
+      real*4 eyp_fp_pre1(entracks_pre_max,enum_fitting)
+      real*4 ex_fp_pre2(entracks_pre_max)
+      real*4 ey_fp_pre2(entracks_pre_max)
+      real*4 exp_fp_pre2(entracks_pre_max)
+      real*4 eyp_fp_pre2(entracks_pre_max)
+
+*     EDEL_FP : FOCAL PLANE ERROR MATRIX   
+*     x,y,xp,yp for roteted focal plane
+
+      REAL*4  EDEL_FP(4,4,ENTRACKS_MAX)                         
+      REAL*4  EX_FP_rot(ENTRACKS_MAX)                         
+      REAL*4  EY_FP_rot(ENTRACKS_MAX)                               
+      REAL*4  EXP_FP_rot(ENTRACKS_MAX)                          
+      REAL*4  EYP_FP_rot(ENTRACKS_MAX)                            
+* THE FOCAL PLANE ERROR MATRIX IS A 4 BY 4 BY SNTRACK_MAX ARRAY         
+* THE FOUR INDECIES FOR EACH TRACK ARE X, XP, Y,  YP                       
+* THE ERROR MATRIX FOR EACH TRACK IS SYMMETRIC ABOUT THE DIAGONAL          
+*      DELXX   DELXXP  DELXY   DELXYP                                      
+*      DELXPX  DELXPXP DELXPY  DELXPYP                                     
+*      DELYPX  DELYXP  DELYY   DELYYP                                      
+*      DELYPX DELYPXP  DELYPY  DELYPYP         
+
+      common/HES_FITTING_TEST/
+     &     entracks_pre,
+     &     entrack_hits_pre,
+     &     edc2ntrack_hits_pre,
+     &     enfree_pre,
+     &     edc1bestchi2_pre_index,
+     &     edc1bestchi2_pre,
+     &     edc2bestchi2_index,
+     &     edc2bestchi2,
+     &     edc1_residual_pre,
+     &     edc1_track_coord_pre,
+     &  	  edc1_drift_time_pre,
+     &     edc1_drift_dis_pre,
+     &     edc1_z,
+     &     edc1_spos,
+     &     edc2_residual_pre,
+     &     edc2_track_coord_pre,
+     &     edc2_drift_dis_pre,
+     &     edc1chi2_pre,
+     &     edc1chi2perdof_pre,
+     &     edc2chi2,
+     &     edc2chi2perdof,
+     &     ex_fp_pre,
+     &     ey_fp_pre,
+     &     exp_fp_pre,
+     &     eyp_fp_pre,
+     &     ex_fp_pre1,
+     &     ey_fp_pre1,
+     &     exp_fp_pre1,
+     &     eyp_fp_pre1,
+     &     ex_fp_pre2,
+     &     ey_fp_pre2,
+     &     exp_fp_pre2,
+     &     eyp_fp_pre2,
+     &     ex_fp_rot,
+     &     ey_fp_rot,
+     &     exp_fp_rot,
+     &     eyp_fp_rot,
+     &     edel_fp
+     
+
+*----------------------------------------------------------------------
+* DEADWIRE LIST
+*
+*     CTPTYPE=parm
+*
+      integer*4 edc1max_num_deadwires
+      parameter (edc1max_num_deadwires=70)
+      integer*4 edc1_num_deadwires
+      integer*4 edc1_deadwire_layer(edc1max_num_deadwires)
+      integer*4 edc1_deadwire_num(edc1max_num_deadwires)
+      integer*4 edc2max_num_deadwires
+      parameter (edc2max_num_deadwires=70)
+      integer*4 edc2_num_deadwires
+      integer*4 edc2_deadwire_layer(edc2max_num_deadwires)
+      integer*4 edc2_deadwire_num(edc2max_num_deadwires)
+
+      common/edc1_dead_wires/
+     &   edc1_num_deadwires,  
+     &   edc1_deadwire_layer, 
+     &   edc1_deadwire_num    
+      
+		common/edc2_dead_wires/
+     &   edc2_num_deadwires,  
+     &   edc2_deadwire_layer, 
+     &   edc2_deadwire_num    
+
+
+*---------------------------------
+*     closer track check in e_select_good_tracks.f
+*     CTPTYPE=parm
+
+      REAL*4  dex_fp                        
+      REAL*4  dey_fp                              
+      REAL*4  dexp_fp                          
+      REAL*4  deyp_fp                            
+      Real*4  HES_DX_MIN 
+      Real*4  HES_DY_MIN 
+      Real*4  HES_DXP_MIN 
+      Real*4  HES_DYP_MIN 
+
+      Common/hes_good_tracks/
+     &   dex_fp,
+     &   dey_fp,
+     &   dexp_fp,
+     &   deyp_fp,
+     &   HES_DX_MIN,
+     &   HES_DY_MIN,
+     &   HES_DXP_MIN,
+     &   HES_DYP_MIN
+
+*
+*     CTPTYPE=parm
+*
+*      logical e1hit1,e1hit2,e1hit3,e1hit4,e1hit5,e1hit6
+*      logical e1hit7,e1hit8,e1hit9,e1hit10
+c      logical e1hitslt,e1layersgt
+c      logical ehitslt,elayersgt
+c      logical estublt
+c      logical f1espacepoints,fespacepoints
+c      logical ehitslayers,ehitslayerssps,ehitslayersspsstubs
+c      logical espacepoints
+c      logical etest1
+c      logical efoundtrack, ecleantrack
+
+      integer enumhit1,enumhit2,enumhit3,enumhit4,enumhit5,enumhit6
+      integer enumhit7,enumhit8,enumhit9,enumhit10
+      integer enumhits1,enumlayers1
+      integer enumscins1,enumscins2
+      integer estubtest
+      real*4 estubminx,estubminy,estubminxp,estubminyp
+      integer escinhit(4,16)
+      integer enclust(4)
+      integer ethreescin(4)
+      integer eslope
+      integer ebestxpscin
+      integer ebestypscin
+      integer egoodscinhits
+      integer exloscin,exhiscin
+      integer eyloscin,eyhiscin
+      integer etrack_eff_test_num_scin_layers
+
+       common/dereks_hes_track_tests/
+c     &    e1hit1,
+c     &    e1hit2,
+c     &    e1hit3,
+c     &    e1hit4,
+c     &    e1hit5,
+c     &    e1hit6,
+c     &    e1hit7,
+c     &    e1hit8,
+c     &    e1hit9,
+c     &    e1hit10,
+     &    enumhit1,enumhit2,enumhit3,enumhit4,enumhit5,
+     &    enumhit6,enumhit7,enumhit8,enumhit9,enumhit10,
+c     &    e1hitslt,
+c     &    e1layersgt,
+c     &    ehitslt,
+c     &    elayersgt,
+c     &    estublt,
+c     &    f1espacepoints,
+c     &    fespacepoints,
+c     &    ehitslayers,
+c     &    ehitslayerssps,
+c     &    ehitslayersspsstubs,
+c     &    espacepoints,
+c     &    etest1,
+c     &    efoundtrack,
+c     &    ecleantrack,
+     &    enumhits1,enumlayers1,
+     &    enumscins1,enumscins2,
+     &    estubtest,
+     &    estubminx,
+     &    estubminy,
+     &    estubminxp,
+     &    estubminyp,
+     &    escinhit,
+     &    enclust,
+     &    ethreescin,
+     &    eslope,
+     &    ebestxpscin,
+     &    ebestypscin,
+     &    egoodscinhits,
+     &    exloscin,exhiscin,eyloscin,eyhiscin,
+     &    etrack_eff_test_num_scin_layers
+
+*     
+*     CTPTYPE=parm
+*     
+*     output tracking results
+*     
+       integer*4 e_track_output_on
+       integer*4 e_tar_output_on
+       
+       Common /hes_tracking_output_flag/
+     &      e_track_output_on,
+     &      e_tar_output_on
+       
+*     
+*     CTPTYPE=event
+*     
+       integer*4 e_kept_track_ID_number
+       integer*4 e_kept_ntrack
+       integer*4 e_kept_track_index
+       integer*4 e_kept_tar_ID_number
+       integer*4 e_kept_ntar
+       integer*4 e_kept_tar_index
+
+       Common /hes_tracking_output_event/
+     &      e_kept_track_ID_number,
+     &      e_kept_ntrack,
+     &      e_kept_track_index,
+     &      e_kept_tar_ID_number,
+     &      e_kept_ntar,
+     &      e_kept_tar_index

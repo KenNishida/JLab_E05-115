@@ -23,12 +23,12 @@ hscinsumposadc3, 128, 0.,8192.  $HKS HTF2X pos ADC
 hscinsumnegadc1, 128, 0.,8192.  $HKS HTF1X neg ADC
 hscinsumnegadc2, 128, 0.,8192.  $HKS HTF1Y neg ADC
 hscinsumnegadc3, 128, 0.,8192.  $HKS HTF2X neg ADC
-hscinsumpostdc1, 128, 10000.,30000.  $HKS HTF1X pos TDC
-hscinsumpostdc2, 128, 10000.,30000.  $HKS HTF1Y pos TDC
-hscinsumpostdc3, 128, 10000.,30000.  $HKS HTF2X pos TDC
-hscinsumnegtdc1, 128, 10000.,30000.  $HKS HTF1X neg TDC
-hscinsumnegtdc2, 128, 10000.,30000.  $HKS HTF1Y neg TDC
-hscinsumnegtdc3, 128, 10000.,30000.  $HKS HTF2X neg TDC
+hscinsumpostdc1, 500, 18000.,23000.  $HKS HTF1X pos TDC
+hscinsumpostdc2, 500, 18000.,23000.  $HKS HTF1Y pos TDC
+hscinsumpostdc3, 500, 18000.,23000.  $HKS HTF2X pos TDC
+hscinsumnegtdc1, 500, 18000.,23000.  $HKS HTF1X neg TDC
+hscinsumnegtdc2, 500, 18000.,23000.  $HKS HTF1Y neg TDC
+hscinsumnegtdc3, 500, 18000.,23000.  $HKS HTF2X neg TDC
 
 hstarttime,200,0.,200.          $HKS start time
 
@@ -55,12 +55,12 @@ haersumposadc3, 128, 0.,8192.   $HKS AC3 all pos ADC
 haersumnegadc1, 128, 0.,8192.   $HKS AC1 all neg ADC
 haersumnegadc2, 128, 0.,8192.   $HKS AC2 all neg ADC
 haersumnegadc3, 128, 0.,8192.   $HKS AC3 all neg ADC
-haersumpostdc1, 300,500.,1100.   $HKS AC1 all pos TDC
-haersumpostdc2, 300,500.,1100.   $HKS AC2 all pos TDC
-haersumpostdc3, 300,500.,1100.   $HKS AC3 all pos TDC
-haersumnegtdc1, 300,500.,1100.   $HKS AC1 all neg TDC
-haersumnegtdc2, 300,500.,1100.   $HKS AC2 all neg TDC
-haersumnegtdc3, 300,500.,1100.   $HKS AC3 all neg TDC
+haersumpostdc1, 500,8500.,10500.   $HKS AC1 all pos TDC
+haersumpostdc2, 500,8500.,10500.   $HKS AC2 all pos TDC
+haersumpostdc3, 500,8500.,10500.   $HKS AC3 all pos TDC
+haersumnegtdc1, 500,8500.,10500.   $HKS AC1 all neg TDC
+haersumnegtdc2, 500,8500.,10500.   $HKS AC2 all neg TDC
+haersumnegtdc3, 500,8500.,10500.   $HKS AC3 all neg TDC
 
 hwatrawtothits, 100,-0.5,99.5    $HKS WC raw tot hits
 hwatrawlayer, 2,0.5,2.5         $HKS WC layer raw hitpat
@@ -78,10 +78,10 @@ hwatsumposadc1, 128, 0.,8192.   $HKS WC1 all pos ADC
 hwatsumposadc2, 128, 0.,8192.   $HKS WC2 all pos ADC
 hwatsumnegadc1, 128, 0.,8192.   $HKS WC1 all neg ADC
 hwatsumnegadc2, 128, 0.,8192.   $HKS WC2 all neg ADC
-hwatsumpostdc1, 128, 0.,4096.   $HKS WC1 all pos TDC
-hwatsumpostdc2, 128, 0.,4096.   $HKS WC2 all pos TDC
-hwatsumnegtdc1, 128, 0.,4096.   $HKS WC1 all neg TDC
-hwatsumnegtdc2, 128, 0.,4096.   $HKS WC2 all neg TDC
+hwatsumpostdc1, 500, 8500.,10500.   $HKS WC1 all pos TDC
+hwatsumpostdc2, 500, 8500.,10500.   $HKS WC2 all pos TDC
+hwatsumnegtdc1, 500, 8500.,10500.   $HKS WC1 all neg TDC
+hwatsumnegtdc2, 500, 8500.,10500.   $HKS WC2 all neg TDC
 
 hlucrawtothits, 25,-0.5,24.5    $HKS LC raw tot hits
 hlucrawlayer, 2,0.5,2.5         $HKS LC layer raw hitpat
@@ -104,6 +104,19 @@ hdcrawtothit,130,-0.5,1299.5     $HDC raw tot hits
 hdcrawtothitzoom,500,-0.5,499.5    $HDC raw tot hits (zoom)
 hdcrawtdcall,50,-100.,6400.  $HDC raw tdc (all)
 
+hdcrawlayerhit01,50,0.,50.         $HDC1u  raw layer hit layer-1  
+hdcrawlayerhit02,50,0.,50.         $HDC1up raw layer hit layer-2 
+hdcrawlayerhit03,50,0.,50.       $HDC1x  raw layer hit layer-3 
+hdcrawlayerhit04,50,0.,50.       $HDC1xp raw layer hit layer-4
+hdcrawlayerhit05,50,0.,50.         $HDC1v  raw layer hit layer-5 
+hdcrawlayerhit06,50,0.,50.         $HDC1vp raw layer hit layer-6 
+hdcrawlayerhit07,50,0.,50.         $HDC2u  raw layer hit layer-7 
+hdcrawlayerhit08,50,0.,50.         $HDC2up raw layer hit layer-8 
+hdcrawlayerhit09,50,0.,50.       $HDC2x  raw layer hit layer-9 
+hdcrawlayerhit10,50,0.,50.       $HDC2xp raw layer hit layer-10 
+hdcrawlayerhit11,50,0.,50.         $HDC2v  raw layer hit layer-11 
+hdcrawlayerhit12,50,0.,50.         $HDC2vp raw layer hit layer-12 
+
 hdcrawhitpat01,88,0.,88.         $HDC1u  raw hitpat layer-1  
 hdcrawhitpat02,88,0.,88.         $HDC1up raw hitpat layer-2 
 hdcrawhitpat03,123,0.,123.       $HDC1x  raw hitpat layer-3 
@@ -118,18 +131,18 @@ hdcrawhitpat11,88,0.,88.         $HDC2v  raw hitpat layer-11
 hdcrawhitpat12,88,0.,88.         $HDC2vp raw hitpat layer-12 
 
 
-hdcrawlayertdc01,100,1500.,3000.    $HDC1u  raw tdc layer-1  
-hdcrawlayertdc02,100,1500.,3000.    $HDC1up raw tdc layer-2 
-hdcrawlayertdc03,100,1500.,3000.    $HDC1x  raw tdc layer-3 
-hdcrawlayertdc04,100,1500.,3000.    $HDC1xp raw tdc layer-4
-hdcrawlayertdc05,100,1500.,3000.    $HDC1v  raw tdc layer-5 
-hdcrawlayertdc06,100,1500.,3000.    $HDC1vp raw tdc layer-6 
-hdcrawlayertdc07,100,1500.,3000.    $HDC2u  raw tdc layer-7 
-hdcrawlayertdc08,100,1500.,3000.    $HDC2up raw tdc layer-8 
-hdcrawlayertdc09,100,1500.,3000.    $HDC2x  raw tdc layer-9 
-hdcrawlayertdc10,100,1500.,3000.    $HDC2xp raw tdc layer-10 
-hdcrawlayertdc11,100,1500.,3000.    $HDC2v  raw tdc layer-11 
-hdcrawlayertdc12,100,1500.,3000.    $HDC2vp raw tdc layer-12 
+hdcrawlayertdc01,500,2000.,3000.    $HDC1u  raw tdc layer-1  
+hdcrawlayertdc02,500,2000.,3000.    $HDC1up raw tdc layer-2 
+hdcrawlayertdc03,500,2000.,3000.    $HDC1x  raw tdc layer-3 
+hdcrawlayertdc04,500,2000.,3000.    $HDC1xp raw tdc layer-4
+hdcrawlayertdc05,500,2000.,3000.    $HDC1v  raw tdc layer-5 
+hdcrawlayertdc06,500,2000.,3000.    $HDC1vp raw tdc layer-6 
+hdcrawlayertdc07,500,2000.,3000.    $HDC2u  raw tdc layer-7 
+hdcrawlayertdc08,500,2000.,3000.    $HDC2up raw tdc layer-8 
+hdcrawlayertdc09,500,2000.,3000.    $HDC2x  raw tdc layer-9 
+hdcrawlayertdc10,500,2000.,3000.    $HDC2xp raw tdc layer-10 
+hdcrawlayertdc11,500,2000.,3000.    $HDC2v  raw tdc layer-11 
+hdcrawlayertdc12,500,2000.,3000.    $HDC2vp raw tdc layer-12 
 
 ;f1 trigger time
 

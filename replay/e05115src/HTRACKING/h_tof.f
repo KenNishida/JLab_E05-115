@@ -99,6 +99,7 @@ c     --- thus, if p<0.11 then here we use p=hpcentral
 
          htrk_tof(trk) = -10000
          htrk_beta(trk) = -10000
+         htrk_beta1y(trk) = -10000
          hsnum_scin_hit(trk) = 0
          hsnum_pmt_hit(trk) = 0
 c--
@@ -239,8 +240,8 @@ c     --- or we had good one but previous one has only one hit
                   hscin_on_track(trk,pl) = hit
                   hscin_trk_good(trk,pl) = good
                   hscin_trk_depo(trk,pl) = 
-     &                 sqrt( max(hscin_adc_pos(hit),1)*
-     &                 max(hscin_adc_neg(hit),1))
+     &                 sqrt( max(hscin_adc_pos(hit),1.0)*
+     &                 max(hscin_adc_neg(hit),1.0))
                   hscin_trk_time(trk,pl) = hscin_time(hit)
  
                   hscin_trk_diff(trk,pl) = 
@@ -263,11 +264,11 @@ c     --- current one is not better.
                   hscin_trk_good(trk,pl) = good + 100
                   temp = hscin_trk_depo(trk,pl)
                   hscin_trk_depo(trk,pl) = sqrt(temp*
-     &                 sqrt( max(hscin_adc_pos(hit),1)*
-     &                 max(hscin_adc_neg(hit),1)))
+     &                 sqrt( max(hscin_adc_pos(hit),1.0)*
+     &                 max(hscin_adc_neg(hit),1.0)))
                   hscin_trk_depo2(trk,pl) = 
-     &                 sqrt( max(hscin_adc_pos(hit),1)*
-     &                 max(hscin_adc_neg(hit),1))
+     &                 sqrt( max(hscin_adc_pos(hit),1.0)*
+     &                 max(hscin_adc_neg(hit),1.0))
 c--   Take the average in case of multiple hits within gate   L.Y.
                   temp = hscin_trk_time(trk,pl) 
                   hscin_trk_time(trk,pl) = 0.5*(temp + hscin_time(hit)) 
@@ -295,20 +296,20 @@ c--   L.Yuan  10/02/2009
                   beta_tmp(1) = htrk_leng(trk) / htrk_tof(trk) 
      &                 /speed_of_light
                   beta_tmp(1) = max(0.00001,beta_tmp(1))
-                  beta_tmp(1) = min(100000,beta_tmp(1))
+                  beta_tmp(1) = min(100000.0,beta_tmp(1))
                Else
                   beta_tmp(1) = -1.
                EndIF
                htrk_depo(trk) = 
      &              sqrt(hscin_trk_depo(trk,3)*hscin_trk_depo(trk,1))
 cc               htrk_id(trk) = 1
-            endif               !    1X-2X
+c -sho            endif               !    1X-2X
 c--   debug
 cc            if (abs(hscin_trk_fptime(trk,1)-hscin_trk_fptime(trk,3)).le.5.and.beta_tmp(1).le.0.5) 
 cc     &           print *, 'tof', beta_tmp(1), zcor,
 cc     &      (hscin_trk_fptime(trk,pl),pl=1,3), (hscin_trk_time(trk,pl),pl=1,3)
 cc     &       ( hscin_zpos(pl),pl=1,3)
-            if(hscin_on_track(trk,2).gt.0) then
+            elseif(hscin_on_track(trk,2).gt.0) then
                htrk_tof(trk)  = hscin_trk_time(trk,3) 
      &              - hscin_trk_time(trk,2)
                htrk_leng(trk) = xyz * (hscin_zpos(3) - hscin_zpos(2))
@@ -316,7 +317,7 @@ cc     &       ( hscin_zpos(pl),pl=1,3)
                   beta_tmp(2) = htrk_leng(trk) / htrk_tof(trk) 
      &                 /speed_of_light
                   beta_tmp(2) = max(0.00001,beta_tmp(2))
-                  beta_tmp(2) = min(100000,beta_tmp(2))
+                  beta_tmp(2) = min(100000.0,beta_tmp(2))
                Else
                   beta_tmp(2) = -1
                EndIf
@@ -329,16 +330,27 @@ cc            if (abs(hscin_trk_fptime(trk,2)-hscin_trk_fptime(trk,3)).le.5.and.
 cc     &        print *, 'tof', beta_tmp(1), betap, xyz,
 cc     &     (hscin_trk_fptime(trk,pl),pl=1,3), (hscin_trk_time(trk,pl),pl=1,3),
 cc     &      (hscin_zpos(pl),pl=1,3)
-c--   
+c--  
+c            if (beta_tmp(1).ge.0.5.and.beta_tmp(1).le.1.3) then
+c               good_beta(1) = 1
+c               htrk_beta(trk) = beta_tmp(1)
+c            elseif (beta_tmp(2).ge.0.5.and.beta_tmp(2).le.1.3) then
+c               good_beta(2) = 1
+c               htrk_beta(trk) = beta_tmp(2)
+c            else
+c               good_beta(1) = 1
+c               htrk_beta(trk) = 2
+c            endif
+c --- divide beta_1X & beta_1Y   S.Nagao
             if (beta_tmp(1).ge.0.5.and.beta_tmp(1).le.1.3) then
-               good_beta(1) = 1
                htrk_beta(trk) = beta_tmp(1)
-            elseif (beta_tmp(2).ge.0.5.and.beta_tmp(2).le.1.3) then
-               good_beta(2) = 1
-               htrk_beta(trk) = beta_tmp(2)
             else
-               good_beta(1) = 1
-               htrk_beta(trk) = beta_tmp(1)
+               htrk_beta(trk) = 2
+            endif
+            if (beta_tmp(2).ge.0.5.and.beta_tmp(2).le.1.3) then
+               htrk_beta1y(trk) = beta_tmp(2)
+            else
+               htrk_beta1y(trk) = 2
             endif
 c--   
          endif                      !  2X has hit
@@ -386,7 +398,7 @@ c         Write(*,*) '(tof)betap=',hidtrkbetap,betap
          Call HF1(hidtrkbetap,betap,1.)
 
          Call HF1(hidtrkbetaall,htrk_beta(trk),1.)
-         Call HF1(hidtrkbeta(htrk_id(trk)),htrk_beta(trk),1.)
+c         Call HF1(hidtrkbeta(htrk_id(trk)),htrk_beta(trk),1.) !htrk_id is not well defined DK 
          Call HF1(hidtrkdepo,htrk_depo(trk),1.)
          Call HF1(hidtrkid,float(htrk_id(trk)),1.)
          Call HF2(hidtrkdeltabeta,htrk_beta(trk),hdelta_tar(trk),1.)
@@ -399,7 +411,7 @@ c         Write(*,*) '(tof)betap=',hidtrkbetap,betap
          EndDo
 
          Call HF1(hidtrktimeatfpall,htrk_time_atfp(trk),1.)
-         Call HF1(hidtrktimeatfp(htrk_id(trk)),htrk_time_atfp(trk),1.)
+c         Call HF1(hidtrktimeatfp(htrk_id(trk)),htrk_time_atfp(trk),1.) !htrk_id is not well defined DK
 
  100  enddo                     !end of loop over tracks
 

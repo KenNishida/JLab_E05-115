@@ -15,16 +15,18 @@
  * Author:  Stephen Wood, CEBAF Hall C
  *
  * Revision History:
- *   $Log: thTestParse.c,v $
- *   Revision 1.1.1.1  2009/06/23 13:55:47  kawama
+ *   $Log$
+ *   Revision 1.6  2011/03/04 15:25:50  jones
+ *   Used to be %li and %ld, but that makes 8 byte result stuffed into 4 byte lval
  *
- *   e05115 src repository for software development
+ *   Revision 1.4.24.1.2.1  2011/03/03 20:09:44  jones
+ *   Used to be %li and %ld, but that makes 8 byte result stuffed into 4 byte *tokval
  *
- *   Revision 1.1.1.1  2005/05/14 21:44:37  miyoshi
+ *   Revision 1.4.24.1  2007/09/10 21:32:47  pcarter
+ *   Implemented changes to allow compilation on RHEL 3,4,5 and MacOSX
  *
- *
- *   Revision 1.1.1.1  2004/08/30 21:21:39  miyoshi
- *   new dir
+ *   Revision 1.4  2003/02/21 20:55:25  saw
+ *   Clean up some types and casts to reduce compiler warnings.
  *
  *   Revision 1.3  1999/11/04 20:34:07  saw
  *   Alpha compatibility.
@@ -123,7 +125,13 @@ in the test package.)*/
 #include <stdio.h>
 #include <string.h>
 #include <math.h>
-#include <values.h>
+
+#define INT_MAX 2147483647
+/* limits.h is used only to get #define INT_MAX 2147483647
+ * If you don't have limits.h, try #include <values.h> instead and then
+ * #define INT_MAX MAXINT */
+//#include <limits.h>
+
 #include <rpc/rpc.h>
 #include "daVar.h"
 #include "daVarRpc.h"
@@ -134,7 +142,7 @@ in the test package.)*/
 #include "thInternal.h"
 #include "cfortran.h"
 
-void thTestRHandler(char *name, daVarStruct *varclass, any *retval);
+daVarStatus thTestRHandler(char *name, daVarStruct *varclass, any *retval);
 
 CODE opstack[100];		/* Operator stack */
 CODE typstack[100];		/* Result type stack */
@@ -337,7 +345,7 @@ char *thGetTok(char *linep, int *tokenid, char **tokstr,
     }
     lastop = *tokenid;
   } else {			/* Operand */
-    int optype;
+ //   int optype;
     int isnum;
     int efound;
 
@@ -374,10 +382,12 @@ char *thGetTok(char *linep, int *tokenid, char **tokstr,
     switch(thIDToken(string))
       {
       case TOKINT:
+	/* Used to be %li and %ld, but that makes 8 byte result stuffed into
+	   4 byte *tokval */
 	if(string[0] == '0' && (string[1] == 'x' || string[1] == 'X')) {
-	  sscanf(string,"%li",tokval); /* Treat as Hex */
+	  sscanf(string,"%i",tokval); /* Treat as Hex */
 	} else {
-	  sscanf(string,"%ld",tokval); /* Treat as decimal */
+	  sscanf(string,"%d",tokval); /* Treat as decimal */
 	}
 	*tokenid = OPPUSHINT;
 	break;
@@ -450,7 +460,8 @@ char *thGetTok(char *linep, int *tokenid, char **tokstr,
 	    var.varptr = (void *) malloc(sizeof(DAINT));
 	    var.size = 1;
 	    var.opaque = 0;
-	    var.rhook = var.whook = 0;
+	    var.rhook = 0;
+	    var.whook = 0;
 	    var.type = DAVARINT;
 	    var.flag = DAVAR_READONLY | DAVAR_REPOINTOK;
 	    var.title = savelinep;
@@ -482,7 +493,8 @@ printf("Created test result %s\n",varp->name);
 		  daVarStruct svar;
 		  svar.name = testscalervarname;
 		  svar.opaque = 0;
-		  svar.rhook = svar.whook = 0;
+		  svar.rhook = 0;
+		  svar.whook = 0;
 		  svar.type = DAVARINT;
 		  svar.flag = DAVAR_READONLY | DAVAR_REPOINTOK;
 		  svar.varptr = (void *) malloc(varp->size*sizeof(DAINT));
@@ -636,7 +648,8 @@ thStatus thEvalImed(char *line, DADOUBLE *d, DAINT *i)
   memcpy(((void **)codenext)++, (void *) &resultp, sizeof(void *));
   }
 #else
-  *((void **) codenext)++ = (void *) &result;
+  *((void **) codenext) = (void *) &result; /*phil*/
+  codenext = (CODEPTR) (void **) ((void **)codenext +1);
 #endif
 /*  printf("%x\n",codenext);*/
 #else
@@ -664,12 +677,12 @@ thStatus thEvalImed(char *line, DADOUBLE *d, DAINT *i)
     exptype = *codenext++ & OPRESTYPEMASK;
     lastop = *codelastop & OPCODEMASK;
     if(lastop == OPPUSHPINT || lastop == OPPUSHINTP) {
-      *((DAINT **)codenext)++;
+      codenext = (CODEPTR) (DAINT **) ((DAINT **)codenext + 1);/*phil*/
     } else if(lastop == OPPUSHINT) {
       if(exptype == OPRDOUBLE) {
-	*((DADOUBLE *)codenext)++;
+      codenext = (CODEPTR) (DADOUBLE **) ((DADOUBLE **)codenext + 1);/*phil*/
       } else {			/* Assume ints, floats have size */
-	*((DAINT *)codenext)++;
+        codenext = (CODEPTR) (DAINT *) ((DAINT *)codenext + 1);/*phil*/
       }
     }
 #ifdef RDOUBLE
@@ -692,7 +705,7 @@ thStatus thEvalImed(char *line, DADOUBLE *d, DAINT *i)
   free(codehead);
   if(d) *d = result;
   if(i) {
-    if(result>=MAXINT || result <=-MAXINT) {
+    if(result>=INT_MAX || result <=-INT_MAX) {
       if(retcode==S_SUCCESS)
 	retcode=S_INTOVF;
     } else {
@@ -777,7 +790,8 @@ thStatus thBookaTest(char *line, CODEPTR *codeheadp, CODEPTR *codenextp,
 #ifdef USEMEMCPY
 	    memcpy(((void **)codenext)++,&tokptr,sizeof(void *));
 #else
-	    *((void **)codenext)++ = tokptr;
+	    *(void **)codenext = tokptr;/*phil*/
+            codenext = (CODEPTR) (void **) ((void **)codenext +1);
 #endif
 	  }
 	  /* If TOKEN is push function, then tokval is an index into a list of
@@ -907,10 +921,12 @@ thStatus thBookaTest(char *line, CODEPTR *codeheadp, CODEPTR *codenextp,
 	    *codenext++ = *(DAINT *)&f;
 	  } else {
 	    DAINT i;
+	    /* Used to be %li and %ld, but that makes 8 byte result
+	       stuffed into 4 byte i */
 	    if(token[0] == '0' && (token[1] == 'x' || token[1] == 'X')) {
-	      sscanf(token,"%li",&i); /* Treat as Hex */
+	      sscanf(token,"%i",&i); /* Treat as Hex */
 	    } else {
-	      sscanf(token,"%ld",&i); /* Treat as decimal */
+	      sscanf(token,"%d",&i); /* Treat as decimal */
 	    }
 	    *codenext++ = i;
 	  }
@@ -959,9 +975,11 @@ thStatus thBookaTest(char *line, CODEPTR *codeheadp, CODEPTR *codenextp,
 	      if(toktyp == TOKARRAY)
 		*p = leftp;
 	      if(var.type == DAVARINT || var.type == DAVARFLOAT) {
-		*((void **)codenext)++ = ((DAINT *) var.varptr+index);
+		*(void **)codenext = ((DAINT *) var.varptr+index);/*phil*/
+                codenext = (CODEPTR) (void **) ((void **)codenext + 1);
 		*((void **)codenext) = (void *) malloc(sizeof(token)+1);
-		strcpy((char *) *((void **)codenext)++,token);
+		strcpy((char *) *(void **)codenext,token);
+                codenext = (CODEPTR) (void **) ((void **)codenext + 1);
 	      } else {
 		if(forcefloat) {
 		  f = 0.0;
@@ -1023,7 +1041,8 @@ thStatus thBookaTest(char *line, CODEPTR *codeheadp, CODEPTR *codenextp,
 	  var.name = token;
 	  var.varptr = (void *) malloc(sizeof(DAINT));
 	  var.opaque = 0;
-	  var.rhook = var.whook = 0;
+	  var.rhook = 0;
+	  var.whook = 0;
 	  var.type = DAVARINT;
 	  var.flag = DAVAR_READONLY | DAVAR_REPOINTOK;
 /* Do I need to set the size to 1 here??? */
@@ -1032,10 +1051,12 @@ thStatus thBookaTest(char *line, CODEPTR *codeheadp, CODEPTR *codenextp,
 	break;
       }
     daVarRegister((int) 0, &var);	/* Create or replace variable */
-    *((void **)codenext)++ = ((DAINT *) var.varptr);
+    *(void **)codenext = ((DAINT *) var.varptr);/*phil*/
+    codenext = (CODEPTR) (void **) ((void **)codenext + 1);
     /* Save the token string for future reference */
     *((void **)codenext) = ((void *) malloc(strlen(token)+1));
-    strcpy((char *) *((void **)codenext)++,token);
+    strcpy((char *) *(void **)codenext,token);
+    codenext = (CODEPTR) (void **) ((void **)codenext + 1);
   }
   *codenextp = codenext;
   return(status);
@@ -1097,7 +1118,7 @@ float ftheval_(char *A1,unsigned C1)
   return f;
 }
 
-void thTestRHandler(char *name, daVarStruct *varclass, any *retval)
+daVarStatus thTestRHandler(char *name, daVarStruct *varclass, any *retval)
 /* The default Read handler */
 {
   daVarStruct *varp;
@@ -1137,5 +1158,5 @@ void thTestRHandler(char *name, daVarStruct *varclass, any *retval)
     }
   }
   /* A special handler would check more attributes if status != SUCCESS */
-  return;
+  return(status);
 }

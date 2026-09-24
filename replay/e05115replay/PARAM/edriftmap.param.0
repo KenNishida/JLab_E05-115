@@ -9,7 +9,8 @@ edriftbins=138
 
 ;number of 1st bin in Meek's table in ns
 
-edrift1stbin=-24
+;edrift1stbin=-24
+edrift1stbin=-25
 
 ;bin size in ns of Meek's table
 

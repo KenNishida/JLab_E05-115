@@ -119,7 +119,15 @@ c     INCLUDE 'h_ntuple.dte'
             m= m+1
             h_dc_ntuple_tag(m)= 'wi'     ! 5
             m= m+1
-            h_dc_ntuple_tag(m)= 'tdc'    ! 6
+            h_dc_ntuple_tag(m)= 'dtim'    ! 6
+            m= m+1
+            h_dc_ntuple_tag(m)= 'ddis'! 7
+            m= m+1
+            h_dc_ntuple_tag(m)= 'wcent'     ! 8
+            m= m+1
+            h_dc_ntuple_tag(m)= 'wcoor'     ! 9
+            m= m+1
+            h_dc_ntuple_tag(m)= 'tdc'    ! 10
       
 *     Experiment dependent entries start here.
       

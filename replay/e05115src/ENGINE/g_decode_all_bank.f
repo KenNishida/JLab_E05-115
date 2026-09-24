@@ -158,7 +158,7 @@
       banklength = bank(1) + 1  ! Bank length including count
       last_first = banklength
       stat_roc = ishft(bank(2),-16)
-      roc = iand(stat_roc,'1F'X) ! Get ROC from header
+      roc = iand(stat_roc,INT(Z'1F')) ! Get ROC from header
 
       mask_vme1 = 0
       
@@ -206,7 +206,7 @@ c      endif
 *     
         last_first = pointer + bank(pointer) ! Last word in sub bank
         stat_roc = ishft(bank(pointer+1),-16) !2 words are fb roc header.
-        roc = iand(stat_roc,'1F'X)
+        roc = iand(stat_roc,INT(Z'1F'))
         pointer=pointer+2       !using parallel link, so next
       endif
       
@@ -222,7 +222,7 @@ c     ******************************************************
         if(pointer.eq.(last_first+1)) then ! Second bank in a two bank
           last_first = banklength ! Reset to end of second bank
           stat_roc = ishft(bank(pointer+1),-16) ! 2 words are fb roc header
-          roc = iand(stat_roc,'1F'X) ! New roc
+          roc = iand(stat_roc,INT(Z'1F')) ! New roc
         endif
 *     
 *     Look for and report empty ROCs.
@@ -234,7 +234,7 @@ c     ******************************************************
 
 *     check where missing data
         
-        if (bank(pointer).EQ.X'DCFF0000') then
+        if (bank(pointer).EQ.INT(Z'DCFF0000')) then
           if (roc.eq.1 .or. roc.eq.2) then !missing hnss data
             if (gen_event_type.ne.2) then !event type 2 is sos only event.
               write(6,'(a,i3,a,i8,a,z8,a,i2)') 'roc',roc,
@@ -260,25 +260,25 @@ c     ******************************************************
 *     
         
 *     if you have DA at least once the ROC, mask_vme1 = DA
-        if(ishft(iand(bank(pointer),'FF000000'X),-24) .eq. X'DA') then
-          mask_vme1= ishft(iand(bank(pointer),'FF000000'X),-24)
+        if(ishft(iand(bank(pointer),INT(Z'FF000000')),-24) .eq. INT(Z'DA')) then
+          mask_vme1= ishft(iand(bank(pointer),INT(Z'FF000000')),-24)
         EndIf
         
 *     if you have 'ADC','DDC' or 'F1C' then update module type.
-        if(ishft(iand(bank(pointer),'0000FFC0'X),-4) .eq. X'ADC' .or.
-     &       ishft(iand(bank(pointer),'0000FFC0'X),-4) .eq. X'DDC' .or.
-     &       ishft(iand(bank(pointer),'0000FFC0'X),-4) .eq. X'F1C') then
-          mask_vme2 = ishft(iand(bank(pointer),'0000FFF0'X),-4)
+        if(ishft(iand(bank(pointer),INT(Z'0000FFC0')),-4) .eq. INT(Z'ADC').or.
+     &       ishft(iand(bank(pointer),INT(Z'0000FFC0')),-4) .eq. INT(Z'DDC') .or.
+     &       ishft(iand(bank(pointer),INT(Z'0000FFC0')),-4) .eq. INT(Z'F1C')) then
+          mask_vme2 = ishft(iand(bank(pointer),INT(Z'0000FFF0')),-4)
         EndIF
 *     --- if 'F1C' tag is not found in VME crate, do roc scan.
         if(roc .eq. HR_VME_ROCID) then
-          mask_vme1 = X'DA'
-          mask_vme2 = X'F1C'
+          mask_vme1 = INT(Z'DA')
+          mask_vme2 = INT(Z'F1C')
 c     --- we care this is f1 or c794 in g_decode_all_detector.
         EndIf
         if(roc .eq. LR_VME_ROCID) then
-          mask_vme1 = X'DA'
-          mask_vme2 = X'F1C'
+          mask_vme1 = INT(Z'DA')
+          mask_vme2 = INT(Z'F1C')
 c     --- we care this is f1 or c794 in g_decode_all_detector.
         EndIf
         
@@ -288,23 +288,23 @@ c     --- we care this is f1 or c794 in g_decode_all_detector.
         EndIf
         
 *--   looking for header/trailer data.  
-        if(mask_vme1 .eq. X'DA') then
-          mask_vme3 = ishft(iand(bank(pointer),'FF000000'X),-24)
-          if(mask_vme3 .eq. X'DA') then
+        if(mask_vme1 .eq. INT(Z'DA')) then
+          mask_vme3 = ishft(iand(bank(pointer),INT(Z'FF000000')),-24)
+          if(mask_vme3 .eq. INT(Z'DA')) then
             pointer=pointer+1
           EndIF
 *     VME-c775/c792, 1 at 25th bit for header and 1 at 26th bit for end of words 
 c     --- c775/792, 0000 0011 0000 0000 0000 0000 0000 0000
-          mask_vme4 = ishft(iand(bank(pointer),'01000000'X),-24)
-          if(mask_vme4 .eq. X'1') pointer = pointer + 1
-          mask_vme4 = ishft(iand(bank(pointer),'03000000'X),-25)
-          if(mask_vme4 .eq. X'1') pointer = pointer + 1
+          mask_vme4 = ishft(iand(bank(pointer),INT(Z'01000000')),-24)
+          if(mask_vme4 .eq. INT(Z'1')) pointer = pointer + 1
+          mask_vme4 = ishft(iand(bank(pointer),INT(Z'03000000')),-25)
+          if(mask_vme4 .eq. INT(Z'1')) pointer = pointer + 1
 c     --- f1c, 0000 0000 1000 0000 0000 0000 0000 0000 1:data 0:header
-          mask_vme4 = ishft(iand(bank(pointer),'00800000'X),-23)            
-          if(mask_vme4 .eq. X'0') pointer = pointer + 1
+          mask_vme4 = ishft(iand(bank(pointer),INT(Z'00800000')),-23)            
+          if(mask_vme4 .eq. INT(Z'0')) pointer = pointer + 1
         EndIF
         
-        slot = iand(ishft(bank(pointer),-27),'1F'X)
+        slot = iand(ishft(bank(pointer),-27),INT(Z'1F'))
 c        write(*,*) "roc,slot=",roc,slot
         if(roc.eq.11) then ! for EDC1 
             slot=slot+1
@@ -321,19 +321,19 @@ c     -- but do not include X'BA'=23
         
         if( slot .gt. 0 .and. slot .le. G_DECODE_MAXSLOTS
      $       .and.
-     $       mask_vme1 .ne. X'BA' .and.
+     $       mask_vme1 .ne. INT(Z'BA') .and.
      $       roc .gt. 0 .and. roc .le. g_decode_maxrocs ) then
           
-          if(mask_vme1 .ne. X'DA') then ! not VME
+          if(mask_vme1 .ne. INT(Z'DA')) then ! not VME
             subadd = iand(ishft(bank(pointer),
-     $           -g_decode_subaddbit(roc,slot)),'7F'X)
+     $           -g_decode_subaddbit(roc,slot)),INT(Z'7F'))
           Else                  ! VME
-            if(mask_vme2 .eq. X'F1C') then
-              subadd = ishft(iand(bank(pointer),'380000'X),-19) * 8
-     &             + ishft(iand(bank(pointer),'70000'X),-16)
+            if(mask_vme2 .eq. INT(Z'F1C')) then
+              subadd = ishft(iand(bank(pointer),INT(Z'380000')),-19) * 8
+     &             + ishft(iand(bank(pointer),INT(Z'70000')),-16)
             Else
               subadd = iand(ishft(bank(pointer),
-     $             -g_decode_subaddbit(roc,slot)),'3F'X)
+     $             -g_decode_subaddbit(roc,slot)),INT(Z'3F'))
             EndIf
           EndIF
           
@@ -343,7 +343,7 @@ c     check roc,slot and did
      &           roc,slot,subadd
           EndIf
           
-          if (subadd .lt. X'7F') then ! Only valid subaddress
+          if (subadd .lt. INT(Z'7F')) then ! Only valid subaddress
             
             slotp = g_decode_slotpointer(roc,slot)
             
@@ -530,7 +530,15 @@ c              EndIF
      $             EDC1_RAW_WIRE_NUM,1 ,EDC1_RAW_TDC,0, 0, 0)
              
               if(g_decode_debug .eq. 1) then
-                Write(*,*) 'nedc1.p=',edc1_raw_tot_hits,pointer
+                Do i=1,edc1_raw_tot_hits
+                  if (edc1_raw_layer_num(i).eq.5.and.
+     &                 edc1_raw_wire_num(i).gt.82    ) then
+                     Write(*,*) 'ev,i,la,wi,tdcp,tdcn=',
+     &                 gen_event_ID_number,
+     &                 i,edc1_raw_layer_num(i),
+     &                 edc1_raw_wire_num(i)
+                  endif
+                EndDo
               EndIf
             
             else if(did.eq.EDC2_ID) then
@@ -719,7 +727,7 @@ c     &             gmax_uninst_hits,' p=',pointer
             pointer = pointer + 1 ! Skip Bad subaddresses (module header)
           endif
 *     
-        else if(mask_vme1 .eq. X'BA') then ! VME bad data
+        else if(mask_vme1 .eq. INT(Z'BA')) then ! VME bad data
           Write(*,*) 'This is VME bad data!'
           pointer = pointer + 1 ! Skip bad slots
         else                    ! slot,roc>max values

@@ -50,7 +50,7 @@ c     Call r_e_ntuple
       call r_hes_tracking
       call r_hes_geometry
       call r_hes_recon_elements
-      call r_hes_physics_sing
+      call r_hes_physics_sing ! ???? (6/June/2011)
 
       Call r_hes_scin_parms
 
@@ -58,7 +58,7 @@ c     Call r_e_ntuple
 
       Call r_hes_bypass_swiches
 
-      Call r_hes_pedestals
+      Call r_hes_pedestals ! ???? (6/June/2011)
 
       Call r_hes_statistics
 

@@ -1,0 +1,1069 @@
+      subroutine h_tof_pre(abort,errmsg)
+c Feb.06,2010 C.CHEN
+C  h_tof_pre pre_tracking between hhodoscopes prepare for the start time 
+c  calculation
+c***********************************************************************
+       
+         implicit none
+         save
+
+      include 'hks_data_structures.cmn'
+      include 'hks_scin_parms.cmn'
+      include 'hks_scin_tof.cmn'
+      include 'hks_id_histid.cmn'
+      include 'hks_tracking.cmn'
+
+      INCLUDE 'gen_constants.par'
+      INCLUDE 'hks_geometry.cmn'
+      include 'gen_decode_common.cmn'
+      include 'gen_rocid.cmn'
+      include 'gen_f1tdc.cmn'
+      include 'gen_run_info.cmn'
+      include 'gen_event_info.cmn'
+      external h_chamnum
+      integer*4 h_chamnum    !external function need to be decleared
+      real*4 h_drift_dist_calc
+      external h_drift_dist_calc
+      real*4 dt
+
+      logical abort
+      character*1024 errmsg
+      character*20 here
+      parameter (here = 'h_tof_pre')
+      integer*4 i,j,k,ihit,pln,itrack,hit,s,nsp,iy,it
+      real*4 xdist,ydist
+      real*4 time_corr
+      real*4 h12time,h22time,t2xh1,t2xh2
+      real*4 h11time,h21time
+      real*4 h1time(hmax_space_points*8)
+      real*4 h2time(hmax_space_points*8)
+      real*4 t1x2x, t1x2x_new,t1xh1,t1xh2
+      real*4 deltax 
+      Integer*4 cardn,wiren
+c       real*4 h1space_points(hmax_space_points,2)
+c       real*4 h2space_points(hmax_space_points,2)
+c      integer*4 prelinkflag1(hmax_space_points,hmax_space_points)
+c      integer*4  trackpre_space_points(HNTRACKS_MAX,hmax_space_points+1)
+      integer*4 tryflag,isp1,isp2,isp
+      integer*4 sp1num,sp2num,spsum
+      integer*4 inumsp1,inumsp2
+      integer*4 hntracks_pre
+      real*4 deltaz1,deltaz2,deltaz3,temp1,temp2,temp3,deltaz4
+      real*4 x1t,x2t
+
+      real*4 x1x,x2x
+      real*4 y1t,y2t
+      real*4 y1x,y2x
+      real*4 x1y,y1y
+      real*4 dx1,dx2,dx1min,dx2min
+      real*4 dy1,dy1min
+      integer*4 y1index
+
+      integer*4 x1index,x2index
+
+      real*4 deltaz1x2x,prelen
+      integer*4 sp1flag(hmax_space_points*8),sp1track
+      integer*4 sp2flag(hmax_space_points*8)
+      integer*4 skipflag(hmax_space_points*8)
+      integer*4 hnspace_points_pre,point,hitsnum
+      integer*4 hnspace_points_tot_pre
+      integer*4 addflag(hmax_space_points*8)
+      integer*4 space_points_tot,ss              !,pp,ss,are used for test
+     
+      real*4 h1tsum,h2tsum
+c---------------------------
+c check are there several hits on the same timing counter which have min dx
+      integer*4 minhits(hmax_scin_hits)
+      integer*4 minflag,nummin,imin,finalnummin
+      real*4 smindx
+c----- if 1x and 2x can not sperate the timing
+      integer*4 track_space_point(hmax_space_points*8,2)
+      integer*4 track_timing_index(hmax_space_points*8,2)
+      integer*4 x1countercheckflag,x2countercheckflag
+      integer*4 y1countercheckflag
+c----pretracking 1y2x
+      real*4 deltaz1y2x,t1yh2,t1yh1,deltay,t1y2x
+      
+c-----pretracking 1x1y
+      real*4 deltaz1x1y,t1x1y
+      real*4 deltazh11y,deltazh21x,deltazh22x,deltazh21y
+      real*4 deltazh11x,deltazh12x  
+      integer*4 timeflag(hmax_dc_hits)
+c      real*4 deltaz
+ 
+      abort = .false.
+      inumsp1=0
+      inumsp2=0
+c--------------------space line extention-------------------------------
+      deltaz1=hdc_1_zpos-hdc_2_zpos! zhdc1-zhdc2
+      deltaz2=hscin_zpos(1)-hdc_1_zpos !126.001    !z1x-zhdc1
+      deltaz3=hscin_zpos(3)-hdc_1_zpos!z2x-zhdc1
+      deltaz4=hscin_zpos(2)-hdc_1_zpos ! z1y-zhdc1
+      temp1=deltaz2/deltaz1 
+      temp2=deltaz3/deltaz1
+      temp3=deltaz4/deltaz1
+c-------------------start time project--------------------------
+      deltaz1x2x=hscin_zpos(1)-hscin_zpos(3)
+      deltaz1x1y=hscin_zpos(1)-hscin_zpos(2)
+      deltaz1y2x=hscin_zpos(2)-hscin_zpos(3)
+      deltazh11x= hdc_1_zpos-hscin_zpos(1)
+      deltazh12x= hdc_1_zpos-hscin_zpos(3)
+      deltazh11y= hdc_1_zpos-hscin_zpos(2)
+      deltazh21x= hdc_2_zpos-hscin_zpos(1)
+      deltazh22x= hdc_2_zpos-hscin_zpos(3)
+      deltazh21y= hdc_2_zpos-hscin_zpos(2)
+c----------------------------------------------------------
+      dx1min=100000.0
+      dx2min=100000.0
+      dy1min=100000.0
+      sp1track=0
+      sp1num=0
+      sp2num=0
+      h1tsum=0
+      h2tsum=0
+      nsp=0
+      hnspace_points_pre=0
+      hnspace_points_tot_pre=0
+      hntracks_pre=0
+
+      if(ntof.eq.0) return
+       
+      if(hnspace_points_tot .le. 0) Return
+      
+      do i=1,hmax_dc_hits
+         timeflag(i)=1
+      enddo
+      
+      do i=1,hnspace_points_tot
+         do j=1,2
+            track_space_point(i,j)=0
+            track_timing_index(i,j)=0
+         enddo
+      enddo
+      
+      do i=1,hnspace_points_tot
+         precutflag(i)=1
+         h1time(i)=0
+         h2time(i)=0
+         sp1flag(i)=0
+         sp2flag(i)=0
+         skipflag(i)=1
+         addflag(i)=0
+      enddo
+      
+      
+      do i=1,hnspace_points_tot
+         do j=1,hnspace_points_tot
+c           print*, 'cham1',h_chamnum(i),'cham2',h_chamnum(j)
+            if(h_chamnum(i).eq.h_chamnum(j)) then
+               prelinkflag(i,j)=0
+            else
+               prelinkflag(i,j)=1
+            endif
+c           print*, prelinkflag
+         enddo
+      enddo
+c     write(17,*) ntof
+c     print*,ntof
+              
+      if(ntof.eq.1) then  !ntof1x2x is only for test
+c later we need to calculate all conditions for 1x2x,1y2x,and 1y2x
+c start time calculate for all the multiplicite is 1 
+c      print*,'multi=1'     
+c      print*,'eventid'
+c---------------------------------------------
+         if(ntof1x2x.gt.0.and.hntracks_pre.le.hmax_space_points*8) then
+c           print*,'eventid'
+!hntracks_pre.le.hmax_space_points*6  which is from the max Cr run
+!the max hits for hdc1 is 120, assuming there are 5 hits per space points
+!the max space points from hdc1 is 22, and the max space points from hdc2 is 18
+!the max combination is 8*hmax_space_points
+! this condition tries to avoid the segementation fault
+            do isp1=1,hnspace_points_tot-1
+               x1t = hspace_points(isp1,1)
+               y1t = hspace_points(isp1,2)
+               do isp2=isp1+1,hnspace_points_tot  
+                  if(h_chamnum(isp1).ne.h_chamnum(isp2)) then
+                     x2t = hspace_points(isp2,1)
+                     y2t = hspace_points(isp2,2)
+                     x1x=(1+temp1)*x1t-temp1*x2t
+                     y1x=(1+temp1)*y1t-temp1*y2t
+                     x2x=(1+temp2)*x1t-temp2*x2t
+                     y2x=(1+temp2)*y1t-temp2*y2t  
+                 
+                     dx1=hscin_1x_center(hpro_counter_num(1,1))-x1x
+                     dx2=hscin_2x_center(hpro_counter_num(1,3))-x2x  
+                     if(abs(dx1).le.34.65.and.abs(dx2).le.80.75) then
+                        hntracks_pre=hntracks_pre+1
+                        track_timing_index(hntracks_pre,1)=1
+                        track_timing_index(hntracks_pre,2)=1 
+                        track_space_point(hntracks_pre,1)=isp1
+                        track_space_point(hntracks_pre,2)=isp2           
+c                       print*,isp1,isp2
+                     else
+                        prelinkflag(isp1,isp2)=0 
+                     endif
+                  endif ! h_chamnum
+               enddo ! loop isp2
+            enddo     ! loop isp1
+c           print*,hntracks_pre
+         endif       ! ntof1x2x
+c---------------------------------------
+         if(ntof1x2x.le.0.and.ntof1y2x.gt.0
+     +    .and.hntracks_pre.le.hmax_space_points*8) then
+            do isp1=1,hnspace_points_tot-1
+               x1t = hspace_points(isp1,1)
+               y1t = hspace_points(isp1,2)
+               do isp2=isp1+1,hnspace_points_tot  
+                  if(h_chamnum(isp1).ne.h_chamnum(isp2)) then
+                     x2t = hspace_points(isp2,1)
+                     y2t = hspace_points(isp2,2)
+                     x1y=(1+temp3)*x1t-temp3*x2t
+                     y1y=(1+temp3)*y1t-temp3*y2t
+                     x2x=(1+temp2)*x1t-temp2*x2t
+                     y2x=(1+temp2)*y1t-temp2*y2t  
+                     dy1= hscin_1y_center(hpro_counter_num(1,2))-y1y
+                     dx2=hscin_2x_center(hpro_counter_num(1,3))-x2x  
+                     if(abs(dy1).le.12.95.and.abs(dx2).le.80.75) then
+                        hntracks_pre=hntracks_pre+1
+                        track_timing_index(hntracks_pre,1)=1
+                        track_timing_index(hntracks_pre,2)=1 
+                        track_space_point(hntracks_pre,1)=isp1
+                        track_space_point(hntracks_pre,2)=isp2 
+                     else
+                        prelinkflag(isp1,isp2)=0   
+                     endif
+                  endif
+               enddo
+            enddo
+         endif 
+
+c-----------------------------------------
+         if(ntof1x2x.le.0.and.ntof1y2x.eq.0.and.ntof1x1y.gt.0
+     +      .and.hntracks_pre.le.hmax_space_points*8) then
+          
+            do isp1=1,hnspace_points_tot-1
+               x1t = hspace_points(isp1,1)
+               y1t = hspace_points(isp1,2)
+               do isp2=isp1+1,hnspace_points_tot  
+                  if(h_chamnum(isp1).ne.h_chamnum(isp2)) then
+                     x2t = hspace_points(isp2,1)
+                     y2t = hspace_points(isp2,2)
+                     x1y=(1+temp3)*x1t-temp3*x2t
+                     y1y=(1+temp3)*y1t-temp3*y2t
+                     x1x=(1+temp1)*x1t-temp1*x2t
+                     y1x=(1+temp1)*y1t-temp1*y2t
+                     dy1= hscin_1y_center(hpro_counter_num(1,2))-y1y
+                     dx1=hscin_1x_center(hpro_counter_num(1,1))-x1x  
+                     if(abs(dy1).le.12.95.and.abs(dx1).le.34.65) then
+                        hntracks_pre=hntracks_pre+1
+                        track_timing_index(hntracks_pre,2)=1
+                        track_timing_index(hntracks_pre,1)=1 
+                        track_space_point(hntracks_pre,1)=isp1
+                        track_space_point(hntracks_pre,2)=isp2 
+                     else
+                        prelinkflag(isp1,isp2)=0 
+                     endif
+                  endif
+               enddo
+            enddo
+         endif 
+      
+c---------------------------------------------
+
+
+           
+         do isp=1,hnspace_points_tot
+
+           
+            if(hspace_point_hits_multi(isp).gt.0) then
+               space_points_tot=hspace_point_hits(isp,1)
+     +                     *hspace_point_hits_multi(isp)
+            else
+               space_points_tot=hspace_point_hits(isp,1)
+            endif
+
+            do ihit=1,space_points_tot
+               hit = hspace_point_hits(isp,ihit+2)
+              
+              
+               pln = hdc_layer_num(hit)
+               if(timeflag(hit).ne.0) then
+               if(pln.le.6) then
+                 
+                  h1start_time=h1start_pre
+                  
+                  hdc_drift_time(hit)=-h1start_time+hdc_drift_time(hit)
+
+               else
+                  h2start_time=h2start_pre
+                  hdc_drift_time(hit)=-h2start_time+hdc_drift_time(hit)
+               endif
+c              print*, "hdc_time",hdc_drift_time(hit)
+               timeflag(hit)=0
+               endif
+             
+            enddo
+         enddo
+c        print*,hntracks_pre
+      endif
+  
+      if(ntof.gt.1) then  
+c----------------------1x2x-------------------------------------------------------------
+c        print*,'eventid'
+
+         if(ntof1x2x.gt.0) then  !later would put ntof1x1y and ntof1y2x and move (if(ntof1x2x.eq.0) return)      
+            do isp1=1,hnspace_points_tot-1 ! loop over all space points
+c              isp1flag=0
+               x1t = hspace_points(isp1,1)
+               y1t = hspace_points(isp1,2)
+               do isp2=isp1+1,hnspace_points_tot
+c              print*,prelinkflag
+c              print*,'check'
+                  if(h_chamnum(isp1).ne.h_chamnum(isp2)) then
+c           write(69,*)pp,isp1,isp2,h_chamnum(isp1),h_chamnum(isp2)
+c            print*,isp1,isp2,h_chamnum(isp1),h_chamnum(isp2)
+                     if(prelinkflag(isp1,isp2).ne.0) then
+                        x1index=0
+                        x2index=0  
+                        x2t = hspace_points(isp2,1)
+                        y2t = hspace_points(isp2,2)
+                        x1x=(1+temp1)*x1t-temp1*x2t
+                        y1x=(1+temp1)*y1t-temp1*y2t
+c                       print*,'event1'
+                        nummin=0
+                        minflag=0
+                        finalnummin=0
+                        dx1min=100000.0
+                        dx2min=100000.0
+                        do k=1,nhits1x
+c                         
+                           dx1=hscin_1x_center(hpro_counter_num(k,1))-x1x
+c                       
+                           if(abs(dx1).le.34.65) then  
+                           ! 34.65 = hscin_1x_width*4.5 this is needed to be tested again
+                              if(abs(dx1).le.dx1min) then
+                                 dx1min=abs(dx1)
+                                 x1index=k  
+                              else
+                              endif
+c-------------------------------------------------------------
+c If there are several hits which have min dx on the same timing counter
+c First check whether are there several hits on the same timing counter
+                              if(abs(dx1-dx1min).le.1e-6) then
+                                 nummin=nummin+1
+                                 minhits(nummin)=k
+                                 minflag=1
+                              endif
+   
+                           endif !valid track by 1x
+c                             
+c                                endif  ! 1x time window cut
+                        enddo ! nhits1x
+c if there are several hits on the same counter, then check whether are these hits have the min dx
+                        if(minflag.gt.0) then
+                           do imin=1,nummin             
+                              smindx=hscin_1x_center(hpro_counter_num
+     &                         (minhits(imin),1))-x1x
+                              if(abs(dx1min-smindx).le.1e-6) then
+
+                                 if(hstart_pro(minhits(imin),1).le.-35
+     &                            .and.hstart_pro(minhits(imin),1).ge.-95
+     &                            .and.x1index.gt.0) then !DK added
+
+                                    if (hstart_pro(x1index,1).ge.-35
+     &                               .or.hstart_pro(x1index,1).le.-95) then
+
+                                       x1index=minhits(imin)
+                                    else
+                                       hstart_pro(x1index,1)=hstart_pro(x1index,1)
+     &                                  +hstart_pro(minhits(imin),1)
+                                       finalnummin=finalnummin+1
+                                    endif
+                                 endif
+                              endif
+                           enddo
+                        endif
+                   
+                        !if(finalnummin.gt.0) then
+                        if(finalnummin.gt.0.and.x1index.gt.0) then !DK added
+                           hstart_pro(x1index,1)=hstart_pro(x1index,1)/finalnummin
+                        endif
+                        
+                        dx1min=100000.0 
+                        dx2min=100000.0 
+                        dy1min=100000.0 
+              
+                        x2x=(1+temp2)*x1t-temp2*x2t
+                        y2x=(1+temp2)*y1t-temp2*y2t 
+c                          print*,'event2'
+                        minflag=0
+                        finalnummin=0
+                        nummin=0 
+                        do s=1,nhits2x 
+           
+                           dx2=hscin_2x_center(hpro_counter_num(s,3))-x2x  
+c                         
+                           if(abs(dx2).le.80.75) then
+c                             print*,'dx2',dx2,'dx2min',dx2min
+                              if(abs(dx2).le.dx2min) then
+                                 dx2min=abs(dx2)
+                                 x2index=s
+                              endif
+c            if there are several hits on the same counter
+                              if(abs(dx2-dx2min).le.1e-6) then
+                                 nummin=nummin+1
+                                 minhits(nummin)=s
+                                 minflag=1
+                              endif
+c                             else
+c                                prelinkflag(isp1,isp2)=0 
+                           endif   !valid check by 2x 
+c                          write(32,*) x2index,dx2min,hpro_counter_num(x2index,3)
+
+c                          endif  !2x time windows cut
+                        enddo !  nhits2x
+
+                        if(minflag.gt.0) then
+                           do imin=1,nummin             
+                              smindx=hscin_2x_center(hpro_counter_num
+     &                         (minhits(imin),3))-x2x
+                              if(abs(dx2min-smindx).le.1e-6) then
+                                 if(hstart_pro(minhits(imin),3).le.0.and.
+     &                            hstart_pro(minhits(imin),3).ge.-100
+     &                            .and.x2index.gt.0) then !DK added
+                                    if (hstart_pro(x2index,3).ge.0
+     &                               .or.hstart_pro(x2index,3).le.-100) then
+                                       x2index=minhits(imin)
+                                    else
+                                       hstart_pro(x2index,3)=hstart_pro(x2index,3)
+     &                                  +hstart_pro(minhits(imin),3)
+                                       finalnummin=finalnummin+1
+                                    endif
+                                 endif
+                              endif
+                           enddo
+                        endif
+
+                        !if(finalnummin.gt.0) then
+                        if(finalnummin.gt.0.and.x2index.gt.0) then !DK added
+                           hstart_pro(x2index,3)=hstart_pro(x2index,3)/finalnummin
+                        endif 
+c-----------------------------if one the timing can separate the tracks, however another can not--------------
+c consider 1y, however, it is not worthy to do it------------------------------------------------------------                     
+c               x1y=(1+temp3)*x1t-temp3*x2t
+c               y1y=(1+temp3)*y1t-temp3*y2t
+c                   minflag=0
+c                   finalnummin=0
+c                   nummin=0 
+c                 
+c             if(nhits1y.gt.0) then
+c                do iy=1,nhits1y 
+c                 dy1= hscin_1y_center(hpro_counter_num(iy,2))-y1y
+c                 if(abs(dy1).le.12.95) then ! need to be checked target by target             
+c                  
+c                     if(dy1.le.dy1min) then
+c                       dy1min=dy1
+c                        y1index=iy
+c                      endif
+c            
+c                    if(abs(dy1-dy1min).le.1e-6) then
+c                    nummin=nummin+1
+c                    minhits(nummin)=k
+c                    minflag=1
+c                  endif
+c                  endif
+c               enddo
+c             write(13,*) dy1min,y1y,hscin_1y_center(hpro_counter_num(iy,2))
+
+c               if(minflag.gt.0) then
+c                do imin=1,nummin             
+c               smindx=hscin_1y_center(hpro_counter_num(minhits(imin),2))
+c     &                                                            -y1y
+c
+c                 if(abs(dy1min-smindx).le.1e-6) then
+c
+c                   if(hstart_pro(minhits(imin),2).le.-20.and.
+c     &               hstart_pro(minhits(imin),2).ge.-80) then
+c
+c                    if (hstart_pro(y1index,2).ge.-20
+c     &                        .or.hstart_pro(y1index,2).le.-80) then
+c
+c                        y1index=minhits(imin)
+c                    else
+c                      hstart_pro(y1index,2)=hstart_pro(x1index,3)
+c     &                                 +hstart_pro(minhits(imin),3)
+c                     finalnummin=finalnummin+1
+c                    endif
+c                   endif
+c                 endif
+c                enddo
+c               endif
+c               if(finalnummin.gt.0) then
+c                hstart_pro(x2index,3)=hstart_pro(x2index,3)/finalnummin
+c               endif 
+c                    
+c              endif  !nhits1y>0       
+
+                        if(x1index.eq.0.or.x2index.eq.0) then
+                           prelinkflag(isp1,isp2)=0 
+c                          print*,'check',nhits1x,nhits2x
+                        endif
+                        if(prelinkflag(isp1,isp2).ne.0
+     +                   .and.hntracks_pre.le.hmax_space_points*8) then
+c                        
+                           hntracks_pre=hntracks_pre+1
+
+                           track_timing_index(hntracks_pre,1)=x1index
+                           track_timing_index(hntracks_pre,2)=x2index 
+c                          track_timing_index(hntracks_pre,3)=y1index 
+                           track_space_point(hntracks_pre,1)=isp1
+                           track_space_point(hntracks_pre,2)=isp2           
+                           t1x2x=hstart_pro(x1index,1)-hstart_pro(x2index,3)
+                           deltax=(hscin_1x_center(hpro_counter_num(x1index,1))
+     +                      -hscin_2x_center(hpro_counter_num(x2index,3)))
+c                          deltaz1x2x=-125.6   !hscin_zpos(1)-hscin_zpos(3)
+                           prelen=sqrt(deltax*deltax+deltaz1x2x*deltaz1x2x)
+                           t1x2x=abs(deltaz1x2x)*t1x2x/prelen !t1x2x=time_1x-time_2x
+                           t1xh2=t1x2x*deltazh21x/deltaz1x2x  !19.2cm is the distance between 1x and HDC2, 125.6 is the distance between 1x and 2x from survey data
+                                      !=time_h2-time_1x
+                           h21time=hstart_pro(x1index,1)+t1xh2
+                           t1xh1=t1x2x*deltazh11x/deltaz1x2x !119.371cm is the distance between 1x and HDC1 all those number could get from parameter files
+                           h11time=hstart_pro(x1index,1)+t1xh1
+                           t2xh1=t1x2x*deltazh12x/deltaz1x2x 
+                           t2xh2=t1x2x*deltazh22x/deltaz1x2x
+                           h12time=hstart_pro(x2index,3)+t2xh1
+                           h22time=hstart_pro(x2index,3)+t2xh2
+                           h1time(hntracks_pre)=(h11time+h12time)/2
+                           h2time(hntracks_pre)=(h21time+h22time)/2
+                           sp2flag(isp2)=1
+                           sp1flag(isp1)=1
+                        endif   !start_time calculate 
+                     endif  !prelink        
+                  endif !chamnum
+          
+               enddo  ! isp2   
+            enddo ! isp1
+c-------------------------------------ONLY FOR TEST
+C         if(hntracks_pre.gt.1) then
+             
+C          do i=1,hntracks_pre-1
+C              
+C            do j=i+1,hntracks_pre
+C               x1countercheckflag=0
+C               x2countercheckflag=0
+C               y1countercheckflag=0
+C             if(track_timing_index(i,1).eq.track_timing_index(j,1)) then
+C               x1countercheckflag=1
+C             endif
+C             if(track_timing_index(i,2).eq.track_timing_index(j,2)) then
+C               x2countercheckflag=1
+C             endif
+C            if(x1countercheckflag.eq.1.and.x2countercheckflag.eq.0) then
+C            if(track_timing_index(i,3).ne.track_timing_index(j,3)) then
+C                y1countercheckflag=1
+C             endif
+C             endif
+C              y1countercheckflag=0
+C            if(x1countercheckflag.eq.0.and.x2countercheckflag.eq.1) then
+C            if(track_timing_index(i,3).ne.track_timing_index(j,3)) then
+C                y1countercheckflag=1
+C             endif
+c             endif
+Cc              print*,y1countercheckflag
+CC          enddo!hntracks_pre
+C        enddo
+  
+C         endif
+  
+         endif !ntof1x2x
+c-----------------------------------1x2x--------------------------------
+
+c------------------------1y2x-------------------------
+
+         if(ntof1x2x.eq.0.and.ntof1y2x.gt.0) then        
+            do isp1=1,hnspace_points_tot-1 ! loop over all space points            
+               x1t = hspace_points(isp1,1)
+               y1t = hspace_points(isp1,2)          
+               do isp2=isp1+1,hnspace_points_tot
+                  !DKy1index=0
+                  !DKx2index=0
+
+                  if(h_chamnum(isp1).ne.h_chamnum(isp2)) then
+                     if(prelinkflag(isp1,isp2).ne.0) then           
+                        y1index=0 !DK
+                        x2index=0 !DK
+                        x2t = hspace_points(isp2,1)
+                        y2t = hspace_points(isp2,2)
+                        minflag=0
+                        finalnummin=0
+                        nummin=0 
+                        x1y=(1+temp3)*x1t-temp3*x2t
+                        y1y=(1+temp3)*y1t-temp3*y2t
+                        dy1min=100000.0
+                        dx2min=100000.0
+                        do iy=1,nhits1y 
+                           dy1= hscin_1y_center(hpro_counter_num(iy,2))-y1y
+                           if(abs(dy1).le.12.95) then  !3.5*1y_width
+                              if(dy1.le.dy1min) then
+                                 dy1min=abs(dy1)
+                                 y1index=iy
+                              endif
+                              if(abs(dy1-dy1min).le.1e-6) then
+                                 nummin=nummin+1
+                                 minhits(nummin)=iy
+                                 minflag=1
+                              endif
+                           endif
+                        enddo
+
+                        if(minflag.gt.0) then
+                           do imin=1,nummin             
+                              smindx=hscin_1y_center
+     &                         (hpro_counter_num(minhits(imin),2))-y1y
+                              if(abs(dy1min-smindx).le.1e-6) then
+
+                                 if(hstart_pro(minhits(imin),2).le.-20.and.
+     &                            hstart_pro(minhits(imin),2).ge.-80
+     &                            .and.y1index.gt.0) then !DK added
+                                    if (hstart_pro(y1index,2).ge.-20
+     &                               .or.hstart_pro(y1index,2).le.-80) then
+                                       y1index=minhits(imin)
+                                    else
+                                       hstart_pro(y1index,2)=hstart_pro(y1index,2)
+     &                                  +hstart_pro(minhits(imin),2)
+                                       finalnummin=finalnummin+1
+                                    endif
+                                 endif
+                              endif
+                           enddo
+                        endif
+                        !if(finalnummin.gt.0) then
+                        if(finalnummin.gt.0.and.y1index.gt.0) then !DK added
+                           hstart_pro(y1index,2)=hstart_pro(y1index,2)/finalnummin
+                        endif 
+                        x2x=(1+temp2)*x1t-temp2*x2t
+                        y2x=(1+temp2)*y1t-temp2*y2t 
+                        minflag=0
+                        finalnummin=0
+                        nummin=0 
+                        do s=1,nhits2x 
+                           dx2=hscin_2x_center(hpro_counter_num(s,3))-x2x  
+                           if(abs(dx2).le.80.75) then
+                              if(abs(dx2).le.dx2min) then
+                 
+                                 dx2min=abs(dx2)
+                                 x2index=s
+                              endif
+c if there are several hits on the same counter
+                              if(abs(dx2-dx2min).le.1e-6) then
+                                 nummin=nummin+1
+                                 minhits(nummin)=s
+                                 minflag=1
+                              endif
+                           endif   !valid check by 2x 
+c                          write(32,*) x2index,dx2min,hpro_counter_num(x2index,3)
+c                          endif  !2x time windows cut
+                        enddo !  nhits2x
+                        if(minflag.gt.0) then
+                           do imin=1,nummin             
+                              smindx=hscin_2x_center(hpro_counter_num
+     &                         (minhits(imin),3))-x2x
+                              if(abs(dx2min-smindx).le.1e-6) then
+
+                                 if(hstart_pro(minhits(imin),3).le.0.and.
+     &                            hstart_pro(minhits(imin),3).ge.-100
+     &                            .and. x2index.gt.0) then !DK added
+
+                                    if (hstart_pro(x2index,3).ge.0
+     &                               .or.hstart_pro(x2index,3).le.-100) then
+
+                                       x2index=minhits(imin)
+                                    else
+                                       hstart_pro(x2index,3)=hstart_pro(x2index,3)
+     &                                  +hstart_pro(minhits(imin),3)
+                                       finalnummin=finalnummin+1
+                                    endif
+                                 endif
+                              endif
+                           enddo
+                        endif
+                        !if(finalnummin.gt.0) then
+                        if(finalnummin.gt.0.and.x2index.gt.0) then !DK added
+                           hstart_pro(x2index,3)=hstart_pro(x2index,3)/finalnummin
+                        endif 
+c                  
+                        if(y1index.eq.0.or.x2index.eq.0) then
+                           prelinkflag(isp1,isp2)=0 
+                        endif
+c                       print*,'check2'
+                        if(prelinkflag(isp1,isp2).ne.0 
+     +                   .and.hntracks_pre.le.hmax_space_points*8) then
+                           hntracks_pre=hntracks_pre+1
+                           track_timing_index(hntracks_pre,1)=y1index
+                           track_timing_index(hntracks_pre,2)=x2index 
+c                          track_timing_index(hntracks_pre,3)=y1index 
+                           track_space_point(hntracks_pre,1)=isp1
+                           track_space_point(hntracks_pre,2)=isp2   
+          
+                           t1y2x=hstart_pro(y1index,2)-hstart_pro(x2index,3)
+c                          deltaz1y2x =hscin_zpos(2)-hscin_zpos(3)
+                           deltax=hscin_1y_center(hpro_counter_num(y1index,2))
+                           deltay=hscin_2x_center(hpro_counter_num(x2index,3))
+                           prelen=sqrt(deltax*deltax+deltaz1y2x*deltaz1y2x+deltay*deltay)
+                           t1y2x=t1y2x*abs(deltaz1y2x)/prelen
+
+                           t1yh2=t1y2x*deltazh21y/deltaz1y2x  !19.2cm is the distance between 1x and HDC2, 125.6 is the distance between 1x and 2x from survey data
+                           h21time=hstart_pro(i,2)+t1yh2
+                           t1yh1=t1y2x*deltazh11y/deltaz1y2x !119.371cm is the distance between 1x and HDC1 all those number could get from parameter files
+                           h11time=hstart_pro(i,2)+t1yh1
+                           t2xh1=t1y2x*deltazh12x/deltaz1y2x 
+                           t2xh2=t1y2x*deltazh22x/deltaz1y2x
+                           h12time=hstart_pro(j,3)+t2xh1
+                           h22time=hstart_pro(j,3)+t2xh2
+                           h1time(hntracks_pre)=(h11time+h12time)/2
+                           h2time(hntracks_pre)=(h21time+h22time)/2
+                           sp2flag(isp2)=1
+                           sp1flag(isp1)=1
+                        endif   !start_time calculate 
+                     endif  !prelink        
+                  endif !chamnum
+               enddo  ! isp2   
+            enddo ! isp1
+         endif !ntof1y2x
+
+c----------------------1y2x-----------------------------        
+
+c-------------------1x1y--------------------------------
+
+         if(ntof1x2x.eq.0.and.ntof1y2x.eq.0.and.ntof1x1y.gt.0) then
+            do isp1=1,hnspace_points_tot-1 ! loop over all space points
+c              isp1flag=0
+               x1t = hspace_points(isp1,1)
+               y1t = hspace_points(isp1,2)          
+               do isp2=isp1+1,hnspace_points_tot
+                  x1index=0
+                  x2index=0
+c                 print*,prelinkflag
+c                 print*,'check'
+                  if(h_chamnum(isp1).ne.h_chamnum(isp2)) then
+c                    pp=pp+1
+c                    write(69,*)pp,isp1,isp2,h_chamnum(isp1),h_chamnum(isp2)
+c                    print*,isp1,isp2,h_chamnum(isp1),h_chamnum(isp2)
+                     if(prelinkflag(isp1,isp2).ne.0) then
+                        y1index=0 !DK
+                        x1index=0 !DK
+                        x2t = hspace_points(isp2,1)
+                        y2t = hspace_points(isp2,2)
+                        x1x=(1+temp1)*x1t-temp1*x2t
+                        y1x=(1+temp1)*y1t-temp1*y2t
+c                       print*,'event1'
+                        nummin=0
+                        minflag=0
+                        finalnummin=0
+                        dy1min=100000.0
+                        dx1min=100000.0
+                        do k=1,nhits1x
+
+                           dx1=hscin_1x_center(hpro_counter_num(k,1))-x1x
+
+                           if(abs(dx1).le.34.65) then  ! 34.65 = hscin_1x_width*4.5 this is needed to be tested again
+                              if(abs(dx1).le.dx1min) then
+                                 dx1min=abs(dx1)
+                                 x1index=k  
+                              endif
+c-------------------------------------------------------------
+c If there are several hits which have min dx on the same timing counter
+c First check whether are there several hits on the same timing counter
+                              if(abs(dx1-dx1min).le.1e-6) then
+                                 nummin=nummin+1
+                                 minhits(nummin)=k
+                                 minflag=1
+                              endif
+   
+                           endif !valid track by 1
+
+                        enddo ! nhits1x
+c if there are several hits on the same counter, then check whether are these hits have the min dx
+                        if(minflag.gt.0) then
+                           do imin=1,nummin             
+                              smindx=hscin_1x_center(hpro_counter_num
+     &                         (minhits(imin),1))-x1x
+                              if(abs(dx1min-smindx).le.1e-6) then
+                                 if(hstart_pro(minhits(imin),1).le.-35
+     &                            .and.hstart_pro(minhits(imin),1).ge.-95
+     &                            .and.x1index.gt.0) then !DK added
+                                    if (hstart_pro(x1index,1).ge.-35
+     &                               .or.hstart_pro(x1index,1).le.-95) then
+                                       x1index=minhits(imin)
+                                    else
+                                       hstart_pro(x1index,1)=hstart_pro(x1index,1)
+     &                                  +hstart_pro(minhits(imin),1)
+                                       finalnummin=finalnummin+1
+                                    endif
+                                 endif
+                              endif
+                           enddo
+                        endif
+                        !if(finalnummin.gt.0) then
+                        if(finalnummin.gt.0.and.x1index.gt.0) then !DK added
+                           hstart_pro(x1index,1)=hstart_pro(x1index,1)/finalnummin
+                        endif 
+                        minflag=0
+                        finalnummin=0
+                        nummin=0 
+                        x1y=(1+temp3)*x1t-temp3*x2t
+                        y1y=(1+temp3)*y1t-temp3*y2t
+                        do iy=1,nhits1y 
+                           dy1= hscin_1y_center(hpro_counter_num(iy,2))-y1y
+                           if(abs(dy1).le.12.95) then  !3.5*1y_width
+                              if(dy1.le.dy1min) then
+                                 dy1min=abs(dy1)
+                                 y1index=iy
+                              endif
+                              if(abs(dy1-dy1min).le.1e-6) then
+                                 nummin=nummin+1
+                                 minhits(nummin)=iy
+                                 minflag=1
+                              endif
+                           endif
+                        enddo
+
+                        if(minflag.gt.0) then
+                           do imin=1,nummin             
+                              smindx=hscin_1y_center(hpro_counter_num
+     &                         (minhits(imin),2))-y1y
+                              if(abs(dy1min-smindx).le.1e-6) then
+
+                                 if(hstart_pro(minhits(imin),2).le.-20.and.
+     &                            hstart_pro(minhits(imin),2).ge.-80
+     &                            .and.y1index.gt.0) then !DK added
+
+                                    if (hstart_pro(y1index,2).ge.-20
+     &                               .or.hstart_pro(y1index,2).le.-80) then
+                                       y1index=minhits(imin)
+                                    else
+                                       hstart_pro(y1index,2)=hstart_pro(y1index,2)
+     &                                  +hstart_pro(minhits(imin),2)
+                                       finalnummin=finalnummin+1
+                                    endif
+                                 endif
+                              endif
+                           enddo
+                        endif
+
+                        if(finalnummin.gt.0) then
+                           hstart_pro(y1index,2)=hstart_pro(y1index,2)/finalnummin
+                        endif 
+
+                        if(x1index.eq.0.or.y1index.eq.0) then
+                           prelinkflag(isp1,isp2)=0 
+                        endif
+         
+c                       print*,'check2'
+
+                        if(prelinkflag(isp1,isp2).ne.0
+     +                   .and.hntracks_pre.le.hmax_space_points*8) then
+                           hntracks_pre=hntracks_pre+1
+                           track_timing_index(hntracks_pre,1)=x1index
+                           track_timing_index(hntracks_pre,2)=y1index          
+                           track_space_point(hntracks_pre,1)=isp1
+                           track_space_point(hntracks_pre,2)=isp2           
+                           t1x1y=hstart_pro(x1index,1)-hstart_pro(y1index,2)
+                        
+                           deltax=hscin_1x_center(hpro_counter_num(x1index,1))
+                           deltay=hscin_1y_center(hpro_counter_num(y1index,2))
+                           prelen=sqrt(deltax*deltax+deltaz1x1y*deltaz1x1y+deltay*deltay)
+                           t1x1y=t1x1y*abs(deltaz1x1y)/prelen
+                           t1xh2=t1x1y*deltazh21x/deltaz1x1y  !19.2cm is the distance between 1x and HDC2, 125.6 is the distance between 1x and 2x from survey data
+                           h21time=hstart_pro(i,1)+t1xh2
+                           t1xh1=t1x1y*deltazh11x/deltaz1x1y !119.371cm is the distance between 1x and HDC1 all those number could get from parameter files
+                           h11time=hstart_pro(i,1)+t1xh1
+                           t1yh1=t1x1y*deltazh11y/deltaz1x1y 
+                           t1yh2=t1x1y*deltazh21y/deltaz1x1y
+                           h12time=hstart_pro(j,2)+t1yh1
+                           h22time=hstart_pro(j,2)+t1yh2
+                           h1time(hntracks_pre)=(h11time+h12time)/2
+                           h2time(hntracks_pre)=(h21time+h22time)/2
+                           sp2flag(isp2)=1
+                           sp1flag(isp1)=1
+                        endif   !start_time calculate 
+                     endif  !prelink        
+                  endif !chamnum
+               enddo  ! isp2   
+            enddo ! isp1
+         endif
+
+
+c------------------------1x1y---------------------------------- 
+
+c-------------------------------start time calculate------------------
+         
+                
+       
+         do i=1,hnspace_points_tot 
+            sp1num=0
+            sp2num=0
+            h1tsum=0
+            h2tsum=0
+            spsum=0
+            if(sp1flag(i).gt.0) then
+               do j=1,hntracks_pre
+                  if(track_space_point(j,1).eq.i) then
+                     sp1num=sp1num+1
+                     if(h_chamnum(i).eq.1) then
+                        h1tsum=h1tsum+h1time(j)
+                     else
+                        h2tsum=h2tsum+h2time(j)
+                     endif 
+                  endif
+               enddo
+            endif
+            if(sp2flag(i).gt.0) then
+               do j=1,hntracks_pre
+                  if(track_space_point(j,2).eq.i) then
+                     sp2num=sp2num+1
+                     if(h_chamnum(i).eq.1) then
+                        h1tsum=h1tsum+h1time(j)
+                     else
+                        h2tsum=h2tsum+h2time(j)
+                     endif 
+                  endif
+               enddo
+            endif
+            if(sp1num.gt.0) then
+               spsum=sp1num
+            elseif(sp2num.gt.0) then
+               spsum=sp2num
+            else
+               spsum=0
+            endif
+            if(spsum.gt.0) then
+               if(hspace_point_hits_multi(i).gt.0) then
+                  space_points_tot=hspace_point_hits(i,1)
+     +             *hspace_point_hits_multi(i)
+               else
+                  space_points_tot=hspace_point_hits(i,1)
+               endif
+               if(h_chamnum(i).eq.1) then
+                  h1start_time=h1tsum/spsum
+                  do ihit=1,space_points_tot
+                     hit = hspace_point_hits(i,ihit+2)
+                     pln = hdc_layer_num(hit)
+                     if(timeflag(hit).ne.0) then
+                     hdc_drift_time(hit)=-h1start_time+hdc_drift_time(hit)  
+                     timeflag(hit)=0
+                     endif                  
+                  enddo
+               else
+                  h2start_time=h2tsum/spsum
+                  do ihit=1,space_points_tot
+                     hit = hspace_point_hits(i,ihit+2)
+                     pln = hdc_layer_num(hit)
+                    if(timeflag(hit).ne.0) then
+                     hdc_drift_time(hit)=-h2start_time+hdc_drift_time(hit)
+                    timeflag(hit)=0
+                    endif
+                  enddo
+               endif 
+            endif
+         enddo
+ 
+         do i=1,hnspace_points_tot
+            if(sp1flag(i).eq.0.and.sp2flag(i).eq.0) then
+               precutflag(i)=0
+               if(hspace_point_hits_multi(i).gt.0) then
+                  space_points_tot=hspace_point_hits(i,1)
+     +             *hspace_point_hits_multi(i)
+               else
+                  space_points_tot=hspace_point_hits(i,1)
+               endif
+               do ihit=1, space_points_tot
+                  hit = hspace_point_hits(i,ihit+2)
+                  pln = hdc_layer_num(hit)
+                  if(timeflag(hit).ne.0) then
+                  if(pln.le.6) then
+c                    print*,h1start_time,"h1start_time"
+                     h1start_time=h1start_pre
+c                    hdc_drift_time(hit)=-h1start_time+hdc_drift_time(hit)
+                     hdc_drift_time(hit)=-h1start_pre+hdc_drift_time(hit)
+c                    print*,hdc_drift_time(hit)
+                  else
+                     h2start_time=h2start_pre
+                     hdc_drift_time(hit)=-h2start_time+hdc_drift_time(hit)
+                  endif
+                  timeflag(hit)=0
+                  endif
+c                 print*, "hdc_time",hdc_drift_time(hit)
+               enddo
+            endif
+         enddo 
+      endif  ! ntof 
+
+
+        do i=1,hmax_dc_hits
+         timeflag(i)=1
+        enddo
+    
+      if(hnspace_points_tot.gt.0) then
+c--- to test dxp
+         do isp=1,hnspace_points_tot
+c           print*,precutflag(isp)
+            xdist = hspace_points(isp,1)
+            ydist = hspace_points(isp,2)
+           
+            if(hspace_point_hits_multi(isp).gt.1) then
+               space_points_tot=hspace_point_hits(isp,1)
+     +                        *hspace_point_hits_multi(isp)
+            else
+               space_points_tot=hspace_point_hits(isp,1)
+            endif
+
+            do ihit=1,space_points_tot
+               hit = hspace_point_hits(isp,ihit+2)
+
+               pln = hdc_layer_num(hit)
+               wiren = hdc_wire_num(hit)
+               cardn = hdc_card_no(wiren,pln) 
+               if (cardn.ne.0) then
+                  time_corr = (-hdc_card_pos(cardn)*ydist+hdc_length_y/2.)
+     &                 *hdc_readout_corr(pln)/hdc_wire_velocity
+               else
+                  time_corr = 0.
+               endif
+               if(timeflag(hit).ne.0) then
+               hdc_drift_time(hit) = hdc_drift_time(hit) 
+     &              + hdc_drifttime_sign(pln)*time_corr
+               hdc_drift_dis(hit) = h_drift_dist_calc
+     &              (pln,hdc_wire_num(hit),hdc_drift_time(hit))
+*     
+*     djm 8/25/94
+*     Stuff drift time and distance into registered variables 
+*     for histogramming and tests.
+*     In the case of two separated hits per layer, 
+*     the last one will be histogrammed.
+*     
+               hdc_sing_drifttime(pln) = hdc_drift_time(hit)
+               hdc_sing_driftdis(pln) = hdc_drift_dis(hit)
+               hdc_sing_cardid(pln) =
+     &              hdc_card_no(hdc_wire_num(hit),hdc_layer_num(hit))
+               dt=hdc_drift_time(hit)
+              timeflag(hit)=0
+              endif
+c               
+c                call hf1(hiddcdrifttime(pln),dt,1.)
+            enddo
+         enddo
+      endif
+*     
+*     write out results if debugflagpr is set
+      if(hdebugflagpr.ne.0) then
+         call h_print_pr
+      endif
+*
+      return
+       
+      end
+
+
+

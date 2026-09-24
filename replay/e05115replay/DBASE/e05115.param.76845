@@ -1,0 +1,37 @@
+;  This file contains the HKS and ENGE parameters 
+;  needed for all the analysis
+
+begin parm kinematics
+#include "PARAM/general.param.0"
+#include "PARAM/gscalers.param.0"
+end parm kinematics
+
+begin parm hes_parameters
+#include "PARAM/edeadwires.param.0"
+#include "PARAM/edc.pos.0"
+#include "PARAM/edc.param.75884"
+#include "PARAM/edc_offsets.param.0"
+#include "PARAM/edriftmap.param.0"
+#include "PARAM/etracking.param.0"
+#include "PARAM/edriftcoeff.param.0"
+#include "PARAM/ehodo.pos.0"
+#include "PARAM/ehodo.param.0"
+end parm hes_parameters
+
+begin parm hks_parameters
+#include "PARAM/hdc.pos.0"
+#include "PARAM/hdc.param.75885"
+#include "PARAM/hdc_offsets.param.0"
+#include "PARAM/hdriftmap.param.76857"
+#include "PARAM/htracking.param.0"
+#include "PARAM/hhodo.pos.0"
+#include "PARAM/hhodo.param.76646"
+#include "PARAM/haer.param.74990"
+#include "PARAM/hwat.param.75919"
+#include "PARAM/hluc.param.0"
+end parm hks_parameters
+
+begin parm coin_parameters
+#include "PARAM/coin.param.0"
+end parm coin_parameters
+

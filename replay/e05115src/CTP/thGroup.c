@@ -139,8 +139,11 @@ thStatus thSetGroupClasses()
     var.whook = 0;		/* Need handlers? */
     var.rhook = 0;
     var.flag = DAVAR_READWRITE | DAVAR_REPOINTOK;
-    var.opaque = (void *)opqptr 
-	 = (thGroupOpaque *) malloc(sizeof(thGroupOpaque));
+    //    var.opaque = (void *)opqptr 
+    //	 = (thGroupOpaque *) malloc(sizeof(thGroupOpaque));
+    // SP. 09/14/2026
+    var.opaque = (void *) (opqptr = (thGroupOpaque *) (void *)
+            ((thGroupOpaque *) malloc(sizeof(thGroupOpaque))));
     opqptr->blocklist = 0;
     opqptr->type = (char *) malloc(strlen(thHooks[i].type) + 1);
     strcpy(opqptr->type,thHooks[i].type);

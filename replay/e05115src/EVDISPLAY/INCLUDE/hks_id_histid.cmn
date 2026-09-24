@@ -172,6 +172,7 @@
       Integer*4 hiddcextramult
       Integer*4 hiddccluster(HMAX_NUM_DC_LAYERS)
       Integer*4 hiddclayerhit(HMAX_NUM_DC_LAYERS)
+      Integer*4 hiddcrawlayerhit(HMAX_NUM_DC_LAYERS)
 
 *     --- fill in h_fill_dc_sp_hist
       Integer*4 hiddcnspacepoint
@@ -184,6 +185,7 @@
       Integer*4 hidytcriterion
       Integer*4 hidxptcriterion
       Integer*4 hidyptcriterion
+      Integer*4 hiddcdistime(HMAX_NUM_DC_LAYERS)
 
       COMMON/hks_dc_dec_histid/
      &     hiddcdectothit,
@@ -196,6 +198,7 @@
      &     hiddcextramult,
      &     hiddccluster,
      &     hiddclayerhit,
+     &     hiddcrawlayerhit,
      &     hiddcnspacepoint,
      &     hiddcnspacepointzoom,
      &     hiddcnspacepointhits,
@@ -203,7 +206,8 @@
      &     hidxtcriterion,
      &     hidytcriterion,
      &     hidxptcriterion,
-     &     hidyptcriterion
+     &     hidyptcriterion,
+     &     hiddcdistime
 
 *     --- hks tracking histgram 
 
@@ -634,6 +638,7 @@ c     --- luc raw hist
       Integer*4 hidtrklucnum(1)
       Integer*4 hidtrkaernpesum(3)
       Integer*4 hidtrkwatnpesum(2)
+      Integer*4 hidtrkwatnpesumkratio(2)
       Integer*4 hidtrklucnpesum(1)
 
       Common/hks_link_tracks/
@@ -645,6 +650,7 @@ c     --- luc raw hist
      &     hidtrklucnum,
      &     hidtrkaernpesum,
      &     hidtrkwatnpesum,
+     &     hidtrkwatnpesumkratio,
      &     hidtrklucnpesum
 
 *

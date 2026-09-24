@@ -1,0 +1,603 @@
+*     hks_tracking.cmn
+*     include file for hks tracking intermediate results
+*     D. F. Geesaman         1 September 1993
+*     modified  dfg          10 Feb 94
+*     change name to hks_tracking.cmn
+*     put sluno and debugflags from parameters to CTP
+*     $Log: hks_tracking.cmn,v $
+
+*     Revision 1.1.1.1  2009/06/23 13:55:43  kawama
+*
+*     e05115 src repository for software development
+*
+*     Revision 1.2  2005/09/20 15:06:21  sumihama
+*     Mod. find track candidates with Group info. by Seva
+*
+*     Revision 1.1.1.1  2005/05/14 21:44:37  miyoshi
+*
+*
+*     Revision 1.6  2005/04/21 23:15:54  miyoshi
+*     add target readout parameters for debug only
+*
+*     Revision 1.5  2005/03/14 19:47:51  miyoshi
+*     change hscin names
+*
+*     Revision 1.4  2005/03/02 22:13:38  miyoshi
+*     add variables for hdc decording
+*
+*     Revision 1.3  2004/12/24 21:18:50  miyoshi
+*     change name plane to layer
+*
+*     Revision 1.2  2004/12/23 21:59:37  miyoshi
+*     add tracking result variables
+*
+*     Revision 1.1.1.1  2004/08/30 21:21:38  miyoshi
+*     new dir
+*
+*     Revision 1.19 2004/03/02 Miyoshi
+*     for E01-011
+*     Revision 1.18  1999/02/23 19:22:52  csa
+*     (JRA) Remove sdebugcalcpeds
+*     
+*     Revision 1.17  1998/12/01 20:30:16  saw
+*     * (SAW) Put HKS_DRIFT common block before equivalences
+*     
+*     Revision 1.16  1996/09/04 16:32:10  saw
+*     (DVW) Add slew of variables for derek's hms track tests
+*     
+*     Revision 1.15  1996/04/30 14:04:39  saw
+*     (JRA) Bunch of changes
+*     
+*     Revision 1.14  1996/01/17 15:05:05  cdaq
+*     (JRA) Change name of various correction variables.
+*     Add some efficiency accumulator variables.
+*     
+*     Revision 1.13  1995/05/22 19:01:16  cdaq
+*     (SAW) Split gen_data_data_structures into gen, hms, hks, and coin parts
+*     
+*     Revision 1.12  1995/04/06  20:30:04  cdaq
+*     (SAW) Fix wc layer names.  Change residuals variable names
+*     
+*     Revision 1.11  1995/03/13  19:18:06  cdaq
+*     (SAW) Names of fract equivalence arrays reflect HKS chamber layer names
+*     
+*     Revision 1.10  1995/01/27  20:22:58  cdaq
+*     (SAW) Let sdc_layers_per_chamber be a ctp parameter
+*     
+*     Revision 1.9  1994/12/01  17:22:08  cdaq
+*     (SAW) Add s_hms_style_chambers flag to treat HKS chambers like HMS
+*     Add sdc_layers_per_chamber (calculated in s_generate_geometry)
+*     Make glayersdc equivalenced with glayersdc1, ...
+*     
+*     Revision 1.8  1994/11/22  18:40:41  cdaq
+*     (SAW) Add s's in front of fract, aa3, det3, aainv3.  Remove fractinterp
+*     Cleaned up ?DC_NUM_CHAMBERS and ?MAX_NUM_CHAMBERS stuff
+*     
+*     Revision 1.7  1994/11/21  18:02:58  cdaq
+*     (SPB) Recopied from hms file and modified names for HKS
+*     
+*     Revision 1.6  1994/08/16  03:57:09  cdaq
+*     (SAW) Change some variables to parm CTPTYPE
+*     
+*     Revision 1.5  1994/08/05  20:06:27  cdaq
+*     (SAW) Add makereg directive with required include files
+*     
+*     Revision 1.4  1994/08/05  20:00:36  cdaq
+*     (SAW) Add "CTPTYPE=event,parm" directive for auto generation of CTP reg calls
+*     
+*     Revision 1.3  1994/06/06  17:06:05  cdaq
+*     (DFG) add ssingle_stub
+*     
+*     Revision 1.2  1994/03/24  18:40:37  cdaq
+*     (DFG) Additional parameters
+*     
+*     Revision 1.1  1994/02/22  14:47:57  cdaq
+*     Initial revision
+*     
+*     The following include statments must precede the inclusion of this
+*     file in each routine that uses it.  The *%% syntax is also a
+*     directive to makereg to tell it to include the code in the program
+*     that it generates.
+*     
+*%%   include 'hks_data_structures.cmn'
+      
+      
+*----------------------------------------------------------------------
+*     PARAMETERS FOR DRIFT TIME TO DISTANCE CALCULATION
+*     
+*     CTPTYPE=parm
+*     
+      integer*4 hdriftbins_max  
+*     ! number of bins for drift time lookup table
+      parameter (hdriftbins_max=138)
+      real*4    hdriftbins      
+*     ! number of bins for drift time lookup table
+      real*4    hdriftbinsz     
+*     ! drift bin size in nsec of lookup table
+      real*4    hdrift1stbin    
+*     ! drift time of 1st bin in nsec of lookup
+      real*4    hfract(hdriftbins_max,hmax_num_dc_layers)
+                                !fraction of integrated time spectrum
+      
+      real*4 hwc1u1fract(hdriftbins_max),hwc1u2fract(hdriftbins_max),
+     &     hwc1x1fract(hdriftbins_max),hwc1x2fract(hdriftbins_max),
+     &     hwc1v1fract(hdriftbins_max),hwc1v2fract(hdriftbins_max),
+     &     hwc2u1fract(hdriftbins_max),hwc2u2fract(hdriftbins_max),
+     &     hwc2x1fract(hdriftbins_max),hwc2x2fract(hdriftbins_max),
+     &     hwc2v1fract(hdriftbins_max),hwc2v2fract(hdriftbins_max)
+      
+      common/HKS_DRIFT/
+     &        hfract,
+     &        hdriftbinsz,
+     &        hdrift1stbin,
+     &        hdriftbins
+
+      equivalence (hwc1u1fract(1),hfract(1,1))
+      equivalence (hwc1u2fract(1),hfract(1,2))
+      equivalence (hwc1x1fract(1),hfract(1,3))
+      equivalence (hwc1x2fract(1),hfract(1,4))
+      equivalence (hwc1v1fract(1),hfract(1,5))
+      equivalence (hwc1v2fract(1),hfract(1,6))
+      equivalence (hwc2u1fract(1),hfract(1,7))
+      equivalence (hwc2u2fract(1),hfract(1,8))
+      equivalence (hwc2x1fract(1),hfract(1,9))
+      equivalence (hwc2x2fract(1),hfract(1,10))
+      equivalence (hwc2v1fract(1),hfract(1,11))
+      equivalence (hwc2v2fract(1),hfract(1,12))
+
+*----------------------------------------------------------------------
+*     INFORMATION ABOUT LAYER GEOMETRY AND TRACKING PARAMETERS
+*     
+*     CTPTYPE=parm
+*     
+*     hmax_chamber_hits       maximum number of chamber hits
+*     hmax_space_points       maximum number of space points
+*     hmax_hits_per_point     maximum number of hits per point
+*     hnum_fpray_param        number of ray parameters in focal plane
+*     hdc_num_cards           number of discriminator cards
+*     hdc_max_wires_per_layer maximum number of wire in a layer
+
+      integer*4 hmax_chamber_hits
+      integer*4 hmax_space_points
+      integer*4 hmax_hits_per_point 
+      integer*4 hmax_space_points_multi
+      integer*4 hnum_fpray_param   
+      integer*4 hdc_num_cards  
+      integer*4 hdc_max_wires_per_layer
+
+      parameter (hmax_chamber_hits=544)
+      parameter (hmax_space_points=50)
+      parameter (hmax_space_points_multi=50)
+      parameter (hmax_hits_per_point=25)
+      parameter (hnum_fpray_param=4)
+      parameter (hdc_num_cards=80)
+      parameter (hdc_max_wires_per_layer=122)
+      
+*     --- set in CTP
+*     hdc_num_layers     actual number of dc chambers 
+*     hdc_num_chambers   actual number of chambers
+*    
+
+      integer*4 hdc_num_layers   
+      integer*4 hdc_num_chambers 
+      integer*4 hdc_layers_per_chamber
+
+*     dc tdc min and max
+      integer*4 hdc_tdc_min_win(hmax_num_dc_layers)  
+      integer*4 hdc_tdc_max_win(hmax_num_dc_layers) 
+
+      integer*4 hmin_hit(hmax_num_chambers)         
+*     ! minimum hits   for space point
+      integer*4 hmin_combos(hmax_num_chambers)      
+*     ! minimum combos for space point
+      integer*4 hmax_pr_hits(hmax_num_chambers)     
+*     ! max number of hits in each layer for
+                                ! pattern recognition to be done in that pla
+*	
+      integer*4 htrack_chi2min
+
+*     wire velocity corrections.
+      
+      logical hdc_readout_x(hmax_num_dc_layers)
+*     true = read out from side (like x layer)
+      
+     
+      real*4  hdc_readout_corr(hmax_num_dc_layers)   
+*     !wire path length/dist. to readout side
+      real*4 hdc_cut_min(12,6)
+      real*4 hdc_cut_max(12,6)
+      real*4  hdc_wire_velocity  
+*     ! propogation velocity of signal on wire(cm/ns)
+      real*4  hdc_drifttime_sign(hmax_num_dc_layers)
+*     !sign of correction term.
+      real*4  hdc_central_time(hmax_num_dc_layers)   
+*     !ave. time (ns) for signal to reach disc. card.
+                                ! (both times are from center of the chamber)
+*     timing offsets per card.
+      integer*4 hdc_sing_cardid(hmax_num_dc_layers)  
+*     ! array of card id''s so one can put cuts/test on a per/card basys
+      integer*4 hdc_card_no(hdc_max_wires_per_layer,hmax_num_dc_layers)   
+*     ! card number
+      real*4 hdc_card_delay(hdc_num_cards)      
+*     ! delay for a given card
+      real*4 hdc_card_pos(hdc_num_cards)
+
+*     stub link criterion on x_t,y_t,xp_t,yp_t 
+*     used in h_link_stub.f and filled in htracking.param
+
+      real*4 hxt_track_criterion    
+      real*4 hyt_track_criterion    
+      real*4 hxpt_track_criterion   
+      real*4 hypt_track_criterion   
+ 
+      real*4 mhstart_time(hmax_chamber_hits,hmax_num_chambers)
+
+      real*4 hspace_point_criterion(hmax_num_chambers)       
+
+*     one track identification criterion
+*     used in h_select_good_tracks
+
+      Real*4 hks_dx_min,hks_dy_min
+      Real*4 hks_dxp_min,hks_dyp_min
+
+*     ! maximum distance**2 to join pairs/combos.
+*     
+*     CTPTYPE=event
+*     
+      integer*4 hncham_hits(hmax_num_chambers)
+      integer*4 hnspace_points(hmax_num_chambers)  
+      integer*4 prelinkflag(hmax_space_points,hmax_space_points) 
+      integer*4 precutflag(hmax_space_points)
+*     ! number of space points in each chamber
+      integer*4 htrack_fit_num     
+*     ! track number in fitting loop
+      integer*4 hnspace_points_tot 
+*! total number of space points after select.
+      integer*4 glayerhdc(hmax_space_points,hmax_num_chambers)   
+*! good layer pattern unit, set bit if respective layer hit
+      integer*4 glayerhdc1(hmax_space_points)  
+*! good layer pattern unit,
+      integer*4 glayerhdc2(hmax_space_points)  
+*! set bit if respective layer
+      integer*4 glayerhdc3(hmax_space_points)  
+*! was hit.
+ 
+      equivalence (glayerhdc1(1),glayerhdc(1,1))
+      equivalence (glayerhdc2(1),glayerhdc(2,1))
+      equivalence (glayerhdc3(1),glayerhdc(3,1))
+
+      integer*4 hspace_point_hits(hmax_space_points,10*hmax_hits_per_point+2) 
+      integer*4 hspace_point_hits_multi(hmax_space_points_multi)
+      integer*4 hspace_point_hits_pre(hmax_space_points,hmax_hits_per_point+2)
+*! array of n rows of space points
+                                   ! (n,1) = number of hits
+                                   ! (n,2) = number of valid combinations
+                                   ! (n,3...) hit numbers for space point
+      real*4 hspace_points(hmax_space_points,2)   
+       real*4 hspace_points_pre(hmax_space_points,2)
+*! array of x, y of space points
+      real*4 hbeststub(hmax_space_points,hnum_fpray_param)             
+*! array of stubs fit to each space point
+      real*4 hdc_sing_drifttime(hmax_num_dc_layers)    
+*! array of fully corrected drift times for each layer
+      real*4 hdc_sing_driftdis(hmax_num_dc_layers)     
+*! array of final drift distances for each layer
+
+*
+      common/HKS_TRACKING/
+     &     hdc_num_chambers,
+     &     hdc_num_layers,
+     &     hdc_layers_per_chamber,
+     &     glayerhdc,
+     &     hspace_points,
+     &     hspace_points_pre,
+     &     hspace_point_hits,
+     &     hspace_point_hits_pre,
+     &     hspace_point_hits_multi,
+     &     hnspace_points,
+     &     hnspace_points_tot,
+     &     hbeststub,
+     &     hncham_hits,
+     &     htrack_fit_num,
+     &     hspace_point_criterion,
+     &     hdc_tdc_min_win, 
+     &     hdc_tdc_max_win,
+     &     htrack_chi2min,
+     &     hmin_hit,
+     &     hmin_combos,
+     &     hmax_pr_hits,
+     &     hxt_track_criterion,hyt_track_criterion,
+     &     hxpt_track_criterion,hypt_track_criterion,
+     &     hks_dx_min,hks_dy_min,
+     &     hks_dxp_min,hks_dyp_min,
+     &     hdc_sing_drifttime,
+     &     hdc_sing_driftdis,
+     &     hdc_cut_min,
+     &     hdc_cut_max,
+     &     hdc_wire_velocity,
+     &     hdc_central_time,
+     &     hdc_drifttime_sign,
+     &     hdc_readout_corr,
+     &     hdc_readout_x,
+     &     hdc_card_delay,
+     &     hdc_card_no,
+     &     hdc_card_pos,
+     &     hdc_sing_cardid,
+     &     mhstart_time,
+     &     prelinkflag,
+     &     precutflag
+
+
+*----------------------------------------------------------------------
+* MATRICES FOR 3 PARAMETER FITS.
+*
+*     CTPTYPE=parm
+*
+      real*8 haa3(3,3)
+      real*8 haainv3(3,3,hmax_num_dc_layers+hmax_num_chambers)           
+*! matrix AA and its inverse AAINV 
+      real*8 hdet3(hmax_num_dc_layers+hmax_num_chambers)             
+*! array of determinants of AA
+      common/HKS_TFIT_MATRIX/
+     &     haa3,
+     &     haainv3,
+     &     hdet3
+
+
+
+*----------------------------------------------------------------------
+* DRIFT CHAMBER DEBUGGING FLAGS/INFO.
+*
+*     CTPTYPE=parm
+*
+* debug print flags, if flags .ne. 0 then execute debug code
+      integer*4 hdebugflagpsi          
+      integer*4 hdebugflaggeometry
+      integer*4 hdebugflagpr
+      integer*4 hdebugflagstubs
+      integer*4 hdebuglinkstubs
+      integer*4 hdebugtrackprint
+      integer*4 hdebugstubchisq
+      integer*4 hdebugtartrackprint   
+*! call h_print_tar_track
+      integer*4 hdebugdumptof         
+*! dumps tof fitting data
+      integer*4 hsingle_stub          
+*! switch to make tracks of all stubs
+      integer*4 hsmallAngleApprox     
+*! switch for alternate L/R determ. of Y,Yprime layers
+      integer*4 h_hms_style_chambers  
+*! Using HMS style drift chambers.
+
+      common/HKS_TRACKFLAGS/
+     &     hdebugflagpsi,
+     &     hdebugflaggeometry,
+     &     hdebugflagpr,
+     &     hdebugflagstubs,
+     &     hdebuglinkstubs,
+     &     hdebugtrackprint,
+     &     hdebugstubchisq,
+     &     hdebugtartrackprint,
+     &     hdebugdumptof,
+     &     hsingle_stub,
+     &     hsmallAngleApprox,
+     &     h_hms_style_chambers
+
+*----------------------------------------------------------------------
+* DRIFT CHAMBER EFFICIENCY MEASUREMENTS.
+*
+*     CTPTYPE=parm
+*
+* warning levels for efficiency
+      real*4 hdc_min_layer_eff(hmax_num_dc_layers)
+      real*4 hdc_min_wire_eff
+*
+*     CTPTYPE=event
+*
+* multiple hits per wire statistics.
+      integer*4 hwire_mult(hdc_max_wires_per_layer,hmax_num_dc_layers)
+      integer*4 hwire_early_mult(hdc_max_wires_per_layer,hmax_num_dc_layers)
+      integer*4 hwire_late_mult(hdc_max_wires_per_layer,hmax_num_dc_layers)
+      integer*4 hwire_extra_mult(hdc_max_wires_per_layer,hmax_num_dc_layers)
+* stuff for calcualting efficiency per wire.
+      integer*4 hdc_shouldhit(hmax_num_dc_layers,hdc_max_wires_per_layer)
+      integer*4 hdc_didhit(hmax_num_dc_layers,hdc_max_wires_per_layer)
+      integer*4 hdc_shouldsum(hmax_num_dc_layers)
+      integer*4 hdc_didsum(hmax_num_dc_layers)
+      integer*4 hdc_eff(hmax_num_dc_layers)
+      real*4 hdc_track_coord(hntracks_max,hmax_num_dc_layers)
+
+*hdc_track_coord   !track position per layer, in x,y,u,v directions.
+*hdc_shouldhit     !times a wire should have fired.
+*hdc_didhit        !times a wire did fire.
+*hdc_shouldsum     !sum over layer.
+*hdc_didsum        !sum over layer.
+*hdc_eff           !effic. per layer.
+*hdc_min_wire_eff  !warning level for wire effic.
+*hdc_min_layer_eff !warning level for layer effic.
+
+      common/hks_dc_track_efficiency/
+     &   hdc_track_coord,   
+     &   hdc_shouldhit,
+     &   hdc_didhit,
+     &   hdc_shouldsum,
+     &   hdc_didsum,
+     &   hdc_eff,
+     &   hdc_min_wire_eff,
+     &   hdc_min_layer_eff,
+     &   hwire_mult,
+     &   hwire_early_mult,
+     &   hwire_late_mult,
+     &   hwire_extra_mult
+
+
+*----------------------------------------------------------------------
+* DRIFT CHAMBER RESIDUALS
+*
+*     CTPTYPE=event
+*
+*  complete 2-D array for residuals in all layers over all tracks
+      real*4 hdc_single_residual(hntracks_max,hmax_num_dc_layers)
+
+*     djm 8/26/94 arrays containing single and double residual arrays which can be
+*     histogrammed in the normal fashion (ie, not hardwired histograms).
+
+      Integer*4 hdc_bestchi2_index
+      
+      real*4 hdc_wire_numb(hntracks_max,hmax_num_dc_layers)
+      real*4 hdc_layer_wirecoord(hntracks_max,hmax_num_dc_layers)
+      real*4 hdc_layer_wirecenter(hntracks_max,hmax_num_dc_layers)
+      real*4 hdc_bestchi2
+      real*4 hdc_layer_sigma(hntracks_max,hmax_num_dc_layers)
+      real*4 hdc_track_numb(hntracks_max,hmax_num_dc_layers)
+      real*4 hdc_drift_distance(hntracks_max,hmax_num_dc_layers)
+      real*4 hdc_layer_drift_time(hntracks_max,hmax_num_dc_layers)
+
+      common/HKS_RESIDUAL/
+     &     hdc_bestchi2_index,
+     &     hdc_bestchi2,
+     &     hdc_single_residual,
+     &     hdc_layer_wirecoord,
+     &     hdc_layer_wirecenter,
+     &     hdc_wire_numb,
+     &     hdc_layer_sigma,
+     &     hdc_track_numb,
+     &     hdc_drift_distance,
+     &     hdc_layer_drift_time
+
+*----------------------------------------------------------------------
+* DEADWIRE LIST
+*
+*     CTPTYPE=parm
+*
+      integer*4 hmax_num_deadwires
+      parameter (hmax_num_deadwires=60)
+      integer*4 hdc_num_deadwires
+      integer*4 hdc_deadwire_layer(hmax_num_deadwires)
+      integer*4 hdc_deadwire_num(hmax_num_deadwires)
+
+*        hdc_num_deadwires,  !number of dead wires.
+*        hdc_deadwire_layer, !list of layer numbers.
+*        hdc_deadwire_num    !list of wire numbers.
+
+      common/hks_dead_wires/
+     &   hdc_num_deadwires,  
+     &   hdc_deadwire_layer, 
+     &   hdc_deadwire_num    
+
+
+*
+*     CTPTYPE=parm
+*
+      logical h1hit1,h1hit2,h1hit3,h1hit4,h1hit5,h1hit6
+      logical h1hit7,h1hit8,h1hit9,h1hit10,h1hit11,h1hit12
+      logical h1hitslt,h2hitslt,h1layersgt,h2layersgt
+      logical hhitslt,hlayersgt
+      logical hstublt
+      logical f1hspacepoints,f2hspacepoints,fhspacepoints
+      logical hhitslayers,hhitslayerssps,hhitslayersspsstubs
+      logical hspacepoints
+      logical htest1,htest2
+      logical hfoundtrack, hcleantrack
+
+      integer hnumhit1,hnumhit2,hnumhit3,hnumhit4,hnumhit5,hnumhit6
+      integer hnumhit7,hnumhit8,hnumhit9,hnumhit10,hnumhit11,hnumhit12
+      integer hnumhith1,hnumhith2,hnumlayerh1,hnumlayerh2
+      integer hnumscinh1,hnumscinh2,hnumscinh3,hnumscinh4
+      integer hstubtest
+      real*4 hstubminx,hstubminy,hstubminxp,hstubminyp
+      integer hscinhit(4,16)
+      integer hnclust(4)
+      integer hthreescin(4)
+      integer hslope
+      integer hbestxpscin
+      integer hbestypscin
+      integer hgoodscinhits
+      integer hxloscin(hmax_num_chambers),hxhiscin(hmax_num_chambers)
+      integer hyloscin(hmax_num_chambers),hyhiscin(hmax_num_chambers)
+      integer htrack_eff_test_num_scin_layers
+
+       common/dereks_hks_track_tests/
+     &    h1hit1,
+     &    h1hit2,
+     &    h1hit3,
+     &    h1hit4,
+     &    h1hit5,
+     &    h1hit6,
+     &    h1hit7,
+     &    h1hit8,
+     &    h1hit9,
+     &    h1hit10,
+     &    h1hit11,
+     &    h1hit12,
+     &	  hnumhit1,hnumhit2,hnumhit3,hnumhit4,hnumhit5,hnumhit6,
+     &    hnumhit7,hnumhit8,hnumhit9,hnumhit10,hnumhit11,hnumhit12,
+     &    h1hitslt,
+     &    h2hitslt,
+     &    h1layersgt,
+     &    h2layersgt,
+     &    hhitslt,
+     &    hlayersgt,
+     &    hstublt,
+     &    f1hspacepoints,
+     &    f2hspacepoints,
+     &    fhspacepoints,
+     &    hhitslayers,
+     &    hhitslayerssps,
+     &    hhitslayersspsstubs,
+     &    hspacepoints,
+     &    htest1,htest2,
+     &    hfoundtrack,
+     &    hcleantrack,
+     &    hnumhith1,hnumhith2,hnumlayerh1,hnumlayerh2,
+     &    hnumscinh1,hnumscinh2,hnumscinh3,hnumscinh4,
+     &    hstubtest,
+     &    hstubminx,
+     &    hstubminy,
+     &    hstubminxp,
+     &    hstubminyp,
+     &	  hscinhit,
+     &    hnclust,
+     &    hthreescin,
+     &    hslope,
+     &    hbestxpscin,
+     &    hbestypscin,
+     &    hgoodscinhits,
+     &    hxloscin,hxhiscin,hyloscin,hyhiscin,
+     &    htrack_eff_test_num_scin_layers
+
+*     
+*     CTPTYPE=parm
+*     
+*     output tracking results
+*     
+       integer*4 h_track_output_on
+       integer*4 h_tar_output_on
+       
+       Common /hks_tracking_output_flag/
+     &      h_track_output_on,
+     &      h_tar_output_on
+       
+*     
+*     CTPTYPE=event
+*     
+       integer*4 h_kept_track_ID_number
+       integer*4 h_kept_ntrack
+       integer*4 h_kept_track_index
+       
+       Common /hks_tracking_output_event/
+     &      h_kept_track_ID_number,
+     &      h_kept_ntrack,
+     &      h_kept_track_index
+       
+*     
+*     CTPTYPE=event
+*     
+       integer*4 h_kept_tar_ID_number
+       integer*4 h_kept_ntar
+       integer*4 h_kept_tar_index
+       
+       Common /hks_target_output_event/
+     &      h_kept_tar_ID_number,
+     &      h_kept_ntar,
+     &      h_kept_tar_index

@@ -132,7 +132,7 @@ c         Write(*,*) '(hfilldcdec,la,wi,wc,dt=)',la,wi,wc,dt
          if(i .eq. hdc_tot_hits) 
      &        Call HF1(hiddccluster(la),float(cs),1.)
          
-         call hf1(hiddcdrifttime(la),dt,1.)
+c         call hf1(hiddcdrifttime(la),dt,1.)
          
       EndDo                     ! hdc_tot_hits
       

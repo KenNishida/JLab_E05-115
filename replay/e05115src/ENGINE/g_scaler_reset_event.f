@@ -60,6 +60,7 @@
       gbcm2_charge = 0.
       gbcm3_charge = 0.
       gunser_charge = 0.
+      gbcm_mean_charge = 0.
 *
       g_beam_on_run_time = 0.    ! Have to do this, because I have to accumlate
                                  ! this value (unlike g_run_time)

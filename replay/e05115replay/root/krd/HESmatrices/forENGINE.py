@@ -2,10 +2,10 @@
 
 def f2t():
 	name_oFILE="hes_recon_coeff.dat"
-	name_Mmom="mom4_24Aug09.dat"
-	name_Mxpt="xpt4_24Aug09.dat"
-	name_Mypt="ypt4_24Aug09.dat"
-	name_Mlen="len4_24Aug09.dat"
+	name_Mmom="mom6_27Aug10.dat"
+	name_Mxpt="xpt6_27Aug10.dat"
+	name_Mypt="ypt6_27Aug10.dat"
+	name_Mlen="len6_27Aug10.dat"
 
 	fMom=open(name_Mmom,"r")
 	fXpt=open(name_Mxpt,"r")
@@ -21,25 +21,25 @@ def f2t():
 	f.write("! recostruction matrix elements\n")
 	f.write("! <theta y phi delta | nmpq>;(x**n xp**m y**p yp**q)\n")
 	f.write("!\n")
-	f.write("e_ang_slope_x  = -0.00\n")
-	f.write("e_ang_slope_y  = -0.00\n")
-	f.write("e_ang_offset_x = 0.0\n")
-	f.write("e_ang_offset_y = -0.000\n")
-	f.write("e_det_offset_x = 0.00\n")
-	f.write("e_det_offset_y = 0.0\n")
-	f.write("e_z_true_focus = 0.0\n")
-	f.write("Center_of_exf = 0.0\n")
-	f.write("Center_of_expf = 0.0\n")
-	f.write("Center_of_eyf = 0.0\n")
-	f.write("Center_of_eypf = 0.0\n")
-	f.write("Nfactor_of_exf = 25.0\n")
+	f.write("e_ang_slope_x   = -0.00\n")
+	f.write("e_ang_slope_y   = -0.00\n")
+	f.write("e_ang_offset_x  = 0.0\n")
+	f.write("e_ang_offset_y  = -0.000\n")
+	f.write("e_det_offset_x  = 0.00\n")
+	f.write("e_det_offset_y  = 0.0\n")
+	f.write("e_z_true_focus  = 0.0\n")
+	f.write("Center_of_exf   = 0.0\n")
+	f.write("Center_of_expf  = 0.0\n")
+	f.write("Center_of_eyf   = 0.0\n")
+	f.write("Center_of_eypf  = -0.03\n")
+	f.write("Nfactor_of_exf  = 25.0\n")
 	f.write("Nfactor_of_expf = 0.1\n")
-	f.write("Nfactor_of_eyf = 3.0\n")
+	f.write("Nfactor_of_eyf  = 3.0\n")
 	f.write("Nfactor_of_eypf = 0.01\n")
 
 	f.write(" ---------------------------------------------------------------------\n")
 
-	nPar=70	
+	nPar=210	
 	n=0
 	while n<nPar:
 		pMoms = fMom.readline()
@@ -66,8 +66,8 @@ def f2t():
 
 def t2s():
 	name_oFILE="hes_t2s_coeff.dat"
-	name_Mxss="xss4_24Aug09.dat"
-	name_Myss="yss4_24Aug09.dat"
+	name_Mxss="xss4_27Aug10.dat"
+	name_Myss="yss4_27Aug10.dat"
 
 	fXss=open(name_Mxss,"r")
 	fYss=open(name_Myss,"r")
@@ -75,9 +75,9 @@ def t2s():
 	f=open(name_oFILE,"w")
 	f.write("!Nominal recon coefficients for HES\n")
 	f.write("!\n")
-	f.write("Center_of_expt = 0.\n")
-	f.write("Center_of_eypt = 0.06\n")
-	f.write("Center_of_emom = 0.844\n")
+	f.write("Center_of_expt  = 0.\n")
+	f.write("Center_of_eypt  = -0.06\n")
+	f.write("Center_of_emom  = 0.844\n")
 	f.write("Nfactor_of_expt = 0.1\n")
 	f.write("Nfactor_of_eypt = 0.03\n")
 	f.write("Nfactor_of_emom = 0.2\n")
@@ -103,4 +103,4 @@ def t2s():
 	f.close()
 
 f2t()
-t2s()
+#t2s()

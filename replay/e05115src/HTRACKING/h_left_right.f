@@ -87,7 +87,7 @@
 *     
       logical ABORT
       character*(*) err
-      integer*4 isp, ihit,iswhit, idummy, pmloop, ich,hit,la
+      integer*4 isp, ihit,iswhit, idummy, pmloop,ich,hit,la,ii,pp,jj
       integer*4 nplusminus
       integer*4 numhits,npaired,ihit2
       integer*4 hits(hmax_hits_per_point), pl(hmax_hits_per_point)
@@ -97,15 +97,22 @@
       integer*4 plusminusknown(hmax_hits_per_point)
       real*4 plusminus(hmax_hits_per_point)
       real*4 plusminusbest(hmax_hits_per_point)
+      real*4 mulplusminusbest(hmax_space_points_multi,hmax_hits_per_point)
       real*4 chi2,dispol
       real*4 minchi2
-      real*4 stub(4)
+      real*4 stub(4),dt
+      integer*4 nummulti,imul
+      real*4 mulchi2(hmax_space_points_multi)
+      real*4 mulminchi2
+      integer*4 imulbest,k
+      real*4 mulhbeststub(hmax_space_points_multi,4)
       logical smallAngOk
 *     
+
       ABORT= .FALSE.
       err=' '
 
-
+c     print*,hnspace_points_tot 
 *     --- Histogram for dc sp bank 
       call h_fill_dc_sp_hist(abort,err)
       if (abort) then
@@ -113,29 +120,54 @@
          return
       endif
 
-      if(hnspace_points_tot .le. 0) Return
+
+      if(ntof.eq.0) return
+      if(hnspace_points_tot .le. 1) Return
+c      if(hnspace_points_tot .le. 0) Return
       
       do isp=1,hnspace_points_tot ! loop over all space points
-         do ich=1,hdc_num_chambers
-            glayerhdc(isp,ich) = 0
-         enddo
+         if(precutflag(isp).gt.0) then
+        
          minchi2=1e10
+         mulminchi2=1e10
          smallAngOK = .FALSE.
          isa_y1 = 0
          isa_y2 = 0
-         numhits=hspace_point_hits(isp,1)
-         nplusminus=2**numhits
+   
+   
+      if(hspace_point_hits_multi(isp).le.1) then
+
+         do ich=1,hdc_num_chambers
+            glayerhdc(isp,ich) = 0
+         enddo
+          
+               numhits=hspace_point_hits(isp,1)
+               
+               nplusminus=2**numhits
+
 *     
 *     Identify which layer the space point is in.
 *     
+
          ich = (HDC_LAYER_NUM(hspace_point_hits(isp,2+1))-1)
      $        /(hdc_layers_per_chamber)+1
+
+
+
+c         if(hspace_point_hits_multi(isp).ne.0) then
+c           print*,hspace_point_hits_multi(isp)
+c          endif
+c        if(hspace_point_hits_multi(isp).le.1) then
+c         print*, hspace_point_hits_multi(isp)
+c         print *, "isp,numhits",isp,numhits
          do ihit=1,numhits
             hits(ihit)=hspace_point_hits(isp,2+ihit)
             pl(ihit)=HDC_LAYER_NUM(hits(ihit))
-            
             glayerhdc(isp,ich)=ibset(glayerhdc(isp,ich),pl(ihit)-
      $           ((ich-1)*(hdc_layers_per_chamber)+1))
+c            print *, "isp,hit,ihit,pl,glayerhdc,ddis",
+c     &       isp,hits(ihit),ihit,pl(ihit),glayerhdc(isp,ich),hdc_drift_dis(hits(ihit))
+                
             
 c     if(pl(ihit).ge.1 .and. pl(ihit).le.6)then
 c     glayerhdc1(isp)=jibset(glayerhdc1(isp),pl(ihit)-1)
@@ -145,35 +177,37 @@ c     endif
             
             wc(ihit)=HDC_WIRE_CENTER(hits(ihit))
             plusminusknown(ihit) = 0
+
             if(h_hms_style_chambers.eq.1) then
                if(pl(ihit).eq.2 .OR. pl(ihit).eq.8)  isa_y1 = ihit
                if(pl(ihit).eq.5 .OR. pl(ihit).eq.11) isa_y2 = ihit
             endif
          enddo
          
-         
 *     djm 10/2/94 check bad sdc pattern units to set the index for the inverse
 *     matrix SAAINV(i,j,pindex).
-*    
-         if(glayerhdc(isp,ich).eq.X'3F') then
-            pindex=hdc_num_layers+ich
-         else if (glayerhdc(isp,ich).eq.X'3E') then
-            pindex=(ich-1)*(hdc_layers_per_chamber) + 1
-         else if (glayerhdc(isp,ich).eq.X'3D') then
-            pindex=(ich-1)*(hdc_layers_per_chamber) + 2
-         else if (glayerhdc(isp,ich).eq.X'3B') then
-            pindex=(ich-1)*(hdc_layers_per_chamber) + 3
-         else if (glayerhdc(isp,ich).eq.X'37') then
-            pindex=(ich-1)*(hdc_layers_per_chamber) + 4
-         else if (glayerhdc(isp,ich).eq.X'2F') then
-            pindex=(ich-1)*(hdc_layers_per_chamber) + 5
-         else if (glayerhdc(isp,ich).eq.X'1F') then
-            pindex=(ich-1)*(hdc_layers_per_chamber) + 6
-         else
-            pindex=-1
-         endif
-         
+*     
+               if(glayerhdc(isp,ich).eq.INT(Z'3F')) then
+                  pindex=hdc_num_layers+ich
+               else if (glayerhdc(isp,ich).eq.INT(Z'3E')) then
+                  pindex=(ich-1)*(hdc_layers_per_chamber) + 1
+               else if (glayerhdc(isp,ich).eq.INT(Z'3D')) then
+                  pindex=(ich-1)*(hdc_layers_per_chamber) + 2
+               else if (glayerhdc(isp,ich).eq.INT(Z'3B')) then
+                  pindex=(ich-1)*(hdc_layers_per_chamber) + 3
+               else if (glayerhdc(isp,ich).eq.INT(Z'37')) then
+                  pindex=(ich-1)*(hdc_layers_per_chamber) + 4
+               else if (glayerhdc(isp,ich).eq.INT(Z'2F')) then
+                  pindex=(ich-1)*(hdc_layers_per_chamber) + 5
+               else if (glayerhdc(isp,ich).eq.INT(Z'1F')) then
+                  pindex=(ich-1)*(hdc_layers_per_chamber) + 6
+               else
+                  pindex=-1
+               endif
+               
 *     check if small angle L/R determination of Y and Y' layers is possible
+
+
          if(hSmallAngleApprox.ne.0) then
             if(h_hms_style_chambers.eq.1) then
                if(isa_y1.gt.0 .AND. isa_y2.gt.0) then
@@ -187,54 +221,55 @@ c     endif
                   nplusminus = 2**(numhits-2)
                endif
             else                ! HKS chambers
+               
 *     
 *     Brookhaven chamber L/R code
 *     Can we assume that hits are sorted by layer?  As best I (SAW) can
 *     tell, we can not.
 *     
-               ihit = 1
-               npaired = 0
-               do ihit=1,numhits
-                  if(pl(ihit)-2*(pl(ihit)/2) .eq. 1) then ! Odd layer
-                     do ihit2=1,numhits ! Look for the adjacent layer
-                        if(pl(ihit2)-pl(ihit).eq.1) then ! Adjacent layer found
-                           if(wc(ihit2).le.wc(ihit)) then
-                              plusminusknown(ihit) = -1
-                              plusminusknown(ihit2) = 1
-                           else
-                              plusminusknown(ihit) = 1
-                              plusminusknown(ihit2) = -1
-                           endif
-                           npaired = npaired + 2
+                     ihit = 1
+                     npaired = 0
+                     do ihit=1,numhits
+                        if(pl(ihit)-2*(pl(ihit)/2) .eq. 1) then ! Odd layer
+                           do ihit2=1,numhits ! Look for the adjacent layer
+                              if(pl(ihit2)-pl(ihit).eq.1) then ! Adjacent layer found
+                                 if(wc(ihit2).le.wc(ihit)) then
+                                    plusminusknown(ihit) = -1
+                                    plusminusknown(ihit2) = 1
+                                 else
+                                    plusminusknown(ihit) = 1
+                                    plusminusknown(ihit2) = -1
+                                 endif
+                                 npaired = npaired + 2
+                              endif
+                           enddo
                         endif
                      enddo
                   endif
-               enddo
-            endif
-            nplusminus = 2**(numhits-npaired)
+                  nplusminus = 2**(numhits-npaired)
 *     Let's hope that following code will work with nplusminus = 1
-         endif
-         
-*     use bit value of integer word to set + or -
-         do pmloop=0,nplusminus-1
-            iswhit = 1
-            do ihit=1,numhits
-               if(plusminusknown(ihit).ne.0) then
-                  plusminus(ihit) = float(plusminusknown(ihit))
-               else
-                  if(jbit(pmloop,iswhit).eq.1) then
-                     plusminus(ihit)=1.0
-                  else
-                     plusminus(ihit)=-1.0
-                  endif
-                  iswhit = iswhit + 1
                endif
-            enddo
-            
-            if (pindex.ge.0 .and. pindex.le.14) then
-               call h_find_best_stub(numhits,hits,pl,pindex,
-     &              plusminus,stub,chi2)
-               if(hdebugstubchisq.ne.0) then
+               
+*     use bit value of integer word to set + or -
+               do pmloop=0,nplusminus-1
+                  iswhit = 1
+                  do ihit=1,numhits
+                     if(plusminusknown(ihit).ne.0) then
+                        plusminus(ihit) = float(plusminusknown(ihit))
+                     else
+                        if(jbit(pmloop,iswhit).eq.1) then
+                           plusminus(ihit)=1.0
+                        else
+                           plusminus(ihit)=-1.0
+                        endif
+                        iswhit = iswhit + 1
+                     endif
+                  enddo
+                  
+                  if (pindex.ge.0 .and. pindex.le.14) then
+                     call h_find_best_stub(numhits,hits,pl,pindex,
+     &                    plusminus,stub,chi2)
+                     if(hdebugstubchisq.ne.0) then
                   write(hluno,'(12H hks pmloop=,i4,8H   chi2=,e14.6)')
      &                 pmloop,chi2
                endif
@@ -249,17 +284,28 @@ c     endif
                endif            ! end if on lower chi2
             else                ! if pindex<0 or >14
                write(6,*) 'pindex=',pindex,' in h_left_right'
+               
             endif
          enddo                  ! end loop on possible left-right
 *     
 *     calculate final coordinate based on plusminuhbest
 *     
+
          do ihit=1,numhits
             hit = hspace_point_hits(isp,2+ihit)
             la = HDC_LAYER_NUM(hit)
             dispol = plusminusbest(ihit)*HDC_DRIFT_DIS(hit)
+c            dispol = plusminusbest(ihit)*hdc_drift_dis_sp(isp,hit) !modified on 20Aug2010
             HDC_WIRE_COORD(hit)= HDC_WIRE_CENTER(hit) + dispol
+            dt = hdc_drift_time(hit)
+
+c add DD 2010/7/11
+            hdc_wire_coord_sp(isp,hit)=hdc_wire_coord(hit) 
+c add DD 2010/7/11
+
             Call HF1(hiddcdriftdis(la),dispol,1.)
+c     call hf1(hiddcdrifttime(la),dt,1.)
+
          enddo
 *     
 *     stubs are calculated in rotated coordinate system
@@ -279,15 +325,241 @@ c     endif
          hbeststub(isp,2)=stub(2)
          hbeststub(isp,3)=stub(3)
          hbeststub(isp,4)=stub(4)
+         
+
+c---------------------------------------------------------------
+      else 
+         numhits=hspace_point_hits(isp,1)
+         nummulti=hspace_point_hits_multi(isp)
+         
+         nplusminus=2**numhits
 *     
-      enddo                             ! end loop over space points
+*     Identify which layer the space point is in.
+*     
+         ich = (HDC_LAYER_NUM(hspace_point_hits(isp,2+1))-1)
+     $        /(hdc_layers_per_chamber)+1
+         do imul= 1,nummulti
+            minchi2=1e10
+            mulminchi2=1e10
+            do jj=1,hdc_num_chambers
+               glayerhdc(isp,jj) = 0
+            enddo
+            
+            ihit=0
+c            print *, "isp,imul,nummulti,numhits",isp,imul,nummulti,numhits
+            do ii=1+(imul-1)*numhits,numhits+(imul-1)*numhits
+               ihit=ihit+1
+               hits(ihit)=hspace_point_hits(isp,2+ii)
+c     print*,hits(ihit),imul,numhits,ihit,hdc_drift_time(hits(ihit))
+               pl(ihit)=HDC_LAYER_NUM(hits(ihit))
+               glayerhdc(isp,ich)=ibset(glayerhdc(isp,ich),pl(ihit)-
+     $              ((ich-1)*(hdc_layers_per_chamber)+1))
+c               print *, "isp,hit,ii,ihit,pl,glayerhdc,ddis",
+c     &          isp,hits(ihit),ii,ihit,pl(ihit),glayerhdc(isp,ich),hdc_drift_dis(hits(ihit))
+c         
+c          
+            
+c     if(pl(ihit).ge.1 .and. pl(ihit).le.6)then
+c     glayerhdc1(isp)=jibset(glayerhdc1(isp),pl(ihit)-1)
+c     else
+c     glayerhdc2(isp)=jibset(glayerhdc2(isp),pl(ihit)-7)
+c     endif
+            
+               wc(ihit)=HDC_WIRE_CENTER(hits(ihit))
+               plusminusknown(ihit) = 0
+               if(h_hms_style_chambers.eq.1) then
+                  if(pl(ihit).eq.2 .OR. pl(ihit).eq.8)  isa_y1 = ihit
+                  if(pl(ihit).eq.5 .OR. pl(ihit).eq.11) isa_y2 = ihit
+               endif
+            enddo
 
 
+*     djm 10/2/94 check bad sdc pattern units to set the index for the inverse
+*     matrix SAAINV(i,j,pindex).
+*    
+            if(glayerhdc(isp,ich).eq.INT(Z'3F')) then
+               pindex=hdc_num_layers+ich
+            else if (glayerhdc(isp,ich).eq.INT(Z'3E')) then
+               pindex=(ich-1)*(hdc_layers_per_chamber) + 1
+            else if (glayerhdc(isp,ich).eq.INT(Z'3D')) then
+               pindex=(ich-1)*(hdc_layers_per_chamber) + 2
+            else if (glayerhdc(isp,ich).eq.INT(Z'3B')) then
+               pindex=(ich-1)*(hdc_layers_per_chamber) + 3
+            else if (glayerhdc(isp,ich).eq.INT(Z'37')) then
+               pindex=(ich-1)*(hdc_layers_per_chamber) + 4
+            else if (glayerhdc(isp,ich).eq.INT(Z'2F')) then
+               pindex=(ich-1)*(hdc_layers_per_chamber) + 5
+            else if (glayerhdc(isp,ich).eq.INT(Z'1F')) then
+               pindex=(ich-1)*(hdc_layers_per_chamber) + 6
+            else
+               pindex=-1
+            endif
+         
+          
+*     check if small angle L/R determination of Y and Y' layers is possible
+            if(hSmallAngleApprox.ne.0) then
+               if(h_hms_style_chambers.eq.1) then
+                  if(isa_y1.gt.0 .AND. isa_y2.gt.0) then
+                     if(wc(isa_y2).le.wc(isa_y1)) then
+                        plusminusknown(isa_y1) = -1
+                        plusminusknown(isa_y2) = 1
+                     else
+                        plusminusknown(isa_y1) = 1
+                        plusminusknown(isa_y2) = -1
+                     endif
+                     nplusminus = 2**(numhits-2)
+                  endif
+               else             ! HKS chambers
+*     
+*     Brookhaven chamber L/R code
+*     Can we assume that hits are sorted by layer?  As best I (SAW) can
+*     tell, we can not.
+*     
+                  ihit = 1
+                  npaired = 0
+                  do ihit=1,numhits
+                     if(pl(ihit)-2*(pl(ihit)/2) .eq. 1) then ! Odd layer
+                        do ihit2=1,numhits ! Look for the adjacent layer
+                           if(pl(ihit2)-pl(ihit).eq.1) then ! Adjacent layer found
+                              if(wc(ihit2).le.wc(ihit)) then
+                                 plusminusknown(ihit) = -1
+                                 plusminusknown(ihit2) = 1
+                              else
+                                 plusminusknown(ihit) = 1
+                                 plusminusknown(ihit2) = -1
+                              endif
+                              npaired = npaired + 2
+                           endif
+                        enddo
+                     endif
+                  enddo
+               endif
+               nplusminus = 2**(numhits-npaired)
+*     Let's hope that following code will work with nplusminus = 1
+            endif
+            
+*     use bit value of integer word to set + or -
+            do pmloop=0,nplusminus-1
+               iswhit = 1
+               do ihit=1,numhits
+                  if(plusminusknown(ihit).ne.0) then
+                     plusminus(ihit) = float(plusminusknown(ihit))
+                  else
+                     if(jbit(pmloop,iswhit).eq.1) then
+                        plusminus(ihit)=1.0
+                     else
+                        plusminus(ihit)=-1.0
+                     endif
+                     iswhit = iswhit + 1
+                  endif
+               enddo
+               
+               if (pindex.ge.0 .and. pindex.le.14) then
+c     print*,imul
+                  call h_find_best_stub(numhits,hits,pl,pindex,
+     &                 plusminus,stub,chi2)
+                  
+                  
+                  if(hdebugstubchisq.ne.0) then
+                     write(hluno,'(12H hks pmloop=,i4,8H   chi2=,e14.6)')
+     &                    pmloop,chi2
+                  endif
+                  if (chi2.lt.minchi2)  then
+                     minchi2=chi2
+                     
+                     do idummy=1,numhits
+                        mulplusminusbest(imul,idummy)=plusminus(idummy)
+                     enddo
+                     do idummy=1,4
+                        mulhbeststub(imul,idummy)=stub(idummy)
+                        
+                     enddo
+                     
+                  endif         ! end if on lower chi2
+               else             ! if pindex<0 or >14
+                  
+                  write(6,*) 'pindex=',pindex,' in h_left_right multi'
+c     print*,imul,nummulti,ihit
+                  
+               endif             
+            enddo               ! end loop on possible left-right
+c-----------------------
+            mulchi2(imul)=minchi2          
+         enddo
+         
+       
+         do imul=1,nummulti
+            if(mulchi2(imul).lt.mulminchi2) then
+               mulminchi2=mulchi2(imul)
+               imulbest=imul
+               do idummy=1,numhits
+                  plusminusbest(idummy)=mulplusminusbest(imul,idummy)
+               enddo
+               do idummy=1,4
+                  hbeststub(isp,idummy)= mulhbeststub(imul,idummy)        
+               enddo
+            endif
+         enddo
+         
+c     print*,imulbest
+         k=0
+         do ihit=1+(imulbest-1)*numhits,numhits+(imulbest-1)*numhits
+            k=k+1 
+            hspace_point_hits(isp,2+k) = hspace_point_hits(isp,2+ihit)
+         enddo
+c     print*,imulbest  
+*     
+*     calculate final coordinate based on plusminuhbest
+*     
+         do ihit=1,numhits
+            hit = hspace_point_hits(isp,2+ihit)
+            la = HDC_LAYER_NUM(hit)
+            dispol = plusminusbest(ihit)*HDC_DRIFT_DIS(hit)
+c            dispol = plusminusbest(ihit)*hdc_drift_dis_sp(isp,hit) !modified on 20Aug2010
+            HDC_WIRE_COORD(hit)= HDC_WIRE_CENTER(hit) + dispol
 
+            dt=hdc_drift_time(hit)
+
+c add DD 2010/7/11
+            hdc_wire_coord_sp(isp,hit)=hdc_wire_coord(hit)
+c add DD 2010/7/11
+
+            Call HF1(hiddcdriftdis(la),dispol,1.)
+c     call hf1(hiddcdrifttime(la),dt,1.)
+
+         enddo
+*     
+*     stubs are calculated in rotated coordinate system
+*     use first hit to determine chamber
+*     
+c         print *, "hbeststub before",hbeststub(isp,1),hbeststub(isp,2),hbeststub(isp,3),hbeststub(isp,4)
+         layer=HDC_LAYER_NUM(hits(1))
+         stub(3)=(hbeststub(isp,3) - htanbeta(layer))
+     &        /(1.0 + hbeststub(isp,3)*htanbeta(layer))
+         stub(4)=hbeststub(isp,4)
+     &        /(hbeststub(isp,3)*hsinbeta(layer)+hcosbeta(layer))
+         
+         stub(1)=hbeststub(isp,1)*hcosbeta(layer) 
+     &        - hbeststub(isp,1)*stub(3)*hsinbeta(layer)
+         stub(2)=hbeststub(isp,2) 
+     &        - hbeststub(isp,1)*stub(4)*hsinbeta(layer)
+         hbeststub(isp,1)=stub(1)
+         hbeststub(isp,2)=stub(2)
+         hbeststub(isp,3)=stub(3)
+         hbeststub(isp,4)=stub(4)
+c         print *, "hbeststub after",hbeststub(isp,1),hbeststub(isp,2),hbeststub(isp,3),hbeststub(isp,4)
+         
+      endif
+      endif
+      
+*     
+      enddo                     ! end loop over space points
+         
 *     
 *     write out results if sdebugflagstubs is set
       if(hdebugflagstubs.ne.0) then
          call h_print_stubs
       endif
       return
+
       end

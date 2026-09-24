@@ -221,21 +221,13 @@ c     --- Calculate Npe no matter what!
          
 C     ADCs have been evaluated. Now check for valid TDC hits. 
 
-*     --- both tubes have hits
-            
-         if((tdcpos .gt. HLUC_TDC_POS_MIN .and. 
-     &        tdcpos .lt. HLUC_TDC_POS_MAX) 
-     &        .AND.
-     &        (tdcneg .gt. HLUC_TDC_NEG_MIN .and. 
-     &        tdcneg .lt. HLUC_TDC_NEG_MAX)
-     &        ) hluc_both_hits(counter_hits(la,co)) = 1
 
 *     --- the positive tube
          if(tdcpos .gt. HLUC_TDC_POS_MIN .and. 
      &        tdcpos .lt. HLUC_TDC_POS_MAX) then
             hluc_pos_npe(counter_hits(la,co)) = npepos
-            hluc_npe_sum(counter_hits(la,co)) = 
-     &           hluc_npe_sum(counter_hits(la,co)) + npepos
+            hluc_npe_sum(counter_hits(la,co)) = npepos         ! chiba 2010/10/20
+*     &           hluc_npe_sum(counter_hits(la,co)) + npepos
             hluc_pos_time(counter_hits(la,co)) = 
      &           tdcpos*hluc_tdc_to_time
      &           -hluc_pos_time_offset(la,co) 
@@ -245,14 +237,26 @@ C     ADCs have been evaluated. Now check for valid TDC hits.
          if(tdcneg .gt. HLUC_TDC_NEG_MIN .and. 
      &        tdcneg .lt. HLUC_TDC_NEG_MAX) then
             hluc_neg_npe(counter_hits(la,co)) = npeneg
-            hluc_npe_sum(counter_hits(la,co)) = 
-     &           hluc_npe_sum(counter_hits(la,co)) + npeneg
+            hluc_npe_sum(counter_hits(la,co)) = npeneg         ! chiba 2010/10/20
+*     &           hluc_npe_sum(counter_hits(la,co)) + npeneg
             hluc_neg_time(counter_hits(la,co)) =  
      &           tdcneg*hluc_tdc_to_time
      &           -hluc_neg_time_offset(la,co) 
          endif                  ! Good neg TDC time
       EndDo                     ! Loop over hluc_raw_tot_hits
 
+*     --- both tubes have hits
+      
+      if((tdcpos .gt. HLUC_TDC_POS_MIN .and. 
+     &     tdcpos .lt. HLUC_TDC_POS_MAX) 
+     &     .AND.
+     &     (tdcneg .gt. HLUC_TDC_NEG_MIN .and. 
+     &     tdcneg .lt. HLUC_TDC_NEG_MAX)
+     &     ) then
+         hluc_both_hits(counter_hits(la,co)) = 1
+         hluc_npe_sum(counter_hits(la,co)) = npepos + npeneg ! chiba 2010/10/20
+      EndIF
+      
       do ind = 1,HLUCSUM_RAW_TOT_HITS
          la = hlucsum_raw_layer_num(ind)
          co = hlucsum_raw_counter_num(ind)
@@ -273,7 +277,7 @@ c     --- Calculate Npe no matter what!
             hluc_tot_npe(gh) = 0.
             hluc_tot_time(gh) = -1
             hlucsum_layer_hits(la) = hlucsum_layer_hits(la) + 1
-         endif
+         endif    
          
 C     ADCs have been evaluated. Now check for valid TDC hits. 
 
@@ -284,7 +288,6 @@ C     ADCs have been evaluated. Now check for valid TDC hits.
      &           tdctot*hluc_tdc_to_time*2.0
      &           -hluc_pos_time_offset(la,co) 
          endif                  ! Good tot TDC time
-         
       EndDo                     ! Loop over hlucsum_raw_tot_hits
 
 *     fill the raw histogram as needed

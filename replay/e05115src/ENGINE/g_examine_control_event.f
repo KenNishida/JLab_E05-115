@@ -61,7 +61,7 @@
 *
       gen_event_sequence_N= gen_event_sequence_N+1  !from beginning
 *
-      if(iand(buffer(2),X'FFFF').ne.X'01CC') then
+      if(iand(buffer(2),INT(Z'FFFF')).ne.INT(Z'01CC')) then
          err = 'Event is not a control event'
          ABORT = .true.
          call g_add_path(here,err)

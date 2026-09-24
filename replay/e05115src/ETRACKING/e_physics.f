@@ -102,6 +102,8 @@
       INCLUDE 'gen_constants.par'
       INCLUDE 'gen_units.par'
       Include 'gen_event_info.cmn'
+      include 'hes_tracking.cmn'
+      include 'hes_bypass_swiches.cmn' !Added by Gogami (3Feb2011)
  
       Integer*4 i,j,k,itrk,hit,ep,eg,ierr
       Real*4 dp, dt,x,y,z,dis
@@ -118,6 +120,7 @@ c     real*4 scalar,mink
       real*4 xyz
       Real*4 adcdep
       Integer*4 gh
+      integer*4 layer
 
 *--------------------------------------------------------
       ABORT=.FALSE.
@@ -130,9 +133,20 @@ c     real*4 scalar,mink
       ep = 0
 
       if(escin_tot_hits .le. 0 .or. entracks_fp .le. 0) Return
-c      if(entracks_fp .le. 0) Return
+c     if(entracks_fp .le. 0) Return
       
+c     =======OUTPUT CHAMBER INFROMATION=====================
+c     ============Added by Gogami (3Feb2011)================
+      if(edc_hitinfo_flag.eq.1 .and.
+     &     edc_hitinfo_flag2.eq.1 )then
+         open(24,file='hes_cham.dat',access='append')
+         write(24,*)entracks_fp
+         close(24)
+      endif
+c     ======================================================
+c      write(*,*)"ENREACKS_FP=",entracks_fp
       Do i=1,entracks_fp
+c         write(*,*)"entracks_fp",entracks_fp
 *     --- put cut condition here
          if(
 *DK     &        abs(etrk_fptime(i)) .le. 300 .and.
@@ -150,17 +164,29 @@ c      if(entracks_fp .le. 0) Return
             esnco1(ep)=0
             esnco2(ep)=0
             esnco3(ep)=0
-            esnt1(ep)=0
-            esnt2(ep)=0
-            esnt3(ep)=0
-            esnt1m(ep)=0
-            esnt2m(ep)=0
+            esnt1(ep)=-1000
+            esnt2(ep)=-2000
+            esnt3(ep)=-3000
+            esnt1m(ep)=-1000
+            esnt2m(ep)=-2000
             esna1(ep)=0
             esna2(ep)=0
             esna3(ep)=0
             esna1m(ep)=0
             esna2m(ep)=0
-
+            do j=1,emax_num_dc1_layers
+               esresidual(ep,j) = 100000
+               edc_tc(ep,j) = 100000
+               edc_wc(ep,j) = 100000
+               edc_wn(ep,j) = 100000
+            enddo
+            do j=1,emax_num_dc2_layers
+               esresidual(ep,j+emax_num_dc1_layers) = 100000
+               edc_tc(ep,j+emax_num_dc1_layers) = 100000
+               edc_wc(ep,j+emax_num_dc1_layers) = 100000
+               edc_wn(ep,j+emax_num_dc1_layers) = 100000
+            enddo
+            
             Do j=1,hit
                ephys_scin_hits(ep,j+1) = etrk_hodo_hit(i,j+1)
                if(escin_good_hits(etrk_hodo_hit(i,j+1)).eq.1) then
@@ -169,7 +195,8 @@ c      if(entracks_fp .le. 0) Return
                   gh = gh + 1
                EndIf
                esscin_depo(ep) = esscin_depo(ep) + adcdep
-
+c               write(*,*)"escin_layer_num(etrk_hodo_hit(i,j+1)=",
+c     &              escin_layer_num(etrk_hodo_hit(i,j+1))
                if(escin_layer_num(etrk_hodo_hit(i,j+1)).eq.1) then
                   if(esnco1(ep).eq.0) then
                      esnco1(ep) = 
@@ -193,6 +220,7 @@ c      if(entracks_fp .le. 0) Return
                      endif
                   endif
                elseif(escin_layer_num(etrk_hodo_hit(i,j+1)).eq.2) then
+                  
                   if(esnco2(ep).eq.0) then
                      esnco2(ep) = 
      &                    real(escin_counter_num(etrk_hodo_hit(i,j+1)))
@@ -235,6 +263,17 @@ c      if(entracks_fp .le. 0) Return
             esxp_fp(ep) = exp_fp(i)
             esyp_fp(ep) = eyp_fp(i)
             
+c     =======OUTPUT CHAMBER INFROMATION=====================
+c     ============Added by Gogami (3Feb2011)================
+            if(edc_hitinfo_flag.eq.1 .and.
+     &           edc_hitinfo_flag2.eq.1 )then
+               open(24,file='hes_cham.dat',access='append')
+               write(24,*)esx_fp(ep),esy_fp(ep),esxp_fp(ep),esyp_fp(ep)
+               close(24)
+            endif
+c            write(*,*)esx_fp(ep),esy_fp(ep),esxp_fp(ep),esyp_fp(ep)
+c     ======================================================
+            
 *     --- note that entracks_fp = entracks_tar
             esdelta(ep)  = edelta_tar(i)
             esx_tar(ep)  = ex_tar(i)
@@ -269,8 +308,59 @@ c     &           *(estime_at_fp(ep)-estime_at_tar(ep)+20.2)
 c            esrftime(ep) = hmisc_dec_data(65,1)*0.025
 c     &           - estime_at_tar(ep)
             
-            eschi2perdeg(ep) = echi2perdof_fp(i) 
-            esnfree_fp(ep)   = enfree_fp(i)
+            eschi2perdeg(ep)  = echi2perdof_fp(i) 
+            esnfree_fp(ep)    = enfree_fp(i)
+
+            do j=1,emax_num_dc1_layers
+               if(i.gt.1500 .or. j.gt.1500) then
+                  write(*,*)"h_physics.f : (",i,",",j,")"
+               endif
+               esresidual(ep,j) 
+     &              = edc1_single_residual(i,j)
+               edc_tc(ep,j) = edc1_tcoord(i,j)
+               edc_wc(ep,j) = edc1_wcoord(i,j)
+               edc_wn(ep,j) = edc1_wnum(i,j)
+            enddo
+            do j=1,emax_num_dc2_layers
+               esresidual(ep,j+emax_num_dc1_layers)
+     &              =edc2_single_residual(i,j)
+               edc_tc(ep,j+emax_num_dc1_layers) = edc2_tcoord(i,j)
+               edc_wc(ep,j+emax_num_dc1_layers) = edc2_wcoord(i,j)
+               edc_wn(ep,j+emax_num_dc1_layers) = edc2_wnum(i,j)
+            enddo
+c     =======OUTPUT CHAMBER INFROMATION=====================
+c     ============Added by Gogami (5Feb2011)================
+            if(edc_hitinfo_flag.eq.1 .and.
+     &           edc_hitinfo_flag2.eq.1 )then
+               open(24,file='hes_cham.dat',access='append')
+               write(24,*)edc_wn(ep,1),edc_wn(ep,2),edc_wn(ep,3),
+     &              edc_wn(ep,4),edc_wn(ep,5),edc_wn(ep,6),edc_wn(ep,7),
+     &              edc_wn(ep,8),edc_wn(ep,9),edc_wn(ep,10),
+     &              edc_wn(ep,11),edc_wn(ep,12),edc_wn(ep,13),
+     &              edc_wn(ep,14),edc_wn(ep,15),edc_wn(ep,16)
+               write(24,*)edc_tc(ep,1),edc_tc(ep,2),edc_tc(ep,3),
+     &              edc_tc(ep,4),edc_tc(ep,5),edc_tc(ep,6),edc_tc(ep,7),
+     &              edc_tc(ep,8),edc_tc(ep,9),edc_tc(ep,10),
+     &              edc_tc(ep,11),edc_tc(ep,12),edc_tc(ep,13),
+     &              edc_tc(ep,14),edc_tc(ep,15),edc_tc(ep,16)
+               write(24,*)edc_wc(ep,1),edc_wc(ep,2),edc_wc(ep,3),
+     &              edc_wc(ep,4),edc_wc(ep,5),edc_wc(ep,6),edc_wc(ep,7),
+     &              edc_wc(ep,8),edc_wc(ep,9),edc_wc(ep,10),
+     &              edc_wc(ep,11),edc_wc(ep,12),edc_wc(ep,13),
+     &              edc_wc(ep,14),edc_wc(ep,15),edc_wc(ep,16)
+               write(24,*)esresidual(ep,1),esresidual(ep,2),
+     &              esresidual(ep,3),esresidual(ep,4),esresidual(ep,5),
+     &              esresidual(ep,6),esresidual(ep,7),esresidual(ep,8),
+     &              esresidual(ep,9),esresidual(ep,10),
+     &              esresidual(ep,11),esresidual(ep,12),
+     &              esresidual(ep,13),esresidual(ep,14),
+     &              esresidual(ep,15),esresidual(ep,16)
+               write(24,*)eschi2perdeg(ep)
+               write(24,*)esnco1(ep),esnco2(ep)
+               write(24,*)esp(ep)
+               close(24)
+            endif
+c     ======================================================
             
 *     Do energy loss, which is particle specific
             estheta_1st = etheta_lab*TT/180. + atan(esyp_tar(ep)) 
@@ -405,6 +495,19 @@ c     write(6,*)' e_phys: esbigq2, W2    =',esbigq2(ep),W2(ep)
             endif            
          EndIf                  ! if data is ok.
       EndDo                     ! group loop.
+      
+c     ======= Calculation efficiency =========
+      call e_dc_eff_count(abort,err,ep) ! EDC efficiency (T.Gogami,3Mar2011)
+
+c     =======OUTPUT CHAMBER INFROMATION=====================
+c     ============Added by Gogami (5Feb2011)================      
+      if(enphysics.gt.0 .and.
+     &     edc_hitinfo_flag.eq.1 .and. edc_hitinfo_flag2.eq.1 )then
+         open(24,file='hes_cham.dat',access='append')
+         write(24,*)"data"
+         close(24)
+      endif
+c     ======================================================
       
 *     --- Histogram for phys bank ---
       call e_fill_phys_hist(abort,err)

@@ -27,6 +27,8 @@
       Parameter(temp_lun=86)
       Integer*4 temp_lun2
       Parameter(temp_lun2=82)
+      real*4 raddeg
+      parameter (raddeg = 3.14159265/180.)
 
 c--   Local variable to transfer to e_dc2_best_stub
 c--   L.Yuan   09/24/2009
@@ -111,6 +113,8 @@ c     close(92)
          z0=edc2_zpos(pln)
          cosalpha = cos(edc2_alpha_angle(pln))
          sinalpha = sin(edc2_alpha_angle(pln))
+cDK         cosalpha = cos(edc2_alpha_angle(pln)-90*raddeg)
+cDK         sinalpha = sin(edc2_alpha_angle(pln)-90*raddeg)
          cosbeta  = cos(edc2_beta_angle(pln))
          sinbeta  = sin(edc2_beta_angle(pln))
          cosgamma = cos(edc2_gamma_angle(pln))
@@ -144,15 +148,16 @@ c     close(92)
 *     dt=distance from centerline of
 *     chamber = ( xcoeff*x + ycoeff*y )*corr / veloc.
          
-         if (cosalpha .le. 0.707) then  
+         edc2_readout_corr(pln) = 1./sinalpha
+c         if (cosalpha .le. 0.707) then  
 c     x-like wire, need dist. from x=0 line
 c     edc_readout_x(pln) = .true.
-            edc2_readout_corr(pln) = 1./sinalpha
-         else                           
+c            edc2_readout_corr(pln) = 1./sinalpha
+c         else                           
 c     y-like wire, need dist. from y=0 line
 c     edc_readout_x(pln) = .false.
-            edc2_readout_corr(pln) = 1./cosalpha
-         endif
+c            edc2_readout_corr(pln) = 1./cosalpha
+c         endif
          
 *     
 *     fill edc2psi0,edc2chi0,ez0  used in stub fit
@@ -189,10 +194,16 @@ c     edc_readout_x(pln) = .false.
 *     
          edc2layer_coeff(1,pln)= edc2zchi(pln) !  =0.
          edc2layer_coeff(2,pln)=-edc2zchi(pln) !  =0.
+cDK         edc2layer_coeff(3,pln)= edc2xchi(pln)*(edc2_zpos(pln)-elocrayzt) !cos(a)*(z-slocrayzt)
+cDK         edc2layer_coeff(4,pln)= edc2ychi(pln)*(edc2_zpos(pln)-elocrayzt) !sin(a)*(z-slocrayzt)
          edc2layer_coeff(3,pln)= edc2ychi(pln)*(edc2_zpos(pln)-elocrayzt) !sin(a)*(z-slocrayzt)
-         edc2layer_coeff(4,pln)= edc2xchi(pln)*(elocrayzt-edc2_zpos(pln)) !cos(a)*(z-slocrayzt)
+c         edc2layer_coeff(4,pln)= edc2xchi(pln)*(elocrayzt-edc2_zpos(pln)) !cos(a)*(z-slocrayzt)
+         edc2layer_coeff(4,pln)= edc2xchi(pln)*(edc2_zpos(pln)-elocrayzt) !cos(a)*(z-slocrayzt)
+cDK         edc2layer_coeff(5,pln)= edc2xchi(pln) !cos(a)
+cDK         edc2layer_coeff(6,pln)= edc2ychi(pln) !sin(a)
          edc2layer_coeff(5,pln)= edc2ychi(pln) !sin(a)
-         edc2layer_coeff(6,pln)=-edc2xchi(pln) !cos(a)
+c         edc2layer_coeff(6,pln)=-edc2xchi(pln) !cos(a)
+         edc2layer_coeff(6,pln)=edc2xchi(pln) !cos(a)
          edc2layer_coeff(7,pln)= edc2zchi(pln)*edc2ypsi(pln) - edc2ychi(pln)*edc2zpsi(pln) !0.
          edc2layer_coeff(8,pln)=-edc2zchi(pln)*edc2xpsi(pln) + edc2xchi(pln)*edc2zpsi(pln) !0.
          edc2layer_coeff(9,pln)= edc2ychi(pln)*edc2xpsi(pln) - edc2xchi(pln)*edc2ypsi(pln) !1.

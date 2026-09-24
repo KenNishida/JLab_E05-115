@@ -94,6 +94,7 @@
       Integer*4 eiddc1rawhitpat(EMAX_NUM_DC1_LAYERS)
       Integer*4 eiddc1rawtdc(EMAX_NUM_DC1_SLOTS)
       Integer*4 eiddc1rawlayertdc(EMAX_NUM_DC1_LAYERS)
+      Integer*4 eiddc1rawlayerhit(EMAX_NUM_DC1_LAYERS)
       Integer*4 eiddc1rawtdcall
 	
       COMMON/hes_dc1_raw_histid/
@@ -102,6 +103,7 @@
      3  eiddc1rawhitpat,
      4  eiddc1rawtdc,
      5  eiddc1rawlayertdc,
+     5  eiddc1rawlayerhit,
      6  eiddc1rawtdcall
       
 		Integer*4 eiddc2rawtothit
@@ -109,6 +111,7 @@
       Integer*4 eiddc2rawhitpat(EMAX_NUM_DC2_LAYERS)
       Integer*4 eiddc2rawtdc(EMAX_NUM_DC2_SLOTS)
       Integer*4 eiddc2rawlayertdc(EMAX_NUM_DC2_LAYERS)
+      Integer*4 eiddc2rawlayerhit(EMAX_NUM_DC2_LAYERS)
       Integer*4 eiddc2rawtdcall
 	
       COMMON/hes_dc2_raw_histid/
@@ -117,6 +120,7 @@
      3  eiddc2rawhitpat,
      4  eiddc2rawtdc,
      5  eiddc2rawlayertdc,
+     5  eiddc2rawlayerhit,
      6  eiddc2rawtdcall
 
 * e_fill_dc_dec_hist
@@ -191,23 +195,45 @@
 
 *     --- hes tracking histgram 
 
-       Integer*4 eidentrackspre
-       Integer*4 eidentracksprezoom
+       Integer*4 eidntrackspre
+       Integer*4 eidntracksprezoom
+       Integer*4 eiddc1ntrackspre
+       Integer*4 eiddc1ntracksprezoom
+       Integer*4 eiddc2ntrackspre
+       Integer*4 eiddc2ntracksprezoom
+       Integer*4 eidchi2perdofpre
        Integer*4 eiddc1chi2perdofpre
        Integer*4 eiddc2chi2perdofpre
+       Integer*4 eidchi2perdofprezoom
        Integer*4 eiddc1chi2perdofprezoom
        Integer*4 eiddc2chi2perdofprezoom
        Integer*4 eidntracksfp
        Integer*4 eidntracksfpzoom
+       Integer*4 eiddc1ntracksfp
+       Integer*4 eiddc1ntracksfpzoom
+       Integer*4 eiddc2ntracksfp
+       Integer*4 eiddc2ntracksfpzoom
+       Integer*4 eidchi2perdoffp
        Integer*4 eiddc1chi2perdoffp
        Integer*4 eiddc2chi2perdoffp
+       Integer*4 eidchi2perdoffpzoom
        Integer*4 eiddc1chi2perdoffpzoom
        Integer*4 eiddc2chi2perdoffpzoom
-       Integer*4 eidexfp,eideyfp
-       Integer*4 eidexpfp,eideypfp
+       Integer*4 eidfpx,eidfpxp
+       Integer*4 eidfpy,eidfpyp
        Integer*4 eidfpxy,eidfpxpyp
        Integer*4 eidfpxxp,eidfpxyp
        Integer*4 eidfpyxp,eidfpyyp
+       Integer*4 eiddc1fpx,eiddc1fpxp
+       Integer*4 eiddc1fpy,eiddc1fpyp
+       Integer*4 eiddc1fpxy,eiddc1fpxpyp
+       Integer*4 eiddc1fpxxp,eiddc1fpxyp
+       Integer*4 eiddc1fpyxp,eiddc1fpyyp
+       Integer*4 eiddc2fpx,eiddc2fpxp
+       Integer*4 eiddc2fpy,eiddc2fpyp
+       Integer*4 eiddc2fpxy,eiddc2fpxpyp
+       Integer*4 eiddc2fpxxp,eiddc2fpxyp
+       Integer*4 eiddc2fpyxp,eiddc2fpyyp
 
        Integer*4 eiddc1driftdis(EMAX_NUM_DC1_LAYERS)
        Integer*4 eiddc1wcoord(EMAX_NUM_DC1_LAYERS)
@@ -220,28 +246,60 @@
        Integer*4 eiddc2distime(EMAX_NUM_DC2_LAYERS)
 
       Common/hes_tracking_histid/
-     &     eidentrackspre,
-     &     eidentracksprezoom,
+     &     eidntrackspre,
+     &     eidntracksprezoom,
+     &     eiddc1ntrackspre,
+     &     eiddc1ntracksprezoom,
+     &     eiddc2ntrackspre,
+     &     eiddc2ntracksprezoom,
+     &     eidchi2perdofpre,
      &     eiddc1chi2perdofpre,
      &     eiddc2chi2perdofpre,
+     &     eidchi2perdofprezoom,
      &     eiddc1chi2perdofprezoom,
      &     eiddc2chi2perdofprezoom,
      &     eidntracksfp,
      &     eidntracksfpzoom,
+     &     eiddc1ntracksfp,
+     &     eiddc1ntracksfpzoom,
+     &     eiddc2ntracksfp,
+     &     eiddc2ntracksfpzoom,
+     &     eidchi2perdoffp,
      &     eiddc1chi2perdoffp,
      &     eiddc2chi2perdoffp,
+     &     eidchi2perdoffpzoom,
      &     eiddc1chi2perdoffpzoom,
      &     eiddc2chi2perdoffpzoom,
-     &     eidexfp,
-     &     eideyfp,
-     &     eidexpfp,
-     &     eideypfp,
+     &     eidfpx,
+     &     eidfpy,
+     &     eidfpxp,
+     &     eidfpyp,
      &     eidfpxy,
      &     eidfpxpyp,
      &     eidfpxxp,
      &     eidfpxyp,
      &     eidfpyxp,
      &     eidfpyyp,
+     &     eiddc1fpx,
+     &     eiddc1fpy,
+     &     eiddc1fpxp,
+     &     eiddc1fpyp,
+     &     eiddc1fpxy,
+     &     eiddc1fpxpyp,
+     &     eiddc1fpxxp,
+     &     eiddc1fpxyp,
+     &     eiddc1fpyxp,
+     &     eiddc1fpyyp,
+     &     eiddc2fpx,
+     &     eiddc2fpy,
+     &     eiddc2fpxp,
+     &     eiddc2fpyp,
+     &     eiddc2fpxy,
+     &     eiddc2fpxpyp,
+     &     eiddc2fpxxp,
+     &     eiddc2fpxyp,
+     &     eiddc2fpyxp,
+     &     eiddc2fpyyp,
      &     eiddc1driftdis,
      &     eiddc1wcoord,
      &     eiddc1residualpre,

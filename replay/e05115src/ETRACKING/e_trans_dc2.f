@@ -125,6 +125,19 @@
       integer*4 pol,i,k,vec_no,edc2_tot_hit_dc1,edc2_tot_hit_dc2
       real*4 histval,cut_min(12,6),cut_max(12,6)
       integer*4 nt,j,whichgroup
+      
+      integer*4 itrk1,itrk_min
+      real*4 xedc1,xpedc1
+      real*4 yedc1,ypedc1
+      real*4 xedc2,xpedc2
+      real*4 yedc2,ypedc2
+      real*4 sedc2,wcenter,alpha,ds,ds_pre,ds_min
+      real*4 raddeg
+      parameter (raddeg=3.14159265/180.)
+      integer*4 slot
+      real*4 ddis
+      real*4 e_dc2_drift_dist_calc 
+      external e_dc2_drift_dist_calc 
 *     
       ABORT= .FALSE.
       err= ' '
@@ -206,13 +219,13 @@ c     call hf1(hidrawtdcall,histval,1.)
                      
                         if((pln.eq.1) .or. (pln.eq.2)) then
                            edc2_slot_num(gh) = 6*(pln-1)
-     &                       +int((wire+4)/16) +1
+     &                       +int((wire-edc2_wire_offset_low(pln)-1)/16) +1
                         else if((pln.eq.3) .or. (pln.eq.4)) then
-                           edc2_slot_num(gh) = 8*(pln-3)
-     &                       +int((wire+3)/16) + 1 + 12 
+                           edc2_slot_num(gh) = 12 + 8*(pln-3)
+     &                       +int((wire-edc2_wire_offset_low(pln)-1)/16) +1
                         else  
-                           edc2_slot_num(gh) = 6*(pln-5)
-     &                       +int((wire+4)/16) +1 + 12 + 16
+                           edc2_slot_num(gh) = 28 + 6*(pln-5)
+     &                       +int((wire-edc2_wire_offset_low(pln)-1)/16) +1
                         EndIF
 *     check cluster size
                         if( 
@@ -244,12 +257,15 @@ c     call hf1(hidrawtdcall,histval,1.)
      &                          - edc2_center(pln)
                         endif
 
-*                        edc2_drift_time(gh) = - hstart_time
+c                        print *, "edc2_tdc(gh),tzero,slot",
+c     &                  edc2_tdc(gh),edc2_layer_time_zero(edc2_slot_num(gh)),
+c     &                  edc2_slot_num(gh)
                         edc2_drift_time(gh) = 0
      &                       + float(edc2_tdc(gh)) * pol
      &                       *edc2_tdc_time_per_channel
-     &                       - edc2_layer_time_zero(pln) * pol
-*     &                       - edc2_layer_time_zero(pln) * pol
+     &                       - edc2_layer_time_zero(edc2_slot_num(gh)) * pol
+c                        print *, "edc2_drift_time(gh)",edc2_drift_time(gh)
+                     
 
                         edc2_hits_per_layer(pln) = 
      &                       edc2_hits_per_layer(pln)+1
@@ -269,7 +285,61 @@ c     call hf1(hidrawtdcall,histval,1.)
 *     set total number of good hits
 *     
       edc2_tot_hits = gh
-*     
+*    
+ccc DK added from here in order to adjust starttime for EDC2
+      if (.not.gen_event_ts_flag(2)) then !coin, hks case
+         if (entracks_fp.gt.0) then
+            do ihit=1,edc2_tot_hits
+               pln=edc2_layer_num(ihit) 
+               wire=edc2_wire_num(ihit)
+               wcenter=edc2_wire_center(ihit) 
+               do itrk1=1,entracks_fp
+                  xedc1=ex_fp(itrk1)
+                  xpedc1=exp_fp(itrk1)
+                  yedc1=ey_fp(itrk1)
+                  ypedc1=eyp_fp(itrk1)
+                  xedc2=xedc1+xpedc1*edc2_zpos(pln)
+                  yedc2=yedc1+ypedc1*edc2_zpos(pln)
+                  alpha=edc2_alpha_angle(pln)-90*raddeg
+                  sedc2=xedc2*cos(alpha)+yedc2*sin(alpha)
+                  ds=sedc2-wcenter
+c                  write(*,*) "pln,itrk1,ds",pln,itrk1,ds
+                  if(itrk1.eq.1) then
+                     ds_min=ds
+                     itrk_min=itrk1
+                  elseif(abs(ds).le.abs(ds_min)) then
+                     ds_min=ds
+                     itrk_min=itrk1
+                  endif
+               enddo 
+c               write(*,*) "itrk_min,ds_min,entracks_fp",itrk_min,ds_min,pln 
+               edc2_drift_time(ihit) = 
+     &         edc2_drift_time(ihit) -starttime2(itrk_min)
+c            print *, 'trans', ihit,edc2_drift_time(ihit),starttime2(itrk_min)  
+            enddo
+         endif
+      endif
+ccc to here 
+c      print *, "edc2_tot_hits before",edc2_tot_hits
+      gh=0
+      do ihit=1,edc2_tot_hits
+         pln = edc2_layer_num(ihit)
+         slot = edc2_slot_num(ihit)
+         ddis = e_dc2_drift_dist_calc(pln,slot,edc2_drift_time(ihit))
+c         print *, "ihit,pln,slot,dtime,ddis",ihit,pln,slot,edc2_drift_time(ihit),ddis
+         if (ddis.gt.-1.) then
+            gh=gh+1
+            edc2_layer_num(gh)=edc2_layer_num(ihit)
+            edc2_slot_num(gh)=edc2_slot_num(ihit)
+            edc2_drift_time(gh)=edc2_drift_time(ihit)
+            edc2_wire_center(gh)=edc2_wire_center(ihit)
+            edc2_wire_num(gh)=edc2_wire_num(ihit)
+            edc2_cluster_size(gh)=edc2_cluster_size(ihit)
+            edc2_tdc(gh)=edc2_tdc(ihit)
+         endif
+      enddo
+      edc2_tot_hits = gh
+c      print *, "edc2_tot_hits after",edc2_tot_hits
 
 *     
 *     Dump decoded banks if flag is set

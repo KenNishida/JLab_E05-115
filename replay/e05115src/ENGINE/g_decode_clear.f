@@ -40,7 +40,7 @@
          do slot=1, G_DECODE_MAXSLOTS
             g_decode_slotpointer(roc,slot) = -1 ! Uninstrumented SLOT
             g_decode_subaddcnt(roc,slot) = 16 ! Dflt for "uninstrmntd" slots
-            g_decode_slotmask(roc,slot) = 'FFF'x         ! Default mask
+            g_decode_slotmask(roc,slot) = INT(Z'FFF')         ! Default mask
          enddo
       enddo
 *

@@ -85,12 +85,6 @@
          call G_add_path(here,err)
          return
       endif 
-      edc2_tot_hits = 0
-      call e_trans_dc2(ABORT,err)
-      if(ABORT) then
-         call G_add_path(here,err)
-         return
-      endif 
       
 *     --- check if tracking has been done.
 *     output file : output/hes_track_output_%d.dat
@@ -155,6 +149,7 @@ c     &                          (temp_number(j),j=1,10)
       
 c     Write(*,*) '(e_track) entracks_fp=',entracks_fp
 
+
       edc1nspace_points_tot = 0 
       if(e_track_output_on .ne. 1) then ! output file doesn't exist
 * get drift distance         
@@ -164,16 +159,17 @@ c     Write(*,*) '(e_track) entracks_fp=',entracks_fp
             return
          endif      
          
-c         call e_dc2_pattern_recognition(ABORT,err)
-c         if(ABORT) then
-c            call G_add_path(here,err)
-c            return
-c         endif      
 
 * "pre_link" to find a correct hit in EHODO and get starttime by MIZUKI
          if (gen_run_number.ge.50000) then
             call e_dc1_pre_link
          Endif
+         
+         call e_dc1_cleanup(ABORT,err)
+         if(ABORT) then
+            call G_add_path(here,err)
+            return
+         endif
 
          entracks_pre = 0
          call e_dc1_left_right(ABORT,err)
@@ -181,29 +177,59 @@ c         endif
             call G_add_path(here,err)
             return
          endif
-*         call e_dc2_left_right(ABORT,err)
-*         if(ABORT) then
-*            call G_add_path(here,err)
-*            return
-*         endif
-*     
+
          call E_DC1_TRACK_FIT(ABORT,err,ierr)
          if(ABORT) then
             call G_add_path(here,err)
             return
          endif
          
-c         call E_DC2_TRACK_FIT(ABORT,err,ierr)
-c         if(ABORT) then
-c            call G_add_path(here,err)
-c            return
-c         endif
+         if(ierr.ne.0) then
+            line_err=' '
+            call CSETDI(ierr,line_err,1,5)
+            err='MINUIT ERROR IN E_DC1_TRACK_FIT' // line_err
+            call G_add_path(here,err)
+            call G_LOG_MESSAGE(err)
+         endif
+
+         call E_SELECT_GOOD_TRACKS(ABORT,err)
+         if(ABORT) then
+            call G_add_path(here,err)
+            return
+         endif                  ! end test on E_SELECT_GOOD_TRACKS ABORT
+c         entracks_pre = 0
+        
+         edc2_tot_hits = 0
+         call e_trans_dc2(ABORT,err)
+         if(ABORT) then
+            call G_add_path(here,err)
+            return
+         endif 
+
+         call e_dc2_pattern_recognition(ABORT,err)
+         if(ABORT) then
+            call G_add_path(here,err)
+            return
+         endif      
+         
+         call e_dc2_left_right(ABORT,err)
+         if(ABORT) then
+            call G_add_path(here,err)
+            return
+         endif
+     
+         call E_DC2_TRACK_FIT(ABORT,err,ierr)
+         if(ABORT) then
+            call G_add_path(here,err)
+            return
+         endif
+
          
 *     Check for internal error in E_TRACK_FIT
          if(ierr.ne.0) then
             line_err=' '
             call CSETDI(ierr,line_err,1,5)
-            err='MUNUIT ERROR IN E_TRACK_FIT' // line_err
+            err='MINUIT ERROR IN E_DC2_TRACK_FIT' // line_err
             call G_add_path(here,err)
             call G_LOG_MESSAGE(err)
          endif

@@ -1,15 +1,15 @@
 include ../Makefile.in
 
-ALLOBJS= find_space_points.o select_space_points.o select_space_points_seva.o solve_four_by_four.o
+ALLOBJS= find_space_points.o select_space_points.o select_space_points_seva.o solve_four_by_four.o select_space_points_hks.o
 
 LIB= libtracking.a
 
 #
 
-F77=/usr/bin/g77
+F77=/usr/bin/gfortran
 
-#FFLAGS=-g -ffixed-line-length-132
-FFLAGS=-m32 -g -ffixed-line-length-132
+FFLAGS=-g -ffixed-line-length-132
+#FFLAGS=-m32 -g -ffixed-line-length-132
 
 INC=-I../INCLUDE/
 

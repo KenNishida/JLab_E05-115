@@ -58,6 +58,26 @@
       real*8 TT(3)
       integer*4 hit
       integer*4 i
+
+c--   Local variable to transfer to e_dc2_best_stub
+c--   L.Yuan   09/24/2009
+*----------------------------------------------------------------------
+* MATRICES FOR 3 PARAMETER FITS.
+*
+*     CTPTYPE=parm
+*
+* matrix AA and its inverse AAINV 
+* array of determinants of AA
+
+      real*8 edc2aa3(3,3),edc2aainv3(3,3,emax_num_dc2_layers+1)      
+      real*8 edc2det3(emax_num_dc2_layers+1)             
+
+      common/EDC2_TFIT_MATRIX/
+     &     edc2aa3,
+     &     edc2aainv3,
+     &     edc2det3
+
+*----------------------------------------------------------------------
       
       TT(1)=0.
       TT(2)=0.
@@ -65,8 +85,8 @@
 
 * calculate trail hit position and least squares matrix coefficients.
       do hit=1,numhits
-        dpos(hit)=EDC1_WIRE_CENTER(hits(hit)) +
-     &       plusminus(hit)*EDC1_DRIFT_DIS(hits(hit)) -
+        dpos(hit)=EDC2_WIRE_CENTER(hits(hit)) +
+     &       plusminus(hit)*EDC2_DRIFT_DIS(hits(hit)) -
      &       edc2psi0(pl(hit))
         do i=1,3
           TT(i)=TT(i)+(dpos(hit)*edc2stubcoef(pl(hit),i))/edc2_sigma(pl(hit))
@@ -76,12 +96,12 @@
 *     solve three by three equations
 ccc      call s_solve_3by3(TT,pindex,dstub,ierr)
 
-      dstub(1)=EAAINV3(1,1,pindex)*TT(1) + EAAINV3(1,2,pindex)*TT(2) +
-     &     EAAINV3(1,3,pindex)*TT(3)
-      dstub(2)=EAAINV3(1,2,pindex)*TT(1) + EAAINV3(2,2,pindex)*TT(2) +
-     &     EAAINV3(2,3,pindex)*TT(3)
-      dstub(3)=EAAINV3(1,3,pindex)*TT(1) + EAAINV3(2,3,pindex)*TT(2) +
-     &     EAAINV3(3,3,pindex)*TT(3)
+      dstub(1)=EDC2AAINV3(1,1,pindex)*TT(1) + EDC2AAINV3(1,2,pindex)*TT(2) +
+     &     EDC2AAINV3(1,3,pindex)*TT(3)
+      dstub(2)=EDC2AAINV3(1,2,pindex)*TT(1) + EDC2AAINV3(2,2,pindex)*TT(2) +
+     &     EDC2AAINV3(2,3,pindex)*TT(3)
+      dstub(3)=EDC2AAINV3(1,3,pindex)*TT(1) + EDC2AAINV3(2,3,pindex)*TT(2) +
+     &     EDC2AAINV3(3,3,pindex)*TT(3)
 
 *
 * calculate chi2.  Remember one power of sigma is in sstubcoef
@@ -90,6 +110,9 @@ ccc      call s_solve_3by3(TT,pindex,dstub,ierr)
       stub(2)=dstub(2)
       stub(3)=dstub(3)
       stub(4)=0.
+
+cc      print *, 'AAINV',(EDC2AAINV3(1,i,pindex), i=1,3)
+cc      print *, 'find_stub', TT(1),TT(2), TT(3), dpos(1), dpos(2), dstub(1), dstub(2)
       do hit=1,numhits
         chi2=chi2+(dpos(hit)/edc2_sigma(pl(hit))
      &       -edc2stubcoef(pl(hit),1)*stub(1)

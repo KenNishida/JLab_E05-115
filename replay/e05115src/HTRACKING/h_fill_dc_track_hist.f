@@ -74,7 +74,7 @@ c     --- for dummy data
             re = hdc_track_coord(itrk,la)-hdc_wire_center(hit)
             dt = hdc_drift_time(hit)
 c     Write(*,*) dt,re
-c     Call HF2(hiddcdistime(la),dt,re,1.)
+            Call HF2(hiddcdistime(la),dt,re,1.)
          EndDo
          
          Call HF1(hidchi2perdofpre,hchi2perdof_fp(itrk),1.)

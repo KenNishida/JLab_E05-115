@@ -172,11 +172,11 @@
 *     
 *     CTPTYPE=event
 *
-      Real*4 estart_time
+*      Real*4 estart_time
       Integer*4 etrigger_flag
 
       Common/HES_START_TIME/
-     &     estart_time,
+*     &     estart_time,
      &     etrigger_flag
 
 *     HES  DATA
@@ -326,17 +326,25 @@
       REAL*4 EDC2_DRIFT_DIS(EMAX_DC2_DEC_HITS)
       REAL*4 EDC2_WIRE_CENTER(EMAX_DC2_DEC_HITS)
       REAL*4 EDC2_WIRE_COORD(EMAX_DC2_DEC_HITS)
+      REAL*4 EDC2_DRIFT_TIME_MOD(EMAX_DC2_DEC_HITS)
+      REAL*4 EDC2_DRIFT_DIS_MOD(EMAX_DC2_DEC_HITS)
+      REAL*4 EDC2_WIRE_CENTER_MOD(EMAX_DC2_DEC_HITS)
+      REAL*4 EDC2_WIRE_COORD_MOD(EMAX_DC2_DEC_HITS)
       COMMON/HES_DECODED_DC2/
      &     EDC2_TOT_HITS,
-     1     EDC2_DRIFT_TIME,
-     2     EDC2_DRIFT_DIS,
-     3     EDC2_WIRE_CENTER,
-     4     EDC2_WIRE_COORD,
-     5     EDC2_LAYER_NUM,
-     6     EDC2_GROUP_NUM,
-     7     EDC2_WIRE_NUM,
-     8     EDC2_SLOT_NUM,
-     9     EDC2_CLUSTER_SIZE,
+     &     EDC2_DRIFT_TIME,
+     &     EDC2_DRIFT_DIS,
+     &     EDC2_WIRE_CENTER,
+     &     EDC2_WIRE_COORD,
+     &     EDC2_DRIFT_TIME_MOD,
+     &     EDC2_DRIFT_DIS_MOD,
+     &     EDC2_WIRE_CENTER_MOD,
+     &     EDC2_WIRE_COORD_MOD,
+     &     EDC2_LAYER_NUM,
+     &     EDC2_GROUP_NUM,
+     &     EDC2_WIRE_NUM,
+     &     EDC2_SLOT_NUM,
+     &     EDC2_CLUSTER_SIZE,
      &     EDC2_TDC,
      &     EDC2_HITS_PER_LAYER
 
@@ -350,8 +358,8 @@
 *                         
       INTEGER*4 ENTRACKS_MAX  
       INTEGER*4 ENTRACKHITS_MAX      
-      PARAMETER (ENTRACKS_MAX=50)              
-      PARAMETER (ENTRACKHITS_MAX=50)             
+      PARAMETER (ENTRACKS_MAX=4000)              
+      PARAMETER (ENTRACKHITS_MAX=4000)             
 *
 *     The following are # of track, x,y,z,
 *     xp=dx/dz, yp=dy/dz,
@@ -376,15 +384,17 @@
 
       COMMON/HES_FOCAL_PLANE/
      &     ENTRACKS_FP,
-     1     EX_FP,
-     2     EY_FP,
-     3     EZ_FP,
-     4     EXP_FP,
-     5     EYP_FP,
-     6     ECHI2_FP,
-     7     ECHI2PERDOF_FP,
-     8     ENFREE_FP,
-     9     ENTRACK_HITS
+     &     EX_FP,
+     &     EY_FP,
+     &     EZ_FP,
+     &     EXP_FP,
+     &     EYP_FP,
+     &     ECHI2_FP,
+     &     ECHI2PERDOF_FP,
+     &     ENFREE_FP,
+     &     ENTRACK_HITS,
+     &     edc1_single_residual,
+     &     edc2_single_residual
 
 *     Index of focal plane track chosen  
       INTEGER*4 ESNUM_FPTRACK          
@@ -637,6 +647,7 @@
       REAL*4 ESXP_FP(ENPHYSICS_MAX) 
       REAL*4 ESYP_FP(ENPHYSICS_MAX) 
       REAL*4 ESCHI2PERDEG(ENPHYSICS_MAX)
+      REAL*4 esresidual(ENPHYSICS_MAX,EMAX_NUM_DC1_LAYERS+EMAX_NUM_DC2_LAYERS)
       REAL*4 ESTIME_AT_TAR(ENPHYSICS_MAX)
       REAL*4 ESX_TAR(ENPHYSICS_MAX) 
       REAL*4 ESY_TAR(ENPHYSICS_MAX) 
@@ -731,6 +742,7 @@
      & ESXP_FP ,
      & ESYP_FP ,
      & ESCHI2PERDEG,
+     & esresidual,
      & ESX_TAR ,
      & ESY_TAR ,
      & ESXP_TAR ,

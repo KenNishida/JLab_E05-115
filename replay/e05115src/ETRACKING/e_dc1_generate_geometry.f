@@ -89,7 +89,7 @@ c     EndDo
 c     close(92)
       
       do pln=1,edc1_num_layers
-         edc1_layer_num(pln)=pln
+c         edc1_layer_num(pln)=pln
          z0=edc1_zpos(pln)
          cosalpha = cos(edc1_alpha_angle(pln)-90*raddeg)
          sinalpha = sin(edc1_alpha_angle(pln)-90*raddeg)

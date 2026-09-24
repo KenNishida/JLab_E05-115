@@ -77,9 +77,7 @@
 c     Write(*,*) la,wi,sl,wc,dt
 
          Call HF1(eiddc2wirecenter(la),wc,1.)
-         if(eturnon_dc2_dec_hist .eq. 1) then
-            Call HF1(eiddc2drifttime(sl),dt,1.)
-         EndIf
+         Call HF1(eiddc2drifttime(sl),dt,1.)
 c         Call HF1(eiddc2singdtime(la),dt,1.) ! move to e_track_fit
 
          cs = edc2_cluster_size(i)

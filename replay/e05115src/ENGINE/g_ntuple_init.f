@@ -106,6 +106,14 @@
       endif
       ABORT= ABORT .or. FAIL
 
+c      call h_track_ntuple_init(FAIL,why)
+c      if(err.NE.' ' .and. why.NE.' ') then
+c         call G_append(err,' & '//why)
+c      elseif(why.NE.' ') then
+c         err= why
+c      endif
+c      ABORT= ABORT .or. FAIL
+c
       call h_scin_ntuple_init(FAIL,why)
       if(err.NE.' ' .and. why.NE.' ') then
          call G_append(err,' & '//why)

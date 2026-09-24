@@ -117,6 +117,7 @@
       EndIf
 
 
+
       num=0
       Do i=1,haer_raw_tot_hits
          ttime=g_f1_trigger_time(LR_VME_ROCID)
@@ -222,10 +223,29 @@ C     Calculate Npe no matter what!
             haer_npe_sum(gh) = 0.
             haer_neg_time(gh) = -1
             haer_pos_time(gh) = -1
-            haer_layer_hits(la) = haer_layer_hits(la) + 1
-         endif
+         endif 
 
 C     ADCs have been evaluated. Now check for valid TDC hits. 
+
+         
+*     --- the positive tube
+         if(tdcpos .gt. HAER_TDC_POS_MIN .and. 
+     &        tdcpos .lt. HAER_TDC_POS_MAX) then 
+            haer_pos_npe(counter_hits(la,co)) = npepos
+            haer_npe_sum(counter_hits(la,co)) =  npepos    ! chiba 2010/10/20
+*     +           haer_npe_sum(counter_hits(la,co)) + npepos
+            haer_pos_time(counter_hits(la,co)) = Real(tdcpos)
+         EndIF
+            
+*     --- the negative tube
+            
+         if(tdcneg .gt. HAER_TDC_NEG_MIN .and. 
+     &        tdcneg .lt. HAER_TDC_NEG_MAX) then 
+            haer_neg_npe(counter_hits(la,co)) =   npeneg  
+            haer_npe_sum(counter_hits(la,co)) =  npeneg    ! chiba 2010/10/20
+*     +           haer_npe_sum(counter_hits(la,co)) + npeneg
+            haer_neg_time(counter_hits(la,co)) = Real(tdcneg)
+         EndIF
 
 *     --- both tubes have hits
             
@@ -234,29 +254,13 @@ C     ADCs have been evaluated. Now check for valid TDC hits.
      &        .AND.
      &        (tdcneg .gt. HAER_TDC_NEG_MIN .and. 
      &        tdcneg .lt. HAER_TDC_NEG_MAX)
-     &        ) haer_both_hits(counter_hits(la,co)) = 1
-         
-*     --- the positive tube
-         if(tdcpos .gt. HAER_TDC_POS_MIN .and. 
-     &        tdcpos .lt. HAER_TDC_POS_MAX) then 
-            haer_pos_npe(counter_hits(la,co)) = npepos
-            haer_npe_sum(counter_hits(la,co)) = 
-     +           haer_npe_sum(counter_hits(la,co)) + npepos
-            haer_pos_time(counter_hits(la,co)) = Real(tdcpos)
-         EndIF
-            
-*     --- the negative tube
-            
-         if(tdcneg .gt. HAER_TDC_NEG_MIN .and. 
-     &        tdcneg .lt. HAER_TDC_NEG_MAX) then 
-            haer_neg_npe(counter_hits(la,co)) = npeneg
-            haer_npe_sum(counter_hits(la,co)) = 
-     +           haer_npe_sum(counter_hits(la,co)) + npeneg
-            haer_neg_time(counter_hits(la,co)) = Real(tdcneg)
-         EndIF
+     &        ) then
+            haer_npe_sum(counter_hits(la,co)) = npepos + npeneg     ! chiba 2010/10/20
+            haer_both_hits(counter_hits(la,co)) = 1
+            haer_layer_hits(la) = haer_layer_hits(la) + 1
+         endif
+      EndDo      
 
-      EndDo
-      
 *     fill the raw histogram as needed
       call h_fill_aero_hist(abort,err)
       if (abort) then

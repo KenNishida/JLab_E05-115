@@ -4337,22 +4337,43 @@ Slot= 18 !EDC2 TDC
 45, 2, 30 !chamber 1, U' plane, card U'3(14), wires(28-43).
 46, 2, 29 !chamber 1, U' plane, card U'3(15), wires(28-43).
 47, 2, 28 !chamber 1, U' plane, card U'3(16), wires(28-43).
-48, 2, 44 !chamber 1, U' plane, card U'4(1), wires(44-59).
-49, 2, 45 !chamber 1, U' plane, card U'4(2), wires(44-59).
-50, 2, 46 !chamber 1, U' plane, card U'4(3), wires(44-59).
-51, 2, 47 !chamber 1, U' plane, card U'4(4), wires(44-59).
-52, 2, 48 !chamber 1, U' plane, card U'4(5), wires(44-59).
-53, 2, 49 !chamber 1, U' plane, card U'4(6), wires(44-59).
-54, 2, 50 !chamber 1, U' plane, card U'4(7), wires(44-59).
-55, 2, 51 !chamber 1, U' plane, card U'4(8), wires(44-59).
+
+!48, 2, 44 !chamber 1, U' plane, card U'4(1), wires(44-59).
+!49, 2, 45 !chamber 1, U' plane, card U'4(2), wires(44-59).
+!50, 2, 46 !chamber 1, U' plane, card U'4(3), wires(44-59).
+!51, 2, 47 !chamber 1, U' plane, card U'4(4), wires(44-59).
+!52, 2, 48 !chamber 1, U' plane, card U'4(5), wires(44-59).
+!53, 2, 49 !chamber 1, U' plane, card U'4(6), wires(44-59).
+!54, 2, 50 !chamber 1, U' plane, card U'4(7), wires(44-59).
+!55, 2, 51 !chamber 1, U' plane, card U'4(8), wires(44-59).
+!56, 2, 52 !chamber 1, U' plane, card U'4(9), wires(44-59).
+!57, 2, 53 !chamber 1, U' plane, card U'4(10), wires(44-59).
+!58, 2, 54 !chamber 1, U' plane, card U'4(11), wires(44-59).
+!59, 2, 55 !chamber 1, U' plane, card U'4(12), wires(44-59).
+!60, 2, 56 !chamber 1, U' plane, card U'4(13), wires(44-59).
+!61, 2, 57 !chamber 1, U' plane, card U'4(14), wires(44-59).
+!62, 2, 58 !chamber 1, U' plane, card U'4(15), wires(44-59).
+!63, 2, 59 !chamber 1, U' plane, card U'4(16), wires(44-59).
+
+! change the sequence of the wire number because the wrong plug of cable
+!C.Chen 10/17/2009
+!48, 2, 44 !chamber 1, U' plane, card U'4(1), wires(44-59).
+49, 2, 59 !chamber 1, U' plane, card U'4(2), wires(44-59).
+50, 2, 58 !chamber 1, U' plane, card U'4(3), wires(44-59).
+51, 2, 57 !chamber 1, U' plane, card U'4(4), wires(44-59).
+52, 2, 56 !chamber 1, U' plane, card U'4(5), wires(44-59).
+53, 2, 55 !chamber 1, U' plane, card U'4(6), wires(44-59).
+54, 2, 54 !chamber 1, U' plane, card U'4(7), wires(44-59).
+55, 2, 53 !chamber 1, U' plane, card U'4(8), wires(44-59).
 56, 2, 52 !chamber 1, U' plane, card U'4(9), wires(44-59).
-57, 2, 53 !chamber 1, U' plane, card U'4(10), wires(44-59).
-58, 2, 54 !chamber 1, U' plane, card U'4(11), wires(44-59).
-59, 2, 55 !chamber 1, U' plane, card U'4(12), wires(44-59).
-60, 2, 56 !chamber 1, U' plane, card U'4(13), wires(44-59).
-61, 2, 57 !chamber 1, U' plane, card U'4(14), wires(44-59).
-62, 2, 58 !chamber 1, U' plane, card U'4(15), wires(44-59).
-63, 2, 59 !chamber 1, U' plane, card U'4(16), wires(44-59).
+57, 2, 51 !chamber 1, U' plane, card U'4(10), wires(44-59).
+58, 2, 50 !chamber 1, U' plane, card U'4(11), wires(44-59).
+59, 2, 49 !chamber 1, U' plane, card U'4(12), wires(44-59).
+60, 2, 48 !chamber 1, U' plane, card U'4(13), wires(44-59).
+61, 2, 47 !chamber 1, U' plane, card U'4(14), wires(44-59).
+62, 2, 46 !chamber 1, U' plane, card U'4(15), wires(44-59).
+63, 2, 45 !chamber 1, U' plane, card U'4(16), wires(44-59).
+
 64, 2, 60 !chamber 1, U' plane, card U'5(1), wires(60-75).
 65, 2, 61 !chamber 1, U' plane, card U'5(2), wires(60-75).
 66, 2, 62 !chamber 1, U' plane, card U'5(3), wires(60-75).

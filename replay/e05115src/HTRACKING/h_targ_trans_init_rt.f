@@ -86,7 +86,7 @@ c     call G_IO_control(chan,'ANY',ABORT,err) !"ASK"="ANY"
       
 !     Open and read in coefficients.
       
-      open (unit=chan,status='old',name='matrices/hks_recon_coeff.dat',err=92)
+      open (unit=chan,status='old',file='matrices/hks_recon_coeff.dat',err=92)
       Write(*,*) 'hks_recon_coeff.dat is opened successfully.' 
       
 !     Read header comments.
@@ -191,7 +191,7 @@ c     call G_IO_control(chan,'ANY',ABORT,err) !"ASK"="ANY"
       
 !     Open and read in coefficients.
       
-      open (unit=chan,status='old',name='matrices/hks_t2s_coeff.dat',err=97)
+      open (unit=chan,status='old',file='matrices/hks_t2s_coeff.dat',err=97)
       Write(*,*) 'hks_t2s_coeff.dat is opened successfully.' 
 *
       line = '!'

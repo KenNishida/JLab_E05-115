@@ -1,12 +1,12 @@
       subroutine h_pattern_recognition(ABORT,err)
 *--------------------------------------------------------
 *     -
-*     -   Purpose and Methods :  Finds SOS Space points 
+*     -   Purpose and Methods :  Finds HKS Space points 
 *     -
-*     -      Required Input BANKS     SOS_DECODED_DC
+*     -      Required Input BANKS     HKS_DECODED_DC
 *     -
-*     -      Output BANKS             SOS_FOCAL_LAYER
-*     -                               SOS_DECODED_DC hit coordinates
+*     -      Output BANKS             HKS_FOCAL_LAYER
+*     -                               HKS_DECODED_DC hit coordinates
 *     -
 *     -   Output: ABORT           - success or failure
 *     -         : err             - reason for failure, if any
@@ -98,56 +98,138 @@
       INCLUDE 'gen_units.par'
       INCLUDE 'hks_tracking.cmn'
       INCLUDE 'hks_geometry.cmn'
+      include 'hks_id_histid.cmn'  
+      include 'hks_scin_tof.cmn'
+      include 'hks_scin_parms.cmn'
+      include 'gen_run_info.cmn'
+      include 'hks_bypass_switches.cmn'
 *     
-*     local variables
+*     local variable s
       integer*4 hit_number(hmax_chamber_hits)
-      integer*4 space_point_hits(hmax_space_points,hmax_hits_per_point+2)
+      integer*4 space_point_hits(hmax_space_points,10*hmax_hits_per_point+2)
       integer*4 pln, wiren, cardn, isp, ihit, hit
-      integer*4 i,j,k,xx,xxprime
+      integer*4 i,j,k,xx,xxprime,t,s,l
       integer*4 xlayer,xprimelayer
       integer*4 ich, ip, pch
       logical easy_space_point
 *     
       real*4 space_points(hmax_space_points,2)
+      integer*4 space_points_multi(hmax_space_points_multi)
       real*4 xdist,ydist
       real*4 time_corr
       real*4 h_drift_dist_calc
       external h_drift_dist_calc
-      
-*     
+      real*4 dt
+      real*4 deltaz1,deltaz2,deltaz3,temp1,temp2,temp3
+      real*4 h1space_points(hmax_space_points,2)
+      real*4 h2space_points(hmax_space_points,2)
+      integer*4 h1nspace_points_tot
+      integer*4 h2nspace_points_tot
+      integer*4 space_hits_tot
+      integer*4 layer(hmax_hits_per_point)
+      integer*4 trig
+      integer*4 dindex
+      integer*4 temp_trig
+c-- debug variables
+      integer*4 numhits,nummulti,imul,hits(10*hmax_hits_per_point+2)
+     
 *     temporary initialization
       ABORT= .FALSE.
       err=' '
 *     
-*     
+      deltaz1=-100.171 ! zhdc1-zhdc2
+      deltaz2=126.001  !z1x-zhdc1
+      deltaz3=251.601  !z2x-zhdc1
+      temp1=deltaz2/deltaz1 
+      temp2=deltaz3/deltaz1
       ihit = 0
+      s=0
+      t=0 
+      l=0
       hnspace_points_tot = 0
-
+      h1nspace_points_tot = 0
+      h2nspace_points_tot = 0
+       
 c     --- fill dc decorded hist
-      
       call h_fill_dc_dec_hist(ABORT,err)
       if (abort) then
          call g_prepend(here,err)
          return
       endif
 
+      
       if(hdc_tot_hits .le. 0) Return
+      if(ntof.eq.0) return
+***********************************************
+***   DC hit information selection with TOF  ***
+      call h_dc_tofcut(ABORT,err)
+***********************************************
 
-      do ich=1,hdc_num_chambers
+c      write(*,*)"hitinfo_flag",hdc_hitinfo_flag
+***************************************************
+***** OUTPUT CHAMBER INFORMATION  (T.Gogami)  *****
+***************************************************
+      if(hdc_hitinfo_flag.eq.1)then
+         trig=trig+1      
+*     if you belive initialized value is 1, then you
+*     can use below code.
+         
+*     Create dat file in the case of trig==1
+         if(trig .eq. 1)then
+            open(22,file='hks_cham.dat',status='replace')
+c            open(33,file='tete.dat',status='replace')
+*     Add to the dat file in the case of  trig > 1
+         else
+            open(22,file='hks_cham.dat',access='append')   
+         endif
+         
+*     Write data out to the dat file 
+         write(22,*)"start"
+         write(22,*)gen_run_number
+         write(22,*)trig
+         write(22,*)hdc_tot_hits
+         write(22,*)hdc_hits_per_layer
+         do dindex=1,hdc_tot_hits
+            write(22,*)hdc_layer_num(dindex),hdc_wire_num(dindex),
+     &           hdc_wire_center(dindex),hdc_drift_time(dindex),
+     &           hdc_drift_time_pre(dindex)
+         enddo
+         write(22,*)ntof,ntof1x2x,ntof1y2x,ntof1x1y
+         write(22,*)nhits1x
+c         write(22,*)111
+         close(22)
+      endif
+
+      do ich=1,hdc_num_chambers ! hdc_num_chambers=2 in PARAM(hdc.pos.0)
          easy_space_point = .false.
          hnspace_points(ich)=0        
-         hncham_hits(ich)=0
+         hncham_hits(ich)=0     !number of hits of each chambers
+         
 *     
 *     For this loop to work, hdc_layers_per_chamber must be
 *     the number of layers per chamber.  (And all chambers must have the
 *     same number of layers.)
 *     
-         pch = hdc_layers_per_chamber
+         pch = hdc_layers_per_chamber ! = 12/2 = 6
+         
+*     when ich=1,ip:0 - 6  (KDC1)
+*     when ich=2,ip:7 - 12 (KDC2)
          do ip=(ich-1)*pch+1,ich*pch
             hncham_hits(ich)=hncham_hits(ich)+hdc_hits_per_layer(ip)
          enddo
+         
+*     KDC1 uu'xx'vv'(1,2,3,4,5,6)
+*     KDC2 uu'xx'vv'(7,8,9,10,11,12)
+*     when ich=1,xlayer     =3+0= 3 
+*                xprimelayer=4+0= 4
+*     when ich=2,xlayer     =3+6= 9
+*               ,xprimelayer=4+6=10
          xlayer=3+(ich-1)*pch
          xprimelayer=4+(ich-1)*pch
+         
+*     reject event which doesn't have 
+*     required minimum hits(hmin_hit) and maximum hits(hmax_pr_hits)
+*     defined in PARAM(htracking.param.0)
          if(hncham_hits(ich).ge.hmin_hit(ich) .and.
      $        hncham_hits(ich).lt.hmax_pr_hits(ich))  then
             do i=ihit+1,ihit+hncham_hits(ich)
@@ -155,6 +237,12 @@ c     --- fill dc decorded hist
                if(hdc_layer_num(i).eq.xlayer) xx=i
                if(hdc_layer_num(i).eq.xprimelayer) xxprime=i
             enddo
+*     over written ? 
+*     =================
+*     Find space point
+*     ================
+*     "hspace_point_criterion" is defined in PARAM(htracking.param.0)
+*     If situation is simple , go to "h_find_easy_space_point" .
             if((hdc_hits_per_layer(xlayer).eq.1) .and.
      &           (hdc_hits_per_layer(xprimelayer).eq.1).and.
      &           ((hdc_wire_center(xx)-hdc_wire_center(xxprime))**2.lt.
@@ -181,36 +269,71 @@ c     --- fill dc decorded hist
      &              hxsp(1),hysp(1),hmax_space_points,
      &              hnspace_points(ich), space_points, space_point_hits)
             endif
-*     
-            if (hnspace_points(ich).gt.50)
-     >           hnspace_points(ich)=0
+c     Test ( T.Gogami, 31/Oct/2011 )
+c            open(33,file='tete.dat',access='append')
+c            write(33,*)hnspace_points(ich)
+c            close(33)
+
+*     ===============
+c            if (hnspace_points(ich).gt.50)
+c     >           hnspace_points(ich)=0
+c            if (hnspace_points(ich).gt.50) then
+c            if (hnspace_points(ich).gt.100) then ! Increased (T.Gogami, 31/Oct/2011)
+            if (hnspace_points(ich).gt.200) then ! Increased (T.Gogami, 31/Oct/2011)
+c               write(*,*)"  KITA---  ",hnspace_points(ich)
+               hnspace_points(ich)=0
+            endif
             if (hnspace_points(ich).gt.0) then
 *     If two hits in same layer, choose one with minimum drift time
                call h_choose_single_hit(ABORT,err,hnspace_points(ich),
-     &              space_point_hits)
+     &              space_point_hits,space_points_multi)
+               
 *     Select on minimum number of combinations and hits
-               call select_space_points(hmax_space_points,
+               call select_space_points_hks(hmax_space_points,
      &              hnspace_points(ich),
-     &              space_points,space_point_hits,hmin_hit(ich),
+     &              space_points,space_point_hits,space_points_multi,
+     &              hmin_hit(ich),
      &              hmin_combos(ich),
      $              easy_space_point)
             endif
-            
-            
             do i=1,hnspace_points(ich)
                k=hnspace_points_tot+i
                hspace_points(k,1)=space_points(i,1)
                hspace_points(k,2)=space_points(i,2)
                hspace_point_hits(k,1)=space_point_hits(i,1)
                hspace_point_hits(k,2)=space_point_hits(i,2)
-               do j=1,space_point_hits(i,1)
+               hspace_point_hits_multi(k)=space_points_multi(i)
+               if(hspace_point_hits_multi(k).gt.0) then
+                  space_hits_tot=space_points_multi(i)*space_point_hits(i,1)
+               else
+                  space_hits_tot=space_point_hits(i,1)
+               endif
+               do j=1,space_hits_tot
                   hspace_point_hits(k,j+2)=space_point_hits(i,j+2)
                enddo
             enddo
          endif
+*     total number of space points of KDC1 and KDC2
          hnspace_points_tot = hnspace_points_tot + hnspace_points(ich)
+*     total number of hits of KDC1 and KDC2
          ihit = ihit + hncham_hits(ich)
-      enddo                     ! chamber loop
+      enddo    
+      do isp=1,hnspace_points_tot
+         numhits=hspace_point_hits(isp,1)
+         nummulti=hspace_point_hits_multi(isp)
+         if(nummulti.gt.0) then
+            do imul=1,nummulti
+               nummulti=hspace_point_hits_multi(isp)
+               ihit=0
+               do i=1+numhits*(imul-1),numhits+(imul-1)*numhits
+                  ihit=ihit+1
+                  hits(ihit)=hspace_point_hits(isp,2+i)
+                  layer(ihit)=HDC_LAYER_NUM(hits(ihit))
+c     print*,isp,imul,layer(ihit),ihit,hits(ihit),numhits,nummulti
+               enddo
+            enddo
+         endif
+      enddo
 *     
 *     Now we know rough hit positions in the chambers so we can make
 *     wire velocity drift time corrections for each hit in the space point
@@ -222,47 +345,14 @@ c     --- fill dc decorded hist
 *     time offset per card will cancel much of the error caused by this.  The
 *     alternative is to check by card, rather than by layer and this is harder.
 *     
-* For HKS DC, All read out are from the t/b sides, but the cards are
-* on both sides for same plane according to hdc_card_pos.
-*       L.Yuan  01/12/05
-      if(hnspace_points_tot.gt.0) then
-         do isp=1,hnspace_points_tot
-            xdist = hspace_points(isp,1)
-            ydist = hspace_points(isp,2)
-            do ihit=1,hspace_point_hits(isp,1)
-               hit = hspace_point_hits(isp,ihit+2)
-               pln = hdc_layer_num(hit)
-               wiren = hdc_wire_num(hit)
-               cardn = hdc_card_no(wiren,pln) 
-               if (cardn.ne.0) then
-                  time_corr = (-hdc_card_pos(cardn)*ydist+hdc_length_y/2.)
-     &                 *hdc_readout_corr(pln)/hdc_wire_velocity
-               else
-                  time_corr = 0.
-               endif
-               hdc_drift_time(hit) = hdc_drift_time(hit) 
-     &              + hdc_drifttime_sign(pln)*time_corr
-               hdc_drift_dis(hit) = h_drift_dist_calc
-     &              (pln,hdc_wire_num(hit),hdc_drift_time(hit))
+*     For HKS DC, All read out are from the t/b sides, but the cards are
+*     on both sides for same plane according to hdc_card_pos.
+*     L.Yuan  01/12/05
+      
+C     call h_tof_pre(abort,err)
 *     
-*     djm 8/25/94
-*     Stuff drift time and distance into registered variables 
-*     for histogramming and tests.
-*     In the case of two separated hits per layer, 
-*     the last one will be histogrammed.
-*     
-               hdc_sing_drifttime(pln) = hdc_drift_time(hit)
-               hdc_sing_driftdis(pln) = hdc_drift_dis(hit)
-               hdc_sing_cardid(pln) =
-     &              hdc_card_no(hdc_wire_num(hit),hdc_layer_num(hit))
-            enddo
-         enddo
-      endif
-*     
-*     write out results if debugflagpr is set
-      if(hdebugflagpr.ne.0) then
-         call h_print_pr
-      endif
-*
       return
       end
+      
+      
+      

@@ -6,12 +6,14 @@ begin report stats
 run time     :{g_run_time:%7.1f}
 event number :{gen_event_ID_number:%7d}
 Q_BCM1(10-6C):{gbcm1_charge:%7.0f}
+Q_BCM2(10-6C):{gbcm2_charge:%7.0f}
 I_BCM1(10-6A):{gbcm1_charge/(g_run_time+.00001):%7.2f}
+I_BCM2(10-6A):{gbcm2_charge/(g_run_time+.00001):%7.2f}
 Analysis rate:{atrig.scaler/(g_replay_time+.00001):%6d} Hz
-# of event   :{gscaler(2707):%7d}
-%Request      :{gscaler(2709):%7d}
-%Accept       :{gscaler(2708):%7d}
-dead time    :{100*(1-gscaler(2708)/(gscaler(2709)+.00001)):%7.1f} %
+# of event   :{gscaler(1679):%7d}
+%Request      :{gscaler(1677):%7d}
+%Accept       :{gscaler(1678):%7d}
+dead time    :{100*(1-gscaler(1678)/(gscaler(1677)+.00001)):%7.1f} %
              :
 etrig        :{etrig.scaler:%7d}
 etrack/trig  :{100*ecleantrack.scaler/(etrig.scaler+.0000001):%6.1f}%
@@ -22,4 +24,5 @@ fid effic    :{100*hdid.scaler/(hscinshould.scaler+.0000001):%6.1f}%
 ctrig        :{ctrig.scaler:%7d}
              :
 kaon_meter   :{kaon_meter.scaler:%7d}
+
 end reports stats

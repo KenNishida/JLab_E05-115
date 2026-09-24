@@ -102,11 +102,21 @@
 *     CTPTYPE=event
 *
       Real*4 hstart_time
+      Real*4 h1start_time
+      real*4 h1start_pre
+      Real*4 h2start_time
+      real*4 h2start_pre
+*      Real*4 mhstart_time(HMAX_SCIN_HITS,2)
       Integer*4 htrigger_flag
 
       Common/HKS_START_TIME/
      &     hstart_time,
-     &     htrigger_flag
+     &     htrigger_flag,
+     &     h1start_time,
+     &     h2start_time,
+     &     h1start_pre,
+     &     h2start_pre
+*     &     mhstart_time
 
 *     
 *     CTPTYPE=event
@@ -178,6 +188,7 @@
       INTEGER*4 HDC_HITS_PER_LAYER(HMAX_NUM_DC_LAYERS)
       INTEGER*4 HDC_TOT_HITS
       REAL*4 HDC_DRIFT_TIME(HMAX_DC_HITS)
+      REAL*4 HDC_DRIFT_TIME_PRE(HMAX_DC_HITS)
       REAL*4 HDC_DRIFT_DIS(HMAX_DC_HITS)
       REAL*4 HDC_WIRE_CENTER(HMAX_DC_HITS)
       REAL*4 HDC_WIRE_COORD(HMAX_DC_HITS)
@@ -192,7 +203,9 @@
      6     HDC_WIRE_NUM,
      7     HDC_CLUSTER_SIZE,
      8     HDC_TDC,
-     9     HDC_HITS_PER_LAYER
+     9     HDC_HITS_PER_LAYER,
+     >     HDC_DRIFT_TIME_PRE
+
       
 *     
 *     HKS RAW SCINTILLATOR HITS
@@ -265,12 +278,25 @@
       real*4 hscin_neg_time
       real*4 hscin_time
       INTEGER*4 HSCIN_TOT_HITS 
+      INTEGER*4 NTOF
+      integer*4 NTOF1X2X
+      integer*4 NTOF1X1Y
+      integer*4 NTOF1Y2X
+      integer*4 nhits1x,nhits2x,nhits1y
+     
       INTEGER*4 HSCIN_SING_COUNTER
 *     !DJM''S registered hit counter
       
 *     
       COMMON/HKS_REAL_SCIN/
      &     HSCIN_TOT_HITS,
+     &     NTOF,
+     &     NTOF1X2X,
+     &     NTOF1X1Y,
+     &     NTOF1Y2X,
+     &     nhits1x,
+     &     nhits2x,
+     &     nhits1y,
      &     HSCIN_LAYER_NUM(HMAX_SCIN_HITS),
      &     HSCIN_COUNTER_NUM(HMAX_SCIN_HITS),
      &     HSCIN_ADC_POS(HMAX_SCIN_HITS),
@@ -581,6 +607,7 @@
       real*4 hwat_pos_time(HMAX_WAT_HITS)
       real*4 hwat_neg_time(HMAX_WAT_HITS)
       real*4 hwat_npe_sum(HMAX_WAT_HITS)
+      real*4 hwat_npe_sum_k_ratio(HMAX_WAT_HITS)
 
       common /HKS_DECORDED_WATER/
      &  hwat_tot_hits,
@@ -592,6 +619,7 @@
      &  hwat_pos_time,
      &  hwat_neg_time,
      &  hwat_npe_sum,
+     &  hwat_npe_sum_k_ratio,
      &  hwat_layer_hits
 
 *    
@@ -719,9 +747,11 @@
 *     Cherenkov information
       REAL*4 Htrk_AER_NPE_SUM(HNTRACKS_MAX,HNUM_AER_LAYERS)
       REAL*4 Htrk_WAT_NPE_SUM(HNTRACKS_MAX,HNUM_WAT_LAYERS)
+      REAL*4 Htrk_WAT_NPE_SUM_K_RATIO(HNTRACKS_MAX,HNUM_WAT_LAYERS)
       REAL*4 Htrk_LUC_NPE_SUM(HNTRACKS_MAX,HNUM_LUC_LAYERS)
       REAL*4 Htrk_AER_NPE_SUM2(HNTRACKS_MAX,HNUM_AER_LAYERS)
       REAL*4 Htrk_WAT_NPE_SUM2(HNTRACKS_MAX,HNUM_WAT_LAYERS)
+      REAL*4 Htrk_WAT_NPE_SUM_K_RATIO2(HNTRACKS_MAX,HNUM_WAT_LAYERS)
       REAL*4 Htrk_LUC_NPE_SUM2(HNTRACKS_MAX,HNUM_LUC_LAYERS)
       REAL*4 Htrk_AER_TIME(HNTRACKS_MAX,HNUM_AER_LAYERS)
       REAL*4 Htrk_WAT_TIME(HNTRACKS_MAX,HNUM_WAT_LAYERS)
@@ -729,22 +759,72 @@
       REAL*4 Htrk_AER_TIME2(HNTRACKS_MAX,HNUM_AER_LAYERS)
       REAL*4 Htrk_WAT_TIME2(HNTRACKS_MAX,HNUM_WAT_LAYERS)
       REAL*4 Htrk_LUC_TIME2(HNTRACKS_MAX,HNUM_LUC_LAYERS)
+      REAL*4 Htrk_AER_NPE_POS(HNTRACKS_MAX,HNUM_AER_LAYERS)
+      REAL*4 Htrk_WAT_NPE_POS(HNTRACKS_MAX,HNUM_WAT_LAYERS)
+      REAL*4 Htrk_LUC_NPE_POS(HNTRACKS_MAX,HNUM_LUC_LAYERS)
+      REAL*4 Htrk_AER_NPE_POS2(HNTRACKS_MAX,HNUM_AER_LAYERS)
+      REAL*4 Htrk_WAT_NPE_POS2(HNTRACKS_MAX,HNUM_WAT_LAYERS)
+      REAL*4 Htrk_LUC_NPE_POS2(HNTRACKS_MAX,HNUM_LUC_LAYERS)
+      REAL*4 Htrk_AER_TIME_POS(HNTRACKS_MAX,HNUM_AER_LAYERS)
+      REAL*4 Htrk_WAT_TIME_POS(HNTRACKS_MAX,HNUM_WAT_LAYERS)
+      REAL*4 Htrk_LUC_TIME_POS(HNTRACKS_MAX,HNUM_LUC_LAYERS)
+      REAL*4 Htrk_AER_TIME_POS2(HNTRACKS_MAX,HNUM_AER_LAYERS)
+      REAL*4 Htrk_WAT_TIME_POS2(HNTRACKS_MAX,HNUM_WAT_LAYERS)
+      REAL*4 Htrk_LUC_TIME_POS2(HNTRACKS_MAX,HNUM_LUC_LAYERS)
+      REAL*4 Htrk_AER_NPE_NEG(HNTRACKS_MAX,HNUM_AER_LAYERS)
+      REAL*4 Htrk_WAT_NPE_NEG(HNTRACKS_MAX,HNUM_WAT_LAYERS)
+      REAL*4 Htrk_LUC_NPE_NEG(HNTRACKS_MAX,HNUM_LUC_LAYERS)
+      REAL*4 Htrk_AER_NPE_NEG2(HNTRACKS_MAX,HNUM_AER_LAYERS)
+      REAL*4 Htrk_WAT_NPE_NEG2(HNTRACKS_MAX,HNUM_WAT_LAYERS)
+      REAL*4 Htrk_LUC_NPE_NEG2(HNTRACKS_MAX,HNUM_LUC_LAYERS)
+      REAL*4 Htrk_AER_TIME_NEG(HNTRACKS_MAX,HNUM_AER_LAYERS)
+      REAL*4 Htrk_WAT_TIME_NEG(HNTRACKS_MAX,HNUM_WAT_LAYERS)
+      REAL*4 Htrk_LUC_TIME_NEG(HNTRACKS_MAX,HNUM_LUC_LAYERS)
+      REAL*4 Htrk_AER_TIME_NEG2(HNTRACKS_MAX,HNUM_AER_LAYERS)
+      REAL*4 Htrk_WAT_TIME_NEG2(HNTRACKS_MAX,HNUM_WAT_LAYERS)
+      REAL*4 Htrk_LUC_TIME_NEG2(HNTRACKS_MAX,HNUM_LUC_LAYERS)
 
       COMMON/HKS_TRACK_TESTS/
-     1     HTRK_time_ATFP, 
-     2     HSCIN_FPTIME,
-     3     Htrk_aer_npe_sum,
-     4     Htrk_wat_npe_sum,
-     5     Htrk_luc_npe_sum,
-     6     Htrk_aer_npe_sum2,
-     7     Htrk_wat_npe_sum2,
-     8     Htrk_luc_npe_sum2,
-     9     Htrk_aer_time,
+     +     HTRK_time_ATFP, 
+     +     HSCIN_FPTIME,
+     +     Htrk_aer_npe_sum,
+     +     Htrk_wat_npe_sum,
+     +     Htrk_wat_npe_sum_k_ratio,
+     +     Htrk_luc_npe_sum,
+     +     Htrk_aer_npe_sum2,
+     +     Htrk_wat_npe_sum2,
+     +     Htrk_wat_npe_sum_k_ratio2,
+     +     Htrk_luc_npe_sum2,
+     +     Htrk_aer_npe_pos,
+     +     Htrk_wat_npe_pos,
+     +     Htrk_luc_npe_pos,
+     +     Htrk_aer_npe_pos2,
+     +     Htrk_wat_npe_pos2,
+     +     Htrk_luc_npe_pos2,
+     +     Htrk_aer_npe_neg,
+     +     Htrk_wat_npe_neg,
+     +     Htrk_luc_npe_neg,
+     +     Htrk_aer_npe_neg2,
+     +     Htrk_wat_npe_neg2,
+     +     Htrk_luc_npe_neg2,
+     +     Htrk_aer_time,
      +     Htrk_wat_time,
      +     Htrk_luc_time,
      +     Htrk_aer_time2,
      +     Htrk_wat_time2,
      +     Htrk_luc_time2,
+     +     Htrk_aer_time_pos,
+     +     Htrk_wat_time_pos,
+     +     Htrk_luc_time_pos,
+     +     Htrk_aer_time_pos2,
+     +     Htrk_wat_time_pos2,
+     +     Htrk_luc_time_pos2,
+     +     Htrk_aer_time_neg,
+     +     Htrk_wat_time_neg,
+     +     Htrk_luc_time_neg,
+     +     Htrk_aer_time_neg2,
+     +     Htrk_wat_time_neg2,
+     +     Htrk_luc_time_neg2,
      +     htrk_aer_num,
      +     htrk_wat_num,
      +     htrk_luc_num,
@@ -787,6 +867,7 @@
       REAL*4 HSDEDX(HNPHYSICS_MAX,HNUM_RAW_SCIN_LAYERS)             
 *! DEDX of chosen track in each layer
       REAL*4 HSBETA(HNPHYSICS_MAX)                
+      REAL*4 HSBETA1Y(HNPHYSICS_MAX)                
       REAL*4 HSTOF(HNPHYSICS_MAX)                
 *! BETA of chosen track
       REAL*4 HSTIME_AT_FP(HNPHYSICS_MAX) 
@@ -809,6 +890,13 @@
 
       Real*4 HSDC_TRACK_COORD(HNPHYSICS_MAX,HMAX_NUM_DC_LAYERS)
       Real*4 HSDC_SING_RES(HNPHYSICS_MAX,HMAX_NUM_DC_LAYERS)
+      Real*4 HSDC_WIRE_COORD(HNPHYSICS_MAX,HMAX_NUM_DC_LAYERS)
+      Real*4 HSDC_WIRE_CENTER(HNPHYSICS_MAX,HMAX_NUM_DC_LAYERS)
+      Real*4 HSDC_WIRE_NUMB(HNPHYSICS_MAX,HMAX_NUM_DC_LAYERS)
+      Real*4 HSDC_LAYER_SIGMA(HNPHYSICS_MAX,HMAX_NUM_DC_LAYERS)
+      Real*4 HSDC_TRACK_NUMB(HNPHYSICS_MAX)! added for test on 11 July 2010
+      Real*4 HSDC_DRIFT_DISTANCE(HNPHYSICS_MAX,HMAX_NUM_DC_LAYERS)! added for test on 1 Aug 2010
+      Real*4 HSDC_LAYER_DRIFT_TIME(HNPHYSICS_MAX,HMAX_NUM_DC_LAYERS)! added for test on 3 Aug 2010
       
       REAL*4 HSBETA_CHISQ(HNPHYSICS_MAX)
 *     
@@ -877,6 +965,7 @@
      &     HSMINV,
      &     HSZBEAM,
      &     HSBETA,
+     &     HSBETA1Y,
      &     HSTOF,
      &     HSDEDX,
      &     HSTIME_AT_FP,
@@ -896,6 +985,13 @@
      &     HSTIME_AT_TAR,
      &     HSDC_TRACK_COORD,
      &     HSDC_SING_RES,
+     &     HSDC_WIRE_COORD,
+     &     HSDC_WIRE_CENTER, ! Added by Gogami (6/July/2011)
+     &     HSDC_WIRE_NUMB,
+     &     HSDC_LAYER_SIGMA,
+     &     HSDC_TRACK_NUMB,
+     &     HSDC_DRIFT_DISTANCE,
+     &     HSDC_LAYER_DRIFT_TIME,
      &     HSBETA_CHISQ,
      &     HSMASS2,
      &     HST,

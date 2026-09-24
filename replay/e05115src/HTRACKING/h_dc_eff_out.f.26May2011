@@ -1,0 +1,225 @@
+      subroutine h_dc_eff_out(abort,err)
+c
+c     // Calculation of KDC efficiency //
+c     
+c     Toshiyuki Gogami    3/Mar/2011
+c
+
+      implicit none
+      save
+      
+      character*9 here
+      parameter ( here = 'h_dc_eff_out' )
+      logical abort
+      character*(*) err
+      
+      include 'hes_data_structures.cmn'
+      include 'gen_data_structures.cmn'
+      include 'hks_data_structures.cmn'
+      include 'gen_routines.dec'
+      include 'gen_constants.par'
+      include 'gen_units.par'
+      include 'hks_physics_sing.cmn'
+      include 'hks_scin_parms.cmn'
+      include 'hks_tracking.cmn'
+      include 'hks_geometry.cmn'
+      include 'gen_event_info.cmn'
+      include 'gen_run_info.cmn'
+      include 'hks_scin_tof.cmn'
+      include 'hks_aero_parms.cmn'
+      include 'hks_water_parms.cmn'
+      include 'hks_lucite_parms.cmn'
+      include 'hks_bypass_switches.cmn'
+      
+      integer*4 layer           ! use for loop
+      real*4 kdc_eff1,kdc_eff2,kdc_eff ! KDC efficiencies
+      integer dispflag
+      parameter (dispflag = 0)  ! Efficiencies will be displayed, if dispflag==1
+      integer*4 runnumber       ! Run number (int)
+      character Keff_filename*40 ! Output filename
+      character run*5           ! Run number (char)
+      integer*4 anaEV           ! gstop (analyzed event)
+      real*4 kdc_rate_acc(12),kdc_rate_sig(12) ! Rate
+      real*4 twidth_acc,twidth_sig
+      parameter ( twidth_acc = 300.0 ) ! 2400-2100[ch]
+      parameter ( twidth_sig = 200.0 ) ! 2800-2600[ch]
+      real*4 calc_trackingEff
+      real*4 test
+      real*4 kdc_tracking_eff
+      
+c     ========= Initialize ===============
+      kdc_eff = 1.0
+      kdc_eff1= 1.0
+      kdc_eff2= 1.0
+      anaEV   = gen_run_stopping_event
+      do layer=1,12
+         kdc_rate_acc(layer) = -22222.0
+         kdc_rate_sig(layer) = -22222.0         
+      enddo
+      kdc_tracking_eff = 2.0
+
+c     ========= Calculate efficiencies =============
+c     ---- KDC1 ----
+      do layer=1,6
+         hdc_eff(layer) = hdc_eff_hit(layer) / hdc_eff_gtrig
+         kdc_eff1 = kdc_eff1 * hdc_eff(layer)
+      enddo
+c     ---- KDC2 ----
+      do layer=7,12
+         hdc_eff(layer) = hdc_eff_hit(layer) / hdc_eff_gtrig
+         kdc_eff2 = kdc_eff2 * hdc_eff(layer)
+      enddo
+c     ---- KDC ----
+      kdc_eff = kdc_eff1 * kdc_eff2
+
+c     ---- KDC tracking efficiency----
+      kdc_tracking_eff = calc_trackingEff(hdc_eff)
+
+c     ========= Calculate Rates =============
+      do layer=1,12
+         kdc_rate_acc(layer) 
+     &        = hdc_rate_hit_acc(layer)/anaEV
+     &        /(twidth_acc*hdc_tdc_time_per_channel)*1000000000.
+         kdc_rate_sig(layer) 
+     &        = hdc_rate_hit_sig(layer)/anaEV
+     &        /(twidth_sig*hdc_tdc_time_per_channel)*1000000000.
+      enddo
+
+c     ======== Display efficiencies ==============
+      if( dispflag.eq.1 )then
+         write(*,*) "=========== KDC Plane Efficiencies ============="
+         do layer=1 , 12
+            write(*,*) "    ",layer," : ",hdc_eff(layer)
+         enddo
+         write(*,*) "  KDC1  : ",kdc_eff1
+         write(*,*) "  KDC2  : ",kdc_eff2
+         write(*,*) "  Tracking Eff. : ",kdc_tracking_eff
+c         write(*,*) "    "
+      endif
+
+c     ======== Output efficiencies to file ==========
+      write(run,'(I5)')gen_run_number
+      Keff_filename = './scalers/KDCeff/kdc_eff_'//run//'.dat'
+      open(23,file=Keff_filename,status='replace')
+      write(23,*)"RUN: ",gen_run_number
+      write(23,*)"START: ",gen_run_starting_event
+      write(23,*)"ANALnum: ",gen_run_stopping_event
+      write(23,*)"DENO: ",hdc_eff_gtrig ! Denominaor of efficiency calc.
+      write(23,*)"====KDC_efficiency====="
+      do layer=1,12
+         write(23,*)layer,": ",hdc_eff(layer)
+      enddo
+      write(23,*) "KDC1: ",kdc_eff1
+      write(23,*) "KDC2: ",kdc_eff2
+      write(23,*) "Total: ",kdc_eff
+      write(23,*)"====KDC_Rates(accicental,signal)====="
+      do layer=1,12
+         write(23,*)layer,": ",kdc_rate_acc(layer)
+     &        ," ",kdc_rate_sig(layer)
+      enddo
+      close(23)
+
+c     ==========  END  =================
+      return
+      end subroutine
+
+**********************************************************************
+
+c      real*4 function calc_trackingEff(ef1,ef2,ef3,ef4,ef5,ef6
+c     &     ef7,ef8,ef9,ef10,ef11,ef12)
+      real*4 function calc_trackingEff(eff)
+      
+      implicit none
+      real*4 tttt
+      real*4 eff(12)
+      real*4 eff66
+      real*4 eff65
+      real*4 eff65_cal(12)
+      real*4 eff55
+      real*4 eff55_1(12)
+      real*4 eff55_2(12)
+      integer*4 i,j
+      integer*4 reset
+      
+      eff66 = 1.0
+      eff65 = 0.0
+      eff55 = 0.0
+      reset = 1
+      do i=1,12
+         eff65_cal(i) = 1.0
+         eff55_1(i) = 1.0
+         eff55_2(i) = 1.0
+      enddo
+c     ====== Probabirity of 12/12 ======
+      do i=1,12
+         eff66 = eff66 * eff(i)
+c         write(*,*)"  ",eff(i)
+      enddo
+c     write(*,*) "Probability of 12/12 = ",eff66
+
+
+c     ====== Probabirity of 11/12 ======
+c     ---KDC1:5 and KDC2:6---
+      do i=1,12
+c         write(*,*)"i==================",i
+         reset = 1
+         do j=1,12
+c            write(*,*)"   j=======================",j
+            if( j.eq.i )then
+               if( reset.eq.1 )then
+                  eff65_cal(i) = eff65_cal(i) * ( 1.0-eff(i) )
+                  reset = 0
+c                  write(*,*)"RESET"
+               endif
+            else
+               eff65_cal(i) = eff65_cal(i) * eff(j)   
+            endif
+         enddo
+c         write(*,*)"EFF(",i,")===",eff65_cal(i)
+         eff65 = eff65 + eff65_cal(i)
+      enddo
+c      write(*,*) "EFF65 = ",eff65
+
+c     --KDC1:5 and KDC2:5--
+      do i=1,6
+         reset = 1
+         do j=1,6
+            if( j.eq.i)then
+               if( reset.eq.1 )then
+                  eff55_1(i) = eff55_1(i) * (1.0 - eff(i))
+                  reset = 0
+               endif
+            else
+               eff55_1(i) = eff55_1(i) * eff(i)
+            endif
+         enddo
+      enddo
+      
+      do i=1,6
+         reset = 1
+         do j=1,6
+            if( j.eq.i)then
+               if( reset.eq.1 )then
+                  eff55_2(i) = eff55_2(i) * (1.0 - eff(i+6))
+                  reset = 0
+               endif
+            else
+               eff55_2(i) = eff55_2(i) * eff(i+6)
+            endif
+         enddo
+      enddo
+      
+      do i=1,6
+         do j=1,6
+            eff55 = eff55 + eff55_1(i) * eff55_2(j)
+         enddo
+      enddo
+c      write(*,*) " ======== EFF55 = ",eff55
+
+c     --Final calculaion--
+      calc_trackingEff = eff66 + eff65 + eff55
+      
+      return
+      end function
+      
+      

@@ -1,104 +1,4 @@
-*****************begin: gen_data_structures.cmn*************************
-*
-*     include file     gen_data_structures.cmn
-*
-*     Author:	D. F. Geesaman		1 September 1993
-*
-* Revision 1.32 2004/02/26 16:17 Miyoshi
-* (Miyoshi) change s_ and h_ to h_ and e_
-*
-* Revision 1.31  1999/02/23 19:05:55  csa
-* (JRA) Remove slow raster stuff
-*
-* Revision 1.30  1999/02/10 17:50:04  csa
-* Added target eloss variables (D. Mack, K. Vansyoc, J. Volmer),
-* bpm variables (P. Gueye), and raster variables (J. Reinhold)
-*
-* Revision 1.29  1998/12/01 20:21:02  saw
-* (SAW) Change GNUM_MISC_PLANES from 2 to 3
-*
-* Revision 1.28  96/09/04  15:45:04  15:45:04  saw (Stephen A. Wood)
-* (JRA) Increase # of possible targets.  Add fast raster variables.
-* 
-* Revision 1.27  1996/04/30 13:34:25  saw
-* (JRA) Swap index order in GBPM_ADC_PED, GBPM_RAW_ADC
-*
-* Revision 1.26  1996/01/24 16:18:29  saw
-* (JRA) Change raster to use misc arrays.  Change some variable names
-*       for beam position and target information.
-*
-* Revision 1.25  1995/05/22 18:40:21  cdaq
-* (SAW) Split gen_data_data_structures into gen, hms, sos, and coin parts
-*
-* Revision 1.24  1995/05/11  15:16:26  cdaq
-* (SAW) Add new singles and coin kinematics.  Add aerogel structure.
-* (JRA) Change ?SDEDXn vars to arrays.
-*
-* Revision 1.23  1995/04/06  20:16:28  cdaq
-* (SAW) Add ddutta's pre cosy rotation stuff.  Add arrays for BPM data
-*
-* Revision 1.22  1995/03/13  18:54:22  cdaq
-* (JRA) ?SCIN_ADC_??? now real, add several element max's for array sizes, add
-*       ?NUM_PMT_HIT, ?SNUM_SCIN_HIT, ?SNUM_PMT_HIT
-*
-* Revision 1.21  1995/01/03  13:59:37  cdaq
-* (HGM) Increase # of HMS shower counter blocks to 52
-*
-* Revision 1.20  1994/11/22  18:37:46  cdaq
-* (SPB) Brought SOS commons up to date
-* (SAW) Cleaned up ?DC_NUM_CHAMBERS and ?MAX_NUM_CHAMBERS stuff
-*
-* Revision 1.19  1994/09/19  20:26:44  cdaq
-* (SAW) Remove HDC_HITS_PER_PLANE from HMS_DECODED_DC common
-*
-* Revision 1.18  1994/09/13  21:47:19  cdaq
-* (JRA) Remove HGOOD_START_PLANE
-*
-* Revision 1.17  1994/09/13  19:15:21  cdaq
-* (JRA) Add chisq, shower c. raw adc, number of chambers, shower c slop
-*
-* Revision 1.16  1994/08/15  13:20:47  cdaq
-* (SAW) CEBEAM and CPBEAM are parm not event
-*
-* Revision 1.15  1994/08/15  04:39:29  cdaq
-* (SAW) Change CTPTYPE to parm for some variables
-*
-* Revision 1.14  1994/08/03  19:57:07  cdaq
-* (SAW) Add "CTPTYPE=event" directive for auto generation of CTP reg calls
-*
-* Revision 1.13  1994/06/26  02:32:07  cdaq
-* (JA&SAW) Add rawer data structure for HMS scintillator hits.
-* Increase  HMS DC max hits to 3600.
-*
-* Revision 1.12  1994/06/22  15:34:35  cdaq
-* (SAW) Increase max # of hits for hodoscopes to allow for non sparsified data
-*
-* Revision 1.11  1994/06/21  19:22:59  cdaq
-* (SAW) Add hit counters to H_RAW_MISC, S_RAW_MISC and G_RAW_UNINST commons
-*
-* Revision 1.10  1994/06/18  02:49:49  cdaq
-* (SAW) Add code for miscleaneous data and uninstrumented channels
-*
-* Revision 1.9  1994/06/14  03:05:42  cdaq
-* (DFG) Add hms_physics, sos_physics, and coin_physics
-*       Add particle mass to hms_spectrometer and sos_spectrometer
-*
-* Revision 1.8  1994/04/14  16:25:43  cdaq
-* (SAW) Fix typo
-*
-* Revision 1.7  1994/04/12  20:42:22  cdaq
-* (SAW) Put column first in shower commons (column == plane)
-*       Add a structure for hits on uninstrumented channels
-*       Correct "FILLED BY" comment
-*
-* Revision 1.6  1994/04/12  18:38:15  cdaq
-* (DFG) Change dimension of HNTRACK_HITS(HNTRACKS_MAX,HNTRACKHITS_MAX+1)
-*                           SNTRACK_HITS(SNTRACKS_MAX,SNTRACKHITS_MAX+1)
-*                           to allow space for number of hits.
-* (SAW) Remove craw common to gen_craw.cmn
-*
-* Revision 1.5  1994/03/24  17:02:03  cdaq
-* DFG change decoded scin to arrington format in both hms and sos
+decoded scin to arrington format in both hms and sos
 *     change track tests to amatouni format
 *
 * Revision 1.4  1994/02/21  02:54:22  cdaq
@@ -367,7 +267,7 @@
       INTEGER GMAX_MISC_HITS
       PARAMETER(GMAX_MISC_HITS=100)
       INTEGER*4 GNUM_MISC_PLANES
-      PARAMETER(GNUM_MISC_PLANES=10)
+      PARAMETER(GNUM_MISC_PLANES=20)
 *
 *     CTPTYPE=event
 *
@@ -431,6 +331,7 @@
       integer*4 gidtrigcoin
       integer*4 gidprobe
       integer*4 gidmisctdcs(GNUM_MISC_PLANES)
+      integer*4 gidbpmadcs(16)
       
       Common/G_TRIG_HIST/
      &     gidtrigrawtothits,
@@ -448,7 +349,8 @@
      &     gidtrigtdc8,
      &     gidtrigcoin,
      &     gidprobe,
-     &	  gidmisctdcs
+     &	  gidmisctdcs,
+     &	  gidbpmadcs
 
 *
 *     flag

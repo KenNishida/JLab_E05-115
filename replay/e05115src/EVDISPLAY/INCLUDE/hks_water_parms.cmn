@@ -20,6 +20,10 @@
 
       REAL*4 hwat_pos_gain(HNUM_WAT_LAYERS,HNUM_WAT_COUNTERS)
       REAL*4 hwat_neg_gain(HNUM_WAT_LAYERS,HNUM_WAT_COUNTERS)
+      REAL*4 hwat_k_gain_par1(HNUM_WAT_LAYERS,HNUM_WAT_COUNTERS)
+      REAL*4 hwat_k_gain_par2(HNUM_WAT_LAYERS,HNUM_WAT_COUNTERS)
+      REAL*4 hwat_k_sigma_par1(HNUM_WAT_LAYERS,HNUM_WAT_COUNTERS)
+      REAL*4 hwat_k_sigma_par2(HNUM_WAT_LAYERS,HNUM_WAT_COUNTERS)
       REAL*4 hwat_pos_offset(HNUM_WAT_LAYERS,HNUM_WAT_COUNTERS)
       REAL*4 hwat_neg_offset(HNUM_WAT_LAYERS,HNUM_WAT_COUNTERS)
       REAL*4 hwat_box_zpos(HNUM_WAT_LAYERS)
@@ -42,6 +46,10 @@
      &  hwat_neg_offset,
      &  hwat_pos_gain,
      &  hwat_neg_gain,
+     &  hwat_k_gain_par1,
+     &  hwat_k_gain_par2,
+     &  hwat_k_sigma_par1,
+     &  hwat_k_sigma_par2,
      &  hwat_box_zpos,
      &  hwat_box_xcenter,
      &  hwat_box_ycenter,

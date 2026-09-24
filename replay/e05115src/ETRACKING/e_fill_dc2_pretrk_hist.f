@@ -26,21 +26,21 @@
       ABORT= .FALSE.
       err= ' '
       
-      Call HF1(eidentrackspre,float(entracks_pre),1.)
-      Call HF1(eidentracksprezoom,float(entracks_pre),1.)
+      Call HF1(eiddc2ntrackspre,float(entracks_pre),1.)
+      Call HF1(eiddc2ntracksprezoom,float(entracks_pre),1.)
       
-      if(entracks_pre .le. 0) Return
-      Do i=1,entracks_pre
-         ihit = entrack_hits_pre(i,1)
-         Do j=1,ihit
-            hits = entrack_hits_pre(i,j+1)
-            la = edc2_layer_num(hits)
-            da = EDC2_WIRE_COORD(hits)-EDC2_WIRE_CENTER(hits)
+c      if(entracks_pre .le. 0) Return
+c      Do i=1,entracks_pre
+c         ihit = entrack_hits_pre(i,1)
+c         Do j=1,ihit
+c            hits = entrack_hits_pre(i,j+1)
+c            la = edc2_layer_num(hits)
+c            da = EDC2_WIRE_COORD(hits)-EDC2_WIRE_CENTER(hits)
 c     Write(*,*) edc2_wire_coord(hits),edc2_wire_center(hits),
 c     &           da,la
-            Call Hf1(eiddc2driftdis(la),da,1.)
-         EndDo
-      EndDo
+c            Call Hf1(eiddc2driftdis(la),da,1.)
+c         EndDo
+c      EndDo
 
 
 

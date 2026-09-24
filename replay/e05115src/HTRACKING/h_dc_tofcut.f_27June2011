@@ -1,0 +1,472 @@
+      subroutine h_dc_tofcut(ABORT,err)
+
+c     Hit information selection in KDC with KTOF1X and KTOF2X
+c
+c       Toshiyuki Gogami   10/Feb/2011
+c
+
+      implicit none
+      save
+      character*10 here
+      parameter(here='h_dc_tofcut')
+      logical ABORT
+      character*(*) err
+
+      include 'gen_constants.par'
+      include 'gen_event_info.cmn'
+      include 'gen_units.par'
+      include 'gen_f1tdc.cmn'
+      include 'gen_rocid.cmn'
+      include 'gen_run_info.cmn'
+      include 'hks_data_structures.cmn'
+      include 'hks_scin_parms.cmn'
+      include 'hks_scin_tof.cmn'
+      include 'hks_tracking.cmn'
+      include 'hks_geometry.cmn'
+      include 'hks_bypass_switches.cmn'
+      include 'hks_id_histid.cmn'
+      include 'gen_data_structures.cmn'
+      
+      integer*4 ihit,ihit1,ihit2
+      integer*4 la,co,prela,preco
+      integer*4 multi1x,multi2x ! Multiplicity in KTOFs
+      integer*4 addflag1x,addflag2x ! Flag
+      integer*4 flagon          ! Flag
+      integer*4 maxmulti1x,maxmulti2x
+      parameter( maxmulti1x = 14 ) ! Maximum multiplicity in 1X to apply this routine
+      parameter( maxmulti2x = 10 ) ! Maximum multiplicity in 2X to apply this routine
+      integer*4 maxm
+      integer*4 combomax
+      parameter( maxm = 20 )    ! Maximum of Multiplicity (Counter)
+      parameter(combomax = 200) ! Maximum of the combination of KTOFs
+      integer*4 hc1(maxm)       ! Hit counter in KTOF1X
+      integer*4 hc2(maxm)       ! Hit counter in KTOF2X
+      real*4 cutmin_dc1(combomax) ! Cut condition
+      real*4 cutmax_dc1(combomax) ! Cut condition
+      real*4 cutmin_dc2(combomax) ! Cut condition
+      real*4 cutmax_dc2(combomax) ! Cut condition
+      integer*4 cutflag         ! Cut flag
+      integer*4 combo           ! Number of the combination between hit counbers in 1x and 2x
+      real*4 cent1,cent2        ! Center coordinate of Hit segment of KTOF (x-direction)
+      real*4 top1,top2,bot1,bot2 ! Upper and lower egde coordinate of Scintillators
+      real*4 dist_1xdc1,dist_1xdc2 ! Distance between KTOF1X and Chamber
+      real*4 dist_1x2x          ! Distance between KTOF1X and KTOF2X
+      integer*4 i
+      integer*4 gh,com          ! GOOD HIT , COMBINATION (using for LOOP)
+      integer*4 wire,wcenter    ! Wire number , wire center
+      integer*4 pre_hdc_tot_hits ! Total hits in KDC before this routine
+      real*4 allow,allow2
+c      parameter ( allow = 0.0 ) ! Allowance of the cut ( +- allow ) in [cm]
+      parameter ( allow = 2.5 ) ! Allowance of the cut ( +- allow ) in [cm]
+      parameter ( allow2= 1.5 ) ! Allowance of the cut ( +- allow ) in [cm]
+      integer*4 toftrig
+      integer*4 dataout
+      parameter (dataout = 0)   ! If dataout==1 , output "tofcut.dat".
+      integer*4 groupflag
+      integer*4 Grouping        ! Function to check grouping
+      real*4 calmin             ! Function to calculate min cut range for tilted layers
+      real*4 calmax             ! Function to calculate max cut range for tilted layers
+      real*4 cutminp , cutmaxp ! cutmin-prime , cutmax-prime
+
+
+c     =============== Initializing =================
+      la = 0        ! Layer number
+      co = 0        ! Counter number
+      prela = 0     ! Previous layer number
+      preco = 0     ! Prevouus counter number
+      multi1x = 0   ! Number of hit segments in KTOF1X
+      multi2x = 0   ! Number of hit segments in KTOF2X
+      addflag1x = 0 ! Flag
+      addflag2x = 0 ! Flag
+      flagon = 0    ! Flag
+      do i=1 , maxm
+         hc1(i) = -2000 ! Hit counters in KTOF1X
+         hc2(i) = -2000 ! Hit counters in KTOF2X
+         cutmin_dc1(i) = -2000.0
+         cutmax_dc1(i) = -2000.0
+         cutmin_dc2(i) = -2000.0
+         cutmax_dc2(i) = -2000.0
+      enddo
+      combo = 0
+      dist_1xdc1 = 0
+      dist_1xdc2 = 0
+      dist_1x2x = 0
+      cutflag = 0
+      top1 = 0                  ! Upper edge coodinate of KTOF1X hit counter
+      top2 = 0                  ! Upper edge coodinate of KTOF2X hit counter
+      bot1 = 0                  ! Lower edge coodinate of KTOF1X hit counter
+      bot2 = 0                  ! Lower edge coodinate of KTOF1X hit counter
+      gh = 0
+      com = 0
+      wire = 0                  ! Wire number
+      wcenter = 0               ! Wire center coordinate
+      pre_hdc_tot_hits = 0      ! Previous KDC total hits
+      groupflag = 0             ! KTOF1X and KTOF2X grouping flag
+      cutminp = 0               ! Min cut range for tilted layers
+      cutmaxp = 0               ! Max cut range for tilted layers
+
+      
+c     ================ KTOF1X =======================
+c     Count the number of hit segments in KTOF1X
+      do ihit=1 , hscin_tot_hits
+         la = hscin_layer_num(ihit)
+         if(la.eq.1)then
+            co = hscin_counter_num(ihit)
+            if(ihit.gt.1)then
+               prela = hscin_layer_num(ihit-1)
+               preco = hscin_counter_num(ihit-1)
+            endif
+            if( preco.ne.co
+     &           .and. flagon.eq.1 )then
+               addflag1x = 1
+            else 
+               addflag1x = 0
+            endif
+            
+            if(multi1x.eq.0)then
+               flagon = 1
+               multi1x = multi1x+1
+               hc1(multi1x) = co
+            endif
+            if(addflag1x.eq.1) then 
+               multi1x = multi1x+1
+               hc1(multi1x) = co
+            endif
+         endif
+      enddo
+c     ================ KTOF2X =======================
+c     Count the number of hit segments in KTOF2X
+      co = 0
+      la = 0
+      preco = 0
+      prela = 0
+      flagon = 0
+      do ihit=1 , hscin_tot_hits
+         la = hscin_layer_num(ihit)
+         if(la.eq.3)then
+            co = hscin_counter_num(ihit)
+            if(ihit.gt.1)then
+               prela = hscin_layer_num(ihit-1)
+               preco = hscin_counter_num(ihit-1)
+            endif
+            if( preco.ne.co
+     &           .and. flagon.eq.1 )then
+               addflag2x = 1
+            else 
+               addflag2x = 0
+            endif
+            
+            if(multi2x.eq.0)then
+               flagon = 1
+               multi2x = multi2x+1
+               hc2(multi2x) = co
+            endif
+            if(addflag2x.eq.1) then 
+               multi2x = multi2x+1
+               hc2(multi2x) = co
+            endif
+         endif
+      enddo
+      
+
+c     ============== RETURN if multipliciy is high ================
+      if( multi1x.ge.maxmulti1x 
+     &     .or. multi2x.ge.maxmulti2x )then
+         return
+      endif
+      
+c     ====== Determine cut conditons with KTOF1X and 2X =======
+      combo = 0
+      dist_1x2x  = hscin_zpos(3) - hscin_zpos(1)
+      dist_1xdc1 = hscin_zpos(1) - hdc_1_zpos
+      dist_1xdc2 = hscin_zpos(1) - hdc_2_zpos
+      do ihit1=1 , multi1x
+         cent1 = hscin_1x_center( hc1(ihit1) )
+         top1 = cent1 + hscin_width(1)/2.0
+         bot1 = cent1 - hscin_width(1)/2.0
+         do ihit2=1 , multi2x
+            groupflag = Grouping(hc1(ihit1),hc2(ihit2)) !Grouping of 1X and 2X
+            if( groupflag.eq.1 ) then
+               if( combo.lt.combomax ) then
+                  combo = combo + 1
+                  cent2 = hscin_2x_center( hc2(ihit2) )
+                  top2 = cent2 + hscin_width(3)/2.0
+                  bot2 = cent2 - hscin_width(3)/2.0
+                  cutmin_dc1(combo) 
+     &                 = bot1 - (top2-bot1)/dist_1x2x * dist_1xdc1
+     &                 - allow
+                  cutmax_dc1(combo) 
+     &                 = top1 - (bot2-top1)/dist_1x2x * dist_1xdc1
+     &                 + allow
+                  cutmin_dc2(combo) 
+     &                 = bot1 - (top2-bot1)/dist_1x2x * dist_1xdc2
+     &                 - allow
+                  cutmax_dc2(combo) 
+     &                 = top1 - (bot2-top1)/dist_1x2x * dist_1xdc2
+     &                 + allow
+c     write(*,*)"1 : ",hc1(ihit1),",",cent1,",",top1,",",bot1
+c     write(*,*)"2 : ",hc2(ihit2),",",cent2,",",top2,",",bot2
+c     write(*,*)dist_1x2x,",",dist_1xdc1,",",dist_1xdc2
+c     write(*,*)cutmin_dc1(combo),",",cutmax_dc1(combo)
+c     &              ,cutmin_dc2(combo),",",cutmax_dc2(combo)
+               else
+                  write(*,*)"h_dc_tofcut.f 
+     &                 : Combination of KTOF1X and 2X is out of range
+     &              , so skipped."
+               endif
+            endif               !if ( groupflag.eq.1 )
+         enddo
+      enddo
+c     =============== OUTPUT DATA(1/2) =======================
+      if( dataout.eq.1 ) then
+         toftrig = toftrig+1
+         if(toftrig .eq. 1)then
+            open(22,file='tofcut.dat',status='replace')
+*     Add to the dat file in the case of  toftrig > 1
+         else
+            open(22,file='tofcut.dat',access='append')   
+         endif
+         write(22,*)"start"
+         write(22,*)gen_run_number
+         write(22,*)toftrig
+         write(22,*)multi1x,multi2x
+         do ihit=1 , multi1x
+            write(22,*)hc1(ihit)
+         enddo
+         do ihit=1 , multi2x
+            write(22,*)hc2(ihit)
+         enddo
+         write(22,*)hdc_tot_hits
+         write(22,*)hdc_hits_per_layer
+         do ihit=1,hdc_tot_hits
+            write(22,*)hdc_layer_num(ihit),hdc_wire_num(ihit),
+     &           hdc_wire_center(ihit),hdc_drift_time(ihit),
+     &           hdc_drift_time_pre(ihit)
+         enddo
+         close(22)
+      endif
+c      ============ Event cut and Reordering for KDC ===================
+      la = 0
+      gh = 0
+      do ihit=1 , hdc_tot_hits
+         la      = hdc_layer_num(ihit)
+         wire    = hdc_wire_num(ihit)
+         wcenter = hdc_wire_center(ihit)
+         cutflag = 0            ! Doesn't cut 
+         cutflag = 1            ! Does cut
+         do com=1 , combo
+            cutminp = 0
+            cutmaxp = 0
+c     ---------- KDC layer3 & layer4 -----
+            if( la.eq.3 .or. la.eq.4 )then
+               if( cutmin_dc1(com).le.wcenter 
+     &              .and. cutmax_dc1(com).ge.wcenter)then
+                  cutflag = 0
+               endif
+c     ---------- KDC layer9 & layer10 -----
+            else if( la.eq.9 .or. la.eq.10 )then
+               if( cutmin_dc2(com).le.wcenter 
+     &              .and. cutmax_dc2(com).ge.wcenter)then
+                  cutflag = 0
+               endif
+c     ---------- KDC layer1 & layer2 & layer5 & layer6 -----
+            else if(la.eq.1 .or. la.eq.2 .or. la.eq.5 .or. la.eq.6)then
+               cutminp = calmin(cutmin_dc1(com),allow,la)-allow2
+               cutmaxp = calmax(cutmax_dc1(com),allow,la)+allow2
+               if( cutminp.le.wcenter 
+     &              .and. cutmaxp.ge.wcenter)then
+                  cutflag = 0
+               endif
+c     ---------- KDC layery7 & layer8 & layer11 & layer12 -----
+            else if(la.eq.7.or. la.eq.8 .or. la.eq.11 .or. la.eq.12)then
+               cutminp = calmin(cutmin_dc2(com),allow,la)-allow2
+               cutmaxp = calmax(cutmax_dc2(com),allow,la)+allow2
+               if( cutminp.le.wcenter 
+     &              .and. cutmaxp.ge.wcenter)then
+                  cutflag = 0
+               endif
+            endif
+c     write(*,*)cutmin_dc1(com),",",cutmax_dc1(com)
+c     &              ,",",cutmin_dc2(com),",",cutmax_dc2(com)
+         enddo
+         
+         if(cutflag.eq.1)then
+            hdc_hits_per_layer(la) = hdc_hits_per_layer(la)-1
+         endif
+         
+         if(cutflag.eq.0) then
+            gh = gh+1
+            hdc_tdc(gh)           = hdc_tdc(ihit)
+            hdc_layer_num(gh)     = hdc_layer_num(ihit)
+            hdc_wire_num(gh)      = hdc_wire_num(ihit)
+            hdc_wire_center(gh)   = hdc_wire_center(ihit)
+            hdc_drift_time(gh)    = hdc_drift_time(ihit)
+            hdc_drift_time_pre(gh)= hdc_drift_time_pre(ihit)
+            hdc_cluster_size(gh)  = hdc_cluster_size(ihit)
+         endif
+      enddo
+      pre_hdc_tot_hits = hdc_tot_hits
+      hdc_tot_hits = gh
+c     write(*,*) "TOFCUT : ",pre_hdc_tot_hits,"-->",hdc_tot_hits
+
+c     =============== OUTPUT DATA(2/2) =====================
+      if( dataout.eq.1 )then
+         open(22,file='tofcut.dat',access='append')   
+         write(22,*)hdc_tot_hits
+         write(22,*)hdc_hits_per_layer
+         do ihit=1,hdc_tot_hits
+            write(22,*)hdc_layer_num(ihit),hdc_wire_num(ihit),
+     &           hdc_wire_center(ihit),hdc_drift_time(ihit),
+     &           hdc_drift_time_pre(ihit)
+         enddo
+         close(22)
+      endif
+c     ======================= END ========================
+      return
+      end
+
+
+**************************************************************************
+c     //
+c     Grouping of KTOF1X and KTOF2X
+c     Grouping = 1 if those two hits are in same group.
+c     //
+      integer*4 function Grouping(hit1,hit2)
+      
+      implicit none
+      integer*4 group
+      integer*4 hit1,hit2
+
+c     Group1
+      if( hit1.ge.1 .and. hit1.le.3)then
+         if( hit2.ge.1 .and. hit2.le.5 )then
+            group = 1
+         else 
+            group = 0
+         endif
+c     Group2
+      else if( hit1.ge.4 .and. hit1.le.6)then
+         if( hit2.ge.3 .and. hit2.le.8 )then
+            group = 1
+         else 
+            group = 0
+         endif
+c     Group3
+      else if( hit1.ge.7 .and. hit1.le.9)then
+         if( hit2.ge.6 .and. hit2.le.11 )then
+            group = 1
+         else 
+            group = 0
+         endif
+c     Group4
+      else if( hit1.ge.10 .and. hit1.le.12)then
+         if( hit2.ge.9 .and. hit2.le.14 )then
+            group = 1
+         else 
+            group = 0
+         endif
+c     Group5
+      else if( hit1.ge.13 .and. hit1.le.15)then
+         if( hit2.ge.12 .and. hit2.le.17 )then
+            group = 1
+         else 
+            group = 0
+         endif
+c     Group6
+      else if( hit1.ge.16 .and. hit1.le.17 )then
+         if( hit2.ge.15 .and. hit2.le.18 )then
+            group = 1
+         else 
+            group = 0
+         endif
+      else 
+         group = 0
+      endif
+      
+      Grouping = group
+
+      return 
+      end function
+
+**************************************************************************
+c     //
+c     Calculation of Minimum cut value for tilted layers
+c     //
+      real*4 function calmin(premin,allow,la)
+
+      implicit none
+
+      include 'gen_constants.par'
+      include 'gen_event_info.cmn'
+      include 'gen_units.par'
+      include 'gen_f1tdc.cmn'
+      include 'gen_rocid.cmn'
+      include 'gen_run_info.cmn'
+      include 'hks_data_structures.cmn'
+      include 'hks_scin_parms.cmn'
+      include 'hks_scin_tof.cmn'
+      include 'hks_tracking.cmn'
+      include 'hks_geometry.cmn'
+      include 'hks_bypass_switches.cmn'
+      include 'hks_id_histid.cmn'
+      include 'gen_data_structures.cmn'
+
+      real*4 premin
+      real*4 m
+      real*4 allow
+      real*4 h
+      parameter ( h = 15.0 )    ! Hight of KDC in [cm] (+-h)
+      real*4 min
+      integer*4 la
+      real*4 th                 ! Absolute value of relative angle respect to x-layer
+      
+      m = premin - allow
+      min = 0
+      th  = 0
+      th  = 60.0*3.14159/180.0  
+      min = m/cos(th) - (m*tan(th) + h)*sin(th)
+      calmin = min
+c      write(*,*)"la =",la," , premin=",premin+allow," , min=",min
+      return
+      end function
+**************************************************************************
+c     //
+c     Calculation of Maximum cut value for tilted layers
+c     //
+      real*4 function calmax(premax,allow,la)
+
+      implicit none
+
+      include 'gen_constants.par'
+      include 'gen_event_info.cmn'
+      include 'gen_units.par'
+      include 'gen_f1tdc.cmn'
+      include 'gen_rocid.cmn'
+      include 'gen_run_info.cmn'
+      include 'hks_data_structures.cmn'
+      include 'hks_scin_parms.cmn'
+      include 'hks_scin_tof.cmn'
+      include 'hks_tracking.cmn'
+      include 'hks_geometry.cmn'
+      include 'hks_bypass_switches.cmn'
+      include 'hks_id_histid.cmn'
+      include 'gen_data_structures.cmn'
+
+      real*4 premax
+      real*4 m
+      real*4 allow
+      real*4 h
+      parameter ( h = 15.0 )    ! Hight of KDC in [cm] (+-h)
+      real*4 max
+      integer*4 la
+      real*4 th                 ! Absolute value of relative angle respect to x-layer
+      
+      m = premax - allow
+      max = 0
+      th  = 0
+      th  = 60.0*3.14159/180.0  
+      max = m/cos(th) - (m*tan(th) - h)*sin(th)
+      calmax = max
+c      write(*,*)"la =",la," , premax=",premax+allow," , max=",max
+      return
+      end function

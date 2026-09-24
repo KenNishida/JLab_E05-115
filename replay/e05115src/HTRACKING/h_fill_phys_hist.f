@@ -41,9 +41,10 @@ c     Write(*,*) '(hfillphys)',hidnphysics,hnphysics,hntracks_fp
          Call HF1(hidstimeatfp,hstime_at_fp(i),1.)
          Call HF1(hidsbeta,hsbeta(i),1.)
          Call HF1(hidstof,hstof(i),1.)
-         Do j=1,hnum_scin_layers
-            Call HF1(hidsdedx(j),hsdedx(i,j),1.)
-         EndDo
+c         hidsdedx is not defined DK
+c         Do j=1,hnum_scin_layers
+c            Call HF1(hidsdedx(j),hsdedx(i,j),1.)
+c         EndDo
          Call HF1(hidsp,hsp(i),1.)
          Call HF1(hidsenergy,hsenergy(i),1.)
          
@@ -68,6 +69,8 @@ c     cherenkov and/or hof counters
          Call HF1(hidsac3npe,hsaer_npe(i,3),1.)
          Call HF1(hidswc1npe,hswat_npe(i,1),1.)
          Call HF1(hidswc2npe,hswat_npe(i,2),1.)
+         Call HF1(hidswc1npekratio,hswat_npe_k_ratio(i,1),1.)
+         Call HF1(hidswc2npekratio,hswat_npe_k_ratio(i,2),1.)
 c        --lucite
          Call HF1(hidslcnpe, hsluc_npe(i,1),1.)
          

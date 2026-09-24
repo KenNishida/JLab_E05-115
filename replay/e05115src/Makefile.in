@@ -1,10 +1,14 @@
-OFFLINE=/work/hallc/hes-hks/gogami/tags/Oct14-2009/e05115src
+OFFLINE=/work/hallc/hks/sanghwa/fortran/e05115/final/e05115_source_Tabun_Final/e05115src
+
 ##
 INC=$(OFFLINE)/INCLUDE
 LIBROOT= $(OFFLINE)/LIB
 MAKEREG= $(OFFLINE)/makereg
-CERNINC= -I/site/cernlib/i386_rhel3/2004/include/cfortran
-CERNLIB= /site/cernlib/i386_rhel3/2004/lib
+#CERNINC= -I/usr/include/cernlib/2006/cfortran/cfortran
+#CERNLIB= /usr/lib/cernlib/2004/lib
+CERNINC= -I/cvmfs/oasis.opensciencegrid.org/jlab/scicomp/sw/el9/cernlib/2023/include/cfortran
+CERNLIB= /cvmfs/oasis.opensciencegrid.org/jlab/scicomp/sw/el9/cernlib/2023/lib
+
 ##
 r_%.f : $(INC)/%.cmn
 	(cp $< . ; $(MAKEREG) $(<F) -o $@ -e /dev/null; rm -f $(<F))

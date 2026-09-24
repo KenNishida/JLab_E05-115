@@ -1,0 +1,51 @@
+# HES simulation parameter
+HBOOK: ../ana/root/ch2_eloss.root
+#HBOOK: ../ana/root/test.root
+#INPUT: ./seed/lambda2344.seed
+SplitterMAP: param/SPL_12May09.map 1.00 
+DMAP: param/ED_3Feb10.map 0.98
+Q1MAP: param/EQ1_23Apr09.map 0.98
+Q2MAP: param/EQ2_23Apr09.map 0.98
+RotAngle(degree): 35.45
+FPAngle(degree): 0.0
+TiltAngle(degree): 6.50
+HES Offset(cm): -5.0
+Shift(cm): 0.0
+Pivot Adjustment(cm): -7.6
+CentralMomentum(GeV): 0.844
+MomentumWidth(GeV): 0.3
+#Theta > 0 
+Theta Central(rad): 0.125
+Theta Width(rad): 0.125
+Phi Central(rad): 1.5708
+Phi Width(rad): 1.5708
+#Raster size is +/- X/Y
+Raster X(cm): 0.0
+Raster Y(cm): 0.0 
+#RasterZ:450.8 [mg/cm2] --> 0.506879[cm]
+#RasterZ:500 [mg/cm2] --> 0.522846[cm]
+#RasterZ:184 [mg/cm2] --> 0.360313[cm]
+#RasterZ:188.1 [mg/cm2] --> 0.106436[cm]
+#RasterZ:56.1 [mg/cm2] --> 0.0250698[cm]
+#RasterZ:112.5 [mg/cm2] --> 0.0522846[cm]
+#RasterZ:154 [mg/cm2] --> 0.0225226[cm]
+Raster Z(cm): 0.506879
+#Target information
+#Material should be 
+#"Vanadium" or "Yttrium" or "Lead" or "Carbon" or "Silicon" or "Polyethylene" 
+#TargetMaterial & Thickness(mg/cm^2):Vacuum 100.
+#TargetMaterial & Thickness(mg/cm^2):Carbon 112.5
+TargetMaterial & Thickness(mg/cm^2):Polyethylene 450.8
+#Event Flag:0 for normal HES event
+#others for only target event
+EventFlag: 0
+PhysicsFlag: 1
+#EDCFlag=0:EDC off,
+#EDCflag=1:EDC on, 
+EDCFlag: 1
+#SSFlag=0:No Collimator
+#SSFlag=1:No Sieve Slit
+#SSFlag=2:Collimator
+SSFlag: 0
+#Particle ID:1 for Electron, ID:2 for Kaon
+ParticleID: 1

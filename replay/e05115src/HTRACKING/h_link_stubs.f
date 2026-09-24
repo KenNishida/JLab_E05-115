@@ -132,6 +132,7 @@
       err=' '
 
       HNTRACKS_FP=0
+
       Do i=1,HNTRACKS_MAX
        HNTRACK_HITS(i,1)=0
       EndDo
@@ -139,16 +140,22 @@
       tempflag=0
       tempflag2=0
       
+      if(ntof.eq.0) return
 *     
+c      print*,hnspace_points_tot 
+
       if(hsingle_stub .eq. 0 ) then       
        
 *     loop over all pairs of space points
        if(hnspace_points_tot.ge.2) then ! return if less than 2 space points
         
 *     search double stub. added by T. Miyoshi
+        
         Do isp1 = 1,hnspace_points_tot
-         linkflag(isp1)=1       ! usually the space point is on.         
+         linkflag(isp1)=1       ! usually the space point is on.
+      
          Do isp2 = 1,hspace_point_hits(isp1,1)
+
           pln = hdc_layer_num( hspace_point_hits(isp1,isp2+2) )
           linkhitnum(isp1,pln) = hspace_point_hits(isp1,isp2+2)
          EndDo          
@@ -170,7 +177,7 @@
             zeronum = zeronum + 1
            EndIf
           EndDo
-          
+         
           if(coinhitnum.eq.6) then
            linkflag(isp1)=0
            tempflag=1
@@ -189,205 +196,224 @@
 *     if linkflag=0, this set is the same as the one before. skip it.
         
         do isp1=1,hnspace_points_tot-1 ! loop over all points
-         if(linkflag(isp1) .ne. 0) then ! add one condition by T.Miyoshi
-          
-*     is this point all ready associated with a track?
-          tryflag=1
-          
-          if(HNTRACKS_FP .gt. 0) then
-           do itrack=1,HNTRACKS_FP
-            if(track_space_points(itrack,1) .gt. 0) then
-             do isp2 = 1,track_space_points(itrack,1)
-              if(track_space_points(itrack,isp2+1) .eq. isp1) then
-               tryflag=0        ! space point all ready in a track
-              endif             ! end test on found point
-             enddo              ! track_space_points loop
-            endif               ! end test of >0  point
-           enddo                ! end loop over tracks
-          endif                 ! hntracks_fp >0
-*     if space point not all ready part of a track then look for matches
-          if( tryflag .eq. 1) then
-           newtrack=1
+         if(precutflag(isp1).ne.0) then
+          if(linkflag(isp1) .ne. 0) then ! add one condition by T.Miyoshi
            
-           do isp2=isp1+1,hnspace_points_tot
-            
-            if(linkflag(isp2).ne.0) then ! add one condition by T.Miyoshi
-             
+*     is this point all ready associated with a track?
+           tryflag=1
+          
+           if(HNTRACKS_FP .gt. 0) then
+            do itrack=1,HNTRACKS_FP
+             if(track_space_points(itrack,1) .gt. 0) then
+              do isp2 = 1,track_space_points(itrack,1)
+               if(track_space_points(itrack,isp2+1) .eq. isp1) then
+                tryflag=0       ! space point all ready in a track
+               endif            ! end test on found point
+              enddo             ! track_space_points loop
+             endif              ! end test of >0  point
+            enddo               ! end loop over tracks
+           endif                ! hntracks_fp >0
+*     if space point not all ready part of a track then look for matches
+           if( tryflag .eq. 1) then
+            newtrack=1
+           
+            do isp2=isp1+1,hnspace_points_tot
+             if(precutflag(isp2).ne.0) then ! add by C.CHEN
+              if(linkflag(isp2).ne.0) then ! add one condition by T.Miyoshi
+               
 *     are these stubs in the same chamber. If so then skip
-             if(h_chamnum(isp1) .ne. h_chamnum(isp2)) then
+               if(h_chamnum(isp1) .ne. h_chamnum(isp2)) then
+                if(prelinkflag(isp1,isp2).ne.0) then
+              
 *     does this stub match
               
 *     since single chamber angular resolution is ~50mr, and the maximum y'
 *     angle is about 30mr, use difference between y AT CHAMBERS, rather than
-*     at focal plane.  (project back to chamber, to take out y' uncertainty).
-              dposx = hbeststub(isp2,1)-hbeststub(isp1,1)
-              y1=hbeststub(isp1,2)+hdc_1_zpos*hbeststub(isp1,4)
-              y2=hbeststub(isp2,2)+hdc_2_zpos*hbeststub(isp2,4)
-              dposy=y2-y1
-              dposxp= hbeststub(isp2,3)-hbeststub(isp1,3)
-              dposyp= hbeststub(isp2,4)-hbeststub(isp1,4)
+*     at focal plane.  (project back to chamber, to take out y' uncertainty)
+                 dposx = hbeststub(isp2,1)-hbeststub(isp1,1)
+                 y1=hbeststub(isp1,2)+hdc_1_zpos*hbeststub(isp1,4)
+                 y2=hbeststub(isp2,2)+hdc_2_zpos*hbeststub(isp2,4)
+                 dposy=y2-y1
+                 dposxp= hbeststub(isp2,3)-hbeststub(isp1,3)
+                 dposyp= hbeststub(isp2,4)-hbeststub(isp1,4)
 c     --- debug histogram
-              Call HF1(hidxtcriterion,dposx,1.)
-              Call HF1(hidytcriterion,dposy,1.)
-              Call HF1(hidxptcriterion,dposxp,1.)
-              Call HF1(hidyptcriterion,dposyp,1.)
+                 Call HF1(hidxtcriterion,dposx,1.)
+                 Call HF1(hidytcriterion,dposy,1.)
+                 Call HF1(hidxptcriterion,dposxp,1.)
+                 Call HF1(hidyptcriterion,dposyp,1.)
 *     Derek added this for track tests...
-              if (abs(dposx).LT.abs(hstubminx)) hstubminx = dposx
-              if (abs(dposy).LT.abs(hstubminy)) hstubminy = dposy
-              if (abs(dposxp).LT.abs(hstubminxp)) hstubminxp = dposxp
-              if (abs(dposyp).LT.abs(hstubminyp)) hstubminyp = dposyp
-              if (hbypass_track_eff_files.eq.0) then
-               if (abs(hstubminx) .gt. hxt_track_criterion) then
-                write(16,*) 'event # ',gen_event_ID_number,
-     $               ' hstubminx = ',hstubminx
-               endif
-               if (abs(hstubminy) .gt. hyt_track_criterion) then
-                write(16,*) 'event # ',gen_event_ID_number,
-     $               '  hstubminy =            ',hstubminy
-               endif
-               if (abs(hstubminxp) .gt. hxpt_track_criterion) then
-                write(16,*) 'event # ',gen_event_ID_number,
-     $               ' hstubminxp =                      ',
-     $               hstubminxp
-               endif
-               if (abs(hstubminyp) .gt. hypt_track_criterion) then
-                write(16,*) 'event # ',gen_event_ID_number,
-     $               ' hstubminyp =                                 ',
-     &               hstubminyp
-               endif
-               close(16)
-              endif
-              
-              if        (abs(dposx) .lt. hxt_track_criterion
-     $             .and. abs(dposy) .lt. hyt_track_criterion
-     $             .and. abs(dposxp).lt. hxpt_track_criterion
-     $             .and. abs(dposyp).lt. hypt_track_criterion) then
-               if(newtrack.eq.1) then
+       
+                 if (abs(dposx).LT.abs(hstubminx)) hstubminx = dposx
+                 if (abs(dposy).LT.abs(hstubminy)) hstubminy = dposy
+                 if (abs(dposxp).LT.abs(hstubminxp)) hstubminxp = dposxp
+                 if (abs(dposyp).LT.abs(hstubminyp)) hstubminyp = dposyp
+
+                 if (hbypass_track_eff_files.eq.0) then
+                  if (abs(hstubminx) .gt. hxt_track_criterion) then
+                   write(16,*) 'event # ',gen_event_ID_number,
+     $                  ' hstubminx = ',hstubminx
+                  endif
+                  if (abs(hstubminy) .gt. hyt_track_criterion) then
+                   write(16,*) 'event # ',gen_event_ID_number,
+     $                  '  hstubminy =            ',hstubminy
+                  endif
+                  if (abs(hstubminxp) .gt. hxpt_track_criterion) then
+                   write(16,*) 'event # ',gen_event_ID_number,
+     $                  ' hstubminxp =                      ',
+     $                  hstubminxp
+                  endif
+                  if (abs(hstubminyp) .gt. hypt_track_criterion) then
+                   write(16,*) 'event # ',gen_event_ID_number,
+     $                  ' hstubminyp =                                 ',
+     &                  hstubminyp
+                  endif
+                  close(16)
+                 endif
+                 
+                 if        (abs(dposx) .lt. hxt_track_criterion
+     $                .and. abs(dposy) .lt. hyt_track_criterion
+     $                .and. abs(dposxp).lt. hxpt_track_criterion
+     $                .and. abs(dposyp).lt. hypt_track_criterion) then
+c     print*,"newtrack=",newtrack,tryflag
+
+                  if(newtrack.eq.1) then
 *     Derek add this next line
-                hstubtest=1
+                   hstubtest=1
 *     make a new track
 *     track<=NNTRACKS_MAX
 *     
-                if(HNTRACKS_FP.lt.HNTRACKS_MAX) then
-                 
-                 HNTRACKS_FP=HNTRACKS_FP+1 ! increment the number of tracks
-                 sptracks=1     ! one track with this seed
-                 stub_tracks(1)=HNTRACKS_FP
-                 track_space_points(HNTRACKS_FP,1)=2
-                 track_space_points(HNTRACKS_FP,2)=isp1
-                 track_space_points(HNTRACKS_FP,3)=isp2
-                 hx_sp1(hntracks_fp)=hbeststub(isp1,1)
-                 hx_sp2(hntracks_fp)=hbeststub(isp2,1)
-                 hy_sp1(hntracks_fp)=hbeststub(isp1,2)
-                 hy_sp2(hntracks_fp)=hbeststub(isp2,2)
-                 hxp_sp1(hntracks_fp)=hbeststub(isp1,3)
-                 hxp_sp2(hntracks_fp)=hbeststub(isp2,3)
-                 newtrack=0     ! make no more track in this loop
-                endif           ! end test on too many tracks                
-               else             ! newtrack=0
+                   if(HNTRACKS_FP.lt.HNTRACKS_MAX) then
+                    
+                    HNTRACKS_FP=HNTRACKS_FP+1 ! increment the number of tracks
+                    sptracks=1  ! one track with this seed
+                    stub_tracks(1)=HNTRACKS_FP
+                    track_space_points(HNTRACKS_FP,1)=2
+                    track_space_points(HNTRACKS_FP,2)=isp1
+                    track_space_points(HNTRACKS_FP,3)=isp2
+                    hx_sp1(hntracks_fp)=hbeststub(isp1,1)
+                    hx_sp2(hntracks_fp)=hbeststub(isp2,1)
+                    hy_sp1(hntracks_fp)=hbeststub(isp1,2)
+                    hy_sp2(hntracks_fp)=hbeststub(isp2,2)
+                    hxp_sp1(hntracks_fp)=hbeststub(isp1,3)
+                    hxp_sp2(hntracks_fp)=hbeststub(isp2,3)
+                    newtrack=0  ! make no more track in this loop
+
+                   endif        ! end test on too many tracks                
+                  else          ! newtrack=0
 *     check if there is another space point in same chamber
-                itrack = 0
-                do while (itrack.lt.sptracks)
-                 itrack = itrack+1
-                 track = stub_tracks(itrack)
-                 spoint = 0
-                 duppoint = 0
-                 do isp=1,track_space_points(track,1)
-                  if(h_chamnum(isp2).eq.
-     &                 h_chamnum(track_space_points(track,isp+1))) then
-                   spoint = isp
-                  endif
-                  if(isp2.eq.track_space_points(track,isp+1)) then
-                   duppoint = 1
-                  endif                   
-                 enddo          ! end loop over sp in tracks with isp1
-                 
+c     print*,"newtrack",newtrack,hntracks_fp,tryflag,isp1,isp2
+                   itrack = 0
+                   do while (itrack.lt.sptracks)
+                    itrack = itrack+1
+                    track = stub_tracks(itrack)
+                    spoint = 0
+                    duppoint = 0
+                    do isp=1,track_space_points(track,1)
+                     if(h_chamnum(isp2).eq.
+     &                    h_chamnum(track_space_points(track,isp+1))) then
+                      spoint = isp
+                     endif
+                     if(isp2.eq.track_space_points(track,isp+1)) then
+                      duppoint = 1
+                     endif                   
+                    enddo       ! end loop over sp in tracks with isp1
+                    
 *     if there is no other space point in this chamber
 *     add this space point to current track(2)
                  
-                 if(duppoint.eq.0) then
-                  if(spoint.eq.0) then
-                   
-                   spindex = track_space_points(track,1) + 1
-                   track_space_points(track,1) = spindex
-                   track_space_points(track,spindex+1) = isp2
-                   
+                    if(duppoint.eq.0) then
+                     if(spoint.eq.0) then
+                      
+                      spindex = track_space_points(track,1) + 1
+                      track_space_points(track,1) = spindex
+                      track_space_points(track,spindex+1) = isp2
+                      
 *     if there is another point in the same chamber in this track
 *     create a new track with all the same space points except spoint
                    
-                  else          ! spoint > 0
+                     else       ! spoint > 0
                    
 *     track =< HNTRACKS_MAX     
 *     check if track_space_points is completely the same
-                   trackskip=0
-                   isp3=hntracks_fp
-                   Do while(isp3.gt.1)
-                    
-                    if(track_space_points(track,1).eq.
-     &                   track_space_points(isp3,1)) then
-                     
-                     newlinkflag=0
-                     
-                     do isp=1,track_space_points(track,1)
-                      
-                      if(isp.ne.spoint) then
-                       if(track_space_points(isp3,isp+1).eq.
-     &                      track_space_points(track,isp+1)) then
-                        newlinkflag=newlinkflag+1
-                       endif
+                      trackskip=0
+                      isp3=hntracks_fp
+                      Do while(isp3.gt.1)
                        
-                      elseif(isp.eq.spoint) then
-                       if(track_space_points(isp3,isp+1).eq.isp2) then
-                        newlinkflag=newlinkflag+1
+                       if(track_space_points(track,1).eq.
+     &                      track_space_points(isp3,1)) then
+                        
+                        newlinkflag=0
+                        
+                        do isp=1,track_space_points(track,1)
+                         
+                         if(isp.ne.spoint) then
+                          if(track_space_points(isp3,isp+1).eq.
+     &                         track_space_points(track,isp+1)) then
+                           newlinkflag=newlinkflag+1
+                          endif
+                          
+                         elseif(isp.eq.spoint) then
+                          if(track_space_points(isp3,isp+1).eq.isp2) then
+                           newlinkflag=newlinkflag+1
+                          endif
+                         endif  ! end check for dup on copy
+                         
+                        enddo   ! track_space_point loop
+                        
+                       endIf    ! end n of track sp is the same
+                       
+                       if(newlinkflag.eq.2) then
+                        trackskip=1
                        endif
-                      endif     ! end check for dup on copy
+                       isp3=isp3-1
+                      EndDo     ! hntracks_fp loop
                       
-                     enddo      ! track_space_point loop
-                     
-                    endIf       ! end n of track sp is the same
-                    
-                    if(newlinkflag.eq.2) then
-                     trackskip=1
-                    endif
-                    isp3=isp3-1
-                   EndDo        ! hntracks_fp loop
-                   
 *     trackskip = 1 : this track can be skipped. 
                    
-                   if(trackskip.ne.1) then ! skip double track
-                    
-                    if(HNTRACKS_FP.lt.HNTRACKS_MAX) then
-                     
-                     HNTRACKS_FP=HNTRACKS_FP+1 ! increment the number of tracks
-                     sptracks= sptracks+1 ! one track with this seed
-                     stub_tracks(sptracks) = HNTRACKS_FP
-                     track_space_points(HNTRACKS_FP,1)
-     $                    =track_space_points(track,1)
-                     do isp=1,track_space_points(track,1)
+                      if(trackskip.ne.1) then ! skip double track
+                       
+                       if(HNTRACKS_FP.lt.HNTRACKS_MAX) then
+                        
+                        HNTRACKS_FP=HNTRACKS_FP+1 ! increment the number of tracks
+
+                        sptracks= sptracks+1 ! one track with this seed
+                        stub_tracks(sptracks) = HNTRACKS_FP
+                        track_space_points(HNTRACKS_FP,1)
+     $                       =track_space_points(track,1)
+                        do isp=1,track_space_points(track,1)
+                         
+                         if(isp.ne.spoint) then
+                          track_space_points(HNTRACKS_FP,isp+1)=
+     &                         track_space_points(track,isp+1)
+                         elseif(isp.eq.spoint) then
+                          track_space_points(HNTRACKS_FP,isp+1)= isp2
+                         endif  ! end check for dup on copy
+                         
+                        enddo   ! end copy of track                     
+                       endif    ! end if on too many tracks
+                      endif     ! end of track skip condition 
                       
-                      if(isp.ne.spoint) then
-                       track_space_points(HNTRACKS_FP,isp+1)=
-     &                      track_space_points(track,isp+1)
-                      elseif(isp.eq.spoint) then
-                       track_space_points(HNTRACKS_FP,isp+1)= isp2
-                      endif     ! end check for dup on copy
-                      
-                     enddo      ! end copy of track                     
-                    endif       ! end if on too many tracks
-                   endif        ! end of track skip condition 
-                  endif         ! end if on same chamber
-                 endif          ! end if on  duplicate point
-                enddo           ! end do while over tracks with isp1
-               endif
-              endif
-             endif              ! end test on same chamber
-            endif               ! end of linkflag(isp2).ne.0 condition
-           enddo                ! end loop over new space points isp2
-          endif                 ! end test on tryflag
-         endif                  ! end of linkflag(isp1).ne.0 condition
+                     endif      ! end if on same chamber
+                    endif       ! end if on  duplicate point
+                   enddo        ! end do while over tracks with isp1
+                  endif
+                 endif
+                 
+                endif
+                
+               endif            ! end test on same chamber
+               
+              endif             ! end of linkflag(isp2).ne.0 condition
+             endif              ! end precutflag          
+            enddo               ! end loop over new space points isp2
+           endif                ! end test on tryflag
+    
+          endif                 ! end of linkflag(isp1).ne.0 condition
+         endif                  ! end precutflag
+c     print*,hntracks_fp
         enddo                   ! end outer loop over space points isp1
        endif                    ! end if on space points > 2
-       
+c     print*,"hntracks_fp" ,hntracks_fp    
       else                      ! if hsingle_stub .ne. 0
 *     
 *     when hsingle_stub is set, make each space point a track
@@ -404,10 +430,14 @@ c     --- debug histogram
        
       endif                     ! end test on ssingle_stub
 
+
+
+
+
 *     
 *     now list all hits on a track
 *     
-      if(HNTRACKS_FP.gt.0)   then
+      if(HNTRACKS_FP.gt.0)   then 
        do itrack = 1,HNTRACKS_FP ! loop over all tracks
         HNTRACK_HITS(itrack,1) = 0
         do isp1 = 1,track_space_points(itrack,1)
@@ -417,7 +447,13 @@ c     --- debug histogram
           if(HNTRACK_HITS(itrack,1).lt.HNTRACKHITS_MAX) then 
            HNTRACK_HITS(itrack,1) = HNTRACK_HITS(itrack,1)+1
            HNTRACK_HITS(itrack,HNTRACK_HITS(itrack,1)+1) =
-     &          hspace_point_hits(spindex,ihit+2)        
+     &          hspace_point_hits(spindex,ihit+2)       
+
+c add DD 2010/7/11
+           hdc_wire_coord_sp(itrack,
+     &          hntrack_hits(itrack,hntrack_hits(itrack,1)+1))=
+     &          hdc_wire_coord_sp(spindex,hspace_point_hits(spindex,ihit+2))
+c add DD 2010/7/11
           endif                 ! end test on too many hits
          enddo                  ! end loop over space point hits
         enddo                   ! end loop over space points
@@ -425,10 +461,11 @@ c     --- debug histogram
        
       endif                     ! end of hntracks_fp > 0
       
+      
       if(hdebuglinkstubs.ne.0) then
        call h_print_links
       endif
-      
+c      print*,"final hntracks_fp",hntracks_fp
       return
       end
 *********

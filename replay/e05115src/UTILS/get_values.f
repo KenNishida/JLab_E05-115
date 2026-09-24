@@ -82,12 +82,12 @@ c
               this(last_hex:)=' ' 
               CALL squeeze(this,i)
               IF(this.eq.' ') goto 2222
-              READ(this(1:i),'(z)',err=2222) v(j)
+              READ(this(1:i),'(Z8)',err=2222) v(j)
             elseif(oct) then
               this(last_oct:)=' ' 
               CALL squeeze(this,i)
               IF(this.eq.' ') goto 2222
-              READ(this(1:i),'(o)',err=2222) v(j)
+              READ(this(1:i),'(O4)',err=2222) v(j)
             elseif(bin) then
               this(last_binary:)=' '
               CALL squeeze(this,i)
@@ -105,7 +105,8 @@ c
             else
               CALL squeeze(this,i)
               IF(this.eq.' ') goto 2222
-              READ(this(1:i),'(i)',err=2222) v(j)
+c              READ(this(1:i),'(i)',err=2222) v(j)
+              READ(this(1:i),*,err=2222) v(j)
             endif
 c
 	    this= line(divider+1:)	 

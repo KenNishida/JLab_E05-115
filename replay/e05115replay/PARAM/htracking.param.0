@@ -3,10 +3,13 @@
 ; hmin_combos(i) minimum number of pairs in each space point ( one per chamber)
 ; hspace_point_criterion(i) minimum separation of distinct space points
 ;
-	hmax_pr_hits = 40, 40
+;	hmax_pr_hits = 40, 40
+	hmax_pr_hits = 100, 100
+;        hmin_hit =      6, 6
         hmin_hit =      5, 5
         hmin_combos =   6, 6
-        hspace_point_criterion = 4, 4
+;        hspace_point_criterion = 4, 4
+        hspace_point_criterion = 2, 2
 ;
 ; The following four criteria are applied to the stub fit results at the
 ; focal plane position to link stubs to tracks
@@ -14,10 +17,11 @@
 ; hyt_track_criterion
 ; hxpt_track_criterion
 ; hypt_track_criterion
-       hxt_track_criterion  = 50.
-       hyt_track_criterion  = 20.
-       hxpt_track_criterion = 0.5
+       hxt_track_criterion  = 45.
+       hyt_track_criterion  = 25.
+       hxpt_track_criterion = 5.0
        hypt_track_criterion = 0.5
+
 ; hsingle_stub            If .ne. 0 make a track of all single stubs
   hsingle_stub = 0
 ; turn on/off small angle approximation to left/right decision for y

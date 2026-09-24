@@ -103,7 +103,8 @@
       integer      num_events_skipped
       integer      i,since_cnt,lastdump
       integer      time
-      external     time
+c      external     time
+      intrinsic    time
       integer      localy
       external     localy
       character*80 g_config_environmental_var
@@ -350,7 +351,7 @@ c         write(*,*)'evtype=',gen_event_type,total_event_count
             write(6,*) '  target number  =',abs(ntarg)
           endif
           
-          if (iand(craw(2),X'FFFF').EQ.X'10CC') then                    !  Physics event
+          if (iand(craw(2),INT(Z'FFFF')).EQ.INT(Z'10CC')) then                    !  Physics event
 
             if (gen_event_type.eq.0) then                               !  scaler event.
 
@@ -634,6 +635,7 @@ c     Print out the statistics report one last time...
 
 c     Report TS Latched Trigger Pattern Statistic
  9898 FORMAT(a12,i10,1x,'(',f4.1,'%)')
+ 9899 FORMAT(a12,i10,1x)
       write(*,*) ' '
       write(*,*) 'TS Latched Trigger Stats (might not add to 100%):'
       write(*,9898) 'HKS:',gen_event_ts_counter(1),100.*gen_event_ts_counter(1)/physics_events
@@ -645,6 +647,10 @@ c     Report TS Latched Trigger Pattern Statistic
       write(*,*) '-----------------------------'
       write(*,9898) 'FFBoff:',gen_event_ts_counter(11),100.*gen_event_ts_counter(11)/physics_events
       write(*,9898) 'DitherON:',gen_event_ts_counter(12),100.*gen_event_ts_counter(12)/physics_events
+      write(*,*) '-----------------------------'
+      write(*,9899) 'HKS sp_tot:',hks_event_counter(1)
+      write(*,9899) 'HKS track:',hks_event_counter(2)
+      write(*,9899) 'HKS physics:',hks_event_counter(3)
       write(*,*) '----------------------------------------------------------'
 
       print *

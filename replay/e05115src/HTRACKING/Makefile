@@ -38,7 +38,9 @@ H_OBJS=h_aero.o h_analyze_pedestal.o \
        h_tof.o h_track.o h_track_fit.o \
        h_trans_dc.o h_trans_dc_group.o h_trans_misc.o h_trans_scin.o \
        h_wire_center_calc.o h_water.o h_lucite.o \
-       h_fill_lucite_hist.o h_fill_lucite_raw_hist.o h_prt_raw_lucite.o
+       h_fill_lucite_hist.o h_fill_lucite_raw_hist.o h_prt_raw_lucite.o\
+       h_tof_pre.o h_track_selection_pre.o h_select_good_combination.o \
+       h_dc_tofcut.o h_dc_eff_count.o h_dc_eff_out.o
 
 ALLOBJS= $(R_OBJS) $(H_OBJS)
 
@@ -46,10 +48,11 @@ LIB= libhtracking.a
 
 #
 
-F77=/usr/bin/g77
+F77=/usr/bin/gfortran
 
-FFLAGS= -m32 -g -ffixed-line-length-132 
+FFLAGS= -g -ffixed-line-length-132 -fallow-argument-mismatch
 #FFLAGS= -m32 -g -ffixed-line-length-132 -fbounds-check
+#FFLAGS= -g -ffixed-line-length-132 -fbounds-check
 
 INC=-I../INCLUDE/
 

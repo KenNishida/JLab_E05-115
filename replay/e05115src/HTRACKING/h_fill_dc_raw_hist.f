@@ -47,6 +47,7 @@
       character*(*) err
       real*4  histval
       integer*4 layer,ihit,la,wi,sl,t1
+      integer*4 layerhit(12)
 *     
       include 'hks_data_structures.cmn'
       include 'hks_tracking.cmn'
@@ -69,6 +70,10 @@
 *     Is histogramming flag set
 *     Make sure there is at least 1 hit
       if(HDC_RAW_TOT_HITS .le. 0 ) Return
+      
+      do layer=1,hmax_num_dc_layers
+        layerhit(layer)=0
+      enddo
       
 *     Loop over all hits
       do ihit=1,HDC_RAW_TOT_HITS 
@@ -100,8 +105,13 @@
             EndIf
             Call HF1(hiddcrawtdc(sl),
      &           float(hdc_raw_tdc_sub_trig(ihit)),1.)
-         endif                  ! end test on histogram block turned on.         
+         endif                  ! end test on histogram block turned on.
+         layerhit(la)=layerhit(la)+1         
       EndDo                     ! end loop over hits
+      
+      do layer=1,hmax_num_dc_layers
+         Call HF1(hiddcrawlayerhit(layer),float(layerhit(layer)),1.)
+      enddo
       
       RETURN
       END

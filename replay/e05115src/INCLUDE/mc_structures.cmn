@@ -35,11 +35,11 @@
 *-                   each of 4 bytes unique!
       PARAMETER (mc_TEST_C4= 'gMc_')             !program pkg
       PARAMETER (mc_TEST_R4= 2.24)               !version
-      PARAMETER (mc_TEST_I4= '23fb1994'x)        !date
+      PARAMETER (mc_TEST_I4= INT(Z'23fb1994'))        !date
 *-
 *- identifing status and ROC integer
       INTEGER mc_status_and_ROC
-      PARAMETER (mc_status_and_ROC= 'FFFF'x)
+      PARAMETER (mc_status_and_ROC= INT(Z'FFFF'))
 *-
 *- status of all subsequent Monte Carlo info.
       LOGICAL mc_READY

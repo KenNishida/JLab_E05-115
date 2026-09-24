@@ -1,0 +1,370 @@
+      Subroutine e_link_tracks(ABORT,err)
+*--------------------------------------------------------
+*     link tracking and hodoscope data.
+*     $Log: e_link_tracks.f,v $
+*     Revision 1.1.1.1  2009/06/23 13:55:45  kawama
+*
+*     e05115 src repository for software development
+*
+*     Revision 1.3  2005/07/06 02:31:51  sumihama
+*     Mod. hist
+*
+*     Revision 1.2  2005/07/03 11:13:20  sumihama
+*     Bug fix and time at ehodo<-FP
+*
+*     Revision 1.1.1.1  2005/05/14 21:44:37  miyoshi
+*
+*
+*     Revision 1.8  2005/04/19 17:47:27  miyoshi
+*     delete unused variables
+*
+*     Revision 1.7  2005/04/08 18:52:21  miyoshi
+*     fix bug
+*
+*     Revision 1.6  2005/02/11 23:01:12  sumihama
+*     Mod. e-ntuple, Mod. etracking
+*
+*     Revision 1.5  2005/02/10 19:09:42  miyoshi
+*     fix bug and select event with track
+*
+*     Revision 1.4  2005/01/24 22:36:17  miyoshi
+*     delete initialization part
+*
+*     Revision 1.3  2005/01/24 19:57:07  miyoshi
+*     correct bugs
+*
+*     Revision 1.2  2005/01/17 15:21:08  sumihama
+*     Bug fix in e_link
+*
+*     Revision 1.1.1.1  2004/08/30 21:21:41  miyoshi
+*     new dir
+*     
+*     03/24/04 Miyoshi 
+*     
+*     Input Banks    
+*     Output Banks  
+*--------------------------------------------------------
+      IMPLICIT NONE
+      SAVE
+*     
+      Character*50 here
+      Parameter (here='e_link_tracks')
+*     
+      Logical ABORT
+      Character*(*) err
+      
+      Include 'hes_data_structures.cmn'
+      Include 'hes_scin_parms.cmn'
+      Include 'gen_event_info.cmn'
+      Include 'hes_id_histid.cmn'
+      Include 'gen_constants.par'
+      Include 'hes_statistics.cmn'
+      Include 'hes_tracking.cmn'
+      Integer*4 i,j,k,ihit,nhit,hit,eg
+      Integer*4 la1,la2,co1,co2,nla1,nla2
+      Integer*4 hit1,hit2,add_hits,seva_hodon_on(3)
+      Integer*4 new_nhit,BROJI1,BROJI2
+      Real*4 t1,t2,z1,z2,sumt1,sumt2
+      Real*4 x1_min,x1_max,x2_min,x2_max
+      Real*4 z1_min,z1_max,z2_min,z2_max
+      Real*4 x_la2,y_la2,x_la,y_la,temp_fpt,temp_fpt_1,fpt2
+      Real*4 time,ph,slope,fpt,eco1,eco2,fpt1,sum_time_offset
+*      Real*4 aa1,aa2,aa3,bb1,bb2,bb3,cc1,cc2,cc3,dd1,dd2,dd3
+      
+      ABORT= .FALSE.
+      err= ' '
+      
+      if(escin_tot_hits .le. 0 .or. entracks_fp .le. 0) Return
+
+c     Write(*,*) 'ev,etot=',gen_event_ID_number,escin_tot_hits
+      
+c     --- see hes_scin_parms.cmn and ehodo.param.
+      if(etrk_time_gate .eq. 0) etrk_time_gate = 10.
+
+      Do i=1,entracks_fp
+         etrk_fptime(i) = -1000
+         Do j=1,5
+            etrk_hodo_hit(i,j) = 0
+         EndDo
+      EndDo
+
+c      Write(*,*) '(elink)ev=',gen_event_ID_number
+      Do i=1,entracks_fp
+         slope = sqrt(1+exp_fp(i)*exp_fp(i)+eyp_fp(i)*eyp_fp(i))
+         if (esevaflag.eq.0) then
+            Do j=1,escin_tot_hits
+               la1 = escin_layer_num(j)
+c               write(*,*)"la1=",la1
+               co1 = escin_counter_num(j)
+               if((la1.eq.1)) then
+cDK               if((la1.eq.1).or.(la1.eq.2)) then
+                  t1 = escin_mean_time(j)
+                  if( mod(co1,2).eq.1 ) then
+                     x_la = ex_fp(i) 
+     &                    + exp_fp(i) * ( escin_zpos(la1) +1.5 ) ! EHODO downstream side
+                     y_la=ey_fp(i)
+     &                    + eyp_fp(i) * ( escin_zpos(la1) +1.5 )
+                     fpt = t1  -  ( escin_zpos(la1) +1.5 )
+     &                    * slope / speed_of_light
+                  else
+                     x_la = ex_fp(i) 
+     &                    + exp_fp(i) * ( escin_zpos(la1) -1.5 ) ! EHODO upstream side
+                     y_la=ey_fp(i)
+     &                    + eyp_fp(i) * ( escin_zpos(la1) -1.5 )
+                     fpt = t1  -  ( escin_zpos(la1) -1.5 )
+     &                    * slope / speed_of_light
+                  endif
+c                  x_la=ex_fp(i)+exp_fp(i)*escin_zpos(la1)
+c                  y_la=ey_fp(i)+eyp_fp(i)*escin_zpos(la1)
+c                  fpt = t1  -  escin_zpos(la1)
+c     &                    * slope / speed_of_light
+                  x1_min = escin_xcenter(la1,co1)-0.5*escin_width-escin_xslop
+                  x1_max = escin_xcenter(la1,co1)+0.5*escin_width+escin_xslop
+c                 --- fill debug histogram
+                  Call HF2(eidxla(la1),float(co1),x_la,1.)
+                  Call HF1(eidxla1co(co1),x_la,1.)
+c                 --- ehodo position cut 
+                  if( x_la .ge. x1_min .and.
+     &               x_la .le. x1_max .and.
+     &               y_la .ge. -0.5*escin_height-escin_yslop .and.
+     &               y_la .le. 0.5*escin_height+escin_yslop) then
+               
+                     if(etrk_hodo_hit(i,1) .eq. 0) then
+                        etrk_hodo_hit(i,1) = 1
+                        etrk_hodo_hit(i,2) = j
+                        etrk_fptime(i) = t1
+                     Else             ! hodohit>0
+c                        write(*,*) "time gate",la1,t1,etrk_fptime(i)  
+                        if(abs(t1-etrk_fptime(i)) .le. etrk_time_gate .and. 
+     &                     etrk_hodo_hit(i,1) .lt. 4) then
+                              etrk_hodo_hit(i,1) = etrk_hodo_hit(i,1) + 1
+                              etrk_hodo_hit(i,etrk_hodo_hit(i,1)+1) = j
+                              fpt = 0
+                              Do k=1,etrk_hodo_hit(i,1)
+c                                la1 = escin_layer_num(etrk_hodo_hit(i,1+k))
+c                                fpt = fpt + t1 - escin_zpos(la1) 
+c     &                          * slope /speed_of_light 
+                                 fpt = fpt + t1
+                              EndDo
+                              fpt = fpt / etrk_hodo_hit(i,1)
+                              etrk_fptime(i) = fpt
+                        EndIf         ! timing cut
+                     EndIF            ! hodohit>0
+                  EndIf               ! track in scin.
+               endif !la1=1 or 2
+            EndDo                  ! scin loop
+         else   !seva's flag not eq 0
+            fpt2=0
+            if (on_track_hits(i,1).gt.0) then
+               do k=2,on_track_hits(i,1)+1
+                  if (on_track_hits(i,k).gt.0) then
+                     j=on_track_hits(i,k)
+                     la1 = escin_layer_num(j)
+                     co1 = escin_counter_num(j)
+                     if((la1.eq.1).or.(la1.eq.2)) then
+                        t1 = escin_mean_time(j)
+                        if( mod(co1,2).eq.1 ) then
+                           x_la=ex_fp(i)+exp_fp(i)
+     &                          * ( escin_zpos(la1) +1.5 ) ! EHODO downstream side
+                           y_la=ey_fp(i)+eyp_fp(i)
+     &                          * ( escin_zpos(la1) +1.5 ) 
+                           fpt = t1 - ( escin_zpos(la1) +1.5 ) 
+     &                          * slope / speed_of_light
+                        else
+                           x_la=ex_fp(i)+exp_fp(i)
+     &                          * ( escin_zpos(la1) -1.5 ) ! EHODO downstream side
+                           y_la=ey_fp(i)+eyp_fp(i)
+     &                          * ( escin_zpos(la1) -1.5 ) 
+                           fpt = t1 - ( escin_zpos(la1) -1.5 ) 
+     &                          * slope / speed_of_light
+                        endif
+c                        x_la=ex_fp(i)+exp_fp(i)*escin_zpos(la1)
+c                        y_la=ey_fp(i)+eyp_fp(i)*escin_zpos(la1)
+c                        fpt = t1 - escin_zpos(la1) * slope / speed_of_light
+                        x1_min = escin_xcenter(la1,co1)-0.5*escin_width-escin_xslop
+                        x1_max = escin_xcenter(la1,co1)+0.5*escin_width+escin_xslop
+c                       --- fill debug histogram
+                        Call HF2(eidxla(la1),float(co1),x_la,1.)
+                        Call HF1(eidxla1co(co1),x_la,1.)
+c                       --- ehodo position cut 
+                        if( x_la .ge. x1_min .and.
+     &                  x_la .le. x1_max .and.
+     &                  y_la .ge. -0.5*escin_height-escin_yslop .and.
+     &                  y_la .le. 0.5*escin_height+escin_yslop) then
+                           if(etrk_hodo_hit(i,1) .eq. 0) then
+                              etrk_hodo_hit(i,1) = 1
+                              etrk_hodo_hit(i,2) = j
+                              etrk_fptime(i) = fpt
+                           Else             ! hodohit>0
+                              if(abs(fpt-etrk_fptime(i)) .le. etrk_time_gate .and. 
+     &                        etrk_hodo_hit(i,1) .lt. 4) then
+                                 etrk_hodo_hit(i,1) = etrk_hodo_hit(i,1) + 1
+                                 etrk_hodo_hit(i,etrk_hodo_hit(i,1)+1) = j
+                                 fpt2 = fpt2 + fpt
+                                 etrk_fptime(i) = fpt2/etrk_hodo_hit(i,1)
+                              EndIf         ! timing cut
+                           EndIF            ! hodohit>0
+                        EndIf               ! track in scin.
+                     endif !la1=1 or 2
+                  endif
+               EndDo                  ! on_track_hits loop
+            endif
+         
+            fpt1=etrk_fptime(i)
+c           write(*,*) 'FOCALCOMP ORIG TIME',i, etrk_fptime(i),fpt1
+cccccccccccccccccccccc SEVA - this part here is not needed any more, because i check hodoscopes on the track allready in e_track_fit.f to get proper drift time
+c here i just need to calculate focal plane time for each track as an average of the ehodo hits on track that are memorized in  on_track_hits(i,k)
+c until i double check it i'll leave it
+C           etrk_fptime(i) = -1000
+            Do j=1,5
+               etrk_hodo_hit(i,j) = 0
+            EndDo
+            seva_hodon_on(1)=0
+            seva_hodon_on(2)=0
+            seva_hodon_on(3)=0
+            temp_fpt=0
+
+            if (on_track_hits(i,1).gt.0) then
+               do k=2,on_track_hits(i,1)+1
+                  if (on_track_hits(i,k).gt.0) then
+                     j=on_track_hits(i,k)
+                     la1 = escin_layer_num(j)
+                     co1 = escin_counter_num(j)
+                     if((la1.eq.1).or.(la1.eq.2)) then
+                        t1 = escin_mean_time(j)
+                        
+                        if( mod(co1,2).eq.1 ) then
+                           x_la=ex_fp(i)+exp_fp(i)
+     &                          * ( escin_zpos(la1) +1.5 ) ! EHODO downstrem side
+                           y_la=ey_fp(i)+eyp_fp(i)
+     &                          * ( escin_zpos(la1) +1.5 ) 
+                           fpt = t1 - ( escin_zpos(la1) +1.5)
+     &                          * slope / speed_of_light
+                        else
+                           x_la=ex_fp(i)+exp_fp(i)
+     &                          * ( escin_zpos(la1) -1.5 ) ! EHODO upstrem side
+                           y_la=ey_fp(i)+eyp_fp(i)
+     &                          * ( escin_zpos(la1) -1.5 ) 
+                           fpt = t1 - ( escin_zpos(la1) -1.5)
+     &                          * slope / speed_of_light
+                        endif
+c                        x_la=ex_fp(i)+exp_fp(i)*escin_zpos(la1)
+c                        y_la=ey_fp(i)+eyp_fp(i)*escin_zpos(la1)
+c                        fpt = t1 - escin_zpos(la1) * slope / speed_of_light
+                        x1_min = escin_xcenter(la1,co1)-0.5*escin_xslop+0.5
+                        x1_max = escin_xcenter(la1,co1)+0.5*escin_xslop-0.5
+c                       --- fill debug histogram
+c                       Call HF2(eidxla(la1),float(co1),x_la,1.)
+c                       Call HF1(eidxla1co(co1),x_la,1.)
+            
+                        if( x_la .ge. x1_min .and.
+     &                  x_la .le. x1_max .and.
+     &                  y_la .ge. -0.5*escin_height-escin_yslop .and.
+     &                  y_la .le. 0.5*escin_height+escin_yslop) then
+                           if (seva_hodon_on(la1).eq.0) then
+   
+                              if(etrk_hodo_hit(i,1) .eq. 0) then
+                                 etrk_hodo_hit(i,1) = 1
+                                 etrk_hodo_hit(i,2) = j
+                                 temp_fpt_1= fpt
+                                 temp_fpt=fpt
+                                 seva_hodon_on(la1)=1
+                              Else             ! hodohit>0
+                                 if(abs(fpt-temp_fpt_1) .le. etrk_time_gate .and. 
+     &                           etrk_hodo_hit(i,1) .lt. 4) then
+                                    seva_hodon_on(la1)=1
+                                    etrk_hodo_hit(i,1) = etrk_hodo_hit(i,1) + 1
+                                    etrk_hodo_hit(i,etrk_hodo_hit(i,1)+1) = j
+                                    temp_fpt=temp_fpt+fpt
+                                    temp_fpt_1=temp_fpt/etrk_hodo_hit(i,1)
+                                 EndIf         ! timing cut
+                              EndIF            ! hodohit>0
+                           endif
+                        EndIf               ! track in scin.
+                     endif
+                  endif
+               EndDo                  ! on_track_hits loop
+
+            fpt=0
+
+               do k=2,on_track_hits(i,1)+1
+                  if (on_track_hits(i,k).gt.0) then
+                     j=on_track_hits(i,k)
+                     la1 = escin_layer_num(j)
+                     co1 = escin_counter_num(j)
+                     if((la1.eq.1).or.(la1.eq.2)) then
+                        t1 = escin_mean_time(j)
+                        if( mod(co1,2).eq.1 ) then
+                           x_la=ex_fp(i)+exp_fp(i)
+     &                          * ( escin_zpos(la1) +1.5 ) ! EHODO downstream side
+                           y_la=ey_fp(i)+eyp_fp(i)
+     &                          * ( escin_zpos(la1) +1.5 )
+                           fpt = t1 - ( escin_zpos(la1) +1.5 )
+     &                          * slope / speed_of_light
+                        else
+                           x_la=ex_fp(i)+exp_fp(i)
+     &                          * ( escin_zpos(la1) -1.5 ) ! EHODO upstream side
+                           y_la=ey_fp(i)+eyp_fp(i)
+     &                          * ( escin_zpos(la1) -1.5 )
+                           fpt = t1 - ( escin_zpos(la1) -1.5 )
+     &                          * slope / speed_of_light
+                        endif
+c                        x_la=ex_fp(i)+exp_fp(i)*escin_zpos(la1)
+c                        y_la=ey_fp(i)+eyp_fp(i)*escin_zpos(la1)
+c                        fpt = t1 - escin_zpos(la1) * slope / speed_of_light
+                        x1_min = escin_xcenter(la1,co1)-0.5*escin_width-escin_xslop
+                        x1_max = escin_xcenter(la1,co1)+0.5*escin_width+escin_xslop
+c                       x1_min = escin_xcenter(la1,co1)-0.5*escin_width-escin_xslop/6
+c                       x1_max = escin_xcenter(la1,co1)+0.5*escin_width+escin_xslop/6
+c                       Write(*,*) '(elink) i,j=',i,j,' l,c=',la1,co1,
+c     &                    ' xhodo=',x1_min,x1_max,' xytrk=',x_la,y_la
+c                       --- fill debug histogram
+c                       Call HF2(eidxla(la1),float(co1),x_la,1.)
+c                       Call HF1(eidxla1co(co1),x_la,1.)
+                        if( x_la .ge. x1_min .and.
+     &                     x_la .le. x1_max .and.
+     &                     y_la .ge. -0.5*escin_height-escin_yslop .and.
+     &                     y_la .le. 0.5*escin_height+escin_yslop) then
+                           if (seva_hodon_on(la1).eq.0) then
+
+                              if(etrk_hodo_hit(i,1) .eq. 0) then
+                                 etrk_hodo_hit(i,1) = 1
+                                 etrk_hodo_hit(i,2) = j
+c                                etrk_fptime(i) = t1
+                                 temp_fpt_1= t1
+                                 temp_fpt= t1
+                                 seva_hodon_on(la1)=1
+                              Else             ! hodohit>0
+                                 if(abs(fpt- temp_fpt_1) .le. etrk_time_gate .and. 
+     &                           etrk_hodo_hit(i,1) .lt. 4) then
+                                    seva_hodon_on(la1)=1
+                                    etrk_hodo_hit(i,1) = etrk_hodo_hit(i,1) + 1
+                                    etrk_hodo_hit(i,etrk_hodo_hit(i,1)+1) = j
+                                    fpt = 0
+                                    temp_fpt=temp_fpt+t1 
+                                    temp_fpt_1=  temp_fpt/etrk_hodo_hit(i,1)
+                                 EndIf         ! timing cut
+                              EndIF            ! hodohit>0
+                           endif
+                        EndIf               ! track in scin.
+                     endif
+                  endif
+               EndDo                  ! scin loop
+            endif
+            if ( etrk_hodo_hit(i,1).gt.0) then
+               etrk_fptime(i) = temp_fpt_1
+            endif
+
+         endif !seva's flag endif
+      EndDo                     ! track loop
+
+*     --- Histogram for link bank ---
+      call e_fill_link_hist(abort,err)
+      if (abort) then
+         call g_prepend(here,err)
+         return
+      endif
+
+      Return
+      end
+

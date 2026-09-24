@@ -75,6 +75,7 @@
       include 'hes_tracking.cmn'
       include 'hes_geometry.cmn'
       include 'hes_id_histid.cmn'
+      include 'gen_event_info.cmn'
 *     
       external jbit             ! cernlib bit routine
       integer*4 jbit
@@ -89,18 +90,31 @@
       character*(*) err
       integer*4 isp, ihit,iswhit, idummy, pmloop, ich,hit,la, i, gh
       integer*4 nplusminus
-      integer*4 numhits,npaired,ihit2, itrack
+      integer*4 numhits,npaired,ihit2, itrk1, itrk2
       integer*4 hits(edc2max_hits_per_point), pl(edc2max_hits_per_point)
       integer*4 pindex
       real*4 wc(edc2max_hits_per_point)
-      integer*4 layer, isa_y1, isa_y2
+      integer*4 layer, isa_y1, isa_y2, slot
       integer*4 plusminusknown(edc2max_hits_per_point)
       real*4 plusminus(edc2max_hits_per_point)
       real*4 plusminusbest(edc2max_hits_per_point)
       real*4 chi2,dispol, drift_direction
       real*4 minchi2
       real*4 stub(4)
+      real*4 xedc1,xpedc1,yedc1,ypedc1 
+      real*4 xedc2,xpedc2,yedc2,ypedc2,sedc2 
+      real*4 ds_edc2(edc2max_hits_per_point) 
+      real*4 ds_edc2_sum(edc2max_space_points) 
+      real*4 ds_edc2_min 
+      real*4 ds_edc2_sum_min 
+      real*4 alpha
+      integer*4 ihit_min
+      integer*4 edc1_nhit,edc2_nhit
       logical smallAngOk
+      real*4 raddeg
+      parameter (raddeg=3.14159265/180.)
+      real*4 e_dc2_drift_dist_calc
+      external e_dc2_drift_dist_calc
 *     
       ABORT= .FALSE.
       err=' '
@@ -113,6 +127,7 @@
          return
       endif
 
+c      write(*,*) "edc2nspace_points_tot",edc2nspace_points_tot 
       if(edc2nspace_points_tot .le. 0) Return
       
       do isp=1,edc2nspace_points_tot ! loop over all space points
@@ -128,7 +143,7 @@
 *     
          do ihit=1,numhits
             hits(ihit)=edc2space_point_hits(isp,2+ihit)
-            pl(ihit)=EDC2_LAYER_NUM(hits(ihit))
+            pl(ihit)=edc2_layer_num(hits(ihit))
             
             glayeredc2(isp)=ibset(glayeredc2(isp),pl(ihit)-1)
             
@@ -139,7 +154,7 @@ c     glayeredc22(isp)=jibset(glayeredc22(isp),pl(ihit)-7)
 c     endif
 cccc            print *, 'ihit', ihit, hits(ihit), pl(ihit)
             
-            wc(ihit)=EDC2_WIRE_CENTER(hits(ihit))
+            wc(ihit)=edc2_wire_center(hits(ihit))
             plusminusknown(ihit) = 0
             if(pl(ihit).eq.2 ) isa_y1 = ihit
             if(pl(ihit).eq.5 ) isa_y2 = ihit
@@ -149,19 +164,19 @@ cccc            print *, 'ihit', ihit, hits(ihit), pl(ihit)
 *     djm 10/2/94 check bad sdc pattern units to set the index for the inverse
 *     matrix SAAINV(i,j,pindex).
 *     
-         if(glayeredc2(isp).eq.X'3F') then
+         if(glayeredc2(isp).eq.INT(Z'3F')) then
             pindex=edc2_num_layers+1
-         else if (glayeredc2(isp).eq.X'3E') then
+         else if (glayeredc2(isp).eq.INT(Z'3E')) then
             pindex= 1
-         else if (glayeredc2(isp).eq.X'3D') then
+         else if (glayeredc2(isp).eq.INT(Z'3D')) then
             pindex= 2
-         else if (glayeredc2(isp).eq.X'3B') then
+         else if (glayeredc2(isp).eq.INT(Z'3B')) then
             pindex= 3
-         else if (glayeredc2(isp).eq.X'37') then
+         else if (glayeredc2(isp).eq.INT(Z'37')) then
             pindex= 4
-         else if (glayeredc2(isp).eq.X'2F') then
+         else if (glayeredc2(isp).eq.INT(Z'2F')) then
             pindex= 5
-         else if (glayeredc2(isp).eq.X'1F') then
+         else if (glayeredc2(isp).eq.INT(Z'1F')) then
             pindex= 6
          else
             pindex=-1
@@ -186,26 +201,26 @@ cccc            print *, 'ihit', ihit, hits(ihit), pl(ihit)
 *     Can we assume that hits are sorted by layer?  As best I (SAW) can
 *     tell, we can not.
 *     
-               ihit = 1
-               npaired = 0
-               do ihit=1,numhits
-                  if(pl(ihit)-2*(pl(ihit)/2) .eq. 1) then ! Odd layer
-                     do ihit2=1,numhits ! Look for the adjacent layer
-                        if(pl(ihit2)-pl(ihit).eq.1) then ! Adjacent layer found
-                           if(wc(ihit2).le.wc(ihit)) then
-                              plusminusknown(ihit) = -1
-                              plusminusknown(ihit2) = 1
-                           else
-                              plusminusknown(ihit) = 1
-                              plusminusknown(ihit2) = -1
-                           endif
-                           npaired = npaired + 2
-                        endif
-                     enddo
+         ihit = 1
+         npaired = 0
+         do ihit=1,numhits
+            if(pl(ihit)-2*(pl(ihit)/2) .eq. 1) then ! Odd layer
+               do ihit2=1,numhits ! Look for the adjacent layer
+                  if(pl(ihit2)-pl(ihit).eq.1) then ! Adjacent layer found
+                     if(wc(ihit2).le.wc(ihit)) then
+                        plusminusknown(ihit) = -1
+                        plusminusknown(ihit2) = 1
+                     else
+                        plusminusknown(ihit) = 1
+                        plusminusknown(ihit2) = -1
+                     endif
+                     npaired = npaired + 2
                   endif
                enddo
-*DK            endif
-            nplusminus = 2**(numhits-npaired)
+            endif
+         enddo
+*DK      endif
+         nplusminus = 2**(numhits-npaired)
 *     Let's hope that following code will work with nplusminus = 1
 *DK         endif
          
@@ -253,16 +268,18 @@ cc               write(6,*) 'pindex=',pindex,' in h_left_right', minchi2
 *     
          do ihit=1,numhits
             hit = edc2space_point_hits(isp,2+ihit)
-            la = EDC2_LAYER_NUM(hit)
-            dispol = plusminusbest(ihit)*EDC2_DRIFT_DIS(hit)
-            EDC2_WIRE_COORD(hit)= EDC2_WIRE_CENTER(hit) + dispol
-            Call HF1(eiddc2driftdis(la),dispol,1.)
+            la = edc2_layer_num(hit)
+            dispol = plusminusbest(ihit)*edc2_drift_dis(hit)
+c            write(*,*) "la,plusminusbest(ihit),edc2_drift_dis(hit)",
+c     &        la,plusminusbest(ihit),edc2_drift_dis(hit)
+            edc2_wire_coord(hit)= edc2_wire_center(hit) + dispol
+c            Call HF1(eiddc2driftdis(la),dispol,1.)
          enddo
 *     
 *     stubs are calculated in rotated coordinate system
 *     use first hit to determine chamber
 *
-         layer=EDC2_LAYER_NUM(hits(1))
+         layer=edc2_layer_num(hits(1))
          stub(3)=(edc2beststub(isp,3) - edc2tanbeta(layer))
      &        /(1.0 + edc2beststub(isp,3)*edc2tanbeta(layer))
          stub(4)=edc2beststub(isp,4)
@@ -280,47 +297,102 @@ cc               write(6,*) 'pindex=',pindex,' in h_left_right', minchi2
       enddo                             ! end loop over space points
 
 **********************************************************
-* link with entracks_pre defined in e_dc1_left_right.f
+* link with entracks_fp defined in e_select_good_tracks.f
 * DK
 **********************************************************
 
-cc      print *, 'tot sp', edc2nspace_points_tot
-      entracks_pre = edc2nspace_points_tot
-      Do itrack=1,entracks_pre
+c      write(*,*) "entracks_fp=",entracks_fp 
+      do itrk1=1, entracks_fp 
+         xedc1=ex_fp(itrk1)
+         xpedc1=exp_fp(itrk1)
+         yedc1=ey_fp(itrk1)
+         ypedc1=eyp_fp(itrk1)
+         edc2_besttrk(itrk1)=1
+         edc1_nhit=entrack_hits(itrk1,1) 
+         do itrk2=1,edc2nspace_points_tot 
 c     --- reset vectors  
-         edc2chi2_pre(itrack) = -100000.
-         edc2chi2perdof_pre(itrack) = -100000.
-cc         ex_fp_pre1(itrack,1) = edc1beststub(itrack,1)
-cc         ey_fp_pre1(itrack,1) = edc1beststub(itrack,2)
-cc         exp_fp_pre1(itrack,1) = edc1beststub(itrack,3)
-cc        eyp_fp_pre1(itrack,1) = edc1beststub(itrack,4)
+            edc2chi2(itrk2) = -100000.
+            edc2chi2perdof(itrk2) = -100000.
 *     --- ez_fp=0
-         numhits = edc2space_point_hits(itrack,1)
-         entrack_hits_pre(itrack,1) = 0
-         Do i=1,EMAX_NUM_DC2_LAYERS
-            edc2_track_coord_pre(itrack,i) = -10000.
-            edc2_residual_pre(itrack,i) = -10000.
-         EndDo
-         gh = 0
-         Do ihit=1,numhits
+            numhits = edc2space_point_hits(itrk2,1)
+            edc2ntrack_hits_pre(itrk2,1) = 0
+            Do i=1,EMAX_NUM_DC2_LAYERS
+               edc2_track_coord_pre(itrk2,i) = -10000.
+               edc2_residual_pre(itrk2,i) = -10000.
+            EndDo
+            gh = 0
+            ds_edc2_sum(itrk2)=0
+            Do ihit=1,numhits
 cc            print *, 'insider1', ihit
-            gh = gh + 1
-            entrack_hits_pre(itrack,gh+1) = 
-     &           edc2space_point_hits(itrack,ihit+2)
-            ihit2 = edc2space_point_hits(itrack,ihit+2)
-            drift_direction = 
-     &           plusminusbest(ihit)*EDC2_DRIFT_DIS(ihit2)
-            layer=EDC2_LAYER_NUM(ihit2)
-            EDC2_WIRE_COORD(ihit2)=
-     &           EDC2_WIRE_CENTER(ihit2) +
+               hit = edc2space_point_hits(itrk2,ihit+2)
+c               print *, "hit,edc2_drift_dis(hit)",hit,edc2_drift_dis(hit)
+               drift_direction = 
+     &           plusminusbest(ihit)*edc2_drift_dis(hit)
+               layer=edc2_layer_num(hit)
+               xedc2=xedc1+xpedc1*edc2_zpos(layer)
+               yedc2=yedc1+ypedc1*edc2_zpos(layer)
+               edc2_wire_coord(hit)=
+     &           edc2_wire_center(hit) +
      &           drift_direction            
-cc            print *, ' inside', ihit, ihit2, plusminusbest(ihit), EDC2_DRIFT_DIS(ihit2) 
-         EndDo                  ! numhits loop
-         entrack_hits_pre(itrack,1) = gh
-cc         print *, 'out', entrack_hits_pre(itrack,1), itrack, entracks_pre
-      EndDo                     ! entracks_fp loop
+               alpha=edc2_alpha_angle(layer)-90*raddeg
+               sedc2=xedc2*cos(alpha)+yedc2*sin(alpha)
+               ds_edc2(ihit)=sedc2-edc2_wire_coord(hit)
+               ds_edc2_sum(itrk2)=ds_edc2_sum(itrk2)+abs(ds_edc2(ihit))
+c               print *, "itrk1,itrk2,layer,ds_edc2",itrk1,itrk2,layer,ds_edc2(ihit)
+c               print *, "xedc2-xsp",xedc2-edc2space_points(itrk2,1)
+c               write(*,*)"itrk1,itrk2,layer",
+c     &         itrk1,"/",entracks_fp,itrk2,"/",edc2nspace_points_tot,
+c     &         layer
+c               write(*,*)"sedc2,edc2_wcoord,ds_edc2",
+c     &         sedc2,edc2_wire_coord(hit),ds_edc2(ihit)
+               gh = gh + 1
+               edc2ntrack_hits_pre(itrk2,gh+1) = 
+     &           edc2space_point_hits(itrk2,ihit+2)
+            enddo    ! numhits loop
+c            write(*,*)"ds_edc2_sum/numhits",ds_edc2_sum(itrk2)/numhits
+            if (itrk2.eq.1) then
+               ds_edc2_sum_min=ds_edc2_sum(itrk2)/numhits
+               edc2_besttrk(itrk1)=itrk2 
+            elseif (abs(ds_edc2_sum(itrk2)/numhits).lt.
+     &         abs(ds_edc2_sum_min)) then
+               ds_edc2_sum_min=ds_edc2_sum(itrk2)/numhits
+               edc2_besttrk(itrk1)=itrk2 
+            endif
+c            write(*,*) itrk1,abs(ds_edc2_sum_min)
+            if (abs(ds_edc2_sum_min).gt.1.0) then
+               edc2_besttrk(itrk1)=0
+            endif
+ccc---DK wrote 2010/1/11-------------------------------------------------------
+ccc entrack_hits is modified in order to unify EDC1 and EDC2 track.
+ccc entrack_hits(itrk1,1) = # of hits (EDC1+EDC2) on itrk1
+ccc entrack_hits(itrk1,2) ... entrack(itrk1,edc1_nhit+1) = hit # information of EDC1
+ccc entrack_hits(itrk1,edc1_nhit+2) ... entrack(itrk1,edc1_nhit+edc2_nhit+1) 
+ccc   = hit # information of EDC2
+ccc-----------------------------------------------------------------------------
+            edc2ntrack_hits_pre(itrk2,1) = numhits 
+         EndDo
+c         print *, "itrk1,itrk2_best,abs(ds_edc2_sum_min)",itrk1,edc2_besttrk(itrk1),abs(ds_edc2_sum_min) 
+        do itrk2=1,edc2nspace_points_tot
+           if (itrk2.eq.edc2_besttrk(itrk1)) then
+              Do ihit=1,edc2ntrack_hits_pre(itrk2,1)
+                 hit=edc2space_point_hits(itrk2,ihit+2)
+                 entrack_hits(itrk1,edc1_nhit+1+ihit) = hit
+              enddo
+              edc2_nhit=edc2ntrack_hits_pre(itrk2,1)
+              entrack_hits(itrk1,1) = entrack_hits(itrk1,1) + edc2_nhit 
+           endif
+        enddo
+      EndDo          ! entracks_fp loop
+      
+c      do itrk1=1,entracks_fp
+c         itrk2=edc2_besttrk(itrk1)
+c         edc2_nhit=edc2ntrack_hits_pre(itrk2,1)
+c         edc1_nhit=entrack_hits(itrk1,1)-edc2_nhit 
+c         write(*,*)"itrk2,edc1_nhit,edc2_nhit",
+c     &    itrk2,edc1_nhit,edc2_nhit
+c      enddo
 
-cc      print *, 'out2', entrack_hits_pre(itrack,1), itrack, entracks_pre
+cc      print *, 'out2', edc2ntrack_hits_pre(itrk2,1), itrk2, entracks_pre
 *     
 *     write out results if sdebugflagstubs is set
       if(edebugflagstubs.ne.0) then

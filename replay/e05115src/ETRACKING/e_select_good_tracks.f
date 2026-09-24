@@ -98,15 +98,19 @@ c
          if(edc1track_chi2min .eq. 0) edc1track_chi2min = 1000.
          Do i=1,entracks_pre
             do j=1,EMAX_NUM_DC1_LAYERS
-            num_wires(i,j)= -1000
+               num_wires(i,j)= -1000
+c               edc1_single_residual(i,j) = 100000
+               edc1_tcoord(i,j) = 100000
+               edc1_wcoord(i,j) = 100000
+               edc1_wnum(i,j) = 100000
             enddo
+            
             Do ihit1=2,entrack_hits_pre(i,1)+1
                hit1 = entrack_hits_pre(i,ihit1)
                pln1 = edc1_layer_num(hit1)
                nwire1=edc1_wire_num(hit1)
                num_wires(i,pln1)= nwire1
             enddo
-c            write(*,*) edc1chi2perdof_pre(i,enum_fitting),edc1track_chi2min,ey_fp_pre1(i,enum_fitting)
             if(
      &           edc1chi2perdof_pre(i,enum_fitting) .gt. edc1track_chi2min
      &        ) then
@@ -116,7 +120,7 @@ c            write(*,*) edc1chi2perdof_pre(i,enum_fitting),edc1track_chi2min,ey_
          
 c     Write(*,*) 'ev,pre=',gen_event_ID_number,entracks_pre
 c     Do i=1,entracks_pre
-c     write(*,*) 'hit,chi2,x,y=',
+c      write(*,*) 'hit,chi2,x,y=',
 c     &        entrack_hits_pre(i,1),edc1chi2perdof_pre(i,enum_fitting),
 c     &        ex_fp_pre1(i,enum_fitting),ey_fp_pre1(i,enum_fitting)
 c     EndDo
@@ -126,24 +130,26 @@ c     EndDo
             Do i = 1,entracks_pre-1
                Do j = i+1,entracks_pre
                   dx = abs(ex_fp_pre1(i,enum_fitting)-
-     &                 ex_fp_pre1(j,enum_fitting))
+     &                  ex_fp_pre1(j,enum_fitting))
                   dy = abs(ey_fp_pre1(i,enum_fitting)-
-     &                 ey_fp_pre1(j,enum_fitting))
+     &                  ey_fp_pre1(j,enum_fitting))
                   dxp = abs(exp_fp_pre1(i,enum_fitting)-
-     &                 exp_fp_pre1(j,enum_fitting))
+     &                   exp_fp_pre1(j,enum_fitting))
                   dyp = abs(eyp_fp_pre1(i,enum_fitting)-
-     &                 eyp_fp_pre1(j,enum_fitting))
+     &                   eyp_fp_pre1(j,enum_fitting))
                   Call HF1(eidtrkdx,dx,1.)
                   Call HF1(eidtrkdy,dy,1.)
                   Call HF1(eidtrkdxp,dxp,1.)
                   Call HF1(eidtrkdyp,dyp,1.)
                   if(mark(i) .eq. 1 .and. mark(j) .eq. 1) then
+c                     write(*,*) "dx,dxp,dy,dyp",dx,dxp,dy,dyp 
                      if(
      &                    dx .lt. HES_DX_MIN .and.
      &                    dy .lt. HES_DY_MIN .and.
      &                    dxp .lt. HES_DXP_MIN .and.
      &                    dyp .lt. HES_DYP_MIN
      &                    ) then
+c                        write(*,*) "recognized as one track"
                         if(edc1chi2perdof_pre(i,enum_fitting) 
      &                       .le. edc1chi2perdof_pre(j,enum_fitting)) then
                            mark(i) = 1
@@ -153,6 +159,7 @@ c     EndDo
                            mark(j) = 1
                         EndIf
                      EndIF
+c                     write(*,*) "i,j,mark(i),mark(j)",i,j,mark(i),mark(j) 
                   EndIF
 ccccccc SEVA : there must be a better selection criterion
                   if (esevaflag.ne.0) then
@@ -210,6 +217,7 @@ cccccc SEVA's correction end
          
          tnew = 0
          Do i=1,entracks_pre
+c            write(*,*) "i,mark(i)",i,mark(i)
             if(mark(i) .eq. 1) then
                if(tnew .eq. 0) then ! 1st hit
                   tnew = 1
@@ -231,38 +239,24 @@ cccccc SEVA's correction end
                   Do ihit=1,edc1_num_layers
                      have_layer_hits1(ihit) = 0
                   EndDo
-                  Do ihit=1,edc2_num_layers
-                     have_layer_hits2(ihit) = 0
-                  EndDo
 *     --- fill layer hits on/off.
                   Do ihit=2,entrack_hits(1,1)+1
                      entrack_hits(1,ihit) = 
      &                    entrack_hits_pre(i,ihit)
                      hit = entrack_hits(1,ihit)
                      pl1 = edc1_layer_num(hit)
-                     pl2 = edc2_layer_num(hit)
+c                     pl2 = edc2_layer_num(hit)
                      have_layer_hits1(pl1)=1
                      edc1_single_residual(1,pl1) =
      &                    edc1_residual_pre(i,pl1,enum_fitting)
                      edc1_track_coord(1,pl1) =
      &                    edc1_track_coord_pre(i,pl1,enum_fitting)
-                     have_layer_hits2(pl2)=1
-                     edc2_single_residual(1,pl2) =
-     &                    edc2_residual_pre(i,pl2)
-                     edc2_track_coord(1,pl2) =
-     &                    edc1_track_coord_pre(i,pl2,enum_fitting)
                   EndDo
 *     --- if have no hits, reset to default.
                   Do ihit=1,edc1_num_layers
                      if(have_layer_hits1(pl1) .eq. 0) then
                         edc1_single_residual(1,pl1) = 10000.
                         edc1_track_coord(1,pl1)= 10000.
-                     EndIF
-                  EndDo
-                  Do ihit=1,edc2_num_layers
-                     if(have_layer_hits2(pl2) .eq. 0) then
-                        edc2_single_residual(1,pl2) = 10000.
-                        edc2_track_coord(1,pl2)= 10000.
                      EndIF
                   EndDo
                Else             ! tnew>0
@@ -291,17 +285,17 @@ c     --- move (j) to (j+1) if j+1<=entracks_max
                               entrack_hits(j+1,ihit) = 
      &                             entrack_hits(j,ihit)
                            EndDo
+c     ================================================
+c                              if(j.gt.1500)then
+c                                 write(*,*)"e_select_good_tracks.f(1): "
+c     &                                ,j+1, "   Danger !"
+c                              endif
+c     =================================================
                            Do ihit=1,edc1_num_layers
                               edc1_single_residual(j+1,ihit) = 
      &                             edc1_single_residual(j,ihit)
                               edc1_track_coord(j+1,ihit) = 
      &                             edc1_track_coord(j,ihit)
-                           EndDo
-                           Do ihit=1,edc2_num_layers
-                              edc2_single_residual(j+1,ihit) = 
-     &                             edc2_single_residual(j,ihit)
-                              edc2_track_coord(j+1,ihit) = 
-     &                             edc2_track_coord(j,ihit)
                            EndDo
                         EndIf   ! J=1<=entracks_max or not
 c     --- if j=1, this is the 1st index, so we should fill values now.
@@ -320,9 +314,6 @@ c     --- if j=1, this is the 1st index, so we should fill values now.
                            Do ihit=1,edc1_num_layers
                               have_layer_hits1(ihit) = 0
                            EndDo
-                           Do ihit=1,edc2_num_layers
-                              have_layer_hits2(ihit) = 0
-                           EndDo
 *     --- fill layer hits on/off.
                            if (esevaflag.ne.0) then
                               do ihit=1,on_track_hits(i,1)+1
@@ -339,24 +330,18 @@ c     --- if j=1, this is the 1st index, so we should fill values now.
      &                             edc1_residual_pre(i,pl1,enum_fitting)
                               edc1_track_coord(1,pl1) =
      &                             edc1_track_coord_pre(i,pl1,enum_fitting)
-                              pl2 = edc2_layer_num(hit)
-                              have_layer_hits2(pl2)=1
-                              edc2_single_residual(1,pl1) =
-     &                             edc2_residual_pre(i,pl2)
-                              edc2_track_coord(1,pl2) =
-     &                             edc2_track_coord_pre(i,pl2)
+                              edc1_tcoord(1,pl1) =
+     &                             edc1_track_coord_pre(i,pl1,enum_fitting)!track coord(by Gogami)
+                              edc1_wcoord(1,pl1) = 
+     &                             edc1_track_coord_pre(i,pl1,enum_fitting)!wire coord(by Gogami)
+     &                             -edc1_residual_pre(i,pl1,enum_fitting)
+                              edc1_wnum(1,pl1) = edc1_wire_num(hit)!wire number(by Gogami)
                            EndDo
 *     --- if have no hits, reset to default.
                            Do ihit=1,edc1_num_layers
                               if(have_layer_hits1(pl1) .eq. 0) then
                                  edc1_single_residual(1,pl1) = 10000.
                                  edc1_track_coord(1,pl1)= 10000.
-                              EndIF
-                           EndDo
-                           Do ihit=1,edc2_num_layers
-                              if(have_layer_hits2(pl2) .eq. 0) then
-                                 edc2_single_residual(1,pl2) = 10000.
-                                 edc2_track_coord(1,pl2)= 10000.
                               EndIF
                            EndDo
                         EndIf   ! j=1 or not
@@ -378,9 +363,6 @@ c     --- new values are put in arrays(j+1)
                            Do ihit=1,edc1_num_layers
                               have_layer_hits1(ihit) = 0
                            EndDo
-                           Do ihit=1,edc2_num_layers
-                              have_layer_hits2(ihit) = 0
-                           EndDo
 *     --- fill layer hits on/off.
                            if (esevaflag.ne.0) then
                               do ihit=1,on_track_hits_pre(j,1)+1
@@ -393,28 +375,28 @@ c     --- new values are put in arrays(j+1)
                               hit = entrack_hits(j+1,ihit)
                               pl1 = edc1_layer_num(hit)
                               have_layer_hits1(pl1)=1
+c     ================================================
+c                              if(j+1.gt.1500)then
+c                                 write(*,*)"e_select_good_tracks.f : "
+c     &                                ,j+1, "   Danger !"
+c                              endif
+c     =================================================
                               edc1_single_residual(j+1,pl1) =
      &                             edc1_residual_pre(i,pl1,enum_fitting)
                               edc1_track_coord(j+1,pl1) =
      &                             edc1_track_coord_pre(i,pl1,enum_fitting)
-                              pl2 = edc2_layer_num(hit)
-                              have_layer_hits2(pl2)=1
-                              edc2_single_residual(j+1,pl2) =
-     &                             edc2_residual_pre(i,pl2)
-                              edc2_track_coord(j+1,pl2) =
-     &                             edc2_track_coord_pre(i,pl2)
+                              edc1_tcoord(j+1,pl1) =
+     &                             edc1_track_coord_pre(i,pl1,enum_fitting) !track coord(by Gogami)
+                              edc1_wcoord(j+1,pl1) = 
+     &                             edc1_track_coord_pre(i,pl1,enum_fitting) !wire coord(by Gogami)
+     &                             -edc1_residual_pre(i,pl1,enum_fitting)
+                              edc1_wnum(j+1,pl1) = edc1_wire_num(hit) !wire number(by Gogami)
                            EndDo
 *     --- if have no hits, reset to default.
                            Do ihit=1,edc1_num_layers
                               if(have_layer_hits1(pl1) .eq. 0) then
                                  edc1_single_residual(j+1,pl1) = 10000.
                                  edc1_track_coord(j+1,pl1)= 10000.
-                              EndIF
-                           EndDo
-                           Do ihit=1,edc2_num_layers
-                              if(have_layer_hits2(pl2) .eq. 0) then
-                                 edc2_single_residual(j+1,pl2) = 10000.
-                                 edc2_track_coord(j+1,pl2)= 10000.
                               EndIF
                            EndDo
                         EndIf   ! j+1<entracks_max
@@ -429,33 +411,30 @@ c     --- since we found chi2 position, we don't need comparison.
          EndDo                  ! track loop
          Call HF1(eidtrkdiff,float(entracks_pre-tnew),1.)
          entracks_fp = tnew
-cDK         do i=1,entracks_fp
-cDK            ey_fp(i) =  -ey_fp(i)
-cDK            exp_fp(i) = -exp_fp(i)
-cDK         enddo
-         
       endif
+         
       
-      Call HF1(eidntracksfp,float(entracks_fp),1.)
-      Call HF1(eidntracksfpzoom,float(entracks_fp),1.)
+      Call HF1(eiddc1ntracksfp,float(entracks_fp),1.)
+      Call HF1(eiddc1ntracksfpzoom,float(entracks_fp),1.)
       if(entracks_fp .gt. 0) then
          Call HF1(eiddc1chi2perdoffp,echi2perdof_fp(1),1.)
          Call HF1(eiddc1chi2perdoffpzoom,echi2perdof_fp(1),1.)
-         Call HF1(eidexfp,ex_fp(1),1.)
-         Call HF1(eideyfp,ey_fp(1),1.)
-         Call HF1(eidexpfp,exp_fp(1),1.)
-         Call HF1(eideypfp,eyp_fp(1),1.)
-         Call HF2(eidfpxy,ex_fp(1),ey_fp(1),1.)
-         Call HF2(eidfpxpyp,exp_fp(1),eyp_fp(1),1.)
-         Call HF2(eidfpxxp,ex_fp(1),exp_fp(1),1.)
-         Call HF2(eidfpxyp,ex_fp(1),eyp_fp(1),1.)
-         Call HF2(eidfpyxp,ey_fp(1),exp_fp(1),1.)
-         Call HF2(eidfpyyp,ey_fp(1),eyp_fp(1),1.)
+         Call HF1(eiddc1fpx,ex_fp(1),1.)
+         Call HF1(eiddc1fpy,ey_fp(1),1.)
+         Call HF1(eiddc1fpxp,exp_fp(1),1.)
+         Call HF1(eiddc1fpyp,eyp_fp(1),1.)
+         Call HF2(eiddc1fpxy,ex_fp(1),ey_fp(1),1.)
+         Call HF2(eiddc1fpxpyp,exp_fp(1),eyp_fp(1),1.)
+         Call HF2(eiddc1fpxxp,ex_fp(1),exp_fp(1),1.)
+         Call HF2(eiddc1fpxyp,ex_fp(1),eyp_fp(1),1.)
+         Call HF2(eiddc1fpyxp,ey_fp(1),exp_fp(1),1.)
+         Call HF2(eiddc1fpyyp,ey_fp(1),eyp_fp(1),1.)
          Do ihit=2,entrack_hits(1,1)+1
             hit = entrack_hits(1,ihit)
             pl1 = edc1_layer_num(hit)
             res = edc1_single_residual(1,pl1)
             Call HF1(eiddc1singleresidual(pl1),res,1.)
+            call hf2(5720+pl1,ex_fp(1),res,1.)
          EndDo
       EndIF                     ! entracks_fp>0
 

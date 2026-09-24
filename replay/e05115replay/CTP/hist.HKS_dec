@@ -3,6 +3,9 @@ begin hist hks_dec group=hks group=both
 
 hscindectothits, 200,-0.5,199.5       $HKS HTF dec tot hits
 hscinlayer,  3,0.5,3.5           $HKS HTF layer dec hitpat
+hscindeclayerhits1, 100,-0.5,100.5       $HKS HTF1X dec layer nhits
+hscindeclayerhits2, 100,-0.5,100.5       $HKS HTF1Y dec layer nhits
+hscindeclayerhits3, 100,-0.5,100.5       $HKS HTF2X dec layer nhits
 hscincounters1, 17,0.5,17.5      $HKS HTF1X counter dec hitpat
 hscincounters2, 9,0.5,9.5        $HKS HTF1Y counter dec hitpat
 hscincounters3, 18,0.5,18.5      $HKS HTF2X counter dec hitpat

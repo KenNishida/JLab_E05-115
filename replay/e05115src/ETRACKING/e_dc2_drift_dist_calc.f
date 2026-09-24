@@ -1,39 +1,6 @@
-      real*4 function e_dc2_drift_dist_calc(plane,wire,time)
+      real*4 function e_dc2_drift_dist_calc(layer,slot,time)
 *
-*     function to calculate sos drift time from tdc value in sos
-*     wire chambers
-*
-*     d.f. geesaman              17 feb 1994
-c--   For EDC2. From  h_drift_dist_calc
-c--   L.Yuan 09/24/2009
-
-* $Log: h_drift_dist_calc.f,v $
-* Revision 1.1.1.1  2009/06/23 13:55:44  kawama
-*
-* e05115 src repository for software development
-*
-* Revision 1.1.1.1  2005/05/14 21:44:37  miyoshi
-*
-*
-* Revision 1.1.1.1  2004/08/30 21:21:40  miyoshi
-* new dir
-*
-* Revision 1.5  1996/04/30 17:01:21  saw
-* (JRA) Add drift time correction for disc card
-*
-* Revision 1.4  1995/10/10 13:02:39  cdaq
-* (JRA) Remove check for zero drift bin size
-*
-* Revision 1.3  1995/05/22 19:45:35  cdaq
-* (SAW) Split gen_data_data_structures into gen, hms, sos, and coin parts"
-*
-* Revision 1.2  1994/11/22  21:09:59  cdaq
-* (SPB) Recopied from hms file and modified names for SOS
-*
-* Revision 1.1  1994/02/21  16:08:13  cdaq
-* Initial revision
-*
-
+*     This is a function for EDC drift distance calculation
 *  
       implicit none
       include 'hes_data_structures.cmn'
@@ -42,40 +9,37 @@ c--   L.Yuan 09/24/2009
 *
 *     input
 *
-      integer*4  plane      !  plane number of hit
-      integer*4  wire       !  wire number  of hit
+      integer*4  layer,slot     !  layer number of hit
+      real*4     time           !  drift time in ns
       integer*4  ilo,ihi    !  interpolate between bins ilo and ilo+1
-      real*4     time       !  drift time in ns
-      real*4     fractinterp        !  interpolated fraction 
-*
+      real*4     fractinterp        !  interpolated fractio
+*     
 *     output
-*
+*     
+      
+*     
 
+c     Write(*,*) 'l,s,t=',layer,slot,time
+c      if(time .lt. 0.) then
+c         e_drift_dist_calc = 0.
+c      Else if(time .gt. 100.) then
+c         e_drift_dist_calc = 0.5 * edc_pitch(layer)
+c      Else
+c         e_drift_dist_calc = edrift_coeff(1,slot) 
+c     &        + edrift_coeff(2,slot) * time
+c     &        + edrift_coeff(3,slot) * time * time 
+c     &        + edrift_coeff(4,slot) * time * time * time
+c      EndIF
 
-* look in the appropriate drift time to distance table and perform a linear
-* interpolation. minimum and maximum distance values are 0.0cm and 0.5cm. 
-c      if( sdriftbinsz.eq.0.0)then
-c        fractinterp = -1.0
-c        s_drift_dist_calc = 0.5*fractinterp
-c        return
-c      endif      
-      ilo = int((time-edrift1stbin)/edriftbinsz) + 1
-      ihi = ilo + 1
-      if( ilo.ge.1 .and. ihi.le.edriftbins)then 
-        fractinterp = edc2fract(ilo,plane) + 
-     &    ( (edc2fract(ilo+1,plane)-edc2fract(ilo,plane))/edriftbinsz )*
-     &    (time - edrift1stbin - (ilo-1)*edriftbinsz)
-      else
-        if( ilo.lt.1 )then
-          fractinterp = 0.0
-        else
-          if( ihi.gt.edriftbins ) fractinterp = 1.0
-        endif
-      endif
+      e_dc2_drift_dist_calc = edc2_drift_coeff(1,slot)
+     &     + edc2_drift_coeff(2,slot) * time
+     &     + edc2_drift_coeff(3,slot) * time * time 
+     &     + edc2_drift_coeff(4,slot) * time * time * time
+      if(e_dc2_drift_dist_calc.lt.-0.03) e_dc2_drift_dist_calc=-1.
+c      if(e_dc2_drift_dist_calc.gt.0.5) e_dc2_drift_dist_calc=0.5
+      if(e_dc2_drift_dist_calc.gt.0.55) e_dc2_drift_dist_calc=-1.
 
-      e_dc2_drift_dist_calc = 0.5*fractinterp -
-     $     edc2_card_delay(edc2_card_no(wire,plane))
-
+      
       return
       end
 

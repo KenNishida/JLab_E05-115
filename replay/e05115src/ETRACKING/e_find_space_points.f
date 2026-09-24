@@ -1,44 +1,51 @@
       subroutine e_find_space_points(ncham_hits,
-     &  hit_number, wire_center, plane_number,space_point_criterion,
-     &  xsp,ysp,nspace_point_len,
-     &  nspace_points,space_points,space_point_hits)
-*       Created D.F. Geesaman     Sept 1993       
-* $Log: e_find_space_points.f,v $
-* Revision 1.1.1.1  2009/06/23 13:55:45  kawama
+     &     hit_number, wire_center, plane_number,space_point_criterion,
+     &     xsp,ysp,nspace_point_len,
+     &     nspace_points,space_points,space_point_hits)
+*     Created D.F. Geesaman     Sept 1993       
+*     $Log: h_find_space_points.f,v $
+*     Revision 1.1.1.1  2009/06/23 13:55:44  kawama
 *
-* e05115 src repository for software development
+*     e05115 src repository for software development
 *
-* Revision 1.1.1.1  2005/05/14 21:44:37  miyoshi
-*
-*
-* Revision 1.1.1.1  2004/08/30 21:21:41  miyoshi
-* new dir
-*
-* Revision 1.6  1996/01/17 19:20:25  cdaq
-* (JRA) Misc. fixes, reindent
-*
-* Revision 1.5  1995/07/28 15:18:35  cdaq
-* (SAW) Change print to type for f2c
-*
-* Revision 1.4  1994/10/11  20:00:44  cdaq
-* (JRA) Remove bug that allowed double counting of hits
-*
-* Revision 1.3  1994/04/12  20:23:53  cdaq
-* (DFG) Change dim of combos from max_number_pairs to max_number_comb
-*
-* Revision 1.2  1994/02/23  13:34:09  cdaq
-* (SAW) Change 2nd arg of space_points_hits declaration from 1 to *
-*
-* Revision 1.1  1994/02/19  06:12:06  cdaq
-* Initial revision
+*     Revision 1.1.1.1  2005/05/14 21:44:37  miyoshi
 *
 *
+*     Revision 1.1  2005/03/07 16:33:42  miyoshi
+*     copy from find_space_points.f
+*
+*     Revision 1.1.1.1  2004/08/30 21:21:39  miyoshi
+*     new dir
+*     
+*     Revision 1.6  1996/01/17 19:20:25  cdaq
+*     (JRA) Misc. fixes, reindent
+*     
+*     Revision 1.5  1995/07/28 15:18:35  cdaq
+*     (SAW) Change print to type for f2c
+*     
+*     Revision 1.4  1994/10/11  20:00:44  cdaq
+*     (JRA) Remove bug that allowed double counting of hits
+*     
+*     Revision 1.3  1994/04/12  20:23:53  cdaq
+*     (DFG) Change dim of combos from max_number_pairs to max_number_comb
+*     
+*     Revision 1.2  1994/02/23  13:34:09  cdaq
+*     (SAW) Change 2nd arg of space_points_hits declaration from 1 to *
+*     
+*     Revision 1.1  1994/02/19  06:12:06  cdaq
+*     Initial revision
+*     
+*     
 *     This algorithm finds space points in a wire chamber by finding the
 *     intersection of each pair of hits in non-parallel planes,
 *     then combining all two-hit space points that are within a squared
 *     distance space_point_criterion.
       implicit none
 *     input
+
+      Include 'hes_data_structures.cmn'
+      Include 'hes_id_histid.cmn'
+
       integer*4 ncham_hits         ! total number of hits in chamber
       integer*4 hit_number(*)      ! array of hit numbers 
       integer*4 plane_number(*)    ! array of plane numbers for each hit
@@ -86,17 +93,42 @@
             plane1=plane_number(ipair1)
             plane2=plane_number(ipair2)
             determinate=xsp(plane1)*ysp(plane2)-ysp(plane1)*xsp(plane2)
+c            determinate=-xsp(plane1)*ysp(plane2)+ysp(plane1)*xsp(plane2)
             if(abs(determinate) .gt. 0.3 ) then !0.3 is sin(alpha1-alpha2)=sin(17.5)
               ntest_points=ntest_points+1
               pair(ntest_points,1)=hit_number(ipair1)
               pair(ntest_points,2)=hit_number(ipair2)
+c              test_points(ntest_points,1)= 
+c     &             (wire_center(ipair2)*ysp(plane1)-wire_center(ipair1)
+c     $             *ysp(plane2))/ determinate
+c              test_points(ntest_points,2)= 
+c     &             (wire_center(ipair2)*xsp(plane1)-wire_center(ipair1)
+c     $             *xsp(plane2))/ determinate
               test_points(ntest_points,1)= 
      &             (wire_center(ipair1)*ysp(plane2)-wire_center(ipair2)
      $             *ysp(plane1))/ determinate
               test_points(ntest_points,2)= 
      &             (wire_center(ipair2)*xsp(plane1)-wire_center(ipair1)
      $             *xsp(plane2))/ determinate
-            endif                       ! end if for indeterminate planes
+c     ================================
+c     output to file for check testpoint
+c     ================================
+cc     Open file 
+c              if(ntest_points .eq. 1)then
+c                 open(23,file='spfile_np.dat',status='replace')
+c              else
+c                 open(23,file='spfile_np.dat',access='append')
+c              endif
+cc     Write to file
+c              write(23,*)ntest_points
+c              write(23,*)plane1,plane2
+c              write(23,*)wire_center(ipair1),wire_center(ipair2)
+c              write(23,*)test_points(ntest_points,1),
+c     &             test_points(ntest_points,2)
+c              close(23)
+c     ================================
+              
+           endif                ! end if for indeterminate planes
           endif                         ! end test on too many pairs 
         enddo                           ! end loop over pair2
       enddo                             ! end loop over pair1
@@ -111,6 +143,7 @@
             sqdistance_test=
      &           (test_points(ipair1,1)-test_points(ipair2,1))**2 +
      &           (test_points(ipair1,2)-test_points(ipair2,2))**2
+c            Call HF1(eidsqdistance,sqdistance_test,1.)
             if(sqdistance_test.le.space_point_criterion) then 
               ncombo=ncombo+1
               combos(ncombo,1)=ipair1

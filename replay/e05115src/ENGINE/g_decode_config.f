@@ -67,6 +67,7 @@
       character*1 tab
       integer*4 roc, slot, subadd, mask
       integer*4 did, plane, counter, signal, nsubadd, bsubadd
+      integer*4 ios
       integer*4 lastroc, lastslot
       integer N_lines_read
 *
@@ -97,7 +98,7 @@
       lastroc = -1
       lastslot = -1
       N_lines_read= 0
-      mask = 'FFF'x                     ! Default data mask
+      mask = INT(Z'FFF')                ! Default data mask
       bsubadd = 17                      ! Default LSB of channel field
 *
       Do i=1,G_DECODE_MAXWORDS 
@@ -177,8 +178,12 @@
                      endif
                   endif
                else
-                  read(line(1:llen),'(4i15)') subadd, plane, counter,
-     $                 signal
+*     ! MAP file format: subadd, plane, element, signal
+*     Some detectors only have signal 0, and omitted in the map
+*     Initialize signal to 0 here
+*     read(line(1:llen),'(4i15)') subadd, plane,counter,signal
+                  signal = 0
+                  read(line(1:llen),*,iostat=ios) subadd, plane,counter,signal           
                   If(OK .and. (roc.ne.lastroc.or.slot.ne.lastslot)) Then
                      if(g_decode_slotpointer(roc,slot).lt.0) then
                         g_decode_slotpointer(roc,slot) =

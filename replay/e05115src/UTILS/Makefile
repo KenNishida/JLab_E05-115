@@ -16,10 +16,10 @@ LIB= libutils.a
 #
 
 
-F77=/usr/bin/g77
+F77=/usr/bin/gfortran
 
-#FFLAGS=-g -ffixed-line-length-132
-FFLAGS=-m32 -g -ffixed-line-length-132
+FFLAGS=-g -ffixed-line-length-132
+#FFLAGS=-m32 -g -ffixed-line-length-132
 
 INC=-I../INCLUDE/
 

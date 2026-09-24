@@ -48,7 +48,7 @@
 *     probably be put in an include file.
 *
 
-      ABORT = iand(event(2),X'FFFF').ne.X'10CC'
+      ABORT = iand(event(2),INT(Z'FFFF')).ne.INT(Z'10CC')
       if(ABORT) then
          err = here//'Event header not standard physics event'
          return
@@ -57,7 +57,7 @@
       evlength = event(1)
       bankpointer = 3
 
-      ABORT = event(bankpointer+1).ne.X'C0000100'
+      ABORT = event(bankpointer+1).ne.INT(Z'C0000100')
       if(ABORT) then
          err = here//'First bank is not an Event ID bank'
          return
@@ -72,7 +72,7 @@
       ENDIF
 
       do while(bankpointer.lt.evlength)
-         roc = iand(ishft(event(bankpointer+1),-16),X'1F')
+         roc = iand(ishft(event(bankpointer+1),-16),INT(Z'1F'))
          if(roc.eq.13.or.roc.eq.14.or.roc.eq.20) then
             call g_analyze_scaler_bank(event(bankpointer), ABORT, err)
          endif

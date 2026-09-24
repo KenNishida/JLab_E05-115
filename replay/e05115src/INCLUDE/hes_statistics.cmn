@@ -42,10 +42,10 @@
       
       Real*4 escin_layer_rough_eff(ENUM_SCIN_LAYERS)
      
-	   Integer*4 escineff_good_trig(3,25)
-	   Integer*4 escineff_did_trig(3,25)
-	   Integer*4 escin_layer_eff(3,25)
-	   Integer*4 escin_layer_eff_err(3,25)
+	   Integer*4 escineff_good_trig(3,29)
+	   Integer*4 escineff_did_trig(3,29)
+	   Integer*4 escin_layer_eff(3,29)
+	   Integer*4 escin_layer_eff_err(3,29)
 		 
       common/escin_statistics/
      &     escin_rough_tot_events,
@@ -92,8 +92,8 @@ c		 comment out --DK
 *      Integer*4 etrkeff_good_trig2(2)
 *      Integer*4 etrkeff_bad_trig(2)
 *      Integer*4 etrkeff_bad_trig2(2)
-*      Integer*4 etrkeff_flag(2,25,25)
-*      Integer*4 etrkeff_flag2(2,25,25)
+*      Integer*4 etrkeff_flag(2,29,29)
+*      Integer*4 etrkeff_flag2(2,29,29)
 *      Real*4 etrk_eff(4)
 *      Real*4 etrk_eff_err(4)
 *      

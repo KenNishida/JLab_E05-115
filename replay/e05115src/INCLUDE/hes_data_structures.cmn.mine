@@ -1,0 +1,826 @@
+*****************begin: eneg_data_structures.cmn******************
+*     
+*     include file     hes_data_structures.cmn
+*     
+*     $Log: hes_data_structures.cmn,v $
+*     Revision 1.1.1.1  2009/06/23 13:55:43  kawama
+*
+*     e05115 src repository for software development
+*
+*     Revision 1.14  2005/07/08 15:35:31  sumihama
+*     Mod. for rf
+*
+*     Revision 1.13  2005/07/08 13:45:53  sumihama
+*     Mod. Max hit number
+*
+*     Revision 1.12  2005/07/06 19:22:08  sumihama
+*     Mod.hrf/erf
+*
+*     Revision 1.11  2005/07/03 11:14:49  sumihama
+*     Add EHODO info. in e_phys
+*
+*     Revision 1.10  2005/06/19 02:44:06  cdaq
+*     Mod. HESDC ntuple
+*
+*     Revision 1.9  2005/06/15 05:44:13  cdaq
+*     change MAX hit for EHODO
+*
+*     Revision 1.8  2005/06/13 00:11:23  cdaq
+*     Change EMAX?SCIN to 416
+*
+*     Revision 1.7  2005/06/12 20:34:15  cdaq
+*     change
+*
+*     Revision 1.6  2005/06/10 18:54:02  cdaq
+*     add trig,tul variables
+*
+*     Revision 1.5  2005/06/09 17:32:05  cdaq
+*     add tul variables
+*
+*     Revision 1.4  2005/06/07 01:07:30  cdaq
+*     decrease emax_scin_hits
+*
+*     Revision 1.3  2005/06/06 21:52:32  cdaq
+*     add fission chamber quantities
+*
+*     Revision 1.2  2005/06/02 19:57:20  cdaq
+*     add fission chamber id and parameters
+*
+*     Revision 1.1.1.1  2005/05/14 21:44:37  miyoshi
+*
+*
+*     Revision 1.17  2005/04/19 15:02:40  miyoshi
+*     correct sv vector as array
+*
+*     Revision 1.16  2005/04/18 21:19:31  miyoshi
+*     add e or h sv variables
+*
+*     Revision 1.15  2005/03/10 16:41:47  miyoshi
+*     add new common block for EDC analysis
+*
+*     Revision 1.14  2005/02/22 14:17:12  miyoshi
+*     increase hes max dc hits
+*
+*     Revision 1.13  2005/02/11 23:01:13  sumihama
+*     Mod. e-ntuple, Mod. etracking
+*
+*     Revision 1.12  2005/01/31 23:43:24  miyoshi
+*     add trigger time and flag for test
+*
+*     Revision 1.11  2005/01/24 19:46:21  miyoshi
+*     change link track common block
+*
+*     Revision 1.10  2005/01/19 22:53:25  sumihama
+*     Mod. clear_event
+*
+*     Revision 1.9  2005/01/19 00:06:46  miyoshi
+*     add multiplicity for escin
+*
+*     Revision 1.8  2005/01/18 19:40:01  sumihama
+*     enum_scin 50->25
+*
+*     Revision 1.7  2005/01/17 20:50:29  sumihama
+*     Bug fix in hes_data common
+*
+*     Revision 1.6  2005/01/17 15:34:00  sumihama
+*     Mod hes_data common
+*
+*     Revision 1.5  2005/01/05 18:41:00  sumihama
+*     hes-scinti mod.
+*
+*     Revision 1.4  2004/12/24 21:18:50  miyoshi
+*     change name plane to layer
+*
+*     Revision 1.3  2004/12/24 19:41:46  miyoshi
+*     add some variables and parameters
+*
+*     Revision 1.2  2004/10/13 22:15:21  miyoshi
+*     update for f1tdc
+*
+*     Revision 1.1.1.1  2004/08/30 21:21:38  miyoshi
+*     new dir
+*
+*     Revision 1.6 2004/03/03 Miyoshi
+*     for E01-011
+*     
+*     Revision 1.5  2000/03/09 01:32:38  ysato
+*     Update in the production run Mar.8
+*     
+*     Revision 1.4  1999/12/23 19:59:22  ysato
+*     Compiled on Redhat Linux
+*     
+*     Revision 1.3  1999/11/03 16:50:43  ysato
+*     Internal modification
+*     
+*     Revision 1.2  1999/11/02 15:55:22  ysato
+*     Upgrade for HNSS
+*     
+*     Revised:  Y. Fujii        24 February 2000
+*     Revised:  Y. Sato         16 October  1999
+*     Revised:  Y. Fujii         9 August   1999
+*     Author:   T. Takahashi    16 February 1999
+*     
+*     
+*     
+*     CTPTYPE=parm
+*     
+*     HES LAB ANGLE THETA,PHI(RADIANS)
+*     CENTRAL MOMENTUM 
+*     and EXPECTED MASS OF DETECTED PARTICLE IN HES
+      REAL*4  etheta_lab     
+      REAL*4  ephi_lab       
+      REAL*4  epcentral      
+      REAL*4  epartmass      
+      
+      COMMON/hes_spectrometer/
+     &     etheta_lab,
+     &     ephi_lab,
+     &     epcentral,
+     &     epartmass
+
+*
+*     HES debugs
+*
+
+      Integer*4 edumptrack
+      Integer*4 edumplayer
+      Integer*4 edumpphysics
+      Integer*4 edebugprintmiscraw
+      Integer*4 edebug_scinraw
+
+*     --- dump numbers in the logical unit no.
+*     --- e_res_dump_no dump event number and 10 residuals 
+*     --- for the best chi square.
+      Integer*4 e_res_dump_no
+
+      COMMON/HES_DEBUGS/
+     &     edumptrack,
+     &     edumplayer,
+     &     edumpphysics,
+     &     edebugprintmiscraw,
+     &     edebug_scinraw,
+     &     e_res_dump_no
+
+      Integer*4 etest_flag
+*     --- probably # of trigger counter <= 2
+      Integer*4 etrigger_channel(2)
+      
+      Common/HES_STIME_PAR/
+     &     etest_flag,
+     &     etrigger_channel
+
+*     
+*     CTPTYPE=event
+*
+      Real*4 estart_time
+      Integer*4 etrigger_flag
+
+      Common/HES_START_TIME/
+     &     estart_time,
+     &     etrigger_flag
+
+*     HES  DATA
+*     
+*******************************************************
+*     COMMON PARAMETERS
+*     
+*     1877 MULTI-HIT TDC depth. maximum=16.
+      INTEGER*4 ENUM_1877_DEPTH     
+      PARAMETER(ENUM_1877_DEPTH=8)
+
+
+*		Add EDC2 variables 10Feb09 DK
+      
+      INTEGER*4 EMAX_NUM_CHAMBERS  
+      PARAMETER(EMAX_NUM_CHAMBERS=2) !not used 
+      INTEGER*4 EMAX_NUM_DC1_LAYERS
+      PARAMETER(EMAX_NUM_DC1_LAYERS=10)
+      INTEGER*4 EMAX_NUM_DC2_LAYERS
+      PARAMETER(EMAX_NUM_DC2_LAYERS=6)
+      INTEGER*4 EMAX_NUM_DC1_SLOTS
+      PARAMETER(EMAX_NUM_DC1_SLOTS=70)
+      INTEGER*4 EMAX_NUM_DC2_SLOTS
+      PARAMETER(EMAX_NUM_DC2_SLOTS=40)
+      INTEGER*4 EDC1_MAX_WIRES_PER_LAYER
+      PARAMETER(EDC1_MAX_WIRES_PER_LAYER=122)
+      INTEGER*4 EDC2_MAX_WIRES_PER_LAYER
+      PARAMETER(EDC2_MAX_WIRES_PER_LAYER=122)
+*     
+*     to save memory, I(Miyoshi) set 
+*     max dc hits = 120*10 = 1200 x 4 multi-hits
+*     max set to 1200 if exceeded, something wrong.     
+*    
+      INTEGER*4 EMAX_DC1_HITS       
+      INTEGER*4 EMAX_DC1_DEC_HITS       
+      PARAMETER(EMAX_DC1_HITS=1200*4)
+      PARAMETER(EMAX_DC1_DEC_HITS=200)
+      INTEGER*4 EMAX_DC2_HITS       
+      INTEGER*4 EMAX_DC2_DEC_HITS       
+      PARAMETER(EMAX_DC2_HITS=1200*3)
+      PARAMETER(EMAX_DC2_DEC_HITS=200)
+
+* HODOSCOPE 2 layers. Each has 29 scintillators
+* layer=3 is for ehodo3. 
+      INTEGER*4 ENUM_SCIN_LAYERS
+      INTEGER*4 ENUM_SCIN_COUNTERS  
+      INTEGER*4 ENUM_SCIN_MULTIHITS
+      INTEGER*4 ENUM_SCIN_TOT_COUNTERS
+*
+*     EHODO3 is a single counter, so       
+*     maxhits = 51 counter x 8 multihit
+
+      PARAMETER (ENUM_SCIN_LAYERS=3)
+      PARAMETER (ENUM_SCIN_COUNTERS=29)
+      PARAMETER (ENUM_SCIN_MULTIHITS=8)
+      PARAMETER (ENUM_SCIN_TOT_COUNTERS=59)
+***********************************************************
+*
+*     CTPTYPE=event
+*
+*     RAW DC DATA FILLED BY G_decode_event_by_banks
+*     HES DRIFT CHAMBER HITS
+*         EACH CHAMBER HIT (TDC VALUE) HAS A 
+*             LAYER NUMBER
+*             WIRE NUMBER
+*             TDC VALUE
+*     THE TOTAL NUMBER OF HITS IS GIVEN IN EDC_RAW_TOT_HITS
+*     
+      INTEGER*4 EDC1_RAW_LAYER_NUM(EMAX_DC1_HITS)
+      INTEGER*4 EDC1_RAW_WIRE_NUM(EMAX_DC1_HITS)
+      INTEGER*4 EDC1_RAW_TDC(EMAX_DC1_HITS)
+      INTEGER*4 EDC1_RAW_TDC_SUB_TRIG(EMAX_DC1_HITS)
+      INTEGER*4 EDC1_RAW_TOT_HITS
+      COMMON/HES_RAW_DC1/
+     1     EDC1_RAW_TOT_HITS,
+     2     EDC1_RAW_LAYER_NUM,
+     3     EDC1_RAW_WIRE_NUM,
+     4     EDC1_RAW_TDC,
+     5     EDC1_RAW_TDC_SUB_TRIG
+      
+		INTEGER*4 EDC2_RAW_LAYER_NUM(EMAX_DC2_HITS)
+      INTEGER*4 EDC2_RAW_WIRE_NUM(EMAX_DC2_HITS)
+      INTEGER*4 EDC2_RAW_TDC(EMAX_DC2_HITS)
+      INTEGER*4 EDC2_RAW_TDC_SUB_TRIG(EMAX_DC2_HITS)
+      INTEGER*4 EDC2_RAW_TOT_HITS
+      COMMON/HES_RAW_DC2/
+     1     EDC2_RAW_TOT_HITS,
+     2     EDC2_RAW_LAYER_NUM,
+     3     EDC2_RAW_WIRE_NUM,
+     4     EDC2_RAW_TDC,
+     5     EDC2_RAW_TDC_SUB_TRIG
+
+*
+*     HES DC DECODED DATA
+*
+*     FILLED BY E_TRANS_DC ROUTINE 
+*     HES DRIFT CHAMBER HITS
+*     EACH CHAMBER HIT (TDC VALUE) HAS A 
+*         LAYER NUMBER 1-10
+*         GROUP NUMBER 1-5 x,v,x,u,x
+*         WIRE NUMBER
+*         TDC VALUE
+*         DRIFT TIME
+*         DRIFT DISTANCE
+*         WIRE_CENTER = GENERALIZED COORDINATE 
+*         WIRE COORD = WIRE CENTER + or - DRIFT DISTANCE
+*
+*     THE TOTAL NUMBER OF HITS IN EACH LAYER IS GIVEN 
+*     IN KDC_HITS_PER_LAYER(I)
+*     THE TOTAL NUMBER OF HITS IS GIVEN IN KDC_TOT_HITS
+*
+      INTEGER*4 EDC1_TOT_HITS
+      INTEGER*4 EDC1_LAYER_NUM(EMAX_DC1_DEC_HITS)            
+      INTEGER*4 EDC1_GROUP_NUM(EMAX_DC1_DEC_HITS)           
+      INTEGER*4 EDC1_WIRE_NUM(EMAX_DC1_DEC_HITS)            
+      INTEGER*4 EDC1_SLOT_NUM(EMAX_DC1_DEC_HITS)
+      INTEGER*4 EDC1_TDC(EMAX_DC1_DEC_HITS)            
+      INTEGER*4 EDC1_CLUSTER_SIZE(EMAX_DC1_DEC_HITS)
+      INTEGER*4 EDC1_HITS_PER_LAYER(EMAX_NUM_DC1_LAYERS)
+      REAL*4 EDC1_DRIFT_TIME(EMAX_DC1_DEC_HITS)
+      REAL*4 EDC1_DRIFT_DIS(EMAX_DC1_DEC_HITS)
+      REAL*4 EDC1_WIRE_CENTER(EMAX_DC1_DEC_HITS)
+      REAL*4 EDC1_WIRE_COORD(EMAX_DC1_DEC_HITS)
+      COMMON/HES_DECODED_DC1/
+     &     EDC1_TOT_HITS,
+     1     EDC1_DRIFT_TIME,
+     2     EDC1_DRIFT_DIS,
+     3     EDC1_WIRE_CENTER,
+     4     EDC1_WIRE_COORD,
+     5     EDC1_LAYER_NUM,
+     6     EDC1_GROUP_NUM,
+     7     EDC1_WIRE_NUM,
+     8     EDC1_SLOT_NUM,
+     9     EDC1_CLUSTER_SIZE,
+     &     EDC1_TDC,
+     &     EDC1_HITS_PER_LAYER
+      
+		INTEGER*4 EDC2_TOT_HITS
+      INTEGER*4 EDC2_LAYER_NUM(EMAX_DC2_DEC_HITS)            
+      INTEGER*4 EDC2_GROUP_NUM(EMAX_DC2_DEC_HITS)           
+      INTEGER*4 EDC2_WIRE_NUM(EMAX_DC2_DEC_HITS)            
+      INTEGER*4 EDC2_SLOT_NUM(EMAX_DC2_DEC_HITS)
+      INTEGER*4 EDC2_TDC(EMAX_DC2_DEC_HITS)            
+      INTEGER*4 EDC2_CLUSTER_SIZE(EMAX_DC2_DEC_HITS)
+      INTEGER*4 EDC2_HITS_PER_LAYER(EMAX_NUM_DC2_LAYERS)
+      REAL*4 EDC2_DRIFT_TIME(EMAX_DC2_DEC_HITS)
+      REAL*4 EDC2_DRIFT_DIS(EMAX_DC2_DEC_HITS)
+      REAL*4 EDC2_WIRE_CENTER(EMAX_DC2_DEC_HITS)
+      REAL*4 EDC2_WIRE_COORD(EMAX_DC2_DEC_HITS)
+      REAL*4 EDC2_DRIFT_TIME_MOD(EMAX_DC2_DEC_HITS)
+      REAL*4 EDC2_DRIFT_DIS_MOD(EMAX_DC2_DEC_HITS)
+      REAL*4 EDC2_WIRE_CENTER_MOD(EMAX_DC2_DEC_HITS)
+      REAL*4 EDC2_WIRE_COORD_MOD(EMAX_DC2_DEC_HITS)
+      COMMON/HES_DECODED_DC2/
+     &     EDC2_TOT_HITS,
+     &     EDC2_DRIFT_TIME,
+     &     EDC2_DRIFT_DIS,
+     &     EDC2_WIRE_CENTER,
+     &     EDC2_WIRE_COORD,
+     &     EDC2_DRIFT_TIME_MOD,
+     &     EDC2_DRIFT_DIS_MOD,
+     &     EDC2_WIRE_CENTER_MOD,
+     &     EDC2_WIRE_COORD_MOD,
+     &     EDC2_LAYER_NUM,
+     &     EDC2_GROUP_NUM,
+     &     EDC2_WIRE_NUM,
+     &     EDC2_SLOT_NUM,
+     &     EDC2_CLUSTER_SIZE,
+     &     EDC2_TDC,
+     &     EDC2_HITS_PER_LAYER
+
+*                                                     
+*     CTPTYPE=event                                          
+*                                                              
+*     HES DETECTOR TRACK QUANTITIES                              
+*     FILLED BY E_TRACK SUBROUTINE                               
+*                                    
+*     Maximum # of tracks, Maximum # of hits per track.
+*                         
+      INTEGER*4 ENTRACKS_MAX  
+      INTEGER*4 ENTRACKHITS_MAX      
+      PARAMETER (ENTRACKS_MAX=2000)              
+      PARAMETER (ENTRACKHITS_MAX=2000)             
+*
+*     The following are # of track, x,y,z,
+*     xp=dx/dz, yp=dy/dz,
+*     chi2,chi2/dof
+*
+
+      INTEGER*4 ENTRACKS_FP
+      INTEGER*4 ENTRACK_HITS(ENTRACKS_MAX,ENTRACKHITS_MAX+1)   
+      INTEGER*4 ENFREE_FP(ENTRACKS_MAX) 
+		
+      REAL*4  EX_FP(ENTRACKS_MAX)         
+      REAL*4  EY_FP(ENTRACKS_MAX)           	     
+      REAL*4  EZ_FP(ENTRACKS_MAX)                  	
+      REAL*4  EXP_FP(ENTRACKS_MAX)      	             	 
+      REAL*4  EYP_FP(ENTRACKS_MAX)              	       	
+      REAL*4  ECHI2_FP(ENTRACKS_MAX)                    	   
+      REAL*4  ECHI2PERDOF_FP(ENTRACKS_MAX)  	
+      real*4 edc1_single_residual(entracks_max,emax_num_dc1_layers)
+      real*4 edc1_track_coord(entracks_max,emax_num_dc1_layers)
+      real*4 edc2_single_residual(entracks_max,emax_num_dc2_layers)
+      real*4 edc2_track_coord(entracks_max,emax_num_dc2_layers)
+
+      COMMON/HES_FOCAL_PLANE/
+     &     ENTRACKS_FP,
+     1     EX_FP,
+     2     EY_FP,
+     3     EZ_FP,
+     4     EXP_FP,
+     5     EYP_FP,
+     6     ECHI2_FP,
+     7     ECHI2PERDOF_FP,
+     8     ENFREE_FP,
+     9     ENTRACK_HITS
+
+*     Index of focal plane track chosen  
+      INTEGER*4 ESNUM_FPTRACK          
+      COMMON/HES_PHYSICS_I4/ESNUM_FPTRACK
+
+*     HES TARGET QUANTITIES
+*     ASSUME THE SAME NUMBER 
+*     OF MAXIMUM TRACKS AS IN THE FOCAL PLANE
+*     ENTRACKS_MAX
+*     FILLED BY E_TARG_TRANS SUBROUTINE
+
+*     NUMBER OF TARGET TRACKS FOUND 
+      INTEGER*4 ENTRACKS_TAR        
+*     x,y,xp,yp in the target
+      REAL*4  EX_TAR(ENTRACKS_MAX)                
+      REAL*4  EY_TAR(ENTRACKS_MAX)                
+      REAL*4  EZ_TAR(ENTRACKS_MAX)                
+      REAL*4  EXP_TAR(ENTRACKS_MAX)               
+      REAL*4  EYP_TAR(ENTRACKS_MAX)               
+
+*hdelta_tar, hp_tar : delta and momentum
+      REAL*4  EDELTA_TAR(ENTRACKS_MAX)  
+      REAL*4  EP_TAR(ENTRACKS_MAX)                
+
+      REAL*4  ECHI2_TAR(ENTRACKS_MAX)             
+*! FIT QUALITY AT TARGET
+      INTEGER*4 ENFREE_TAR(ENTRACKS_MAX)          
+*! NUMBER OF DEGREES OF FREEDOM IN FIT
+      REAL*4  EDEL_TAR(5,5,ENTRACKS_MAX)              
+* TARGET  ERROR MATRIX
+* THE FOCAL PLANE ERROR MATRIX IS A 5 BY 5 BY SNTRACK_MAX ARRAY
+* THE FIVE INDECIES FOR EACH TRACK ARE X, Y , XP, YP and P
+* THE ERROR MATRIX FOR EACH TRACK IS SYMMETRIC ABOUT THE DIAGONAL
+*      DELXX  DELXXP  DELXY  DELXYP  DELXP
+*      DELXPX DELXPXP DELXPY DELXPYP DELXPP
+*      DELYX  DELYXPY DELYY  DELYYP  DELYP
+*      DELYPX DELYPXP DELYPY DELYPYP DELYPP
+*      DELPX  DELPXP  DELPY  DELPXP  DELPP
+
+      INTEGER*4 ELINK_TAR_FP(ENTRACKS_MAX)
+*! LINK POINTER TO FOCAL PLANE TRACK NUMBER
+
+      COMMON/HES_TARGET/
+     1     EX_TAR,
+     2     EY_TAR,
+     3     EZ_TAR,
+     4     EXP_TAR,
+     5     EYP_TAR,
+     6     EDELTA_TAR,
+     7     EP_TAR,
+     8     ECHI2_TAR,
+     9     EDEL_TAR,
+     A     ENFREE_TAR,
+     B     ELINK_TAR_FP,
+     C     ENTRACKS_TAR
+
+*
+*     HES SIEVE SLIT
+*     used in e_targ_trans.f
+*
+      Real*4 ex_sv(ENTRACKS_MAX) ,ey_sv(ENTRACKS_MAX)
+      Real*4 exp_sv(ENTRACKS_MAX) ,eyp_sv(ENTRACKS_MAX) 
+
+      Common/HES_SIEVE/
+     1     ex_sv,
+     2     ey_sv,
+     3     exp_sv,
+     4     eyp_sv
+
+*
+*     E_LINK_TRACKS
+*     link tracking to scin hits
+*     Maximum scin hits in a event is set to 4.
+*     max vector size is 4 + 1.
+
+      Integer*4 etrk_hodo_hit(entracks_max,5)
+      Real*4 etrk_fptime(entracks_max)
+      Real*4 etrk_pathlength(entracks_max)
+
+      COMMON/HES_LINK_TRACKS/
+     1     etrk_hodo_hit,
+     2     etrk_fptime,
+	  3     etrk_pathlength
+
+*****************************************************************
+*     HNSS RAW HODOSCOPE DATA FILLED BY G_decode_event_by_banks
+*         EACH HODOSCOPE HIT IS SPECIFIED BY A
+*              LAYER NUMBER   (1-10)
+*              COUNTER NUMBER (1-8)
+*              ADC VALUE
+*              TDC VALUE
+*     THE TOTAL NUMBER OF HITS IS GIVEN BY kscin_raw_nhits
+*     
+*     maximum number of hodoscope hits
+      INTEGER*4 EMAX_SCIN_HITS     
+      INTEGER*4 EMAX_SCIN_DEC_HITS     
+      PARAMETER (EMAX_SCIN_HITS=29*4*4*4)
+      PARAMETER (EMAX_SCIN_DEC_HITS=30)
+
+      INTEGER*4 escin_raw_layer_num(EMAX_SCIN_HITS)
+      INTEGER*4 escin_raw_counter_num(EMAX_SCIN_HITS)
+      INTEGER*4 escin_rawadc_pos(EMAX_SCIN_HITS)
+      INTEGER*4 escin_rawadc_neg(EMAX_SCIN_HITS)
+      INTEGER*4 escin_rawtdc_pos(EMAX_SCIN_HITS)
+      INTEGER*4 escin_rawtdc_neg(EMAX_SCIN_HITS)
+      INTEGER*4 escin_rawtdc_pos_sub_trig(EMAX_SCIN_HITS)
+      INTEGER*4 escin_rawtdc_neg_sub_trig(EMAX_SCIN_HITS)
+      INTEGER*4 escin_raw_tot_hits
+
+      COMMON/hes_raw_scin/
+     &  escin_raw_tot_hits,
+     &  escin_raw_layer_num,
+     &  escin_raw_counter_num,
+     &  escin_rawtdc_pos,
+     &  escin_rawtdc_neg,
+     &  escin_rawadc_pos,
+     &  escin_rawadc_neg,
+     &  escin_rawtdc_pos_sub_trig,
+     &  escin_rawtdc_neg_sub_trig
+
+**********************************************************************
+*     HNSS DECODED HODOSCOPE DATA FILLED BY e_trans_scin
+*         EACH HODOSCOPE HIT IS SPECIFIED BY A
+*              LAYER NUMBER   (1-10)
+*              COUNTER NUMBER (1-8)
+*              ADC VALUE
+*              TDC VALUE
+*              PULSE HEIGHT
+*              TIME
+*     THE TOTAL NUMBER OF HITS IS GIVEN BY escin_nhits
+*
+
+      INTEGER*4 escin_layer_num(EMAX_SCIN_DEC_HITS)
+      INTEGER*4 escin_counter_num(EMAX_SCIN_DEC_HITS)
+      INTEGER*4 escin_tdc_pos(EMAX_SCIN_DEC_HITS)
+      INTEGER*4 escin_tdc_neg(EMAX_SCIN_DEC_HITS)
+      REAL*4    escin_adc_pos(EMAX_SCIN_DEC_HITS)
+      REAL*4    escin_adc_neg(EMAX_SCIN_DEC_HITS)
+* good hits = 0 for only one hit ; = 1 for both hits 
+      INTEGER*4 escin_good_hits(EMAX_SCIN_DEC_HITS)
+      INTEGER*4 escin_tot_hits
+      REAL*4    escin_time_pos(EMAX_SCIN_DEC_HITS)
+      REAL*4    escin_time_neg(EMAX_SCIN_DEC_HITS)
+      REAL*4    escin_mean_time(EMAX_SCIN_DEC_HITS)
+
+      COMMON/hes_decoded_scin/
+     &  escin_tot_hits,
+     &  escin_good_hits,
+     &  escin_layer_num,
+     &  escin_counter_num,
+     &  escin_tdc_pos,
+     &  escin_tdc_neg,
+     &  escin_adc_pos,
+     &  escin_adc_neg,
+     &  escin_time_pos,
+     &  escin_time_neg,
+     &  escin_mean_time
+
+
+***********************************
+* 	fission chamber raw hits
+***********************************
+	
+      INTEGER*4 EMAX_FIS_POS_HITS
+      INTEGER*4 EMAX_FIS_TIME_HITS
+      PARAMETER(EMAX_FIS_POS_HITS=4*4*8)
+      PARAMETER(EMAX_FIS_TIME_HITS=4*4*8)
+*     16*4*8=64*8=480+32=512
+*     4*4*8=128
+*     TUL 32*4*8=32*32=960+64=1024
+      
+      INTEGER*4 efis_pos_raw_hits
+      INTEGER*4 efis_time_raw_hits
+      INTEGER*4 efis_pos_raw_layer(EMAX_FIS_POS_HITS)
+      INTEGER*4 efis_pos_raw_tdc(EMAX_FIS_POS_HITS)
+      INTEGER*4 efis_time_raw_layer(EMAX_FIS_TIME_HITS)
+      INTEGER*4 efis_time_raw_adc(EMAX_FIS_TIME_HITS)
+      INTEGER*4 efis_time_raw_tdc(EMAX_FIS_TIME_HITS)
+      Integer*4 efis_raw_dummy(1024)
+*     dummy is dummy. choose max number of hits
+
+      COMMON /fis_raw/
+     &   efis_pos_raw_hits,
+     &   efis_time_raw_hits,
+     &   efis_pos_raw_layer,
+     &   efis_pos_raw_tdc,
+     &   efis_time_raw_layer,
+     &   efis_time_raw_adc,
+     &   efis_time_raw_tdc,
+     &	 efis_raw_dummy
+
+**********************************************************************
+*     HNSS MISCELLANEOUS DATA FILLED BY G_decode_event_by_banks
+*
+      INTEGER*4 EMAX_MISC_HITS
+      PARAMETER (EMAX_MISC_HITS=3)
+      INTEGER*4 emisc_raw_adc(EMAX_MISC_HITS)
+      INTEGER*4 emisc_raw_tdc(EMAX_MISC_HITS)
+      INTEGER*4 emisc_raw_layer_num(EMAX_MISC_HITS)
+      INTEGER*4 emisc_raw_counter_num(EMAX_MISC_HITS)
+      INTEGER*4 emisc_raw_dummy(EMAX_MISC_HITS)
+      INTEGER*4 emisc_raw_tot_hits
+
+      COMMON/hes_misc_raw/
+     &  emisc_raw_adc,
+     &  emisc_raw_tdc,
+     &  emisc_raw_layer_num,
+     &  emisc_raw_counter_num,
+     &  emisc_raw_dummy,
+     &  emisc_raw_tot_hits
+
+**********************************************************************
+*     HES PHYSICS QUANTITIES
+*     FILLED BY E_PHYSICS
+*
+*     PARTICLE momentum and time fp and target
+*  
+
+      INTEGER*4 ENPHYSICS_MAX
+      PARAMETER(ENPHYSICS_MAX=10)
+
+      INTEGER*4 enphysics
+
+*     note : all energy is in GeV
+*
+*     esp          lab momentum
+*     esenergy     lab total energy
+*     escorrp      electron momentum corrected for eloss
+*     escorre      electron energy corrected for eloss
+*     esdelta      Spectrometer delta of chosen track
+*     estheta      Lab Scattering angle in radians
+*     ESPHI        Lab Azymuthal angle in radians
+*     ESMINV       Invariant Mass of remaing hadronic system
+
+      REAL*4 ESP(ENPHYSICS_MAX)              
+      REAL*4 ESENERGY(ENPHYSICS_MAX)                   
+      REAL*4 ESCORRP(ENPHYSICS_MAX)                    
+      REAL*4 ESCORRE(ENPHYSICS_MAX)                    
+      REAL*4 ESDELTA(ENPHYSICS_MAX)       
+      REAL*4 ESTHETA(ENPHYSICS_MAX)             
+      REAL*4 ESPHI(ENPHYSICS_MAX)        
+      REAL*4 ESMINV(ENPHYSICS_MAX)                       
+      REAL*4 ESZBEAM(ENPHYSICS_MAX)                    
+* Lab Z coordinate of intersection of beam
+* track with spectrometer ray
+
+      REAL*4 ESTIME_AT_FP(ENPHYSICS_MAX) 
+      REAL*4 ESX_FP(ENPHYSICS_MAX)                
+      REAL*4 ESY_FP(ENPHYSICS_MAX) 
+      REAL*4 ESXP_FP(ENPHYSICS_MAX) 
+      REAL*4 ESYP_FP(ENPHYSICS_MAX) 
+      REAL*4 ESCHI2PERDEG(ENPHYSICS_MAX)
+      REAL*4 EDC1_RESI(ENPHYSICS_MAX,EMAX_NUM_DC1_LAYERS)!Residual
+      REAL*4 EDC2_RESI(ENPHYSICS_MAX,EMAX_NUM_DC2_LAYERS)!Residual
+      REAL*4 ESTIME_AT_TAR(ENPHYSICS_MAX)
+      REAL*4 ESX_TAR(ENPHYSICS_MAX) 
+      REAL*4 ESY_TAR(ENPHYSICS_MAX) 
+      REAL*4 ESXP_TAR(ENPHYSICS_MAX) 
+      REAL*4 ESYP_TAR(ENPHYSICS_MAX) 
+
+      REAL*4 ESX_SV(ENPHYSICS_MAX) 
+      REAL*4 ESY_SV(ENPHYSICS_MAX) 
+      REAL*4 ESXP_SV(ENPHYSICS_MAX) 
+      REAL*4 ESYP_SV(ENPHYSICS_MAX) 
+
+      REAL*4 ESSCIN_DEPO(ENPHYSICS_MAX)
+
+      REAL*4 esnco1(ENPHYSICS_MAX)
+      REAL*4 esnco2(ENPHYSICS_MAX)
+      REAL*4 esnco3(ENPHYSICS_MAX)
+      REAL*4 esnt1(ENPHYSICS_MAX)
+      REAL*4 esnt2(ENPHYSICS_MAX)
+      REAL*4 esnt3(ENPHYSICS_MAX)
+      REAL*4 esnt1m(ENPHYSICS_MAX)
+      REAL*4 esnt2m(ENPHYSICS_MAX)
+      REAL*4 esna1(ENPHYSICS_MAX)
+      REAL*4 esna2(ENPHYSICS_MAX)
+      REAL*4 esna3(ENPHYSICS_MAX)
+      REAL*4 esna1m(ENPHYSICS_MAX)
+      REAL*4 esna2m(ENPHYSICS_MAX)
+*
+      REAL*4 ESMASS2(ENPHYSICS_MAX)               
+*! Mass squared
+      REAL*4 EST(ENPHYSICS_MAX)                   
+*! invariant t
+      REAL*4 ESU(ENPHYSICS_MAX)                   
+*! invariant u
+      REAL*4 ESELOSS(ENPHYSICS_MAX)
+      REAL*4 ESQ3(ENPHYSICS_MAX)                  
+*! Lab frame momentum transfer
+*      REAL*4 SSTHETAQ, SSPHIQ      ! Direction of q3
+      REAL*4 ESBIGQ2(ENPHYSICS_MAX)               
+*! Q**2
+      REAL*4 ESX(ENPHYSICS_MAX)                   
+*! fraction of nucleon p carried by quark
+      REAL*4 ESY(ENPHYSICS_MAX)                   
+*! fraction of lepton''s E lost in lab
+      REAL*4 ESW(ENPHYSICS_MAX)                   
+*! Invariant mass of recoil system
+      REAL*4 ESW2(ENPHYSICS_MAX)                  
+*! Invariant mass**2 of recoil system
+
+
+*
+*     INTEGER 
+*	
+*  Index of target track chosen
+      INTEGER*4 ESID_LUND(ENPHYSICS_MAX)          
+*  LUND particle ID code -- not yet filled
+      INTEGER*4 ESNFREE_FP(ENPHYSICS_MAX) 
+
+      INTEGER*4 ESNUM_SCIN_HIT(ENPHYSICS_MAX)   
+*  # OF SCINTILLATORS ON TRACK
+      INTEGER*4 ESNUM_PMT_HIT(ENPHYSICS_MAX)    
+*  # OF HODOSCOPE PMTS ON TRACK
+*
+      INTEGER*4 ephys_scin_hits(ENPHYSICS_MAX,ENPHYSICS_MAX+1)
+
+*     (i,1) # of scintillators on track = n
+*     (i,2)...(i,1+n) escin_tot_hits common block vector index 
+
+      Integer*4 ephys_ntrack(ENPHYSICS_MAX)
+
+      COMMON/HES_PHYSICS_R4/
+     & ESP,
+     & ESENERGY,
+     & ESDELTA,
+     & ESTHETA,
+     & ESPHI,
+     & ESMINV,
+     & ESZBEAM,
+     & ESTIME_AT_FP,
+     & ESSCIN_DEPO,
+     & esnco1, 
+     & esnco2, 
+     & esnt1, 
+     & esnt2, 
+     & esnt1m, 
+     & esnt2m, 
+     & esna1, 
+     & esna2, 
+     & esna1m, 
+     & esna2m, 
+     & ESX_FP ,
+     & ESY_FP ,
+     & ESXP_FP ,
+     & ESYP_FP ,
+     & ESCHI2PERDEG,
+     & EDC1_RESI,
+     & EDC2_RESI, 
+     & ESX_TAR ,
+     & ESY_TAR ,
+     & ESXP_TAR ,
+     & ESYP_TAR ,
+     & ESX_SV ,
+     & ESY_SV ,
+     & ESXP_SV ,
+     & ESYP_SV ,
+     & ESTIME_AT_TAR,
+     & ESMASS2,
+     & EST,
+     & ESU,
+     & ESELOSS,
+     & ESQ3,
+     & ESBIGQ2,
+     & ESX,
+     & ESY,
+     & ESW,
+     & ESW2,
+     & ESCORRP,
+     & ESCORRE
+
+*     & ESTHETAQ, ESPHIQ,
+*
+      COMMON/HES_PHYSICS_I4/
+     & ESID_LUND,
+     & ESNFREE_FP,
+     & ESNUM_SCIN_HIT,
+     & ESNUM_PMT_HIT,
+     & ephys_scin_hits,
+     & ephys_ntrack,
+     & ENPHYSICS
+
+*     
+*     TUL output ehodo = 1 module
+*     etul_tot_hits
+*     
+      Integer*4 EMAX_TUL_HITS
+      PARAMETER(EMAX_TUL_HITS=1*32*8)
+      Integer*4 etul_raw_tot_hits
+      Integer*4 etul_raw_layer_num(EMAX_TUL_HITS)
+      Integer*4 etul_raw_channel_num(EMAX_TUL_HITS)
+      Integer*4 etul_raw_tdc(EMAX_TUL_HITS)
+      
+      COMMON/HES_RAW_TUL/
+     &     etul_raw_tot_hits,
+     &     etul_raw_layer_num,
+     &     etul_raw_channel_num,
+     &     etul_raw_tdc
+      
+      Integer*4 etul_tot_hits
+      Integer*4 etul_layer_num(EMAX_TUL_HITS)
+      Integer*4 etul_channel_num(EMAX_TUL_HITS)
+      Integer*4 etul_tdc(EMAX_TUL_HITS)
+      
+      COMMON/HES_DEC_TUL/
+     &     etul_tot_hits,
+     &     etul_channel_num,
+     &     etul_tdc
+
+      
+*     tul tdc cut condition
+*     CTPTYPE=parm
+*
+      Integer*4 etul_tdc_min,etul_tdc_max
+      
+      Common/ETUL_PARAM/
+     &     etul_tdc_min,etul_tdc_max
+      
+      real*4 esrfdiff, esrftime
+      Common/erf/esrftime, esrfdiff
+
+*     
+*     CTPTYPE=event
+*     
+****************** end: hes_data_structures.cmn ************************
+*     Local Variables:
+*     mode: fortran
+*     fortran-continuation-string: "&"
+*     comment-column: 35
+*     End:

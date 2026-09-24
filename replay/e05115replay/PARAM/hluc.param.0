@@ -1,15 +1,15 @@
 
-      hluc_tdc_pos_min = 19750
+      hluc_tdc_pos_min = 10000
 
-      hluc_tdc_pos_max = 21000
+      hluc_tdc_pos_max = 30000
 
-      hluc_tdc_neg_min = 19750
+      hluc_tdc_neg_min = 10000
 
-      hluc_tdc_neg_max = 21000
+      hluc_tdc_neg_max = 30000
 
-      hluc_tdc_tot_min = 9900
+      hluc_tdc_tot_min = 8000
 
-      hluc_tdc_tot_max = 10500
+      hluc_tdc_tot_max = 12000
 
 ; Lucite Cherenkov detecots has one layers and 16 counters per
 ; All values are needed to be reset -- Z. Ye 08/04/2009
@@ -240,7 +240,7 @@
     hluc_height    = 69.57
     hluc_thickness =  3.2
 
-    hluc_slope = 5.0
+    hluc_slope = 2.0
 
     hluc_npe_min = 0.5
 

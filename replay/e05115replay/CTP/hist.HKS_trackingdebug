@@ -11,16 +11,18 @@ htrkdiff,21,0.,21.     $HDC ntrack difference
 hntracksfpfinal,100,0.,1000.    $HDC ntracks fp final 
 hntracksfpfinalzoom,20,0.,20.   $HDC ntracks fp final (zoom)
 
-hsingresfinal01,200,-1.,1.    $HDC residual final 01
-hsingresfinal02,200,-1.,1.    $HDC residual final 02
-hsingresfinal03,200,-1.,1.    $HDC residual final 03
-hsingresfinal04,200,-1.,1.    $HDC residual final 04
-hsingresfinal05,200,-1.,1.    $HDC residual final 05
-hsingresfinal06,200,-1.,1.    $HDC residual final 06
-hsingresfinal07,200,-1.,1.    $HDC residual final 07
-hsingresfinal08,200,-1.,1.    $HDC residual final 08
-hsingresfinal09,200,-1.,1.    $HDC residual final 09
-hsingresfinal10,200,-1.,1.    $HDC residual final 10
+hsingresfinal01,200,-0.5,0.5    $HDC residual final 01
+hsingresfinal02,200,-0.5,0.5    $HDC residual final 02
+hsingresfinal03,200,-0.5,0.5    $HDC residual final 03
+hsingresfinal04,200,-0.5,0.5    $HDC residual final 04
+hsingresfinal05,200,-0.5,0.5    $HDC residual final 05
+hsingresfinal06,200,-0.5,0.5    $HDC residual final 06
+hsingresfinal07,200,-0.5,0.5    $HDC residual final 07
+hsingresfinal08,200,-0.5,0.5    $HDC residual final 08
+hsingresfinal09,200,-0.5,0.5    $HDC residual final 09
+hsingresfinal10,200,-0.5,0.5    $HDC residual final 10
+hsingresfinal11,200,-0.5,0.5    $HDC residual final 11
+hsingresfinal12,200,-0.5,0.5    $HDC residual final 12
 
 ;hxfpfinal,240,-60.,60.               $HDC x fp final 
 ;hyfpfinal,120,-30.,30.               $HDC y fp final 
@@ -31,5 +33,18 @@ hsingresfinal10,200,-1.,1.    $HDC residual final 10
 
 ;hchi2final,100,0.,500.          $HDC chi2 per dof fp final
 ;hchi2finalzoom,100,0.,20.       $HDC chi2 per dof fp final (zoom)
+
+hdcdistime01,100,-10.,110.,100,-0.5,0.5    $KDC1 dis vs time 01
+hdcdistime02,100,-10.,110.,100,-0.5,0.5    $KDC1 dis vs time 02
+hdcdistime03,100,-10.,110.,100,-0.5,0.5    $KDC1 dis vs time 03
+hdcdistime04,100,-10.,110.,100,-0.5,0.5    $KDC1 dis vs time 04
+hdcdistime05,100,-10.,110.,100,-0.5,0.5    $KDC1 dis vs time 05
+hdcdistime06,100,-10.,110.,100,-0.5,0.5    $KDC1 dis vs time 06
+hdcdistime07,100,-10.,110.,100,-0.5,0.5    $KDC2 dis vs time 01
+hdcdistime08,100,-10.,110.,100,-0.5,0.5    $KDC2 dis vs time 02
+hdcdistime09,100,-10.,110.,100,-0.5,0.5    $KDC2 dis vs time 03
+hdcdistime10,100,-10.,110.,100,-0.5,0.5    $KDC2 dis vs time 04
+hdcdistime11,100,-10.,110.,100,-0.5,0.5    $KDC2 dis vs time 05
+hdcdistime12,100,-10.,110.,100,-0.5,0.5    $KDC2 dis vs time 06
 
 end hist hks_trackingdebug

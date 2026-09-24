@@ -82,13 +82,13 @@ c     &       ,gtrig_tdc(gtrig_tot_hits)
 
 c     --- full trigger flag
             if(gtrig_channel_num(gtrig_tot_hits) .eq. 1) then
-c               gtrig_flag_hes = gtrig_tdc(gtrig_tot_hits)
-               gtrig_flag_hes = tdc
+               gtrig_flag_hes = gtrig_tdc(gtrig_tot_hits)
+c               gtrig_flag_hes = tdc
                Call HF1(gidtrigtdc1,float(gtrig_tdc(gtrig_tot_hits)),1.)
             EndIf
             if(gtrig_channel_num(gtrig_tot_hits) .eq. 2) then
-c               gtrig_flag_kaonsum = gtrig_tdc(gtrig_tot_hits)
-               gtrig_flag_kaonsum = tdc
+               gtrig_flag_kaonsum = gtrig_tdc(gtrig_tot_hits)
+c               gtrig_flag_kaonsum = tdc
                Call HF1(gidtrigtdc2,float(gtrig_tdc(gtrig_tot_hits)),1.)
             EndIf
             if(gtrig_channel_num(gtrig_tot_hits) .eq. 3) then

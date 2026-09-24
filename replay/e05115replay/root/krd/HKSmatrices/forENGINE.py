@@ -2,10 +2,10 @@
 
 def f2t():
 	name_oFILE="hks_recon_coeff.dat"
-	name_Mmom="mom4_6Oct09.dat"
-	name_Mxpt="xpt4_6Oct09.dat"
-	name_Mypt="ypt4_6Oct09.dat"
-	name_Mlen="len4_6Oct09.dat"
+	name_Mmom="mom6_22Sep10.dat"
+	name_Mxpt="xpt6_22Sep10.dat"
+	name_Mypt="ypt6_22Sep10.dat"
+	name_Mlen="len6_22Sep10.dat"
 
 	fMom=open(name_Mmom,"r")
 	fXpt=open(name_Mxpt,"r")
@@ -66,8 +66,8 @@ def f2t():
 
 def t2s():
 	name_oFILE="hks_t2s_coeff.dat"
-	name_Mxss="xss4_24Aug09.dat"
-	name_Myss="yss4_24Aug09.dat"
+	name_Mxss="xss4_22Sep10.dat"
+	name_Myss="yss4_22Sep10.dat"
 
 	fXss=open(name_Mxss,"r")
 	fYss=open(name_Myss,"r")
@@ -98,7 +98,6 @@ def t2s():
 		mmm = int(pXss[3])
 		f.write("%10lf %10lf %d %d %d\n"%(aaa,bbb,kkk,lll,mmm))
 		n+=1
-
 	f.write(" ---------------------------------------------------------------------\n")
 	f.close()
 

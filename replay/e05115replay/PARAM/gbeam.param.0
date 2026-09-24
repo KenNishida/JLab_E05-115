@@ -6,7 +6,9 @@
 
   guse_bpm_in_recon  = 0   ; if 1 use bpm information for reconstruction
   guse_bpmc = 1  ; if 1 use all 3 bpm info, if 0 use bpm A and B 
-  gbpm_sample  = 500 ; number of events, which are used for average 
+  gbpm_sample  = 1 ; number of events, which are used for average 
+                     ; beam position ( <5000 ). Optimal value dep. on rate
+;  gbpm_sample  = 500 ; number of events, which are used for average 
                      ; beam position ( <5000 ). Optimal value dep. on rate
 
 ; the names are based on Paul Gueye's 'Status of the actual Beam Position
@@ -49,12 +51,18 @@ gbpm_x_off = -0.037,-0.016,-0.028
   gspec_yoff  = +0.00
   gspec_ypoff = +0.00
 
+; Following pedestal values are determined by AC LED trigger run=76400
+  gbpm_xp_ped = 1882., 851., 884. ; these pedestals have to be determined
+  gbpm_xm_ped = 3126. 1032., 961. ; from runs with no beam in the cavities,
+  gbpm_yp_ped = 1921., 825., 853. ; e.g. cosmic runs.
+  gbpm_ym_ped = 3379., 940., 874. ;
+
 ; Pedestals for BPM ADCs: from cosmic run #10933, 10/3/96, book XI-137
 ; new pedestals from HKS run#55464 
-  gbpm_xp_ped = 1645., 1737., 1560.     ; these pedestals have to be determined
-  gbpm_xm_ped = 1734. 1632.,2449.   ; from runs with no beam in the cavities,
-  gbpm_yp_ped = 1547., 1590.,1541.   ; e.g. cosmic runs.
-  gbpm_ym_ped = 1794., 1578., 2588. ;
+;  gbpm_xp_ped = 1645., 1737., 1560.     ; these pedestals have to be determined
+;  gbpm_xm_ped = 1734. 1632.,2449.   ; from runs with no beam in the cavities,
+;  gbpm_yp_ped = 1547., 1590.,1541.   ; e.g. cosmic runs.
+;  gbpm_ym_ped = 1794., 1578., 2588. ;
 
 ;  gbpm_xp_ped = 431.9,331.0,0.  ; these pedestals have to be determined
 ;  gbpm_xm_ped = 514.7,350.6,0.  ; from runs with no beam in the cavities,

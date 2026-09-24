@@ -141,10 +141,12 @@
 
       Real*4 hsaer_npe(HNPHYSICS_MAX,HNUM_AER_LAYERS)
       Real*4 hswat_npe(HNPHYSICS_MAX,HNUM_WAT_LAYERS)
+      Real*4 hswat_npe_k_ratio(HNPHYSICS_MAX,HNUM_WAT_LAYERS)
       Real*4 hsluc_npe(HNPHYSICS_MAX,HNUM_LUC_LAYERS)	
       
       Real*4 hsaer_npe2(HNPHYSICS_MAX,HNUM_AER_LAYERS)
       Real*4 hswat_npe2(HNPHYSICS_MAX,HNUM_WAT_LAYERS)
+      Real*4 hswat_npe_k_ratio2(HNPHYSICS_MAX,HNUM_WAT_LAYERS)
       Real*4 hsluc_npe2(HNPHYSICS_MAX,HNUM_LUC_LAYERS)
       
       Real*4 hsaer_time(HNPHYSICS_MAX,HNUM_AER_LAYERS)
@@ -155,6 +157,39 @@
       Real*4 hswat_time2(HNPHYSICS_MAX,HNUM_WAT_LAYERS)
       Real*4 hsluc_time2(HNPHYSICS_MAX,HNUM_LUC_LAYERS)
 
+      Real*4 hsaer_npe_pos(HNPHYSICS_MAX,HNUM_AER_LAYERS)
+      Real*4 hswat_npe_pos(HNPHYSICS_MAX,HNUM_WAT_LAYERS)
+      Real*4 hsluc_npe_pos(HNPHYSICS_MAX,HNUM_LUC_LAYERS)	
+      
+      Real*4 hsaer_npe_pos2(HNPHYSICS_MAX,HNUM_AER_LAYERS)
+      Real*4 hswat_npe_pos2(HNPHYSICS_MAX,HNUM_WAT_LAYERS)
+      Real*4 hsluc_npe_pos2(HNPHYSICS_MAX,HNUM_LUC_LAYERS)
+      
+      Real*4 hsaer_time_pos(HNPHYSICS_MAX,HNUM_AER_LAYERS)
+      Real*4 hswat_time_pos(HNPHYSICS_MAX,HNUM_WAT_LAYERS)
+      Real*4 hsluc_time_pos(HNPHYSICS_MAX,HNUM_LUC_LAYERS)	
+
+      Real*4 hsaer_time_pos2(HNPHYSICS_MAX,HNUM_AER_LAYERS)
+      Real*4 hswat_time_pos2(HNPHYSICS_MAX,HNUM_WAT_LAYERS)
+      Real*4 hsluc_time_pos2(HNPHYSICS_MAX,HNUM_LUC_LAYERS)
+
+
+      Real*4 hsaer_npe_neg(HNPHYSICS_MAX,HNUM_AER_LAYERS)
+      Real*4 hswat_npe_neg(HNPHYSICS_MAX,HNUM_WAT_LAYERS)
+      Real*4 hsluc_npe_neg(HNPHYSICS_MAX,HNUM_LUC_LAYERS)	
+      
+      Real*4 hsaer_npe_neg2(HNPHYSICS_MAX,HNUM_AER_LAYERS)
+      Real*4 hswat_npe_neg2(HNPHYSICS_MAX,HNUM_WAT_LAYERS)
+      Real*4 hsluc_npe_neg2(HNPHYSICS_MAX,HNUM_LUC_LAYERS)
+      
+      Real*4 hsaer_time_neg(HNPHYSICS_MAX,HNUM_AER_LAYERS)
+      Real*4 hswat_time_neg(HNPHYSICS_MAX,HNUM_WAT_LAYERS)
+      Real*4 hsluc_time_neg(HNPHYSICS_MAX,HNUM_LUC_LAYERS)	
+
+      Real*4 hsaer_time_neg2(HNPHYSICS_MAX,HNUM_AER_LAYERS)
+      Real*4 hswat_time_neg2(HNPHYSICS_MAX,HNUM_WAT_LAYERS)
+      Real*4 hsluc_time_neg2(HNPHYSICS_MAX,HNUM_LUC_LAYERS)
+      
       integer*4 hsscin_elem_hit(HNPHYSICS_MAX,4)
       Real*4 hsaer_num(HNPHYSICS_MAX,HNUM_AER_LAYERS)
       Real*4 hswat_num(HNPHYSICS_MAX,HNUM_WAT_LAYERS)
@@ -169,10 +204,18 @@
      &     hsx_aer,hsy_aer,
      &     hsx_wat,hsy_wat,
      &     hsx_luc,hsy_luc,
-     &     hsaer_npe,hswat_npe,hsluc_npe,
-     &     hsaer_npe2,hswat_npe2,hsluc_npe2,
+     &     hsaer_npe,hswat_npe,hswat_npe_k_ratio,hsluc_npe,
+     &     hsaer_npe2,hswat_npe2,hswat_npe_k_ratio2,hsluc_npe2,
      &     hsaer_time,hswat_time,hsluc_time,
      &     hsaer_time2,hswat_time2,hsluc_time2,
+     &     hsaer_npe_pos,hswat_npe_pos,hsluc_npe_pos,
+     &     hsaer_npe_pos2,hswat_npe_pos2,hsluc_npe_pos2,
+     &     hsaer_time_pos,hswat_time_pos,hsluc_time_pos,
+     &     hsaer_time_pos2,hswat_time_pos2,hsluc_time_pos2,
+     &     hsaer_npe_neg,hswat_npe_neg,hsluc_npe_neg,
+     &     hsaer_npe_neg2,hswat_npe_neg2,hsluc_npe_neg2,
+     &     hsaer_time_neg,hswat_time_neg,hsluc_time_neg,
+     &     hsaer_time_neg2,hswat_time_neg2,hsluc_time_neg2,
      &     hsscin_elem_hit,
      &     hsaer_num,
      &     hswat_num,

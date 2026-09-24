@@ -10,7 +10,7 @@ hsytar,20,-20.,20.         $hs y tar
 hsxptar,120,-0.2,0.4       $hs xp tar
 hsyptar,120,-0.3,0.3       $hs yp tar
 hsdelta,120,-30.,30.       $hs delta
-hsbeta,200,0.2,1.2          $hs beta
+hsbeta,200,0.6,1.2          $hs beta
 hstof,120,2.,8.           $hs tof
 hstimeatfp,200,10.,60.      $hstime at fp
 hsp,240,0.6,1.8            $hs momentum

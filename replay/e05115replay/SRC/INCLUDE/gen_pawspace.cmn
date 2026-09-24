@@ -21,7 +21,7 @@
 *
       INTEGER G_sizeHBOOK,G_sizeHIGZ,G_sizeKUIP,G_sizePAW
 *      PARAMETER (G_sizeHBOOK= 1000000)
-      PARAMETER (G_sizeHBOOK= 3000000)
+      PARAMETER (G_sizeHBOOK= 5000000)
       PARAMETER (G_sizeHIGZ=  500000)
       PARAMETER (G_sizeKUIP=   75000)
       PARAMETER (G_sizePAW=G_sizeHIGZ+G_sizeKUIP+

@@ -1,6 +1,6 @@
       subroutine E_DC1_TRACK_FIT(ABORT,err,ierr)
 *     
-*     primary track fitting routine for the Enge spectrometer
+*     primary track fitting routine for the HES 
 *     Called by E_TRACK
 *     
 *     d.f. geesaman         8 Sept 1993
@@ -87,7 +87,7 @@
       integer*4 nwire,jfit,flag_used(10),nseva_loops
       integer*4 wn,slot
       
-      integer*4 temp_on_track_hits(10),set_new_track
+      integer*4 temp_on_track_hits(11),set_new_track
       real*4 wc,wco,slope,layer_temp_fpt
       real*4 entracks_pre_seva
       real*4 dt
@@ -136,6 +136,7 @@ c     variables for LNS routine
       real*4 ctj_lns,stj_lns,sij_lns,da1_lns,da2_lns
       real*4 rayang_lns
       real*4 dsl_lns(16)
+      real*4 ds_lns(16)
       integer*4 mini_lns,mini1_lns,mini2_lns
       real*4 minads1_lns,minads2_lns
       real*4 dsc11_lns,dsc12_lns,dsc21_lns,dsc22_lns
@@ -143,9 +144,9 @@ c     variables for LNS routine
       parameter (MaxIteration = 3)
       real*4 IncAngleDifference
       parameter (IncAngleDifference = 5.*raddeg)
-      integer*4 ii,jj,mark(entracks_pre)
+      integer*4 ii,jj,mark(entracks_pre_max)
       real*4 tmp_lns, tdc_sub,temp_time
-      integer*4 la,co,num,seva_loop,hit1,hit2,la1,la2
+      integer*4 la,co,num,seva_loop,hit1,hit2,la1,la2,co1,co2
       integer*4 num_la(emax_num_dc1_layers),kk
       real*4 stime,x_la,x_min,x_max,temp_on_track
 
@@ -172,6 +173,7 @@ c
       real*4 xx1,xx2,yy1,yy2
       real*4 ss1(16),ss2(16),zz1(16),zz2(16)
       integer*4 edc1eff_counter
+      integer*4 edc1eff_start
 *     
       ABORT= .FALSE.
       ierr=0
@@ -220,9 +222,9 @@ c
          edc1bestchi2_pre(i) = 1000000.
          edc1bestchi2_pre_index(i) = -1
       EndDo
-      
+
       do itrk=1,entracks_pre
-cDK         edc1track_fit_num=itrk            
+c     DK         edc1track_fit_num=itrk            
          enfree_pre(itrk)=entrack_hits_pre(itrk,1)-enum_fpray_param
          if(enfree_pre(itrk).gt.0) then 
             if (seva_loop.gt.0) goto 6789
@@ -230,78 +232,79 @@ cDK         edc1track_fit_num=itrk
 *     1st loop
 *******************************************
 *     initialize parameters
-            do i=1,enum_fpray_param
-               TTT(i)=0.
-               do ihit=2,entrack_hits_pre(itrk,1)+1
-                  hit=entrack_hits_pre(itrk,ihit)
-                  pln=edc1_layer_num(hit)
-                  TTT(i)=TTT(i)+((edc1_wire_coord(hit)*
-     &                 edc1layer_coeff(remap(i),pln))
-     &                 /(edc1_sigma(pln)*edc1_sigma(pln)))
-               enddo
-            enddo
-            
-            do i=1,enum_fpray_param
-               do j=1,enum_fpray_param
-                  AA(i,j)=0.
-                  if(j.lt.i)then
-                     AA(i,j)=AA(j,i)
-                  else
-                     do ihit=2,entrack_hits_pre(itrk,1)+1
-                        hit=entrack_hits_pre(itrk,ihit)
-                        pln=edc1_layer_num(hit)
-                        AA(i,j)=AA(i,j) + (
-     &                       edc1layer_coeff(remap(i),pln)
-     &                       *edc1layer_coeff(remap(j),pln)
-     &                       /(edc1_sigma(pln)*edc1_sigma(pln)))
-                     enddo      ! end loop on ihit
-                  endif         ! end test on j .lt. i
-               enddo            ! end loop on j
-            enddo               ! end loop on i
+c            do i=1,enum_fpray_param
+c               TTT(i)=0.
+c               do ihit=2,entrack_hits_pre(itrk,1)+1
+c                  hit=entrack_hits_pre(itrk,ihit)
+c                  pln=edc1_layer_num(hit)
+c                  TTT(i)=TTT(i)+((edc1_wire_coord(hit)*
+c     &                 edc1layer_coeff(remap(i),pln))
+c     &                 /(edc1_sigma(pln)*edc1_sigma(pln)))
+c               enddo
+c            enddo
+c            
+c            do i=1,enum_fpray_param
+c               do j=1,enum_fpray_param
+c                  AA(i,j)=0.
+c                  if(j.lt.i)then
+c                     AA(i,j)=AA(j,i)
+c                  else
+c                     do ihit=2,entrack_hits_pre(itrk,1)+1
+c                        hit=entrack_hits_pre(itrk,ihit)
+c                        pln=edc1_layer_num(hit)
+c                        AA(i,j)=AA(i,j) + (
+c     &                       edc1layer_coeff(remap(i),pln)
+c     &                       *edc1layer_coeff(remap(j),pln)
+c     &                       /(edc1_sigma(pln)*edc1_sigma(pln)))
+c                     enddo      ! end loop on ihit
+c                  endif         ! end test on j .lt. i
+c               enddo            ! end loop on j
+c            enddo               ! end loop on i
 *     --- fitting ---
 *     solve four by four equations
-            call solve_four_by_four(TTT,AA,dray,ierr)
+c            call solve_four_by_four(TTT,AA,dray,ierr)
+c            if(ierr.ne.0) write(*,*) "ierr0",ierr
 *     if error...
-            if(ierr.ne.0) then
-               dray(1)=10000.
-               dray(2)=10000.
-               dray(3)=10000.
-               dray(4)=10000.
-            else                ! no error
+c            if(ierr.ne.0) then
+c               dray(1)=10000.
+c               dray(2)=10000.
+c               dray(3)=10000.
+c               dray(4)=10000.
+c            else                ! no error
 *     calculate hit coord at each layer 
 *     for chisquared and efficiency calculations.
-               do pln = 1,edc1_num_layers
-                  edc1_track_coord_pre(itrk,pln,1)=
-     &                 edc1layer_coeff(remap(1),pln)*dray(1)
-     &                 +edc1layer_coeff(remap(2),pln)*dray(2)
-     &                 +edc1layer_coeff(remap(3),pln)*dray(3)
-     &                 +edc1layer_coeff(remap(4),pln)*dray(4)
-               enddo
-               
-               do ihit = 2,entrack_hits_pre(itrk,1)+1
-                  hit = entrack_hits_pre(itrk,ihit)
-                  pln = edc1_layer_num(hit)
-                  wco = edc1_wire_coord(hit)
-                  edc1_residual_pre(itrk,pln,1)=
-     &                 wco - edc1_track_coord_pre(itrk,pln,1)
-                  edc1chi2_pre(itrk,1) = 
-     &                 edc1chi2_pre(itrk,1) +
-     &                 (edc1_residual_pre(itrk,pln,1)
-     &                 /edc1_sigma(pln))**2
-               enddo   
-            endif               ! ierr = 0 or not.
-            
-            ex_fp_pre1(itrk,1)=dray(1)
-            ey_fp_pre1(itrk,1)=dray(2)
-            exp_fp_pre1(itrk,1)=dray(3)
-            eyp_fp_pre1(itrk,1)=dray(4)   
-
-            edc1chi2perdof_pre(itrk,1) = 
-     &           edc1chi2_pre(itrk,1)/Real(enfree_pre(itrk))
-            if(edc1chi2perdof_pre(itrk,1) .le. edc1bestchi2_pre(1)) then
-               edc1bestchi2_pre_index(1) = itrk
-               edc1bestchi2_pre(1) = edc1chi2perdof_pre(itrk,1)
-            EndIF
+c               do pln = 1,edc1_num_layers
+c                  edc1_track_coord_pre(itrk,pln,1)=
+c     &                 edc1layer_coeff(remap(1),pln)*dray(1)
+c     &                 +edc1layer_coeff(remap(2),pln)*dray(2)
+c     &                 +edc1layer_coeff(remap(3),pln)*dray(3)
+c     &                 +edc1layer_coeff(remap(4),pln)*dray(4)
+c               enddo
+c               
+c               do ihit = 2,entrack_hits_pre(itrk,1)+1
+c                  hit = entrack_hits_pre(itrk,ihit)
+c                  pln = edc1_layer_num(hit)
+c                  wco = edc1_wire_coord(hit)
+c                  edc1_residual_pre(itrk,pln,1)=
+c     &                 wco - edc1_track_coord_pre(itrk,pln,1)
+c                  edc1chi2_pre(itrk,1) = 
+c     &                 edc1chi2_pre(itrk,1) +
+c     &                 (edc1_residual_pre(itrk,pln,1)
+c     &                 /edc1_sigma(pln))**2
+c               enddo   
+c            endif               ! ierr = 0 or not.
+c            
+c            ex_fp_pre1(itrk,1)=dray(1)
+c            ey_fp_pre1(itrk,1)=dray(2)
+c            exp_fp_pre1(itrk,1)=dray(3)
+c            eyp_fp_pre1(itrk,1)=dray(4)   
+c
+c            edc1chi2perdof_pre(itrk,1) = 
+c     &           edc1chi2_pre(itrk,1)/Real(enfree_pre(itrk))
+c            if(edc1chi2perdof_pre(itrk,1) .le. edc1bestchi2_pre(1)) then
+c               edc1bestchi2_pre_index(1) = itrk
+c               edc1bestchi2_pre(1) = edc1chi2perdof_pre(itrk,1)
+c            EndIF
 c            write(*,*) "event",gen_event_id_number
 c            write(*,*) " dray",dray
 c            write(*,*) " chi2",edc1chi2perdof_pre(itrk,1)
@@ -317,7 +320,13 @@ c            write(*,*) " chi2",edc1chi2perdof_pre(itrk,1)
             edc1eff_flag(itrk)=0
 
             edc1eff_counter=0
-            Do edc1eff_layer=11,11
+            if (edc1trackingflag.eq.0) then
+               edc1eff_start=11
+            else
+               edc1eff_start=1
+            endif
+
+            Do edc1eff_layer=edc1eff_start,11
 *     ---- Initialize ----
                Do i=1,emax_num_dc1_layers
                   sw_lns(i)=-1000.
@@ -377,12 +386,13 @@ c            write(*,*) " chi2",edc1chi2perdof_pre(itrk,1)
                   wire=edc1_wire_center(hit)
                   nwire=edc1_wire_num(hit)
 *     Change to subtract starttime here by MIZUKI
-                  tdc_sub = edc1_tdc(hit)-
-     >                 int(starttime(itrk)/edc1_tdc_time_per_channel)
-*                  if(eturnon_dc1_raw_hist .eq. 1) then
-*                     Call HF1(eiddc1rawtdc(slot),tdc_sub,1.)
-*                  EndIf
-                  dt=edc1_drift_time(hit)-starttime(itrk)
+c                  write(*,*) "itrk,starttime(itrk)",itrk,starttime(itrk)
+                  if (.not.gen_event_ts_flag(2)) then
+                     dt=edc1_drift_time(hit)-starttime(itrk)
+                  else
+                     dt=edc1_drift_time(hit)
+                  endif
+c                  write(*,*) "dt,starttime",dt,starttime(itrk)
 c                  if(edc1eff_layer.eq.11)
 c     >                 Call HF1(eiddc1singdtime(pln),dt,1.)
                   z0=edc1_zpos(pln)
@@ -491,11 +501,14 @@ c                  write(*,*) "10 layer fit"
                   call preSelectLR(nd_lns2,zw_lns2,sw_lns2,a_lns2,
      >                 dl_lns2,w_lns2,ipl_lns2,
      >                 z_lns2,s_lns2,wt_lns2,ierr)
-               endif
+                  if(ierr.ne.0) write(*,*) "ierr1",ierr
+               else
 c               write(*,*) "9 layer fit", edc1eff_layer
-               call preSelectLR(nd_lns,zw_lns2,sw_lns2,a_lns2,
-     >              dl_lns2,w_lns2,ipl_lns,
+                  call preSelectLR(nd_lns,zw_lns,sw_lns,a_lns,
+     >              dl_lns,w_lns,ipl_lns,
      >              z_lns,s_lns,wt_lns,ierr)
+                  if(ierr.ne.0) write(*,*) "ierr1",ierr
+               endif
 c      write(*,*) "event",gen_event_id_number
 c      write(*,*) "edc1eff_layer",edc1eff_layer
 c      write(*,*) " iptr_lns",iptr_lns
@@ -505,7 +518,6 @@ c      write(*,*) " s_lns",s_lns
 c      write(*,*) " s_lns2",s_lns2
 c      write(*,*) " nd_lns",nd_lns
 c      write(*,*) " wt_lns",wt_lns
-               if(ierr.ne.0) write(*,*) "ierr1",ierr
 c               Do i=1,nd_lns
 c                  pln=iptr_lns(i)
 c                  edc1_drift_dis_pre(itrk,pln,enum_fitting)=
@@ -514,23 +526,36 @@ c     >                 +(z_lns(i)-zw_lns(i))**2)
 c     >                 *(s_lns(i)-sw_lns(i))/abs(s_lns(i)-sw_lns(i))
 c               enddo
                
-cDK               write(*,*) "10 layer fit"
-               call linearFit(nd_lns2,z_lns2,s_lns2,a_lns2,
-     >              wt_lns2,param_lns2,ierr)
-cDK               write(*,*) " param_lns2",param_lns2
-               
-               call linearFit(nd_lns,z_lns,s_lns,a_lns,
-     >               wt_lns,param_lns,ierr)
-               if(ierr.ne.0) write(*,*) "ierr2",ierr
                
                if(edc1eff_counter.eq.0) then
+cDK               write(*,*) "10 layer fit"
+                  call linearFit(nd_lns2,z_lns2,s_lns2,a_lns2,
+     >              wt_lns2,param_lns2,ierr)
+c                     print *, "s_lns2",s_lns2
+c                     print *, "z_lns2",z_lns2
+c                     print *, "dl_lns2",dl_lns2
+c                     print *, "param_lns2",param_lns2
+                  if(ierr.ne.0) write(*,*) "ierr2-1",ierr
                   call calcChiSquare(nd_lns2,z_lns2,a_lns2,zw_lns2,sw_lns2,
-     >               dl_lns2,w_lns2,param_lns,scalw_lns,dsdz_lns2, 
+     >               dl_lns2,w_lns2,param_lns2,scalw_lns,dsdz_lns, 
      >               xcal_lns, ycal_lns, chisqr_lns)
-               endif
-               call calcChiSquare(nd_lns,z_lns,a_lns,zw_lns,sw_lns,
+c                     print *, "x2",xcal_lns
+                  if(ierr.ne.0) write(*,*) "ierr2-2",ierr
+                  Do i=1,enum_fpray_param
+                     param_lns(i)=param_lns2(i)
+                  enddo
+               else
+                  call linearFit(nd_lns,z_lns,s_lns,a_lns,
+     >               wt_lns,param_lns,ierr)
+c                     print *, "z_lns",z_lns
+c                     print *, "param_lns",param_lns
+                  if(ierr.ne.0) write(*,*) "ierr2-1",ierr
+                  call calcChiSquare(nd_lns,z_lns,a_lns,zw_lns,sw_lns,
      >              dl_lns,w_lns,param_lns,scalw_lns,dsdz_lns, 
      >              xcal_lns, ycal_lns, chisqr_lns)
+c                     print *, "x",xcal_lns
+                  if(ierr.ne.0) write(*,*) "ierr2-2",ierr
+               endif
 c      write(*,*) "dsdz_lns",dsdz_lns
 c      write(*,*) "event",gen_event_id_number
 c      write(*,*) " param_lns",param_lns
@@ -551,12 +576,12 @@ cDK                  Do i=1,nd_lns
                      ycalold_lns(i)=ycal_lns(i)
                   enddo
                   
-cDK                  write(*,*) "nd_lns loop start, edc1eff_layer=",edc1eff_layer
+c                  write(*,*) "nd_lns loop start, edc1eff_layer=",edc1eff_layer,"iteration=",nitra_lns
                   Do i=1,nd_lns
                      f_lns=1./sqrt(1.+dsdz_lns(i)*dsdz_lns(i))
                      ct_lns=cos(a_lns(i))
                      st_lns=sin(a_lns(i))
-cDK                     write(*,*)"i=",i,zw_lns(i)
+c                     write(*,*)"i=",i,zw_lns(i)
                      if(kf_lns(i).gt.0.and.ipl_lns(i).ge.0
      >                    .and.kf_lns(ipl_lns(i)).gt.0) then ! Pair Hits 
                         !ii=ipl_lns(i)
@@ -566,8 +591,8 @@ cDK                     write(*,*)"i=",i,zw_lns(i)
                         ii=i+1 !DK
                         kf_lns(i+1)=0 !DK
                         
-                        z11_lns=zw_lns(i) -f_lns*dsdz_lns(i)*dl_lns(i)
-                        z12_lns=zw_lns(i) +f_lns*dsdz_lns(i)*dl_lns(i)
+                        z11_lns=zw_lns(i) -f_lns*dsdz_lns(i) *dl_lns(i)
+                        z12_lns=zw_lns(i) +f_lns*dsdz_lns(i) *dl_lns(i)
                         z21_lns=zw_lns(ii)-f_lns*dsdz_lns(ii)*dl_lns(ii)
                         z22_lns=zw_lns(ii)+f_lns*dsdz_lns(ii)*dl_lns(ii)
                         s11_lns=sw_lns(i) +f_lns*dl_lns(i)
@@ -575,6 +600,8 @@ cDK                     write(*,*)"i=",i,zw_lns(i)
                         s21_lns=sw_lns(ii)+f_lns*dl_lns(ii)
                         s22_lns=sw_lns(ii)-f_lns*dl_lns(ii)
                         rayang_lns=atan(dsdz_lns(i))
+c                        print *, "dl_lns(i),dl_lns(ii)",i,dl_lns(i),dl_lns(ii)
+c                        print *, "dsdz_lns(i),dsdz_lns(ii)",atan(dsdz_lns(i)),atan(dsdz_lns(ii))
                         
                         do j=1,16
                             if (iand(j,1).eq.0) then
@@ -598,7 +625,14 @@ cDK                     write(*,*)"i=",i,zw_lns(i)
                               zz2(j)=z22_lns
                             endif
                            dsl_lns(j)=atan((ss1(j)-ss2(j))/(zz1(j)-zz2(j)))
-     >                       -rayang_lns 
+     >                       -rayang_lns
+                           ds_lns(j)=abs(ss1(j)-(param_lns(1)+param_lns(2)*zz1(j))
+     &                      -(param_lns(3)+param_lns(4)*zz1(j)))
+     &                      +abs(ss2(j)-(param_lns(1)+param_lns(2)*zz2(j))
+     &                      -(param_lns(3)+param_lns(4)*zz2(j)))
+c                           print *, "j,ss1,ss2,dz",j,ss1(j),ss2(j),(zz1(j)-zz2(j))
+c                           print *, "j,dsl_lns(j)",j,atan((ss1(j)-ss2(j))/(zz1(j)-zz2(j))) 
+c                           print *, "j,ds_lns(j)",j,ds_lns(j) 
                         enddo
                         
                         if(abs(dsl_lns(1)).lt.abs(dsl_lns(2))) then
@@ -682,10 +716,10 @@ c                        write(*,*)"mini2_lns=",mini2_lns
                         z2_lns=zw_lns(i)+f_lns*dsdz_lns(i)*dl_lns(i)
                         s1_lns=sw_lns(i)+f_lns*dl_lns(i)
                         s2_lns=sw_lns(i)-f_lns*dl_lns(i)
-                        s1cal_lns=(param_lns2(1)+param_lns2(2)*z1_lns)*ct_lns
-     >                       +(param_lns2(3)+param_lns2(4)*z1_lns)*st_lns
-                        s2cal_lns=(param_lns2(1)+param_lns2(2)*z2_lns)*ct_lns
-     >                       +(param_lns2(3)+param_lns2(4)*z2_lns)*st_lns
+                        s1cal_lns=(param_lns(1)+param_lns(2)*z1_lns)*ct_lns
+     >                       +(param_lns(3)+param_lns(4)*z1_lns)*st_lns
+                        s2cal_lns=(param_lns(1)+param_lns(2)*z2_lns)*ct_lns
+     >                       +(param_lns(3)+param_lns(4)*z2_lns)*st_lns
 c                        s1cal_lns=(param_lns(1)+param_lns(2)*z1_lns)*ct_lns
 c     >                       +(param_lns(3)+param_lns(4)*z1_lns)*st_lns
 c                        s2cal_lns=(param_lns(1)+param_lns(2)*z2_lns)*ct_lns
@@ -780,19 +814,21 @@ c                  write(*,*) " nd_lns=",nd_lns
 c                  write(*,*) " z_lns=",z_lns
 c                  write(*,*) " s_lns=",s_lns
 c                  write(*,*) "nitra_lns=",nitra_lns
-                  Do i=1,nd_lns
-                     if (nd_lns.eq.10) then
-                        edc1_z(itrk,i) = z_lns(i)
-                     else 
-                        edc1_z(itrk,i) = 10000.
-                     endif
-                  enddo
+c                  Do i=1,nd_lns
+c                     if (nd_lns.eq.10) then
+c                        edc1_z(itrk,i) = z_lns(i)
+c                     else 
+c                        edc1_z(itrk,i) = 10000.
+c                     endif
+c                  enddo
                   call linearFit(nd_lns,z_lns,s_lns,a_lns,
      >                 wt_lns,param_lns,ierr)
-cDK                  write(*,*) (param_lns(1)-param_lns2(1))*1e4,
-cDK     &             (param_lns(2)-param_lns2(2))*1e3,
-cDK     &             (param_lns(3)-param_lns2(3))*1e4,
-cDK     &             (param_lns(4)-param_lns2(4))*1e3
+c                  print *, "param_lns",param_lns
+c                  write(*,*) "n, dx,dx',dy,dy'",
+c     &             nitra_lns,(param_lns(1)-param_lns2(1))*1e4,
+c     &             (param_lns(2)-param_lns2(2))*1e3,
+c     &             (param_lns(3)-param_lns2(3))*1e4,
+c     &             (param_lns(4)-param_lns2(4))*1e3
                   if(ierr.ne.0) write(*,*) "ierr3",ierr
 
 c                  if(edc1eff_layer.gt.10) then
@@ -878,6 +914,8 @@ c                  endif
                         k=irptr_lns2(i)
                      endif
                   enddo
+                  edc1_z(itrk,pln) = z_lns(k)
+                  edc1_spos(itrk,pln)=s_lns(k)
                   edc1_residual_pre(itrk,pln,enum_fitting)=
      &                 s_lns2(k) 
      &                 -edc1_track_coord_pre(itrk,pln,enum_fitting)
@@ -912,18 +950,18 @@ c     &                 ,edc1_residual_pre(itrk,pln,enum_fitting)*10000
                endif
 
 c     ---- choose particles that pass through EDC effective area ----
-               mark(itrk)=1
-c               mark(itrk)=0
-c               if(abs(ex_fp_pre1(itrk,enum_fitting)
-c     >              +20*exp_fp_pre1(itrk,enum_fitting)).le.52.and.
-c     >              abs(ex_fp_pre1(itrk,enum_fitting)
-c     >              -20*exp_fp_pre1(itrk,enum_fitting)).le.52.and.
-c     >              abs(ey_fp_pre1(itrk,enum_fitting)
-c     >              +20*eyp_fp_pre1(itrk,enum_fitting)).le.6.and.
-c     >              abs(ey_fp_pre1(itrk,enum_fitting)
-c     >              -20*eyp_fp_pre1(itrk,enum_fitting)).le.6) then
-c                  mark(itrk)=1
-c               endif
+c               mark(itrk)=1
+               mark(itrk)=0
+               if(abs(ex_fp_pre1(itrk,enum_fitting)
+     >              +16*exp_fp_pre1(itrk,enum_fitting)).le.60.and.
+     >              abs(ex_fp_pre1(itrk,enum_fitting)
+     >              -16*exp_fp_pre1(itrk,enum_fitting)).le.60.and.
+     >              abs(ey_fp_pre1(itrk,enum_fitting)
+     >              +16*eyp_fp_pre1(itrk,enum_fitting)).le.7.and.
+     >              abs(ey_fp_pre1(itrk,enum_fitting)
+     >              -16*eyp_fp_pre1(itrk,enum_fitting)).le.7) then
+                  mark(itrk)=1
+               endif
                
                if(edc1eff_layer.le.10) then
                   edc1eff_residual(itrk,edc1eff_layer,enum_fitting)=
@@ -954,7 +992,7 @@ c     >              edc1eff_residual(itrk,edc1eff_layer,enum_fitting),
 c     >              ' edc1_residual_pre=',
 c     >              edc1_residual_pre(itrk,edc1eff_layer,enum_fitting)
 c     write(*,*) "event",gen_event_id_number
-c     write(*,*) " lns x,y,xp,yp",ex_fp_pre1(itrk,enum_fitting),
+c      write(*,*) " lns x,y,xp,yp",ex_fp_pre1(itrk,enum_fitting),
 c     >           ey_fp_pre1(itrk,enum_fitting),
 c     >           exp_fp_pre1(itrk,enum_fitting),
 c     >           eyp_fp_pre1(itrk,enum_fitting)
@@ -1002,8 +1040,17 @@ c calculate new start time in order to get correct drift time information
                la = escin_layer_num(j)
                if((la.eq.1).or.(la.eq.2)) then
                   co = escin_counter_num(j)
-                  x_la =  -exp_fp_pre1(i,enum_fitting) *escin_zpos(la) + 
-     &              ex_fp_pre1(i,enum_fitting)
+                  if( mod(co,2).eq.1) then
+                     x_la =  -exp_fp_pre1(i,enum_fitting) 
+     &                    * ( escin_zpos(la)+1.5 ) ! EHODO downstream side
+     &                    + ex_fp_pre1(i,enum_fitting)
+                  else 
+                     x_la =  -exp_fp_pre1(i,enum_fitting) 
+     &                    * ( escin_zpos(la)-1.5 ) ! EHODO upstream side
+     &                    + ex_fp_pre1(i,enum_fitting)
+                  endif
+c                  x_la =  -exp_fp_pre1(i,enum_fitting) *escin_zpos(la) + 
+c     &              ex_fp_pre1(i,enum_fitting)
                   x_min = escin_xcenter(la,co) - 0.5*escin_width+0.25+
      &              abs(escin_thickness*0.5*(-exp_fp_pre1(i,enum_fitting)))
                   x_max = escin_xcenter(la,co) + 0.5*escin_width-0.25-
@@ -1012,8 +1059,17 @@ c calculate new start time in order to get correct drift time information
                   if( x_la .ge. x_min .and. x_la .le. x_max ) then
                      num_la(la)=num_la(la)+1
                      num = num + 1 
-                     layer_temp_fpt=escin_mean_time(j) - 
-     &                   escin_zpos(la) * slope / speed_of_light
+                     if( mod(co,2).eq.1) then
+                        layer_temp_fpt = escin_mean_time(j) 
+     &                       - ( escin_zpos(la)+1.5 ) ! EHODO downstream side
+     &                       * slope / speed_of_light
+                     else
+                        layer_temp_fpt = escin_mean_time(j) 
+     &                       - ( escin_zpos(la)-1.5 ) ! EHODO upstream side
+     &                       * slope / speed_of_light
+                     endif
+c                     layer_temp_fpt=escin_mean_time(j) - 
+c     &                   escin_zpos(la) * slope / speed_of_light
                      stime = stime + layer_temp_fpt
                      on_track_hits_pre(i,1)=num
                      on_track_hits_pre(i,num+1)=j
@@ -1028,13 +1084,33 @@ c calculate new start time in order to get correct drift time information
 c                  if(la.eq.3.or.num_la(la).gt.0) goto 1201
                   if(((la.eq.1).or.(la.eq.2)).and.num_la(la).eq.0) then
                      co = escin_counter_num(j)
-                     x_la =  -exp_fp_pre1(i,enum_fitting) *escin_zpos(la) + 
-     &                  ex_fp_pre1(i,enum_fitting)
-                     x_min = escin_xcenter(la,co) - 0.5*escin_width-escin_width/3
-                     x_max = escin_xcenter(la,co) + 0.5*escin_width+escin_width/3
+                     if( mod(co,2).eq.1 ) then
+                        x_la =  -exp_fp_pre1(i,enum_fitting) 
+     &                       * ( escin_zpos(la) +1.5 ) ! EHODO downstream side
+     &                       + ex_fp_pre1(i,enum_fitting)
+                     else
+                        x_la =  -exp_fp_pre1(i,enum_fitting) 
+     &                       * ( escin_zpos(la) -1.5 ) ! EHODO upstream side
+     &                       + ex_fp_pre1(i,enum_fitting)
+                     endif
+c                     x_la =  -exp_fp_pre1(i,enum_fitting) *escin_zpos(la) + 
+c     &                  ex_fp_pre1(i,enum_fitting)
+                     x_min = escin_xcenter(la,co) - 0.5*escin_width-escin_xslop
+                     x_max = escin_xcenter(la,co) + 0.5*escin_width+escin_xslop
+c                     x_min = escin_xcenter(la,co) - 0.5*escin_width-escin_width/3
+c                     x_max = escin_xcenter(la,co) + 0.5*escin_width+escin_width/3
                      if( x_la .ge. x_min .and. x_la .le. x_max ) then
-                        layer_temp_fpt=escin_mean_time(j) -
-     &                     escin_zpos(la) * slope / speed_of_light
+                        if( mod(co,2).eq.1 ) then
+                           layer_temp_fpt = escin_mean_time(j)
+     &                          - ( escin_zpos(la) +1.5 ) ! EHODO downstream side
+     &                          * slope / speed_of_light
+                        else
+                           layer_temp_fpt = escin_mean_time(j)
+     &                          - ( escin_zpos(la) -1.5 ) ! EHODO upstream side
+     &                          * slope / speed_of_light
+                        endif
+c                        layer_temp_fpt=escin_mean_time(j) -
+c     &                     escin_zpos(la) * slope / speed_of_light
                         if (num.gt.0) then
                            if (abs(stime/num-layer_temp_fpt).lt.1.5*etrk_time_gate) then
                               num = num + 1 
@@ -1061,10 +1137,21 @@ c                  if(la.eq.3.or.num_la(la).gt.0) goto 1201
                   la = escin_layer_num(j)
                   if(((la.eq.1).or.(la.eq.2)).and.num_la(la).eq.0) then
                      co = escin_counter_num(j)
+                     if( mod(co,2).eq.1 ) then
+                        x_la =  -exp_fp_pre1(i,enum_fitting)
+     &                       * ( escin_zpos(la)+1.5 ) ! EHODO downstream side
+     &                       + ex_fp_pre1(i,enum_fitting)
+                     else 
+                        x_la =  -exp_fp_pre1(i,enum_fitting)
+     &                       * ( escin_zpos(la)-1.5 ) ! EHODO upstream side
+     &                       + ex_fp_pre1(i,enum_fitting)
+                     endif
                      x_la =  -exp_fp_pre1(i,enum_fitting) *escin_zpos(la) +
      &                  ex_fp_pre1(i,enum_fitting)
-                     x_min = escin_xcenter(la,co) - 0.5*escin_width-escin_width/3
-                     x_max = escin_xcenter(la,co) + 0.5*escin_width+escin_width/3
+                     x_min = escin_xcenter(la,co) - 0.5*escin_width-escin_xslop
+                     x_max = escin_xcenter(la,co) + 0.5*escin_width+escin_xslop
+c                     x_min = escin_xcenter(la,co) - 0.5*escin_width-escin_width/3
+c                     x_max = escin_xcenter(la,co) + 0.5*escin_width+escin_width/3
                      if( x_la .ge. x_min .and. x_la .le. x_max ) then
                         temp_on_track=temp_on_track+1
                         temp_on_track_hits(temp_on_track)=j
@@ -1088,8 +1175,18 @@ c                  if(la.eq.3.or.num_la(la).gt.0) goto 1201
                      num=1
                      hit1=temp_on_track_hits(j)
                      la1 = escin_layer_num(hit1)
-                     layer_temp_fpt=escin_mean_time(hit1) - 
-     &                  escin_zpos(la) * slope / speed_of_light
+                     co1 = escin_counter_num(hit1)
+                     if( mod(co1,2).eq.1 ) then
+                        layer_temp_fpt=escin_mean_time(hit1) 
+     &                       - ( escin_zpos(la) +1.5 ) !EHODO downstream side
+     &                       * slope / speed_of_light
+                     else
+                        layer_temp_fpt=escin_mean_time(hit1) 
+     &                       - ( escin_zpos(la) -1.5 ) !EHODO upstream side
+     &                       * slope / speed_of_light
+                     endif
+c                     layer_temp_fpt=escin_mean_time(hit1) - 
+c     &                  escin_zpos(la) * slope / speed_of_light
                      stime=layer_temp_fpt
                      
                      on_track_hits_pre(i,1)=num        
@@ -1100,8 +1197,18 @@ c                  if(la.eq.3.or.num_la(la).gt.0) goto 1201
                         
                         hit2=temp_on_track_hits(k)
                         la2 = escin_layer_num(hit2)
-                        layer_temp_fpt=escin_mean_time(hit2) - 
-     &                   escin_zpos(la2) * slope / speed_of_light 
+                        co2 = escin_counter_num(hit2)
+                        if( mod(co2,2).eq.1 )then
+                           layer_temp_fpt = escin_mean_time(hit2) 
+     &                          - ( escin_zpos(la2) +1.5 ) ! EHODO downstream side
+     &                          * slope / speed_of_light 
+                        else
+                           layer_temp_fpt = escin_mean_time(hit2) 
+     &                          - ( escin_zpos(la2) -1.5 ) ! EHODO upstream side
+     &                          * slope / speed_of_light 
+                        endif   
+c                        layer_temp_fpt=escin_mean_time(hit2) - 
+c     &                   escin_zpos(la2) * slope / speed_of_light 
                         if (abs(stime/num-layer_temp_fpt).lt.1.5*etrk_time_gate) then
                            flag_used(k)=1
                            num=num+1
@@ -1190,7 +1297,7 @@ c     write(*,*) " jj=0!!!!!!!!!!!!!!!!!!!!!!!!"
             endif
          enddo
       endif
-c     write(*,*) "After",entracks_pre,ii
+c      write(*,*) "After",entracks_pre
 c     Do i=1,entracks_pre
 c     write(*,*) " ex",ex_fp_pre1(i,enum_fitting)
 c     enddo
@@ -1276,8 +1383,8 @@ c     --- test if we want to dump out trackfit results
       integer*4 n
       real*4 z(n),s(n),a(n),w(n)
       real*8 param(enum_fpray_param)
-      real*8 paramx(enum_fpray_param)
-      real*8 paramy(enum_fpray_param)
+      real*8 paramx(2)
+      real*8 paramy(2)
       real*8 mtpx(enum_fpray_param,enum_fpray_param)
       real*8 mtpy(enum_fpray_param,enum_fpray_param)
       integer*4 indx(enum_fpray_param)
@@ -1337,10 +1444,6 @@ c     --- test if we want to dump out trackfit results
       param(3)=paramy(1) 
       param(4)=paramy(2) 
 
-c      write(*,*) "s=",s
-c      write(*,*) "a=",a
-c      write(*,*) "w=",w
-c      write(*,*) param
 
       return
       end
@@ -1358,7 +1461,8 @@ c      write(*,*) param
 
       real*8 a(enum_fpray_param,enum_fpray_param)
       integer*4 n
-      real*8 b(enum_fpray_param)
+c      real*8 b(enum_fpray_param)
+      real*8 b(2)
       integer*4 indxr(enum_fpray_param)
       integer*4 indxc(enum_fpray_param)
       integer*4 ipiv(enum_fpray_param)
@@ -1412,10 +1516,13 @@ c      write(*,*) param
          indxr(i)=irow
          indxc(i)=icol
          
+c         print *, "i,icol,a1",i,icol,a(1,1),a(1,2),a(2,1),a(2,2)
          if(a(icol,icol).eq.0) then
-            write(*,*) 'GaussJordan: Singular Matrix-2'
+            write(*,*) 'GaussJordan: Singular Matrix-2, n='
+     &       ,n,' i=',i,' icol=',icol,'big=',big
             ierr=1
-            stop
+c            stop
+            goto 1111
          endif
          pivinv=1./a(icol,icol)
          a(icol,icol)=1.
@@ -1433,6 +1540,7 @@ c      write(*,*) param
                b(k)=b(k)-b(icol)*d
             endif
          enddo
+c         print *, "i,a2",i,a(1,1),a(1,2),a(2,1),a(2,2)
       enddo
 
       Do l=n,1,-1
@@ -1445,8 +1553,7 @@ c      write(*,*) param
          endif
       enddo
 
-
-      return
+1111  return
       end
 
 
@@ -1602,6 +1709,7 @@ c               nx=nx+1
       q(2)=0.0
       mtp(1,1)=0.0
       mtp(1,2)=0.0
+      mtp(2,1)=0.0
       mtp(2,2)=0.0
       Do i=1,nx
          mtp(1,1) = mtp(1,1)+wt(i)
@@ -1614,6 +1722,17 @@ c               nx=nx+1
 
       call GaussJordan(mtp,2,q,indx,indy,ipiv,ierr)
       if(ierr.ne.0) write(*,*) "ierr5",ierr
+      
+c      nx=0
+c      Do i=1,emax_num_dc1_layers
+c         if(abs(ang(i)).lt.SmallTiltAngle) then
+c            nx=nx+1
+c            if (abs(xt(nx))<5) then
+c               print *, "nx,xt,xcoord,dx",nx,xt(nx),(q(1)+zw(i)*q(2)),xt(nx)-(q(1)+zw(i)*q(2))
+c            endif
+c         endif
+c      enddo
+      
       p(1)=q(1)
       p(2)=q(2)
       ny=0
@@ -1752,31 +1871,33 @@ c               write(*,*)"s1,s1cal",s1,s1cal
          mtp(1,1) = mtp(1,1) + w(i)*ct*ct
          mtp(1,2) = mtp(1,2) + w(i)*z(i)*ct*ct
          mtp(1,3) = mtp(1,3) + w(i)*ct*st
-c         mtp(1,4) = mtp(1,4) + w(i)*z(i)*ct*st
+         mtp(1,4) = mtp(1,4) + w(i)*z(i)*ct*st
          mtp(2,2) = mtp(2,2) + w(i)*z(i)*z(i)*ct*ct
          mtp(2,3) = mtp(2,3) + w(i)*z(i)*ct*st
-c         mtp(2,4) = mtp(2,4) + w(i)*z(i)*z(i)*ct*st
+         mtp(2,4) = mtp(2,4) + w(i)*z(i)*z(i)*ct*st
          mtp(3,3) = mtp(3,3) + w(i)*st*st
-c         mtp(3,4) = mtp(3,4) + w(i)*z(i)*st*st
-c         mtp(4,4) = mtp(4,4) + w(i)*z(i)*z(i)*st*st
+         mtp(3,4) = mtp(3,4) + w(i)*z(i)*st*st
+         mtp(4,4) = mtp(4,4) + w(i)*z(i)*z(i)*st*st
 
          q(1) = q(1)+w(i)*s(i)*ct
          q(2) = q(2)+w(i)*s(i)*z(i)*ct
          q(3) = q(3)+w(i)*s(i)*st
-c         q(4) = q(4)+w(i)*s(i)*z(i)*st
+         q(4) = q(4)+w(i)*s(i)*z(i)*st
       enddo
       mtp(2,1) = mtp(1,2)
       mtp(3,1) = mtp(1,3)
       mtp(3,2) = mtp(2,3)
-c      mtp(4,1) = mtp(1,4)
-c      mtp(4,2) = mtp(2,4)
-c      mtp(4,3) = mtp(3,4)
-      call GaussJordan(mtp,3,q,indx,indy,ipiv,ierr)
-c      call GaussJordan(mtp,4,q,indx,indy,ipiv,ierr)
+      mtp(4,1) = mtp(1,4)
+      mtp(4,2) = mtp(2,4)
+      mtp(4,3) = mtp(3,4)
+c      call GaussJordan(mtp,3,q,indx,indy,ipiv,ierr)
+      call GaussJordan(mtp,4,q,indx,indy,ipiv,ierr)
       if(ierr.ne.0) write(*,*) "ierr6",ierr
       p(1)=q(1)
       p(2)=q(2)
       p(3)=q(3)
+      p(4)=q(4)
+      !!!!!!!!!!!!!!!!!!!!!!!!!!!!!ang
 c      if(n.eq.10) then
 c         xx1=(p(1)+z(3)*p(2))*cos(ang(3)) 
 c         xx2=(p(1)+z(8)*p(2))*cos(ang(8)) 
@@ -1798,7 +1919,7 @@ cDK      Do i=1,n
       kk=1 
       Do i=1,n
          ct=cos(ang(i))
-         dsdz=p(2)*ct
+         dsdz=p(2)*ct+p(4)*st
          f=1./sqrt(1.+dsdz*dsdz)
          if(kf(i).gt.0.and.ipl(i).ge.0.and.kf(ipl(i)).gt.0) then
             !ii=ipl(i)
@@ -1865,10 +1986,10 @@ cDK            write(*,*) i,"mini=",mini
             z2=zw(i)+f*dsdz*dl(i)
             s1=sw(i)+f*dl(i)
             s2=sw(i)-f*dl(i)
-            s1cal=(p(1)+p(2)*z1)*ct+p(3)*st
-            s2cal=(p(1)+p(2)*z2)*ct+p(3)*st
-c            s1cal=(p(1)+p(2)*z1)*ct+(p(3)+p(4)*z1)*st
-c            s2cal=(p(1)+p(2)*z2)*ct+(p(3)+p(4)*z2)*st
+c            s1cal=(p(1)+p(2)*z1)*ct+p(3)*st
+c            s2cal=(p(1)+p(2)*z2)*ct+p(3)*st
+            s1cal=(p(1)+p(2)*z1)*ct+(p(3)+p(4)*z1)*st
+            s2cal=(p(1)+p(2)*z2)*ct+(p(3)+p(4)*z2)*st
             d1=abs(s1-s1cal)
             d2=abs(s2-s2cal)
             if(d1.lt.d2) then

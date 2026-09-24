@@ -98,6 +98,8 @@
       INCLUDE 'gen_units.par'
       INCLUDE 'hes_tracking.cmn'
       INCLUDE 'hes_geometry.cmn'
+      include 'gen_run_info.cmn'
+      include 'hes_bypass_swiches.cmn' !Added by Gogami (3Feb2011)
 *     
 *     local variables
       integer*4 hit_number(edc2max_chamber_hits)
@@ -106,6 +108,7 @@
       integer*4 i,j,k,xx,xxprime
       integer*4 xlayer,xprimelayer
       integer*4 ip, pch
+      integer*4 dindex
       logical easy_space_point
 *     
       real*4 space_points(edc2max_space_points,2)
@@ -114,11 +117,27 @@
       real*4 e_dc2_drift_dist_calc
       external e_dc2_drift_dist_calc
       
+      integer*4 etrig2
+      
 *     
 *     temporary initialization
       ABORT= .FALSE.
       err=' '
 *     
+c     =======OUTPUT CHAMBER INFROMATION=====================
+c     ============Added by Gogami (3Feb2011)================
+      if(edc_hitinfo_flag.eq.1)then
+         open(24,file='hes_cham.dat',access='append')   
+         write(24,*)edc2_tot_hits
+         write(24,*)edc2_hits_per_layer
+         do dindex=1,edc2_tot_hits
+            write(24,*)edc2_layer_num(dindex),edc2_wire_num(dindex),
+     &           edc2_wire_center(dindex),edc2_drift_time(dindex)
+         enddo
+         close(24)
+      endif
+c     ========================================================
+
 *     
       ihit = 0
       edc2nspace_points_tot = 0
@@ -160,13 +179,15 @@ cc      print *, 'hit chamber', edc2ncham_hits, edc2_hits_per_layer(2)
          enddo
 
 cc         print *, 'hits2', edc2_tot_hits
+cc         print *, 'xx,xxprime', xx,xxprime
 
-         if((edc2_hits_per_layer(xlayer).eq.1) .and.
+         if (xx.gt.0 .and.xxprime.gt.0) then
+            if((edc2_hits_per_layer(xlayer).eq.1) .and.
      &        (edc2_hits_per_layer(xprimelayer).eq.1).and.
      &        ((edc2_wire_center(xx)-edc2_wire_center(xxprime))**2.lt.
      &        (edc2space_point_criterion)) .and.
      &        (edc2ncham_hits.le.6)) then
-            call e_dc2_find_easy_space_point(edc2ncham_hits,
+               call e_dc2_find_easy_space_point(edc2ncham_hits,
      &         hit_number(ihit+1),
      &         edc2_wire_center(ihit+1),
      &         edc2_layer_num(ihit+1),
@@ -175,8 +196,8 @@ cc         print *, 'hits2', edc2_tot_hits
      &         xx-ihit,xxprime-ihit,
      &         easy_space_point,
      &         edc2nspace_points,space_points,space_point_hits)
-            if (.not.easy_space_point) 
-     &         call e_find_space_points(edc2ncham_hits,
+               if (.not.easy_space_point) 
+     &          call e_find_space_points(edc2ncham_hits,
      &           hit_number(ihit+1),
      &           edc2_wire_center(ihit+1),
      &           edc2_layer_num(ihit+1),
@@ -184,6 +205,7 @@ cc         print *, 'hits2', edc2_tot_hits
      &           edc2xsp(1),edc2ysp(1),
      &           edc2max_space_points,
      &           edc2nspace_points, space_points, space_point_hits)
+            endif
          else
             call e_find_space_points(edc2ncham_hits,
      &        hit_number(ihit+1),
@@ -194,9 +216,9 @@ cc         print *, 'hits2', edc2_tot_hits
      &        edc2max_space_points,
      &        edc2nspace_points, space_points, space_point_hits)
          endif
-cc         print *, 'sp1', edc2nspace_points
 *     
-         if (edc2nspace_points.gt.50)
+cDK         if (edc2nspace_points.gt.50)
+         if (edc2nspace_points.gt.100)
      >           edc2nspace_points=0
          if (edc2nspace_points.gt.0) then
 *     If two hits in same layer, choose one with minimum drift time
@@ -249,15 +271,21 @@ cc        print *, 'nspace, points', edc2nspace_points_tot
                wiren = edc2_wire_num(hit)
                cardn = edc2_card_no(wiren,pln) 
                if (cardn.ne.0) then
-                  time_corr = (-edc2_card_pos(cardn)*ydist+edc2_length_y/2.)
+                  time_corr = (edc2_card_pos(cardn)*ydist+edc2_length_y/2.)
      &                 *edc2_readout_corr(pln)/edc2_wire_velocity
+c                  time_corr = (-edc2_card_pos(cardn)*ydist+edc2_length_y/2.)
+c     &                 *edc2_readout_corr(pln)/edc2_wire_velocity
                else
                   time_corr = 0.
                endif
-               edc2_drift_time(hit) = edc2_drift_time(hit) 
-     &              + edc2_drifttime_sign(pln)*time_corr
+c               print *, 'pattern recognition', xdist,ydist,isp,hit,edc2_drift_time(hit) 
+c               edc2_drift_time(hit) = edc2_drift_time(hit) 
+c     &              + edc2_drifttime_sign(pln)*time_corr
+c               edc2_drift_dis(hit) = e_dc2_drift_dist_calc
+c     &              (pln,edc2_wire_num(hit),edc2_drift_time(hit))
                edc2_drift_dis(hit) = e_dc2_drift_dist_calc
-     &              (pln,edc2_wire_num(hit),edc2_drift_time(hit))
+     &              (pln,cardn,edc2_drift_time(hit))
+c               write(*,*)"pln,dtime,ddis",pln,edc2_drift_time(hit),edc2_drift_dis(hit)
 *     
 *     djm 8/25/94
 *     Stuff drift time and distance into registered variables 

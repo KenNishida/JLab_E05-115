@@ -125,6 +125,7 @@ c themselves.  The following is to
       real*8 gbcm2_charge
       real*8 gbcm3_charge
       real*8 gunser_charge
+      real*8 gbcm_mean_charge
       real*8 g_beam_on_bcm_charge   
 *! "beam on" accumulated charge
       integer*4 gscaler_event_num
@@ -133,7 +134,7 @@ c themselves.  The following is to
      &    gbcm1_index, gbcm2_index, gbcm3_index, gunser_index,
      &    gbcm1_gain, gbcm2_gain, gbcm3_gain, gunser_gain,
      &    gbcm1_offset, gbcm2_offset, gbcm3_offset, gunser_offset,
-     &    gbcm1_charge, gbcm2_charge, gbcm3_charge, gunser_charge,
+     &    gbcm1_charge, gbcm2_charge, gbcm3_charge, gunser_charge, gbcm_mean_charge,
      &    g_beam_on_bcm_charge, g_beam_on_thresh_cur,
      &    gscaler_event_num, bcm_for_threshold_cut
 

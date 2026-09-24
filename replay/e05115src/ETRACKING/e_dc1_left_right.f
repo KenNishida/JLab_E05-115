@@ -86,12 +86,14 @@
 *     
       logical ABORT
       character*(*) err
-      integer*4 isp, ihit,iswhit, idummy, pmloop, ich,i,gh,j
+      integer*4 isp, ihit,iswhit, idummy, pmloop, ich,i,gh,gt,j,hit
       integer*4 nplusminus
       integer*4 numhits,npaired,ihit2
       integer*4 hits(edc1max_hits_per_point), pl(edc1max_hits_per_point)
+      integer*4 sl(edc1max_hits_per_point)
       integer*4 pindex
       real*4 wc(edc1max_hits_per_point),wn(edc1max_hits_per_point)
+      real*4 wcoord(edc1max_hits_per_point)
       integer*4 layer, isa_y1, isa_y2,itrack
       integer*4 plusminusknown(edc1max_hits_per_point)
       real*4 plusminus(edc1max_hits_per_point)
@@ -100,10 +102,23 @@
       real*4 minchi2,stub(4)
       real*4 n_missing_hits
       real*4 drift_direction
+      real*4 s(emax_num_dc1_layers)
+      real*4 x(emax_num_dc1_layers)
+      real*4 y(emax_num_dc1_layers)
+      real*4 a(emax_num_dc1_layers)
+      real*4 raddeg
+      real*4 dt
+      real*8 dray(enum_fpray_param)
+      real*8 TT(enum_fpray_param)
+      real*8 AA(enum_fpray_param,enum_fpray_param)
+      integer*4 ierr
+      parameter (raddeg=3.14159265/180.)
       logical smallAngOk
       integer*4 remap(enum_fpray_param)
       data remap/5,6,3,4/
       save remap
+      Real*4 e_drift_dist_calc
+      external e_drift_dist_calc
 
 *     
       ABORT= .FALSE.
@@ -121,6 +136,7 @@
       endif
       
       if (edc1nspace_points_tot.le.0) return 
+         
       
 ************************************************************      
 *     --- edc1nspace_points_tot Loop start 
@@ -146,8 +162,11 @@
          do ihit=1,numhits
             hits(ihit) = edc1space_point_hits(isp,2+ihit)
             pl(ihit) = EDC1_LAYER_NUM(hits(ihit))
+            sl(ihit) = EDC1_SLOT_NUM(hits(ihit))
             wc(ihit) = EDC1_WIRE_CENTER(hits(ihit))
             wn(ihit) = EDC1_WIRE_NUM(hits(ihit))
+            dt = edc1_drift_time(hits(ihit))-starttime(isp)
+            edc1_drift_dis(hits(ihit))=e_drift_dist_calc(pl(ihit),sl(ihit),dt)
             edc1_i_have_hit(pl(ihit)) = 1
             plusminusknown(ihit) = 0
          enddo
@@ -279,39 +298,78 @@ c     Write(*,*) 'Missing layer gt 1 in e_left_right'
 ************************************************************      
 *     calculate final coordinate based on plusminusbest
 ************************************************************      
-     
          do ihit=1,numhits
             hits(ihit) = edc1space_point_hits(isp,2+ihit)
             drift_direction = 
      &           plusminusbest(ihit)*EDC1_DRIFT_DIS(hits(ihit))
-            layer=EDC1_LAYER_NUM(hits(ihit))
-            EDC1_WIRE_COORD(hits(ihit))=
-     &           EDC1_WIRE_CENTER(hits(ihit)) +
+            layer=edc1_layer_num(hits(ihit))
+c            print *, "layer,drift_direction",layer,drift_direction 
+            edc1_wire_coord(hits(ihit))=
+     &           edc1_wire_center(hits(ihit)) +
      &           drift_direction
             pl(ihit) = EDC1_LAYER_NUM(hits(ihit))
             wc(ihit) = EDC1_WIRE_CENTER(hits(ihit))
             wn(ihit) = EDC1_WIRE_NUM(hits(ihit))
-c      Write(*,*) pl(ihit),plusminusbest(ihit)
-c      write(*,*) wc(ihit),wn(ihit)
+            wcoord(ihit) = EDC1_WIRE_COORD(hits(ihit))
          enddo
+         do i=1,enum_fpray_param
+            TT(i)=0
+            do ihit=1,numhits
+c               print *, "pl,wcoord",pl(ihit),wcoord(ihit)
+               TT(i)=TT(i)+(wcoord(ihit)*edc1layer_coeff(remap(i),pl(ihit)))
+     &          /edc1_sigma(pl(ihit))/edc1_sigma(pl(ihit))
+            enddo
+         enddo
+         do i=1,enum_fpray_param
+            do j=1,enum_fpray_param
+               AA(i,j)=0.
+               if(j.lt.i)then
+                  AA(i,j)=AA(j,i)
+               else
+                  do ihit=1,numhits
+                     AA(i,j)=AA(i,j)+(edc1layer_coeff(remap(i),pl(ihit))*
+     &               edc1layer_coeff(remap(j),pl(ihit)))
+     &               /edc1_sigma(pl(ihit))/edc1_sigma(pl(ihit))
+                  enddo
+               endif
+            enddo
+         enddo
+
+         ierr=0
+c         print *, "TT",TT(1),TT(2),TT(3),TT(4)
+c         print *, "AA",AA(1,1),AA(1,2),AA(1,3),AA(1,4)
+         call solve_four_by_four(TT,AA,dray,ierr)
+c         print *, "x,y,x',y'",dray(1),dray(2),dray(3),dray(4)
+            
+         do ihit=1,numhits
+c            a(layer)=edc1_alpha_angle(layer)-90*raddeg
+c            x(layer)=dray(1)+dray(2)*edc1_zpos(layer)
+c            y(layer)=dray(3)+dray(4)*edc1_zpos(layer)
+            s(layer)=edc1layer_coeff(remap(1),pl(ihit))*dray(1)
+     &       +edc1layer_coeff(remap(2),pl(ihit))*dray(2)
+     &       +edc1layer_coeff(remap(3),pl(ihit))*dray(3)
+     &       +edc1layer_coeff(remap(4),pl(ihit))*dray(4)
+c            Write(*,*) "pl,pmbest",pl(ihit),plusminusbest(ihit)
+c            write(*,*) "wn,wcoord,ds,wc,ddis",
+c     &       wn(ihit),wcoord(ihit),wcoord(ihit)-s(layer),wc(ihit),wcoord(ihit)-wc(ihit)
+         enddo
+      enddo                     ! end loop over space points
 *     
 *     stubs are calculated in rotated coordinate system
 *     use first hit to determine chamber
-         layer=EDC1_LAYER_NUM(hits(1))
-         stub(3)=(edc1beststub(isp,3) - edc1tanbeta(layer))
-     &        /(1.0 + edc1beststub(isp,3)*edc1tanbeta(layer))
-         stub(4)=edc1beststub(isp,4)
-     &        /(edc1beststub(isp,3)*edc1sinbeta(layer)+edc1cosbeta(layer))
-         
-         stub(1)=edc1beststub(isp,1)*edc1cosbeta(layer) 
-     &        - edc1beststub(isp,1)*stub(3)*edc1sinbeta(layer)
-         stub(2)=edc1beststub(isp,2) 
-     &        - edc1beststub(isp,1)*stub(4)*edc1sinbeta(layer)
-         edc1beststub(isp,1)=stub(1)
-         edc1beststub(isp,2)=stub(2)
-         edc1beststub(isp,3)=stub(3)
-         edc1beststub(isp,4)=stub(4)
-      enddo                     ! end loop over space points
+c            stub(3)=(edc1beststub(isp,3) - edc1tanbeta(layer))
+c     &        /(1.0 + edc1beststub(isp,3)*edc1tanbeta(layer))
+c            stub(4)=edc1beststub(isp,4)
+c     &        /(edc1beststub(isp,3)*edc1sinbeta(layer)+edc1cosbeta(layer))
+c         
+c            stub(1)=edc1beststub(isp,1)*edc1cosbeta(layer) 
+c     &        - edc1beststub(isp,1)*stub(3)*edc1sinbeta(layer)
+c            stub(2)=edc1beststub(isp,2) 
+c     &        - edc1beststub(isp,1)*stub(4)*edc1sinbeta(layer)
+c            edc1beststub(isp,1)=stub(1)
+c            edc1beststub(isp,2)=stub(2)
+c            edc1beststub(isp,3)=stub(3)
+c            edc1beststub(isp,4)=stub(4)
       
 *     --- fill entracks_pre
       
@@ -348,6 +406,7 @@ cDK     &           edc1layer_coeff(remap(1),layer)*ex_fp_pre(itrack,1)
 cDK     &           +edc1layer_coeff(remap(2),layer)*ey_fp_pre(itrack,1)
 cDK     &           +edc1layer_coeff(remap(3),layer)*exp_fp_pre(itrack,1)
 cDK     &           +edc1layer_coeff(remap(4),layer)*eyp_fp_pre(itrack,1)!DK add
+c            Write(*,*) "ihit2,ddis",ihit2,edc1_drift_dis(ihit2)
 c            Write(*,*) layer,hits(ihit),edc1_wire_coord(hits(ihit))
          EndDo                  ! numhits loop
          entrack_hits_pre(itrack,1) = gh

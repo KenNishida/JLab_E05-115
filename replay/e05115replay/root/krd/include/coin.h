@@ -1,8 +1,8 @@
 //////////////////////////////////////////////////////////
 // This class has been automatically generated on
-// Sat Jun  6 17:09:31 2009 by ROOT version 5.20/00
-// from TTree h9500/COINntuple
-// found on file: coin59400.root
+// Sat Jan 30 18:02:05 2010 by ROOT version 5.24/00
+// from TTree h9500/kawama@farm7:rev=350:2010/01/29/23:19
+// found on file: ntuple/rev350M/ch2/coin76312.root
 //////////////////////////////////////////////////////////
 
 #ifndef coin_h
@@ -36,28 +36,71 @@ public :
    Float_t         hsp;
    Float_t         hsdelta;
    Float_t         hsbeta;
+   Float_t         hsbeta1y;
    Float_t         hsbeta_k;
+   Float_t         hmsq;
    Float_t         haernhit;
+   Float_t         haernh1;
+   Float_t         haernh2;
+   Float_t         haernh3;
    Float_t         haernpe1;
    Float_t         haernpe2;
    Float_t         haernpe3;
    Float_t         hacnpe1m;
    Float_t         hacnpe2m;
    Float_t         hacnpe3m;
+   Float_t         haern1p;
+   Float_t         haern2p;
+   Float_t         haern3p;
+   Float_t         hacn1pm;
+   Float_t         hacn2pm;
+   Float_t         hacn3pm;
+   Float_t         haern1n;
+   Float_t         haern2n;
+   Float_t         haern3n;
+   Float_t         hacn1nm;
+   Float_t         hacn2nm;
+   Float_t         hacn3nm;
    Float_t         hact1;
    Float_t         hact2;
    Float_t         hact3;
    Float_t         hact1m;
    Float_t         hact2m;
    Float_t         hact3m;
+   Float_t         hact1p;
+   Float_t         hact2p;
+   Float_t         hact3p;
+   Float_t         hact1pm;
+   Float_t         hact2pm;
+   Float_t         hact3pm;
+   Float_t         hact1n;
+   Float_t         hact2n;
+   Float_t         hact3n;
+   Float_t         hact1nm;
+   Float_t         hact2nm;
+   Float_t         hact3nm;
    Float_t         haernum1;
    Float_t         haernum2;
    Float_t         haernum3;
    Float_t         hwatnhit;
+   Float_t         hwatnh1;
+   Float_t         hwatnh2;
    Float_t         hwatnpe1;
    Float_t         hwatnpe2;
    Float_t         hwcnpe1m;
    Float_t         hwcnpe2m;
+   Float_t         hwatnkn1;
+   Float_t         hwatnkn2;
+   Float_t         hwcnkn1m;
+   Float_t         hwcnkn2m;
+   Float_t         hwatn1p;
+   Float_t         hwatn2p;
+   Float_t         hwcn1pm;
+   Float_t         hwcn2pm;
+   Float_t         hwatn1n;
+   Float_t         hwatn2n;
+   Float_t         hwcn1nm;
+   Float_t         hwcn2nm;
    Float_t         hwct1;
    Float_t         hwct2;
    Float_t         hwct1m;
@@ -122,24 +165,12 @@ public :
    Float_t         gespread;
    Float_t         gfbon;
    Float_t         gferon;
-   Float_t         ipm3c07x;
-   Float_t         ipm3c07y;
-   Float_t         ipm3c08x;
-   Float_t         ipm3c08y;
-   Float_t         ipm3c11x;
-   Float_t         ipm3c11y;
-   Float_t         ipm3c12x;
-   Float_t         ipm3c12y;
-   Float_t         ipm3c14x;
-   Float_t         ipm3c14y;
-   Float_t         ipm3c16x;
-   Float_t         ipm3c16y;
-   Float_t         ipm3c17x;
-   Float_t         ipm3c17y;
-   Float_t         ipm3c18x;
-   Float_t         ipm3c18y;
-   Float_t         ipm3c20x;
-   Float_t         ipm3c20y;
+   Float_t         bpm3c07x;
+   Float_t         bpm3c07y;
+   Float_t         bpm3c08x;
+   Float_t         bpm3c08y;
+   Float_t         bpm3c12x;
+   Float_t         bpm3c12y;
    Float_t         hnphys;
    Float_t         enphys;
    Float_t         cnphys;
@@ -155,8 +186,17 @@ public :
    Float_t         tg_g4;
    Float_t         tg_g5;
    Float_t         tg_g6;
-   Float_t         tg_unb;
+   Float_t         ts_hks;
+   Float_t         ts_hes;
+   Float_t         ts_coin;
+   Float_t         ts_cp0;
    Float_t         happex;
+   Float_t         hlucnhit;
+   Float_t         hlucnpe1;
+   Float_t         hlcnpe1m;
+   Float_t         hlct1;
+   Float_t         hlct1m;
+   Float_t         hlucnum1;
 
    // List of branches
    TBranch        *b_hallcp;   //!
@@ -177,28 +217,71 @@ public :
    TBranch        *b_hsp;   //!
    TBranch        *b_hsdelta;   //!
    TBranch        *b_hsbeta;   //!
+   TBranch        *b_hsbeta1y;   //!
    TBranch        *b_hsbeta_k;   //!
+   TBranch        *b_hmsq;   //!
    TBranch        *b_haernhit;   //!
+   TBranch        *b_haernh1;   //!
+   TBranch        *b_haernh2;   //!
+   TBranch        *b_haernh3;   //!
    TBranch        *b_haernpe1;   //!
    TBranch        *b_haernpe2;   //!
    TBranch        *b_haernpe3;   //!
    TBranch        *b_hacnpe1m;   //!
    TBranch        *b_hacnpe2m;   //!
    TBranch        *b_hacnpe3m;   //!
+   TBranch        *b_haern1p;   //!
+   TBranch        *b_haern2p;   //!
+   TBranch        *b_haern3p;   //!
+   TBranch        *b_hacn1pm;   //!
+   TBranch        *b_hacn2pm;   //!
+   TBranch        *b_hacn3pm;   //!
+   TBranch        *b_haern1n;   //!
+   TBranch        *b_haern2n;   //!
+   TBranch        *b_haern3n;   //!
+   TBranch        *b_hacn1nm;   //!
+   TBranch        *b_hacn2nm;   //!
+   TBranch        *b_hacn3nm;   //!
    TBranch        *b_hact1;   //!
    TBranch        *b_hact2;   //!
    TBranch        *b_hact3;   //!
    TBranch        *b_hact1m;   //!
    TBranch        *b_hact2m;   //!
    TBranch        *b_hact3m;   //!
+   TBranch        *b_hact1p;   //!
+   TBranch        *b_hact2p;   //!
+   TBranch        *b_hact3p;   //!
+   TBranch        *b_hact1pm;   //!
+   TBranch        *b_hact2pm;   //!
+   TBranch        *b_hact3pm;   //!
+   TBranch        *b_hact1n;   //!
+   TBranch        *b_hact2n;   //!
+   TBranch        *b_hact3n;   //!
+   TBranch        *b_hact1nm;   //!
+   TBranch        *b_hact2nm;   //!
+   TBranch        *b_hact3nm;   //!
    TBranch        *b_haernum1;   //!
    TBranch        *b_haernum2;   //!
    TBranch        *b_haernum3;   //!
    TBranch        *b_hwatnhit;   //!
+   TBranch        *b_hwatnh1;   //!
+   TBranch        *b_hwatnh2;   //!
    TBranch        *b_hwatnpe1;   //!
    TBranch        *b_hwatnpe2;   //!
    TBranch        *b_hwcnpe1m;   //!
    TBranch        *b_hwcnpe2m;   //!
+   TBranch        *b_hwatnkn1;   //!
+   TBranch        *b_hwatnkn2;   //!
+   TBranch        *b_hwcnkn1m;   //!
+   TBranch        *b_hwcnkn2m;   //!
+   TBranch        *b_hwatn1p;   //!
+   TBranch        *b_hwatn2p;   //!
+   TBranch        *b_hwcn1pm;   //!
+   TBranch        *b_hwcn2pm;   //!
+   TBranch        *b_hwatn1n;   //!
+   TBranch        *b_hwatn2n;   //!
+   TBranch        *b_hwcn1nm;   //!
+   TBranch        *b_hwcn2nm;   //!
    TBranch        *b_hwct1;   //!
    TBranch        *b_hwct2;   //!
    TBranch        *b_hwct1m;   //!
@@ -263,24 +346,12 @@ public :
    TBranch        *b_gespread;   //!
    TBranch        *b_gfbon;   //!
    TBranch        *b_gferon;   //!
-   TBranch        *b_ipm3c07x;   //!
-   TBranch        *b_ipm3c07y;   //!
-   TBranch        *b_ipm3c08x;   //!
-   TBranch        *b_ipm3c08y;   //!
-   TBranch        *b_ipm3c11x;   //!
-   TBranch        *b_ipm3c11y;   //!
-   TBranch        *b_ipm3c12x;   //!
-   TBranch        *b_ipm3c12y;   //!
-   TBranch        *b_ipm3c14x;   //!
-   TBranch        *b_ipm3c14y;   //!
-   TBranch        *b_ipm3c16x;   //!
-   TBranch        *b_ipm3c16y;   //!
-   TBranch        *b_ipm3c17x;   //!
-   TBranch        *b_ipm3c17y;   //!
-   TBranch        *b_ipm3c18x;   //!
-   TBranch        *b_ipm3c18y;   //!
-   TBranch        *b_ipm3c20x;   //!
-   TBranch        *b_ipm3c20y;   //!
+   TBranch        *b_bpm3c07x;   //!
+   TBranch        *b_bpm3c07y;   //!
+   TBranch        *b_bpm3c08x;   //!
+   TBranch        *b_bpm3c08y;   //!
+   TBranch        *b_bpm3c12x;   //!
+   TBranch        *b_bpm3c12y;   //!
    TBranch        *b_hnphys;   //!
    TBranch        *b_enphys;   //!
    TBranch        *b_cnphys;   //!
@@ -296,8 +367,17 @@ public :
    TBranch        *b_tg_g4;   //!
    TBranch        *b_tg_g5;   //!
    TBranch        *b_tg_g6;   //!
-   TBranch        *b_tg_unb;   //!
+   TBranch        *b_ts_hks;   //!
+   TBranch        *b_ts_hes;   //!
+   TBranch        *b_ts_coin;   //!
+   TBranch        *b_ts_cp0;   //!
    TBranch        *b_happex;   //!
+   TBranch        *b_hlucnhit;   //!
+   TBranch        *b_hlucnpe1;   //!
+   TBranch        *b_hlcnpe1m;   //!
+   TBranch        *b_hlct1;   //!
+   TBranch        *b_hlct1m;   //!
+   TBranch        *b_hlucnum1;   //!
 
    coin(TTree *tree=0);
    virtual ~coin();
@@ -318,9 +398,9 @@ coin::coin(TTree *tree)
 // if parameter tree is not specified (or zero), connect the file
 // used to generate this class and read the Tree.
    if (tree == 0) {
-      TFile *f = (TFile*)gROOT->GetListOfFiles()->FindObject("coin59400.root");
+      TFile *f = (TFile*)gROOT->GetListOfFiles()->FindObject("ntuple/rev350M/ch2/coin76312.root");
       if (!f) {
-         f = new TFile("coin59400.root");
+         f = new TFile("ntuple/rev350M/ch2/coin76312.root");
       }
       tree = (TTree*)gDirectory->Get("h9500");
 
@@ -389,28 +469,71 @@ void coin::Init(TTree *tree)
    fChain->SetBranchAddress("hsp", &hsp, &b_hsp);
    fChain->SetBranchAddress("hsdelta", &hsdelta, &b_hsdelta);
    fChain->SetBranchAddress("hsbeta", &hsbeta, &b_hsbeta);
+   fChain->SetBranchAddress("hsbeta1y", &hsbeta1y, &b_hsbeta1y);
    fChain->SetBranchAddress("hsbeta_k", &hsbeta_k, &b_hsbeta_k);
+   fChain->SetBranchAddress("hmsq", &hmsq, &b_hmsq);
    fChain->SetBranchAddress("haernhit", &haernhit, &b_haernhit);
+   fChain->SetBranchAddress("haernh1", &haernh1, &b_haernh1);
+   fChain->SetBranchAddress("haernh2", &haernh2, &b_haernh2);
+   fChain->SetBranchAddress("haernh3", &haernh3, &b_haernh3);
    fChain->SetBranchAddress("haernpe1", &haernpe1, &b_haernpe1);
    fChain->SetBranchAddress("haernpe2", &haernpe2, &b_haernpe2);
    fChain->SetBranchAddress("haernpe3", &haernpe3, &b_haernpe3);
    fChain->SetBranchAddress("hacnpe1m", &hacnpe1m, &b_hacnpe1m);
    fChain->SetBranchAddress("hacnpe2m", &hacnpe2m, &b_hacnpe2m);
    fChain->SetBranchAddress("hacnpe3m", &hacnpe3m, &b_hacnpe3m);
+   fChain->SetBranchAddress("haern1p", &haern1p, &b_haern1p);
+   fChain->SetBranchAddress("haern2p", &haern2p, &b_haern2p);
+   fChain->SetBranchAddress("haern3p", &haern3p, &b_haern3p);
+   fChain->SetBranchAddress("hacn1pm", &hacn1pm, &b_hacn1pm);
+   fChain->SetBranchAddress("hacn2pm", &hacn2pm, &b_hacn2pm);
+   fChain->SetBranchAddress("hacn3pm", &hacn3pm, &b_hacn3pm);
+   fChain->SetBranchAddress("haern1n", &haern1n, &b_haern1n);
+   fChain->SetBranchAddress("haern2n", &haern2n, &b_haern2n);
+   fChain->SetBranchAddress("haern3n", &haern3n, &b_haern3n);
+   fChain->SetBranchAddress("hacn1nm", &hacn1nm, &b_hacn1nm);
+   fChain->SetBranchAddress("hacn2nm", &hacn2nm, &b_hacn2nm);
+   fChain->SetBranchAddress("hacn3nm", &hacn3nm, &b_hacn3nm);
    fChain->SetBranchAddress("hact1", &hact1, &b_hact1);
    fChain->SetBranchAddress("hact2", &hact2, &b_hact2);
    fChain->SetBranchAddress("hact3", &hact3, &b_hact3);
    fChain->SetBranchAddress("hact1m", &hact1m, &b_hact1m);
    fChain->SetBranchAddress("hact2m", &hact2m, &b_hact2m);
    fChain->SetBranchAddress("hact3m", &hact3m, &b_hact3m);
+   fChain->SetBranchAddress("hact1p", &hact1p, &b_hact1p);
+   fChain->SetBranchAddress("hact2p", &hact2p, &b_hact2p);
+   fChain->SetBranchAddress("hact3p", &hact3p, &b_hact3p);
+   fChain->SetBranchAddress("hact1pm", &hact1pm, &b_hact1pm);
+   fChain->SetBranchAddress("hact2pm", &hact2pm, &b_hact2pm);
+   fChain->SetBranchAddress("hact3pm", &hact3pm, &b_hact3pm);
+   fChain->SetBranchAddress("hact1n", &hact1n, &b_hact1n);
+   fChain->SetBranchAddress("hact2n", &hact2n, &b_hact2n);
+   fChain->SetBranchAddress("hact3n", &hact3n, &b_hact3n);
+   fChain->SetBranchAddress("hact1nm", &hact1nm, &b_hact1nm);
+   fChain->SetBranchAddress("hact2nm", &hact2nm, &b_hact2nm);
+   fChain->SetBranchAddress("hact3nm", &hact3nm, &b_hact3nm);
    fChain->SetBranchAddress("haernum1", &haernum1, &b_haernum1);
    fChain->SetBranchAddress("haernum2", &haernum2, &b_haernum2);
    fChain->SetBranchAddress("haernum3", &haernum3, &b_haernum3);
    fChain->SetBranchAddress("hwatnhit", &hwatnhit, &b_hwatnhit);
+   fChain->SetBranchAddress("hwatnh1", &hwatnh1, &b_hwatnh1);
+   fChain->SetBranchAddress("hwatnh2", &hwatnh2, &b_hwatnh2);
    fChain->SetBranchAddress("hwatnpe1", &hwatnpe1, &b_hwatnpe1);
    fChain->SetBranchAddress("hwatnpe2", &hwatnpe2, &b_hwatnpe2);
    fChain->SetBranchAddress("hwcnpe1m", &hwcnpe1m, &b_hwcnpe1m);
    fChain->SetBranchAddress("hwcnpe2m", &hwcnpe2m, &b_hwcnpe2m);
+   fChain->SetBranchAddress("hwatnkn1", &hwatnkn1, &b_hwatnkn1);
+   fChain->SetBranchAddress("hwatnkn2", &hwatnkn2, &b_hwatnkn2);
+   fChain->SetBranchAddress("hwcnkn1m", &hwcnkn1m, &b_hwcnkn1m);
+   fChain->SetBranchAddress("hwcnkn2m", &hwcnkn2m, &b_hwcnkn2m);
+   fChain->SetBranchAddress("hwatn1p", &hwatn1p, &b_hwatn1p);
+   fChain->SetBranchAddress("hwatn2p", &hwatn2p, &b_hwatn2p);
+   fChain->SetBranchAddress("hwcn1pm", &hwcn1pm, &b_hwcn1pm);
+   fChain->SetBranchAddress("hwcn2pm", &hwcn2pm, &b_hwcn2pm);
+   fChain->SetBranchAddress("hwatn1n", &hwatn1n, &b_hwatn1n);
+   fChain->SetBranchAddress("hwatn2n", &hwatn2n, &b_hwatn2n);
+   fChain->SetBranchAddress("hwcn1nm", &hwcn1nm, &b_hwcn1nm);
+   fChain->SetBranchAddress("hwcn2nm", &hwcn2nm, &b_hwcn2nm);
    fChain->SetBranchAddress("hwct1", &hwct1, &b_hwct1);
    fChain->SetBranchAddress("hwct2", &hwct2, &b_hwct2);
    fChain->SetBranchAddress("hwct1m", &hwct1m, &b_hwct1m);
@@ -475,24 +598,12 @@ void coin::Init(TTree *tree)
    fChain->SetBranchAddress("gespread", &gespread, &b_gespread);
    fChain->SetBranchAddress("gfbon", &gfbon, &b_gfbon);
    fChain->SetBranchAddress("gferon", &gferon, &b_gferon);
-   fChain->SetBranchAddress("ipm3c07x", &ipm3c07x, &b_ipm3c07x);
-   fChain->SetBranchAddress("ipm3c07y", &ipm3c07y, &b_ipm3c07y);
-   fChain->SetBranchAddress("ipm3c08x", &ipm3c08x, &b_ipm3c08x);
-   fChain->SetBranchAddress("ipm3c08y", &ipm3c08y, &b_ipm3c08y);
-   fChain->SetBranchAddress("ipm3c11x", &ipm3c11x, &b_ipm3c11x);
-   fChain->SetBranchAddress("ipm3c11y", &ipm3c11y, &b_ipm3c11y);
-   fChain->SetBranchAddress("ipm3c12x", &ipm3c12x, &b_ipm3c12x);
-   fChain->SetBranchAddress("ipm3c12y", &ipm3c12y, &b_ipm3c12y);
-   fChain->SetBranchAddress("ipm3c14x", &ipm3c14x, &b_ipm3c14x);
-   fChain->SetBranchAddress("ipm3c14y", &ipm3c14y, &b_ipm3c14y);
-   fChain->SetBranchAddress("ipm3c16x", &ipm3c16x, &b_ipm3c16x);
-   fChain->SetBranchAddress("ipm3c16y", &ipm3c16y, &b_ipm3c16y);
-   fChain->SetBranchAddress("ipm3c17x", &ipm3c17x, &b_ipm3c17x);
-   fChain->SetBranchAddress("ipm3c17y", &ipm3c17y, &b_ipm3c17y);
-   fChain->SetBranchAddress("ipm3c18x", &ipm3c18x, &b_ipm3c18x);
-   fChain->SetBranchAddress("ipm3c18y", &ipm3c18y, &b_ipm3c18y);
-   fChain->SetBranchAddress("ipm3c20x", &ipm3c20x, &b_ipm3c20x);
-   fChain->SetBranchAddress("ipm3c20y", &ipm3c20y, &b_ipm3c20y);
+   fChain->SetBranchAddress("bpm3c07x", &bpm3c07x, &b_bpm3c07x);
+   fChain->SetBranchAddress("bpm3c07y", &bpm3c07y, &b_bpm3c07y);
+   fChain->SetBranchAddress("bpm3c08x", &bpm3c08x, &b_bpm3c08x);
+   fChain->SetBranchAddress("bpm3c08y", &bpm3c08y, &b_bpm3c08y);
+   fChain->SetBranchAddress("bpm3c12x", &bpm3c12x, &b_bpm3c12x);
+   fChain->SetBranchAddress("bpm3c12y", &bpm3c12y, &b_bpm3c12y);
    fChain->SetBranchAddress("hnphys", &hnphys, &b_hnphys);
    fChain->SetBranchAddress("enphys", &enphys, &b_enphys);
    fChain->SetBranchAddress("cnphys", &cnphys, &b_cnphys);
@@ -508,8 +619,17 @@ void coin::Init(TTree *tree)
    fChain->SetBranchAddress("tg_g4", &tg_g4, &b_tg_g4);
    fChain->SetBranchAddress("tg_g5", &tg_g5, &b_tg_g5);
    fChain->SetBranchAddress("tg_g6", &tg_g6, &b_tg_g6);
-   fChain->SetBranchAddress("tg_unb", &tg_unb, &b_tg_unb);
+   fChain->SetBranchAddress("ts_hks", &ts_hks, &b_ts_hks);
+   fChain->SetBranchAddress("ts_hes", &ts_hes, &b_ts_hes);
+   fChain->SetBranchAddress("ts_coin", &ts_coin, &b_ts_coin);
+   fChain->SetBranchAddress("ts_cp0", &ts_cp0, &b_ts_cp0);
    fChain->SetBranchAddress("happex", &happex, &b_happex);
+   fChain->SetBranchAddress("hlucnhit", &hlucnhit, &b_hlucnhit);
+   fChain->SetBranchAddress("hlucnpe1", &hlucnpe1, &b_hlucnpe1);
+   fChain->SetBranchAddress("hlcnpe1m", &hlcnpe1m, &b_hlcnpe1m);
+   fChain->SetBranchAddress("hlct1", &hlct1, &b_hlct1);
+   fChain->SetBranchAddress("hlct1m", &hlct1m, &b_hlct1m);
+   fChain->SetBranchAddress("hlucnum1", &hlucnum1, &b_hlucnum1);
    Notify();
 }
 

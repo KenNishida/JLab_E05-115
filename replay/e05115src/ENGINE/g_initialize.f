@@ -289,8 +289,7 @@
          write(G_LUN_CHARGE_SCALER,*) 
      &        '!Charge scalers - Run #',gen_run_number
          write(G_LUN_CHARGE_SCALER,*) 
-     &        '!event   Unser(Hz)     BCM1(Hz)     BCM2(Hz)',
-     &        '     BCM3(Hz)     Time(s)'
+     &        '!event   time(sec)    Unser(uC)     BCM1(uC)     BCM2(uC)     mean(uC)'
       endif
       
 *     Open output file for epics events.

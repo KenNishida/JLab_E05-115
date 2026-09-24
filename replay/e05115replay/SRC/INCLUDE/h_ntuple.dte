@@ -42,6 +42,17 @@
       data h_dc_Ntuple_tag/HMAX_Ntuple_size*' '/
       data h_dc_Ntuple_contents/HMAX_Ntuple_size*0/
 
+      data h_track_Ntuple_exists/.FALSE./
+      data h_track_Ntuple_ID/0/
+      data h_track_Ntuple_file/' '/
+      data h_track_Ntuple_name/' '/
+      data h_track_Ntuple_title/' '/
+      data h_track_Ntuple_directory/' '/
+      data h_track_Ntuple_IOchannel/0/
+      data h_track_Ntuple_size/0/
+      data h_track_Ntuple_tag/HMAX_Ntuple_size*' '/
+      data h_track_Ntuple_contents/HMAX_Ntuple_size*0/
+
       data h_scin_Ntuple_exists/.FALSE./
       data h_scin_Ntuple_ID/0/
       data h_scin_Ntuple_file/' '/

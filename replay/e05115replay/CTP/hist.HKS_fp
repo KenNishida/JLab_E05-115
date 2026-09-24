@@ -2,10 +2,10 @@ begin hist hks_fp group=hks group=both
 
 ;rf25ps,gmisc_dec_data(116),1,0,1 $### SOS FOCAL PLANE VARS
 
-hx_fp,140,-70.,70.        $hx-fp t=user
-hy_fp,80,-20.,20.         $hy-fp t=user
-hxp_fp,100,-.4,.4         $hxp-fp t=user
-hyp_fp,100,-.1,.1         $hyp-fp t=user
+;hx_fp,100,-70.,70.        $hx-fp t=user
+;hy_fp,100,-20.,20.         $hy-fp t=user
+;hxp_fp,100,-.4,.4         $hxp-fp t=user
+;hyp_fp,100,-.1,.1         $hyp-fp t=user
 
 ;hlogchi2_fp,60,-1.,5.     $slogchi2-fp t=user
 ;hnfree_fp,20,0.,20.       $snfree-fp t=user

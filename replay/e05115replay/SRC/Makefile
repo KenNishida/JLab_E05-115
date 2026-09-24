@@ -1,10 +1,12 @@
 include ../../e05115src/Makefile.in
 
-F77 = /usr/bin/g77
-#FFLAGS= -m32 -ffixed-line-length-132 -finit-local-zero -I$(INC) -fbounds-check
-FFLAGS= -m32 -ffixed-line-length-132 -finit-local-zero -I$(INC)
-CERNLIBS = -L$(CERNLIB) -lgeant -lpawlib -lmathlib -lgraflib -lgrafX11 -lpacklib 
-X11LIBS = -L/usr/X11R6/lib -lXt -lXext -lX11 -lcrypt -ldl  -lnsl -lm
+FC = /usr/bin/gfortran
+F77= $(FC)
+FFLAGS=  -ffixed-line-length-132 -finit-local-zero -I$(INC)
+
+# Set for ifarm 09212026, SP
+CERNLIBS = -L$(CERNLIB) -lgeant -lpawlib -lmathlib -lgraflib -lgrafX11 -lpacklib -lkernlib
+X11LIBS = -L/usr/lib64 -ltirpc -lXt -lXext -lX11 -lcrypt -ldl  -lnsl -lm
 
 ENGINELIB = $(LIBROOT)/libengine.a
 UTILLIB = $(LIBROOT)/libutils.a
@@ -18,23 +20,27 @@ PORTLIB = $(LIBROOT)/libport.a
 
 OURLIBS = $(ENGINELIB) $(ETRACKINGLIB) $(HTRACKINGLIB) $(TRACKINGLIB) \
           $(UTILLIB) $(CTPLIB) $(CODALIB) $(EVDISPLAYLIB) $(PORTLIB)
-OBJS = engine.o
 
-.f.o: $(F77) $(FFLAGS) -c $<
+OBJS = engine.o g_get_compileinfo.o
 
-none: engine_replay
+#COMPILEENV := '       'COMPILEINFO=\'${USER}@`/bin/hostname`:`pwd`@`/bin/date -R`\'
+COMPILEENV := '       'COMPILEINFO=\'${USER}@`/bin/hostname`:rev=`svnversion -n`:`/bin/date '+%Y/%m/%d/%H:%M'`\'
+none: compileenv engine_replay
 
-all: ../EXE/engine_replay
+all: compileenv ../EXE/engine_replay
 
-engine: ../EXE/engine_replay
+engine: compileenv ../EXE/engine_replay
+
+compileenv:
+	echo ${COMPILEENV} > COMPILEINFO
+#	/bin/rm -f g_get_compileinfo.o
+
+%.o: %.f
+	$(F77) $(FFLAGS) -c $< -o $@
+#.f.o: $(F77) $(FFLAGS) -c $<
 
 engine_replay: $(OBJS) $(OURLIBS)
 	$(F77) -o ../EXE/$@ $(FFLAGS) $(OBJS) $(OURLIBS) $(CERNLIBS) $(X11LIBS)
 
 clean:
 	rm *.o ../EXE/engine_replay
-
-
-
-
-

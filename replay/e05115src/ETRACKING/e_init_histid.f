@@ -114,6 +114,13 @@ c     --- F1 trigger time hist is here for ROC11
             Write(histname,'(15Hedc1rawlayertdc,I2)') i
             eiddc1rawlayertdc(i) = thgetid(histname)
          EndIf
+         if(i .le. 9) then
+            Write(histname,'(16Hedc1rawlayerhit0,I1)') i
+            eiddc1rawlayerhit(i) = thgetid(histname)
+         Else
+            Write(histname,'(15Hedc1rawlayerhit,I2)') i
+            eiddc1rawlayerhit(i) = thgetid(histname)
+         endif
       EndDo
       
       if(eturnon_dc1_raw_hist .eq. 1) then
@@ -144,6 +151,8 @@ c     --- F1 trigger time hist is here for ROC11
          if(i .le. 9) then
             Write(histname,'(16Hedc2rawlayertdc0,I1)') i
             eiddc2rawlayertdc(i) = thgetid(histname)
+            Write(histname,'(16Hedc2rawlayerhit0,I1)') i
+            eiddc2rawlayerhit(i) = thgetid(histname)
          EndIf
       EndDo
       
@@ -251,8 +260,12 @@ c     --- F1 trigger time hist is here for ROC11
          eiddc1edistancetest=thgetid('edistancetest')
          
 *     e_fill_dc1_pretrk_hist
-         eidentrackspre = thgetid('entrackspre')
-         eidentracksprezoom = thgetid('entracksprezoom')
+         eidntrackspre = thgetid('entrackspre')
+         eidntracksprezoom = thgetid('entracksprezoom')
+         eiddc1ntrackspre = thgetid('edc1ntrackspre')
+         eiddc1ntracksprezoom = thgetid('edc1ntracksprezoom')
+         eiddc2ntrackspre = thgetid('edc2ntrackspre')
+         eiddc2ntracksprezoom = thgetid('edc2ntracksprezoom')
          
 *     e_fill_dc1_track_hist
          Do i=1,emax_num_dc1_layers
@@ -265,6 +278,8 @@ c     --- F1 trigger time hist is here for ROC11
             EndIf
          EndDo
          
+         eidchi2perdofpre = thgetid('echi2perdofpre')
+         eidchi2perdofprezoom = thgetid('echi2perdofprezoom')
          eiddc1chi2perdofpre = thgetid('edc1chi2perdofpre')
          eiddc1chi2perdofprezoom = thgetid('edc1chi2perdofprezoom')
          eiddc2chi2perdofpre = thgetid('edc2chi2perdofpre')
@@ -279,7 +294,64 @@ c     --- F1 trigger time hist is here for ROC11
                eiddc1distime(i) = thgetid(histname)
             EndIf
          EndDo
+         Do i=1,emax_num_dc2_layers
+            Write(histname,'(12Hedc2distime0,i1)') i
+            eiddc2distime(i) = thgetid(histname)
+         EndDo
          
+
+        Do i=1,EMAX_NUM_DC2_LAYERS
+         if(i .le. 9) then
+            Write(histname,'(15Hedc2wirecenter0,I1)') i
+            eiddc2wirecenter(i) = thgetid(histname)
+         Else
+            Write(histname,'(14Hedc2wirecenter,I2)') i
+            eiddc2wirecenter(i) = thgetid(histname)
+         EndIf
+       EndDo
+
+      if(eturnon_dc2_dec_hist .eq. 1) then
+         Do i=1,EMAX_NUM_DC2_SLOTS
+            if(i .le. 9) then
+               Write(histname,'(14Hedc2drifttime0,I1)') i
+               eiddc2drifttime(i) = thgetid(histname)
+            Else
+               Write(histname,'(13Hedc2drifttime,I2)') i
+               eiddc2drifttime(i) = thgetid(histname)
+            EndIf
+         EndDo
+      EndIf
+
+       Do i=1,EMAX_NUM_DC2_layers
+         if(i .le. 9) then
+            Write(histname,'(11Hdtime_edc20,I1)') i
+            eiddc2singdtime(i) = thgetid(histname)
+         Else
+            Write(histname,'(10Hdtime_edc2,I2)') i
+            eiddc2singdtime(i) = thgetid(histname)
+         EndIf
+      EndDo
+
+       Do i=1,EMAX_NUM_DC2_LAYERS
+         if(i .le. 9) then
+            Write(histname,'(13Hedc2layerhit0,I1)') i
+            eiddc2layerhit(i) = thgetid(histname)
+         Else
+            Write(histname,'(12Hedc2layerhit,I2)') i
+            eiddc2layerhit(i) = thgetid(histname)
+         EndIf
+      EndDo
+
+        Do i=1,emax_num_dc2_layers
+         if(i .le. 9) then
+            Write(histname,'(13Hedc2driftdis0,i1)') i
+            eiddc2driftdis(i) = thgetid(histname)
+         Else
+            Write(histname,'(12Hedc2driftdis,i2)') i
+            eiddc2driftdis(i) = thgetid(histname)
+         EndIf
+        EndDo
+
 *     e_select_good_tracks.f
          eidtrkdx = thgetid('etrkdx')
          eidtrkdy = thgetid('etrkdy')
@@ -291,29 +363,64 @@ c     --- F1 trigger time hist is here for ROC11
 *     e_select_good_tracks.f
       eidntracksfp = thgetid('entracksfp')
       eidntracksfpzoom = thgetid('entracksfpzoom')
+      eiddc1ntracksfp = thgetid('edc1ntracksfp')
+      eiddc1ntracksfpzoom = thgetid('edc1ntracksfpzoom')
+      eiddc2ntracksfp = thgetid('edc2ntracksfp')
+      eiddc2ntracksfpzoom = thgetid('edc2ntracksfpzoom')
+      eidchi2perdoffp = thgetid('echi2perdoffp')
+      eidchi2perdoffpzoom = thgetid('echi2perdoffpzoom')
       eiddc1chi2perdoffp = thgetid('edc1chi2perdoffp')
       eiddc1chi2perdoffpzoom = thgetid('edc1chi2perdoffpzoom')
       eiddc2chi2perdoffp = thgetid('edc2chi2perdoffp')
       eiddc2chi2perdoffpzoom = thgetid('edc2chi2perdoffpzoom')
       Do i=1,emax_num_dc1_layers
          if(i .le. 9) then
-            Write(histname,'(9Hesingres0,i1)') i
+            Write(histname,'(12Hedc1singres0,i1)') i
             eiddc1singleresidual(i) = thgetid(histname)
          Else
-            Write(histname,'(8Hesingres,i2)') i
+            Write(histname,'(11Hedc1singres,i2)') i
             eiddc1singleresidual(i) = thgetid(histname)
          EndIf
       EndDo
-      eidexfp = thgetid('exfp')
-      eideyfp = thgetid('eyfp')
-      eidexpfp = thgetid('expfp')
-      eideypfp = thgetid('eypfp')
+      Do i=1,emax_num_dc2_layers
+         if(i .le. 9) then
+            Write(histname,'(12Hedc2singres0,i1)') i
+            eiddc2singleresidual(i) = thgetid(histname)
+         Else
+            Write(histname,'(11Hedc2singres,i2)') i
+            eiddc2singleresidual(i) = thgetid(histname)
+         EndIf
+      EndDo
+      eidfpx = thgetid('efpx')
+      eidfpy = thgetid('efpy')
+      eidfpxp = thgetid('efpxp')
+      eidfpyp = thgetid('efpyp')
       eidfpxy = thgetid('efpxy')
       eidfpxpyp = thgetid('efpxpyp')
       eidfpxxp = thgetid('efpxxp')
       eidfpxyp = thgetid('efpxyp')
       eidfpyxp = thgetid('efpyxp')
       eidfpyyp = thgetid('efpyyp')
+      eiddc1fpx = thgetid('edc1fpx')
+      eiddc1fpy = thgetid('edc1fpy')
+      eiddc1fpxp = thgetid('edc1fpxp')
+      eiddc1fpyp = thgetid('edc1fpyp')
+      eiddc1fpxy = thgetid('edc1fpxy')
+      eiddc1fpxpyp = thgetid('edc1fpxpyp')
+      eiddc1fpxxp = thgetid('edc1fpxxp')
+      eiddc1fpxyp = thgetid('edc1fpxyp')
+      eiddc1fpyxp = thgetid('edc1fpyxp')
+      eiddc1fpyyp = thgetid('edc1fpyyp')
+      eiddc2fpx = thgetid('edc2fpx')
+      eiddc2fpy = thgetid('edc2fpy')
+      eiddc2fpxp = thgetid('edc2fpxp')
+      eiddc2fpyp = thgetid('edc2fpyp')
+      eiddc2fpxy = thgetid('edc2fpxy')
+      eiddc2fpxpyp = thgetid('edc2fpxpyp')
+      eiddc2fpxxp = thgetid('edc2fpxxp')
+      eiddc2fpxyp = thgetid('edc2fpxyp')
+      eiddc2fpyxp = thgetid('edc2fpyxp')
+      eiddc2fpyyp = thgetid('edc2fpyyp')
 
 ****************************
 *     ehodo
@@ -561,18 +668,41 @@ c
       eidtultotchannelnum=thgetid('etultotchannelnum')
 
 CCC DK from here
+      Do i=1,emax_num_dc1_layers+emax_num_dc2_layers
+         Call HBOOK2(5000+i,'time vs drift dis(abs)',160,-1.,1.,
+     &        180,-40.,140.,0.)
+         Call HBOOK2(5100+i,'time vs drift dis',160,-1.,1.,
+     &        180,-40.,140.,0.)
+         Call HBOOK2(5120+i,'time vs drift dis(-)',160,-1.,1.,
+     &        180,-40.,140.,0.)
+         Call HBOOK2(5140+i,'time vs drift dis(+)',160,-1.,1.,
+     &        180,-40.,140.,0.)
+         Call HBOOK1(5200+i,'layer hits',2,0.,2.,0.)
+         Call HBOOK1(5300+i,'layer distribution',200,-100.,100.,0.)
+         Call HBOOK1(5400+i,'drift distance',200,-100.,100.,0.)
+      EndDo
       Do i=1,emax_num_dc1_layers
-         Call HBOOK2(4990+i,'time vs drift dis(abs)',160,-1.,1.,
-     &        180,-40.,140.,0.)
-         Call HBOOK2(5000+i,'time vs drift dis',160,-1.,1.,
-     &        180,-40.,140.,0.)
-         Call HBOOK2(5010+i,'time vs drift dis(-)',160,-1.,1.,
-     &        180,-40.,140.,0.)
-         Call HBOOK2(5020+i,'time vs drift dis(+)',160,-1.,1.,
-     &        180,-40.,140.,0.)
-         Call HBOOK1(5100+i,'layer hits',2,0.,2.,0.)
-         Call HBOOK1(5110+i,'layer distribution',200,-100.,100.,0.)
-         Call HBOOK1(5120+i,'drift distance',200,-100.,100.,0.)
+         Call HBOOK1(5500+i,'dx',500,-0.5,0.5,0.)
+         Call HBOOK1(5600+i,'dy',500,-0.5,0.5,0.)
+         Call HBOOK1(5700+i,'ds',500,-0.5,0.5,0.)
+c         Call HBOOK2(5720+i,'ds',200,-60.,60.,200,-0.5,0.5,0.)
+c         Call HBOOK2(5720+i,'ds',500,-60.,60.,500,-0.5,0.5,0.)
+
+         Call HBOOK2(5720+i,'ds',200,-10.,10.,200,-0.1,0.1,0.)
+c         Call HBOOK2(5740+i,'dtvsx',200,-60.,60.,200,-50.,200.,0.)
+
+      EndDo
+      Do i=emax_num_dc1_layers+1,emax_num_dc1_layers+emax_num_dc2_layers
+         Call HBOOK1(5500+i,'dx',200,-1.,1.,0.)
+         Call HBOOK1(5600+i,'dy',200,-1.,1.,0.)
+         Call HBOOK1(5700+i,'ds',500,-0.5,0.5,0.)
+
+c         Call HBOOK2(5720+i,'ds',200,-60.,60.,200,-0.5,0.5,0.)
+
+         Call HBOOK2(5720+i,'ds',200,-.5,.5,200,-0.1,0.1,0.)
+c         Call HBOOK2(5740+i,'dtvsx',200,-60.,60.,200,-50.,200.,0.)
+
+         !Call HBOOK1(5700+i,'ds',500,-0.5,0.5,0.)
       EndDo
 
 

@@ -128,6 +128,7 @@
       include 'hks_aero_parms.cmn'
       include 'hks_water_parms.cmn'
       include 'hks_lucite_parms.cmn'
+      include 'hks_bypass_switches.cmn'
 
 *     local variables 
       
@@ -168,7 +169,7 @@ c     Write(*,*) '(phys) hntracks_fp=',hntracks_fp
 c     put your condition here.
 ****************************************
          if(
-     &        htrk_beta(itrk) .gt. -100000
+     &        htrk_beta(itrk) .gt. -10000
      &        ) then
             hnphysics = hnphysics + 1
             hp = hnphysics
@@ -210,6 +211,16 @@ c     Write(*,*) 'hp=',hp,hphys_ntrack(hp),hschi2perdeg(hp)
 c     EndDo
 c     EndIf
 cc      print *, 'physics',hnphysics,htrk_beta(1)
+
+c***********OUTPUT to get hit information in KDC************
+      if(hdc_hitinfo_flag.eq.1 .and.
+     &     hdc_hitinfo_flag2.eq.1)then
+         open(22,file='hks_cham.dat',access='append')   
+         write(22,*)hnphysics
+         close(22)
+      endif
+c***********************************************************
+
       Do hp = 1, hnphysics
          itrk = hphys_ntrack(hp)      
          
@@ -242,6 +253,7 @@ cc      print *, 'physics',hnphysics,htrk_beta(1)
          hsxp_fp(hp)      = hxp_fp(itrk)
          hsyp_fp(hp)      = hyp_fp(itrk)
          hsbeta(hp)       = htrk_beta(itrk)
+         hsbeta1y(hp)     = htrk_beta1y(itrk)
          hstof(hp)        = htrk_tof(itrk)
          hsdedx(hp,1)     = hscin_trk_depo(itrk,1)
          hsdedx(hp,2)     = hscin_trk_depo(itrk,2)
@@ -262,6 +274,15 @@ cc      print *, 'physics',hnphysics,htrk_beta(1)
          hsna1m(hp)       = hscin_trk_depo2(itrk,1)
          hsna2m(hp)       = hscin_trk_depo2(itrk,2)
          hsna3m(hp)       = hscin_trk_depo2(itrk,3)
+c***********OUTPUT to get hit information in KDC************
+         if(hdc_hitinfo_flag.eq.1 .and.
+     &        hdc_hitinfo_flag2.eq.1)then
+            open(22,file='hks_cham.dat',access='append')   
+            write(22,*)hsx_fp(hp),hsy_fp(hp)
+     &           ,hsxp_fp(hp),hsyp_fp(hp)
+            close(22)
+         endif
+c*************************************************
          
 *     hsp - momentum : hsenergy - kaon energy
          hsp(hp)     = hp_tar(itrk) ! GeV
@@ -296,6 +317,14 @@ cc      print *, 'physics',hnphysics,htrk_beta(1)
             hsaer_npe2(hp,j) = htrk_aer_npe_sum2(itrk,j)
             hsaer_time(hp,j) = htrk_aer_time(itrk,j)
             hsaer_time2(hp,j) = htrk_aer_time2(itrk,j)
+            hsaer_npe_pos(hp,j) = htrk_aer_npe_pos(itrk,j)
+            hsaer_npe_pos2(hp,j) = htrk_aer_npe_pos2(itrk,j)
+            hsaer_time_pos(hp,j) = htrk_aer_time_pos(itrk,j)
+            hsaer_time_pos2(hp,j) = htrk_aer_time_pos2(itrk,j)
+            hsaer_npe_neg(hp,j) = htrk_aer_npe_neg(itrk,j)
+            hsaer_npe_neg2(hp,j) = htrk_aer_npe_neg2(itrk,j)
+            hsaer_time_neg(hp,j) = htrk_aer_time_neg(itrk,j)
+            hsaer_time_neg2(hp,j) = htrk_aer_time_neg2(itrk,j)
             hsaer_num(hp,j) = htrk_aer_num(itrk,j)
          EndDo
          Do j=1,HNUM_WAT_LAYERS
@@ -305,8 +334,18 @@ cc      print *, 'physics',hnphysics,htrk_beta(1)
      &           + hsyp_fp(hp) * hwat_box_zpos(j)
             hswat_npe(hp,j) = htrk_wat_npe_sum(itrk,j)
             hswat_npe2(hp,j) = htrk_wat_npe_sum2(itrk,j)
+            hswat_npe_k_ratio(hp,j) = htrk_wat_npe_sum_k_ratio(itrk,j)
+            hswat_npe_k_ratio2(hp,j) = htrk_wat_npe_sum_k_ratio2(itrk,j)
             hswat_time(hp,j) = htrk_wat_time(itrk,j)
             hswat_time2(hp,j) = htrk_wat_time2(itrk,j)
+            hswat_npe_pos(hp,j) = htrk_wat_npe_pos(itrk,j)
+            hswat_npe_pos2(hp,j) = htrk_wat_npe_pos2(itrk,j)
+            hswat_time_pos(hp,j) = htrk_wat_time_pos(itrk,j)
+            hswat_time_pos2(hp,j) = htrk_wat_time_pos2(itrk,j)
+            hswat_npe_neg(hp,j) = htrk_wat_npe_neg(itrk,j)
+            hswat_npe_neg2(hp,j) = htrk_wat_npe_neg2(itrk,j)
+            hswat_time_neg(hp,j) = htrk_wat_time_neg(itrk,j)
+            hswat_time_neg2(hp,j) = htrk_wat_time_neg2(itrk,j)
             hswat_num(hp,j) = htrk_wat_num(itrk,j)
          EndDo
            
@@ -394,23 +433,72 @@ c     Write(*,*) '(hphys)htt,betak,',
 c     &        hstime_at_tar(hp),hsbeta_k(hp)
 c--
 
-         do i = 1, hnum_scin_layers
-            if ( hscin_on_track(itrk,i).gt.0 ) then
-               hsscin_elem_hit(hp,i) = 
-     &              hscin_counter_num(hscin_on_track(itrk,i))
-            else                ! more than 1 hit in layer
+ccc hsscin_elem_hit is no used anywhere, then I commented out DK
+c         do i = 1, hnum_scin_layers
+c            if ( hscin_on_track(itrk,i).gt.0 ) then
+c               hsscin_elem_hit(hp,i) = 
+c     &              hscin_counter_num(hscin_on_track(itrk,i))
+c            else                ! more than 1 hit in layer
 *     --- it was 18. I(Miyoshi) increased the number.
-               hsscin_elem_hit(hp,ip) = 20
-            endif
-         enddo
+c               hsscin_elem_hit(hp,ip) = 20
+c            endif
+c         enddo
          
          hschi2perdeg(hp)   = hchi2_fp(itrk) / float(hnfree_fp(itrk))
          hsnfree_fp(hp)     = hnfree_fp(itrk)
          
+
+         
          do ip = 1, hdc_num_layers
             hsdc_sing_res(hp,ip)    = hdc_single_residual(itrk,ip)
             hsdc_track_coord(hp,ip) = hdc_track_coord(itrk,ip)
+            hsdc_wire_coord(hp,ip)  = hdc_layer_wirecoord(itrk,ip)
+            hsdc_wire_center(hp,ip) = hdc_layer_wirecenter(itrk,ip)
+            hsdc_wire_numb(hp,ip)   = hdc_wire_numb(itrk,ip)
+            hsdc_layer_sigma(hp,ip) = hdc_layer_sigma(itrk,ip)
+            hsdc_drift_distance(hp,ip)  = hdc_drift_distance(itrk,ip)
+            hsdc_layer_drift_time(hp,ip)= hdc_layer_drift_time(itrk,ip)
+c            Write(*,*) 'DRIFT DISTANCE =',hsdc_drift_distance(hp,ip)
+c            write(22,*)"wire",hsdc_wire_numb(hp,ip)
          enddo
+c***********OUTPUT to get hit information in KDC************
+         if(hdc_hitinfo_flag.eq.1 .and.
+     &        hdc_hitinfo_flag2.eq.1)then
+            open(22,file='hks_cham.dat',access='append')
+            write(22,*)hdc_wire_numb(itrk,1),hdc_wire_numb(itrk,2),
+     &           hdc_wire_numb(itrk,3),hdc_wire_numb(itrk,4),
+     &           hdc_wire_numb(itrk,5),hdc_wire_numb(itrk,6),
+     &           hdc_wire_numb(itrk,7),hdc_wire_numb(itrk,8),
+     &           hdc_wire_numb(itrk,9),hdc_wire_numb(itrk,10),
+     &           hdc_wire_numb(itrk,11),hdc_wire_numb(itrk,12)
+            write(22,*)hdc_track_coord(itrk,1),hdc_track_coord(itrk,2),
+     &           hdc_track_coord(itrk,3),hdc_track_coord(itrk,4),
+     &           hdc_track_coord(itrk,5),hdc_track_coord(itrk,6),
+     &           hdc_track_coord(itrk,7),hdc_track_coord(itrk,8),
+     &           hdc_track_coord(itrk,9),hdc_track_coord(itrk,10),
+     &           hdc_track_coord(itrk,11),hdc_track_coord(itrk,12)
+            write(22,*)hdc_single_residual(itrk,1),
+     &           hdc_single_residual(itrk,2),
+     &           hdc_single_residual(itrk,3),
+     &           hdc_single_residual(itrk,4),
+     &           hdc_single_residual(itrk,5),
+     &           hdc_single_residual(itrk,6),
+     &           hdc_single_residual(itrk,7),
+     &           hdc_single_residual(itrk,8),
+     &           hdc_single_residual(itrk,9),
+     &           hdc_single_residual(itrk,10),
+     &           hdc_single_residual(itrk,11),
+     &           hdc_single_residual(itrk,12)
+            write(22,*)hschi2perdeg(hp)
+            write(22,*)hsnco1(hp),hsnco2(hp),hsnco3(hp)
+            write(22,*)hsaer_num(hp,1),hsaer_num(hp,2),hsaer_num(hp,3)
+            write(22,*)hswat_num(hp,1),hswat_num(hp,2)
+            write(22,*)hsp(hp)
+c            write(22,*)"data"
+            close(22)
+         endif
+c*************************************************
+         hsdc_track_numb(hp)  = itrk!added for test
          
 c     if (hntrack_hits(itrk,1).eq.12 .and. hschi2perdeg.le.4) then
 c     xdist = hsx_dc1
@@ -616,7 +704,32 @@ c     write(6,*)' h_phys: hsbigq2, W2        =',hsbigq2,W2
             write(6,*)' h_phys: hstheta, hsphi     =',
      &           hstheta(hp),hsphi(hp)
          endif
+
+c         if(hsp(hp).ge.1.0 .and. hsp(hp).lt.1.1)then ! Mom Region1 (test:20/Oct/2011, T.Gogami)
+c            write(*,*) hsp(hp)
+!         if(hsp(hp).ge.1.1 .and. hsp(hp).lt.1.2)then ! Mom Region2 (test:20/Oct/2011, T.Gogami)
+!         if(hsp(hp).ge.1.2 .and. hsp(hp).lt.1.3)then ! Mom Region3 (test:20/Oct/2011, T.Gogami)
+!         if(hsp(hp).ge.1.3 .and. hsp(hp).lt.1.4)then ! Mom Region3 (test:20/Oct/2011, T.Gogami)
+!         if(hsp(hp).ge.1.2 .and. hsp(hp).lt.1.4)then ! Mom Region3 (test:20/Oct/2011, T.Gogami)
+!         if(hsp(hp).ge.1.0 .and. hsp(hp).lt.1.2)then ! Mom Region3 (test:20/Oct/2011, T.Gogami)
+c         if( hsx_fp(hp)-(hsxp_fp(hp)*50.0)
+c     &        .le. -10.0)then             ! test
+c     &        .ge. -10.0)then             ! test
+         call h_dc_eff_count(abort,err,hp) ! KDC efficiency (T.Gogami,3Mar2011)
+c         write(*,*) "TEST__"
+c         endif
+!         endif
       EndDo                     ! hnphysics loop
+
+c***********OUTPUT to get hit information in KDC************
+      if(hdc_hitinfo_flag.eq.1 
+     &     .and. hdc_hitinfo_flag2.eq.1
+     &     .and. hnphysics.gt.0)then
+         open(22,file='hks_cham.dat',access='append')   
+         write(22,*)"data"
+         close(22)
+      endif
+c**********************************************************
 
 *     --- Histogram for phys bank ---
       call h_fill_phys_hist(abort,err)

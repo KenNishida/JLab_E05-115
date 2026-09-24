@@ -21,24 +21,144 @@
 *
 
       real*4 gepics_delta_ebeam
+*     BPM @ Arc      
+      real*4 gepics_c01
+      real*4 gepics_xc01,gepics_yc01
+      real*4 gepics_c02
+      real*4 gepics_xc02,gepics_yc02
+      real*4 gepics_c03
+      real*4 gepics_xc03,gepics_yc03
+      real*4 gepics_c04
+      real*4 gepics_xc04,gepics_yc04
+      real*4 gepics_c05
+      real*4 gepics_xc05,gepics_yc05
+      real*4 gepics_c06
+      real*4 gepics_xc06,gepics_yc06
+      real*4 gepics_c07
       real*4 gepics_xc07,gepics_yc07
+      real*4 gepics_c08
       real*4 gepics_xc08,gepics_yc08
+      real*4 gepics_c10
+      real*4 gepics_xc10,gepics_yc10
+      real*4 gepics_c11
       real*4 gepics_xc11,gepics_yc11
+      real*4 gepics_c12
       real*4 gepics_xc12,gepics_yc12
+      real*4 gepics_c14
       real*4 gepics_xc14,gepics_yc14
+      real*4 gepics_c16
       real*4 gepics_xc16,gepics_yc16
+      real*4 gepics_c17
       real*4 gepics_xc17,gepics_yc17
+      real*4 gepics_c18
       real*4 gepics_xc18,gepics_yc18
+      real*4 gepics_c19
+      real*4 gepics_xc19,gepics_yc19
+      real*4 gepics_c20
       real*4 gepics_xc20,gepics_yc20
-      real*4 gepics_xh00a,gepics_yh00a
-      real*4 gepics_xh00b,gepics_yh00b
-      real*4 gepics_xh00c,gepics_yh00c
+      real*4 gepics_4c00
+      real*4 gepics_xp4c00,gepics_yp4c00
+      real*4 gepics_xr4c00,gepics_yr4c00
+*     BPM at the hall
+      real*4 gepics_h00 
+      real*4 gepics_xph00,gepics_yph00
+      real*4 gepics_xrh00,gepics_yrh00
+      real*4 gepics_xah00,gepics_yah00
+      real*4 gepics_xph01,gepics_yph01
+      real*4 gepics_xrh01,gepics_yrh01
+      real*4 gepics_xah01,gepics_yah01
+      real*4 gepics_xph02a,gepics_yph02a
+      real*4 gepics_xrh02a,gepics_yrh02a
+      real*4 gepics_xah02a,gepics_yah02a
+      real*4 gepics_xph02b,gepics_yph02b
+      real*4 gepics_xrh02b,gepics_yrh02b
+      real*4 gepics_xah02b,gepics_yah02b
+      real*4 gepics_xph02c,gepics_yph02c
+      real*4 gepics_xrh02c,gepics_yrh02c
+      real*4 gepics_xah02c,gepics_yah02c
+      real*4 gepics_xph03a,gepics_yph03a
+      real*4 gepics_xrh03a,gepics_yrh03a
+      real*4 gepics_xah03a,gepics_yah03a
+      real*4 gepics_xph03b,gepics_yph03b
+      real*4 gepics_xrh03b,gepics_yrh03b
+      real*4 gepics_xah03b,gepics_yah03b
+*     Sieve Slit and Target
+      real*4 gepics_kss_pos,gepics_ess_pos,gepics_tgt_pos
+      real*4 gepics_tgt_id,gepics_tgt_pid,gepics_tgt
+c
+      real*4 gepics_ed_mps_iout,gepics_kd_mps_iout
+c
       real*4 gepics_target_x,gepics_target_y
       real*4 gepics_target_xp,gepics_target_yp
       real*4 gepics_target_xchi2,gepics_target_ychi2
       real*4 gbpm_target_xchi2,gbpm_target_ychi2
       real*4 gepics_dpp,gepics_ebeam,gepics_pbeam
+c     ARC magnets
       real*4 gepics_dbdl,gepics_diset,gepics_diread
+      real*4 gepics_d00v_bdl,gepics_d00v_s,gepics_d00vm
+      real*4 gepics_01h_bdl,gepics_01h_s,gepics_01hm
+      real*4 gepics_02v_bdl,gepics_02v_s,gepics_02vm
+      real*4 gepics_03h_bdl,gepics_03h_s,gepics_03hm
+      real*4 gepics_04h_bdl,gepics_04h_s,gepics_04hm
+      real*4 gepics_05v_bdl,gepics_05v_s,gepics_05vm
+      real*4 gepics_06h_bdl,gepics_06h_s,gepics_06hm
+      real*4 gepics_07h_bdl,gepics_07h_s,gepics_07hm
+      real*4 gepics_07v_bdl,gepics_07v_s,gepics_07vm
+      real*4 gepics_09v_bdl,gepics_09v_s,gepics_09vm
+      real*4 gepics_11v_bdl,gepics_11v_s,gepics_11vm
+      real*4 gepics_13v_bdl,gepics_13v_s,gepics_13vm
+      real*4 gepics_15v_bdl,gepics_15v_s,gepics_15vm
+      real*4 gepics_17v_bdl,gepics_17v_s,gepics_17vm
+      real*4 gepics_18h_bdl,gepics_18h_s,gepics_18hm
+      real*4 gepics_18v_bdl,gepics_18v_s,gepics_18vm
+      real*4 gepics_20h_bdl,gepics_20h_s,gepics_20hm
+      real*4 gepics_20v_bdl,gepics_20v_s,gepics_20vm
+      real*4 gepics_q01_bdl,gepics_q01_s,gepics_q01m
+      real*4 gepics_q02_bdl,gepics_q02_s,gepics_q02m
+      real*4 gepics_q03_bdl,gepics_q03_s,gepics_q03m
+      real*4 gepics_q04_bdl,gepics_q04_s,gepics_q04m
+      real*4 gepics_q05_bdl,gepics_q05_s,gepics_q05m
+      real*4 gepics_q06_bdl,gepics_q06_s,gepics_q06m
+      real*4 gepics_q07_bdl,gepics_q07_s,gepics_q07m
+      real*4 gepics_q08_bdl,gepics_q08_s,gepics_q08m
+      real*4 gepics_q11_bdl,gepics_q11_s,gepics_q11m
+      real*4 gepics_q12_bdl,gepics_q12_s,gepics_q12m
+      real*4 gepics_q13_bdl,gepics_q13_s,gepics_q13m
+      real*4 gepics_q16_bdl,gepics_q16_s,gepics_q16m
+      real*4 gepics_q17_bdl,gepics_q17_s,gepics_q17m
+      real*4 gepics_q18_bdl,gepics_q18_s,gepics_q18m
+      real*4 gepics_q19_bdl,gepics_q19_s,gepics_q19m
+      real*4 gepics_q20a_bdl,gepics_q20a_s,gepics_q20am
+      real*4 gepics_9th_field
+c     HallC magnets
+      real*4 gepics_dz01_bdl,gepics_dz01_b2
+      real*4 gepics_dz01m,gepics_dz01
+      real*4 gepics_fz03_bdl,gepics_fz03_b2
+      real*4 gepics_fz03m,gepics_fz03
+      real*4 gepics_sp04_bdl,gepics_sp04_b2
+      real*4 gepics_co04v_bdl,gepics_co04vm
+      real*4 gepics_co04v
+      real*4 gepics_dw04ah_bdl,gepics_dw04ah_b2
+      real*4 gepics_dw04ahm,gepics_dw04ah
+      real*4 gepics_dw04bh_bdl,gepics_dw04bh_seti
+      real*4 gepics_dw04bh_readcalc
+c     Tohoku's magnets
+      real*4 gepics_spl_field,gepics_kd_field
+      real*4 gepics_kq1_field,gepics_kq2_field
+      real*4 gepics_ed_field,gepics_eq1_field,gepics_eq2_field
+      real*4 gepics_spl_stat,gepics_kd_stat
+      real*4 gepics_kq1_stat,gepics_kq2_stat
+      real*4 gepics_ed_stat,gepics_eq1_stat,gepics_eq2_stat
+      real*4 gepics_spl_temp
+      real*4 gepics_kq1_temp,gepics_kq2_temp
+      real*4 gepics_eq1_temp,gepics_eq2_temp
+      real*4 gepics_spl_dfil
+      real*4 gepics_kq1_dfil,gepics_kq2_dfil
+      real*4 gepics_eq1_dfil,gepics_eq2_dfil
+      real*4 gepics_spl_range
+      real*4 gepics_kq1_range,gepics_kq2_range
+      real*4 gepics_eq1_range,gepics_eq2_range
+c
       real*4 gepics_xbeam(3),gepics_ybeam(3),gepics_zbeam(3)
       real*4 gepics_otr_x,gepics_otr_y
       real*4 gepics_otr_widx,gepics_otr_widy
@@ -46,31 +166,81 @@
       real*4 gepics_nmr_field,gepics_nmr_lock
       real*4 gepics_mag_temp1,gepics_mag_temp2
       real*4 gepics_mag_temp3,gepics_mag_temp4,gepics_mag_temp5
-      real*4 gepics_ffb_c_stat,gepics_ffb_c_use
-      real*4 gepics_bcm1, gepics_bcm2, gepics_bcm3
+      real*4 gepics_ffb_a_stat,gepics_ffb_a_use,gepics_ffb_a_on
+      real*4 gepics_ffb_c_stat,gepics_ffb_c_use,gepics_ffb_c_on
+      real*4 gepics_bcm1,gepics_bcm2,gepics_bcm3,gepics_bcm4
 c     --- sli info.
-      REAL*4 gepics_sli_dywids
-      REAL*4 gepics_sli_dywidm
-      REAL*4 gepics_sli_dywidme
-      REAL*4 gepics_sli_spreads
-      REAL*4 gepics_sli_espreadm
-      REAL*4 gepics_sli_espreadme
-
+      real*4 gepics_slia_dywids,gepics_slia_dywidm
+      real*4 gepics_slia_dywidme,gepics_slia_spreads
+      real*4 gepics_slia_espreadm,gepics_slia_espreadme
+      real*4 gepics_slia_yvalid
+      real*4 gepics_sli_dywids,gepics_sli_dywidm
+      real*4 gepics_sli_dywidme,gepics_sli_spreads
+      real*4 gepics_sli_espreadm,gepics_sli_espreadme
+      real*4 gepics_sli_yvalid
 
       COMMON/g_epics_events/
      &     gepics_delta_ebeam,
+     &	   gepics_c01,
+     &	   gepics_xc01,gepics_yc01,
+     &	   gepics_c02,
+     &	   gepics_xc02,gepics_yc02,
+     &	   gepics_c03,
+     &	   gepics_xc03,gepics_yc03,
+     &	   gepics_c04,
+     &	   gepics_xc04,gepics_yc04,
+     &	   gepics_c05,
+     &	   gepics_xc05,gepics_yc05,
+     &	   gepics_c06,
+     &	   gepics_xc06,gepics_yc06,
+     &	   gepics_c07,
      &	   gepics_xc07,gepics_yc07,
+     &	   gepics_c08,
      &	   gepics_xc08,gepics_yc08,
+     &	   gepics_c10,
+     &	   gepics_xc10,gepics_yc10,
+     &	   gepics_c11,
      &	   gepics_xc11,gepics_yc11,
+     &	   gepics_c12,
      &	   gepics_xc12,gepics_yc12,
+     &	   gepics_c14,
      &	   gepics_xc14,gepics_yc14,
+     &	   gepics_c16,
      &	   gepics_xc16,gepics_yc16,
+     &	   gepics_c17,
      &	   gepics_xc17,gepics_yc17,
+     &	   gepics_c18,
      &	   gepics_xc18,gepics_yc18,
+     &	   gepics_c19,
+     &	   gepics_xc19,gepics_yc19,
+     &	   gepics_c20,
      &	   gepics_xc20,gepics_yc20,
-     &	   gepics_xh00a,gepics_yh00a,
-     &     gepics_xh00b,gepics_yh00b,
-     &     gepics_xh00c,gepics_yh00c,
+     &	   gepics_4c00,
+     &	   gepics_xp4c00,gepics_yp4c00,
+     &	   gepics_xr4c00,gepics_yr4c00,
+c BPM at the Hall     
+     &	   gepics_h00,
+     &	   gepics_xph00,gepics_yph00,
+     &	   gepics_xrh00,gepics_yrh00,
+     &	   gepics_xah00,gepics_yah00,
+     &	   gepics_xph01,gepics_yph01,
+     &	   gepics_xrh01,gepics_yrh01,
+     &	   gepics_xah01,gepics_yah01,
+     &	   gepics_xph02a,gepics_yph02a,
+     &	   gepics_xrh02a,gepics_yrh02a,
+     &	   gepics_xah02a,gepics_yah02a,
+     &     gepics_xph02b,gepics_yph02b,
+     &     gepics_xrh02b,gepics_yrh02b,
+     &	   gepics_xah02b,gepics_yah02b,
+     &     gepics_xph02c,gepics_yph02c,
+     &     gepics_xrh02c,gepics_yrh02c,
+     &	   gepics_xah02c,gepics_yah02c,
+     &     gepics_xph03a,gepics_yph03a,
+     &	   gepics_xrh03a,gepics_yrh03a,
+     &     gepics_xah03a,gepics_yah03a,
+     &     gepics_xph03b,gepics_yph03b,
+     &	   gepics_xrh03b,gepics_yrh03b,
+     &     gepics_xah03b,gepics_yah03b,
      &     gepics_xbeam,gepics_ybeam,gepics_zbeam,
      &     gepics_target_x,gepics_target_y,
      &     gepics_target_xp,gepics_target_yp,
@@ -78,17 +248,83 @@ c     --- sli info.
      &     gbpm_target_xchi2,gbpm_target_ychi2,
      &	   gepics_dpp,gepics_ebeam,gepics_pbeam,
      &	   gepics_dbdl,gepics_diset,gepics_diread,
+c ARC magnets
+     &	   gepics_01h_bdl,gepics_01h_s,gepics_01hm,
+     &	   gepics_02v_bdl,gepics_02v_s,gepics_02vm,
+     & 	   gepics_03h_bdl,gepics_03h_s,gepics_03hm,
+     & 	   gepics_04h_bdl,gepics_04h_s,gepics_04hm,
+     &     gepics_05v_bdl,gepics_05v_s,gepics_05vm,
+     &     gepics_06h_bdl,gepics_06h_s,gepics_06hm,
+     &     gepics_07h_bdl,gepics_07h_s,gepics_07hm,
+     &     gepics_07v_bdl,gepics_07v_s,gepics_07vm,
+     &     gepics_09v_bdl,gepics_09v_s,gepics_09vm,
+     &     gepics_11v_bdl,gepics_11v_s,gepics_11vm,
+     &     gepics_13v_bdl,gepics_13v_s,gepics_13vm,
+     &     gepics_15v_bdl,gepics_15v_s,gepics_15vm,
+     &     gepics_17v_bdl,gepics_17v_s,gepics_17vm,
+     &     gepics_18h_bdl,gepics_18h_s,gepics_18hm,
+     &	   gepics_18v_bdl,gepics_18v_s,gepics_18vm,
+     &	   gepics_20h_bdl,gepics_20h_s,gepics_20hm,
+     &	   gepics_20v_bdl,gepics_20v_s,gepics_20vm,
+     &	   gepics_9th_field,
+     &	   gepics_q01_bdl,gepics_q01_s,gepics_q01m,
+     &	   gepics_q02_bdl,gepics_q02_s,gepics_q02m,
+     &	   gepics_q03_bdl,gepics_q03_s,gepics_q03m,
+     &	   gepics_q04_bdl,gepics_q04_s,gepics_q04m,
+     &	   gepics_q05_bdl,gepics_q05_s,gepics_q05m,
+     &	   gepics_q06_bdl,gepics_q06_s,gepics_q06m,
+     &	   gepics_q07_bdl,gepics_q07_s,gepics_q07m,
+     &	   gepics_q08_bdl,gepics_q08_s,gepics_q08m,
+     &	   gepics_q11_bdl,gepics_q11_s,gepics_q11m,
+     &	   gepics_q12_bdl,gepics_q12_s,gepics_q12m,
+     &	   gepics_q13_bdl,gepics_q13_s,gepics_q13m,
+     &	   gepics_q16_bdl,gepics_q16_s,gepics_q16m,
+     &	   gepics_q17_bdl,gepics_q17_s,gepics_q17m,
+     &	   gepics_q18_bdl,gepics_q18_s,gepics_q18m,
+     &	   gepics_q19_bdl,gepics_q19_s,gepics_q19m,
+     &	   gepics_q20a_bdl,gepics_q20a_s,gepics_q20am,
+c HallC magnets
+     &	   gepics_dz01_bdl,gepics_dz01_b2,
+     & 	   gepics_dz01m,gepics_dz01,
+     &     gepics_fz03_bdl,gepics_fz03_b2,
+     &     gepics_fz03m,gepics_fz03,
+     &     gepics_sp04_bdl,gepics_sp04_b2,
+     &     gepics_co04v_bdl,gepics_co04vm,
+     &     gepics_co04v,
+     &     gepics_dw04ah_bdl,gepics_dw04ah_b2,
+     &     gepics_dw04ahm,gepics_dw04ah,
+     &     gepics_dw04bh_bdl,gepics_dw04bh_seti,
+     &     gepics_dw04bh_readcalc,
+c Tohoku's magnets
+     &	   gepics_spl_field,gepics_ed_field,gepics_kd_field,
+     &	   gepics_kq1_field,gepics_kq2_field,gepics_eq1_field,gepics_eq2_field,
+     &	   gepics_kd_stat,gepics_ed_stat,
+     &	   gepics_spl_stat,
+     &	   gepics_kq1_stat,gepics_kq2_stat,gepics_eq1_stat,gepics_eq2_stat,
+     &	   gepics_spl_temp,
+     &	   gepics_kq1_temp,gepics_kq2_temp,gepics_eq1_temp,gepics_eq2_temp,
+     &	   gepics_spl_dfil,
+     &	   gepics_kq1_dfil,gepics_kq2_dfil,gepics_eq1_dfil,gepics_eq2_dfil,
+     &	   gepics_spl_range,
+     &	   gepics_kq1_range,gepics_kq2_range,gepics_eq1_range,gepics_eq2_range,
+     &	   gepics_kss_pos,gepics_ess_pos,gepics_tgt_pos,
+     &	   gepics_tgt_id,gepics_tgt_pid,gepics_tgt,
+     &	   gepics_ed_mps_iout,gepics_kd_mps_iout,
      &     gepics_otr_x,gepics_otr_y,
      &     gepics_otr_widx,gepics_otr_widy,
      &     gepics_otr_maxpix,gepics_otr_sat,
      &     gepics_nmr_field,gepics_nmr_lock,
      &     gepics_mag_temp1,gepics_mag_temp2,
      &     gepics_mag_temp3,gepics_mag_temp4,gepics_mag_temp5,
-     &     gepics_ffb_c_stat,gepics_ffb_c_use,
-     &     gepics_bcm1, gepics_bcm2, gepics_bcm3,     
-     &     gepics_sli_dywids,
-     &     gepics_sli_dywidm,
-     &     gepics_sli_dywidme,
-     &     gepics_sli_spreads,
-     &     gepics_sli_espreadm,
-     &     gepics_sli_espreadme
+     &     gepics_ffb_a_stat,gepics_ffb_a_use,gepics_ffb_a_on,
+     &     gepics_ffb_c_stat,gepics_ffb_c_use,gepics_ffb_c_on,
+     &     gepics_bcm1,gepics_bcm2,gepics_bcm3,gepics_bcm4,
+     &     gepics_slia_dywids,gepics_slia_dywidm,
+     &     gepics_slia_dywidme,gepics_slia_spreads,
+     &     gepics_slia_espreadm,gepics_slia_espreadme,
+     &     gepics_slia_yvalid,
+     &     gepics_sli_dywids,gepics_sli_dywidm,
+     &     gepics_sli_dywidme,gepics_sli_spreads,
+     &     gepics_sli_espreadm,gepics_sli_espreadme,
+     &     gepics_sli_yvalid
+

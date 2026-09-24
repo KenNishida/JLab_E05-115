@@ -115,12 +115,12 @@
 *     --- rocID check. if the roc is VME, vmemasks are set.
       
       if(roc .eq. HR_VME_ROCID) then
-        vmemask1 = X'DA'
-        vmemask2 = X'F1C'
+        vmemask1 = INT(Z'DA')
+        vmemask2 = INT(Z'F1C')
       EndIf
       if(roc .eq. LR_VME_ROCID) then
-        vmemask1 = X'DA'
-        vmemask2 = X'F1C'
+        vmemask1 = INT(Z'DA')
+        vmemask2 = INT(Z'F1C')
       EndIf
       
 *     -----------------------------------------------
@@ -135,7 +135,7 @@
         EndIf
         
 *     VME/FB event length mismatch
-        if(iand(evfrag(pointer),'FFFFFFFF'x).EQ.X'DCAA0000') then 
+        if(iand(evfrag(pointer),INT(Z'FFFFFFFF')).EQ.INT(Z'DCAA0000')) then 
           write(6,'(a,i10)') 
      &         'ERROR: VME/Fastbus event length mismatch for event #',
      &         gen_event_id_number
@@ -146,16 +146,16 @@
           pointer = pointer + 3
           goto 987
 !     Check for extra events in FB modules on sync events
-        else if(iand(evfrag(pointer),'FFFF0000'x).EQ.X'DCFE0000') then
+        else if(iand(evfrag(pointer),INT(Z'FFFF0000')).EQ.INT(Z'DCFE0000')) then
           write(*,*)"did=",did
           write(6,'(a,i2,a,i3,a,i3,a,i10)') 'ROC',roc,': Slot'
-     $         ,iand(ishft(evfrag(pointer),-11),X'1F'),': '
-     $         ,iand(evfrag(pointer),X'7FF'),' extra events, event=',
+     $         ,iand(ishft(evfrag(pointer),-11),INT(Z'1F')),': '
+     $         ,iand(evfrag(pointer),INT(Z'7FF')),' extra events, event=',
      &         gen_event_id_number
           pointer = pointer + 1
           goto 987
 *     Catch arrington's headers
-        else if(iand(evfrag(pointer),'FF000000'x).EQ.X'DC000000') then
+        else if(iand(evfrag(pointer),INT(Z'FF000000')).EQ.INT(Z'DC000000')) then
           write(6,'(a,i2,a,i10,a,z10)') 'ROC',roc,
      &         ': no gate or too much data, event=',
      &         gen_event_id_number,' error dataword=',evfrag(pointer)
@@ -166,8 +166,8 @@
 *     
 *     Check for event by event scalers thrown in by the scaler hack.
 *     
-*     if(iand(evfrag(pointer),'FF000000'x).eq.X'DA000000') then ! Magic header
-*     nscalers = iand(evfrag(pointer),'FF'x)
+*     if(iand(evfrag(pointer),INT(Z'FF000000')).eq.INT(Z'DA000000')) then ! Magic header
+*     nscalers = iand(evfrag(pointer),INT(Z'FF'))
 *     do iscaler=1,nscalers
 *     evscalers(iscaler) = evfrag(pointer+iscaler)
 *     enddo
@@ -195,7 +195,7 @@ c     $             pointer,evfrag(pointer),roc,gen_event_id_number
           goto 987
         endif
         
-        slot = iand(ishft(evfrag(pointer),-27),X'1F')
+        slot = iand(ishft(evfrag(pointer),-27),INT(Z'1F'))
         
 c     ---- end of detector test routine
 
@@ -203,15 +203,15 @@ c     ---- end of detector test routine
           if (slot.le.0 .or. slot .gt. G_DECODE_MAXSLOTS 
      &         .or. roc.le.0 .or. roc .gt. G_DECODE_MAXROCS) then
             
-            if(.NOT.(vmemask1 .eq. X'DA' .and. vmemask2 .eq. X'F1C') 
+            if(.NOT.(vmemask1 .eq. INT(Z'DA') .and. vmemask2 .eq. INT(Z'F1C')) 
      &           .and. 
-     &           .NOT.(vmemask1 .eq. X'DA' .and. vmemask2 .eq. X'ADC')) 
+     &           .NOT.(vmemask1 .eq. INT(Z'DA') .and. vmemask2 .eq. INT(Z'ADC'))) 
      &           then
               write (6,'(a,i2,i3,z10,a,i5,a,i8,a,i3)') 'roc,sl,evfrag=',
      &             roc,slot,evfrag(pointer),
      $             '(p=',pointer,') for ev#',gen_event_id_number,
      &             ' probably after sl ',
-     $             iand(ishft(evfrag(pointer-1),-27),'1F'X)
+     $             iand(ishft(evfrag(pointer-1),-27),INT(Z'1F'))
               write(*,*) "roc,did=",roc,did
             EndIF
 c     Write(*,*) 's=0 len=',length, ' p=',pointer
@@ -244,9 +244,9 @@ c     new slot will have a subaddress of '7F' and later be discarded.
 c     
 
           if(subaddbit.eq.17) then ! Is not an 1872A (which has not headers)
-            if(iand(evfrag(pointer),'00FE0000'X).eq.0) then ! probably a header
-              if(iand(evfrag(pointer),'07FF0000'X).ne.0) then
-                write(*,'(z10)') iand(evfrag(pointer),'07FF0000'X)
+            if(iand(evfrag(pointer),INT(Z'00FE0000')).eq.0) then ! probably a header
+              if(iand(evfrag(pointer),INT(Z'07FF0000')).ne.0) then
+                write(*,'(z10)') iand(evfrag(pointer),INT(Z'07FF0000'))
                 print *,"SHIT:misidentified real data word as a header"
                 print *,"DID=",did,", SLOT=",slot,", POINTER=",pointer
                 write(*,'(z10)') evfrag(pointer)
@@ -274,39 +274,39 @@ c     endif
 c     endif
 *************************
         
-        if(vmemask1 .ne. X'DA') then ! not VME
-          subadd = iand(ishft(evfrag(pointer),-subaddbit),'7F'X)
+        if(vmemask1 .ne. INT(Z'DA')) then ! not VME
+          subadd = iand(ishft(evfrag(pointer),-subaddbit),INT(Z'7F'))
         Else                    ! VME
 *     --- header check ---
 *     if this is header, subadd = 1000 to do pointer+1.
 *     For f1TDC, the 24th bit is 0 for header/trailer word
 *     and 1 for data.
-          mask1 = ishft(iand(evfrag(pointer),'FF000000'X),-24)
-          mask2 = ishft(iand(evfrag(pointer),'0000FFF0'X),-4)
-          mask3 = ishft(iand(evfrag(pointer),'06000000'X),-25)
-          mask4 = ishft(iand(evfrag(pointer),'00800000'X),-23)
+          mask1 = ishft(iand(evfrag(pointer),INT(Z'FF000000')),-24)
+          mask2 = ishft(iand(evfrag(pointer),INT(Z'0000FFF0')),-4)
+          mask3 = ishft(iand(evfrag(pointer),INT(Z'06000000')),-25)
+          mask4 = ishft(iand(evfrag(pointer),INT(Z'00800000')),-23)
 *     if module type is changed, update vmemask2.
-          if(mask1 .eq. X'DA' .and. 
-     &         (mask2 .eq. X'DDC' .or. mask2 .eq. X'ADC' 
-     &         .or. mask2 .eq. X'F1C')) vmemask2 = mask2
-          if(mask1 .eq. X'DA' .or. 
-     &         ( (vmemask2 .eq. X'DDC' .or. vmemask2 .eq. X'ADC') 
+          if(mask1 .eq. INT(Z'DA') .and. 
+     &         (mask2 .eq. INT(Z'DDC') .or. mask2 .eq. INT(Z'ADC')
+     &         .or. mask2 .eq. INT(Z'F1C'))) vmemask2 = mask2
+          if(mask1 .eq. INT(Z'DA') .or. 
+     &         ( (vmemask2 .eq. INT(Z'DDC') .or. vmemask2 .eq. INT(Z'ADC')) 
      &         .and. 
-     &         (mask3 .eq. X'1' .or. mask3 .eq. X'2') ) 
+     &         (mask3 .eq. INT(Z'1') .or. mask3 .eq. INT(Z'2')) ) 
      &         .or.
-     &         ( vmemask2 .eq. X'F1C' 
+     &         ( vmemask2 .eq. INT(Z'F1C')
      &         .and. mask4 .eq. 0 )  ) 
      &         then             ! skip this header
             !trigger time definition DK
-            ttime = iand(ishft(evfrag(pointer),-7),'1FF'X)
+            ttime = iand(ishft(evfrag(pointer),-7),INT(Z'1FF'))
 c            ttime = ttime*128+127
             ttime = ttime*128-127 ! Safety mergin for rollover analysis
             g_f1_trigger_time(roc) = ttime 
             subadd = 1000         
           Else                  ! not header
-            if(vmemask2 .eq. X'F1C') then
-              subadd = ishft(iand(evfrag(pointer),'380000'X),-19) * 8
-     &             + ishft(iand(evfrag(pointer),'70000'X),-16)
+            if(vmemask2 .eq. INT(Z'F1C')) then
+              subadd = ishft(iand(evfrag(pointer),INT(Z'380000')),-19) * 8
+     &             + ishft(iand(evfrag(pointer),INT(Z'70000')),-16)
               
 c     if(did .eq. HSCIN_ID .or. did .eq. ESCIN_ID .and.
 c     &             ESCIN_F1TDC_MODE .eq. 1) then ! high resolution mode
@@ -314,7 +314,7 @@ c     subadd = int(subadd/2)
 c     EndIf
               
             Else                ! VME ADC/TDC subaddbit=16
-              subadd = iand(ishft(evfrag(pointer),-subaddbit),'3F'X)
+              subadd = iand(ishft(evfrag(pointer),-subaddbit),INT(Z'3F'))
             EndIf
           EndIF
         EndIF                   ! VME or not.
@@ -405,7 +405,8 @@ c     --- !!! do nothing !!! ---
             Else                ! not trigger time.              
               if(hitcount .lt. maxhits .or.
      $             (hitcount .eq. maxhits .and. 
-     $             signalcount .gt. 1)
+cDK     $             signalcount .gt. 1)
+     $             signalcount .ge. 1)
      $             ) then       ! Don't overwrite arrays
                 
                 if(signalcount .le. 1) then ! single signal counter
@@ -433,6 +434,7 @@ c     --- !!! do nothing !!! ---
                     h = h - 1
                   enddo
                   h = h + 1     ! Put hit pointer to blank
+c                  if (plane.ge.7) print *, "pl,co",plane,counter
                   planelist(h) = plane
                   counterlist(h) = counter
                   signal0(h) = signal
@@ -501,7 +503,7 @@ c                  write(*,*)"multiple signal counter;hitcount=",hitcount
                         signal1(h) = -1
                       else if(signalcount.eq.3) then
                         signal0(h) = -1
-                        if(vmemask2 .eq. X'F1C' ) then !F1TDC
+                        if(vmemask2 .eq. INT(Z'F1C') ) then !F1TDC
                           signal2(h) = -70000
                         Else
                           signal2(h) = -1
@@ -509,7 +511,7 @@ c                  write(*,*)"multiple signal counter;hitcount=",hitcount
                       else if(signalcount.eq.4) then                  
                         signal0(h) = -1
                         signal1(h) = -1
-                        if(vmemask2 .eq. X'F1C' ) then !F1TDC
+                        if(vmemask2 .eq. INT(Z'F1C') ) then !F1TDC
                           signal2(h) = -70000
                           signal3(h) = -70000
                         Else

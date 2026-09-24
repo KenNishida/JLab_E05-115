@@ -76,6 +76,7 @@ c     real*8 S_FCNCHISQ
       integer*4 ierr            ! error return flag
 c     integer*4 ivarbl                  ! dummy MINUIT variable
       integer*4 ihit, pln, hit
+      integer*4 wi
 c     real*8 pos
       real*8 dray(hnum_fpray_param)
       real*8 TT(hnum_fpray_param)
@@ -100,11 +101,20 @@ c     save initialray,initialsteps,fitnames   ! starting ray, steps, names
       integer*4 remap(hnum_fpray_param)
       data remap/5,6,3,4/
       save remap
+*DK added      
+      integer*4 itrk1,itrk2,ntracks_new     ! track loop index
+      integer*4 skipflag(hntracks_max)
+      integer*4 itrk_new(hntracks_max)
+      integer*4 itrk_min(hntracks_max)
+      real*4 x1,xp1,y1,yp1
+      real*4 x2,xp2,y2,yp2
+      real*4 chi2_min,chi2_1,chi2_2
 *     
       ABORT= .FALSE.
       ierr=0
 *     initailize residuals
-      
+
+
       do pln=1,hdc_num_layers
          do itrk=1,hntracks_fp
             hdc_single_residual(itrk,pln)=100000
@@ -168,14 +178,22 @@ c     enddo                            ! end loop over tracks
 c     endif
               
 *     initialize parameters
+
                do i=1,hnum_fpray_param
                   TT(i)=0.
                   do ihit=2,hntrack_hits(itrk,1)+1
                      hit=hntrack_hits(itrk,ihit)
                      pln=hdc_layer_num(hit)
+
+c add DD 2010/7/11
+               hdc_wire_coord(hit) = hdc_wire_coord_sp(itrk,hit) !DD
+c add DD 2010/7/11
+
+
                      TT(i)=TT(i)+((hdc_wire_coord(hit)*
      &                    hlayer_coeff(remap(i),pln))
      &                    /(hdc_sigma(pln)*hdc_sigma(pln)))
+
                   enddo
                enddo
                do i=1,hnum_fpray_param
@@ -191,6 +209,7 @@ c     endif
      &                          hlayer_coeff(remap(i),pln)
      &                          *hlayer_coeff(remap(j),pln)
      &                          /(hdc_sigma(pln)*hdc_sigma(pln)))
+
                         enddo   ! end loop on ihit
                      endif      ! end test on j .lt. i
                   enddo         ! end loop on j
@@ -225,20 +244,43 @@ c     endif
                   do ihit=2,hntrack_hits(itrk,1)+1
                      hit=hntrack_hits(itrk,ihit)
                      pln=hdc_layer_num(hit)
-                     
+                     wi=hdc_wire_num(hit) ! added on 16 June 2010 for test
+                     hdc_wire_numb(itrk,pln)=wi
 *     note chi2 is single precision
                      hdc_layer_wirecenter(itrk,pln)=hdc_wire_center(hit)
-                     hdc_layer_wirecoord(itrk,pln)=hdc_wire_coord(hit)
-                     
+
+c change DD 2010/7/11
+c                     hdc_layer_wirecoord(itrk,pln)=hdc_wire_coord(hit)
+                     hdc_layer_wirecoord(itrk,pln)=                      
+     &                    hdc_wire_coord_sp(itrk,hit) 
+
+c                     hdc_single_residual(itrk,pln)=
+c     &                    hdc_wire_coord(hit)-hdc_track_coord(itrk,pln)
+
                      hdc_single_residual(itrk,pln)=
-     &                    hdc_wire_coord(hit)-hdc_track_coord(itrk,pln)
+     &                    hdc_wire_coord_sp(itrk,hit)-hdc_track_coord(itrk,pln)
+c change DD 2010/7/11
+
+c                     hdc_drift_distance(itrk,pln)=HDC_DRIFT_DIS(hit)
+                     hdc_drift_distance(itrk,pln)=hdc_drift_dis(hit)
+                     
+                     hdc_layer_sigma(itrk,pln)=hdc_sigma(pln)!added on 7 July 2010 for checking sigma
+                     
                      chi2=chi2+
      &                    (hdc_single_residual(itrk,pln)
      &                    /hdc_sigma(pln))**2
+
 c     Write(*,*) hdc_wire_coord(hit),
 c     &                    hdc_track_coord(itrk,pln),
 c     &                    hdc_single_residual(itrk,pln),itrk,pln
                   enddo
+c  //////////chi2 calculation changed on 6 July 2010/////
+c                  do pln=1,hdc_num_layers
+c                     chi2=chi2+
+c     &                    (hdc_single_residual(itrk,pln)
+c     &                    /hdc_sigma(pln))**2
+c                  end do
+c /////////////////////////////////////////////////////
                endif
                
                hx_fp(itrk)=dray(1)
@@ -246,19 +288,103 @@ c     &                    hdc_single_residual(itrk,pln),itrk,pln
                hz_fp(itrk)=0.   ! z=0 of tracking.
                hxp_fp(itrk)=dray(3)
                hyp_fp(itrk)=dray(4)
+
             endif               ! end test on degrees of freedom
             hchi2_fp(itrk)=chi2
             hchi2perdof_fp(itrk)=chi2/hnfree_fp(itrk)
+
             if(hchi2perdof_fp(itrk) .le. hdc_bestchi2) then
                hdc_bestchi2_index = itrk
                hdc_bestchi2 = hchi2perdof_fp(itrk)
             EndIf
+c            print*, "itrk,chi2,x,xp,y,yp",
+c     &       itrk,hchi2perdof_fp(itrk),hx_fp(itrk),hxp_fp(itrk),hy_fp(itrk),hyp_fp(itrk)
 c            Write(*,*) 'i=',hdc_bestchi2_index,itrk,hchi2perdof_fp(itrk)
          enddo                  ! end loop over tracks
+        
+ccc DK added from here ---------------------------------   
+         do itrk1=1,hntracks_max
+            skipflag(itrk1)=0
+            itrk_new(itrk1)=0
+            itrk_min(itrk1)=0
+         enddo
+cDK         print*,"hntracks_fp",hntracks_fp
+         ntracks_new=0
+         do itrk1=1,hntracks_fp-1
+            x1=hx_fp(itrk1)
+            y1=hy_fp(itrk1)
+            xp1=hxp_fp(itrk1)
+            yp1=hyp_fp(itrk1)
+            chi2_1=hchi2perdof_fp(itrk1)
+            chi2_min=chi2_1
+            !itrk_min=itrk1
+            if (skipflag(itrk1).eq.0) then
+               ntracks_new=ntracks_new+1
+               itrk_new(itrk1)=ntracks_new
+               itrk_min(ntracks_new)=itrk1
+               do itrk2=itrk1+1,hntracks_fp
+                  x2=hx_fp(itrk2)
+                  y2=hy_fp(itrk2)
+                  xp2=hxp_fp(itrk2)
+                  yp2=hyp_fp(itrk2)
+                  chi2_2=hchi2perdof_fp(itrk2)
+                  if (abs(x1-x2)<.5.and.abs(y1-y2)<.5.and.
+     &            abs(xp1-xp2)<1e-2.and.abs(yp1-yp2)<1e-2) then
+c                  if (abs(x1-x2)<.1.and.abs(y1-y2)<.1.and.
+c     &            abs(xp1-xp2)<1e-2.and.abs(yp1-yp2)<1e-2) then
+                     skipflag(itrk2)=1
+                     if (chi2_2.le.chi2_min) then
+                        chi2_min=chi2_2
+                        !itrk_min=itrk2
+                        itrk_min(ntracks_new)=itrk2
+                     endif
+                     !hchi2_fp(ntracks_new)=chi2_min
+                     itrk_new(itrk2)=ntracks_new
+cDK                     print*,"ntracks_new,itrk1,itrk2,itrk_min",ntracks_new,itrk1,itrk2,itrk_min(ntracks_new)
+cDK                     print*,"chi2_1,chi2_2,chi2_min",chi2_1,chi2_2,chi2_min
+                  endif
+               enddo
+            endif
+         enddo
+         if (skipflag(hntracks_fp).eq.0) then
+            ntracks_new=ntracks_new+1
+            itrk_new(hntracks_fp)=ntracks_new
+            itrk_min(ntracks_new)=hntracks_fp
+         endif
+cDK         print*,"ntracks_new",ntracks_new
+cDK         print*,"itrk_new",itrk_new
+cDK         print*,"itrk_min",itrk_min
+
+         do itrk1=1,ntracks_new
+            itrk2=itrk_min(itrk1)
+cDK            print*,"itrk1,itrk2",itrk1,itrk2
+            hnfree_fp(itrk1)=hnfree_fp(itrk2)
+            hx_fp(itrk1) =hx_fp(itrk2) 
+            hy_fp(itrk1) =hy_fp(itrk2) 
+            hz_fp(itrk1) =hz_fp(itrk2) 
+            hxp_fp(itrk1)=hxp_fp(itrk2)
+            hyp_fp(itrk1)=hyp_fp(itrk2)
+            hchi2_fp(itrk1)=hchi2_fp(itrk2)
+            hchi2perdof_fp(itrk1)=hchi2perdof_fp(itrk2)
+            do pln=1,hdc_num_layers
+               hdc_single_residual(itrk1,pln)=hdc_single_residual(itrk2,pln)
+               hdc_layer_wirecenter(itrk1,pln)=hdc_layer_wirecenter(itrk2,pln)
+               hdc_track_coord(itrk1,pln)=hdc_track_coord(itrk2,pln)
+            enddo
+            hntrack_hits(itrk1,1)=hntrack_hits(itrk2,1)
+            do ihit=2,hntrack_hits(itrk1,1)+1
+               hntrack_hits(itrk1,ihit)=hntrack_hits(itrk2,ihit)
+               hit=hntrack_hits(itrk1,ihit)
+               hdc_wire_coord_sp(itrk1,hit)=hdc_wire_coord_sp(itrk2,hit) 
+            enddo
+         enddo
+         hntracks_fp=ntracks_new
+cDK         print*,"hntracks_fp",hntracks_fp
+ccc to here ---------------------------------   
+      
       endif
 
-c      Write(*,*) '---'
-      
+     
 *     test if we want to dump out trackfit results
       if(hdebugtrackprint.ne.0) then
          call h_print_tracks

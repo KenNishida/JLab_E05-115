@@ -160,13 +160,17 @@
       integer*4 hmax_chamber_hits
       integer*4 hmax_space_points
       integer*4 hmax_hits_per_point 
+      integer*4 hmax_space_points_multi
       integer*4 hnum_fpray_param   
       integer*4 hdc_num_cards  
       integer*4 hdc_max_wires_per_layer
 
       parameter (hmax_chamber_hits=544)
-      parameter (hmax_space_points=50)
-      parameter (hmax_hits_per_point=25)
+*DK      parameter (hmax_space_points=50)
+      parameter (hmax_space_points=200)
+*DK      parameter (hmax_space_points_multi=50)
+      parameter (hmax_space_points_multi=100)
+      parameter (hmax_hits_per_point=50)
       parameter (hnum_fpray_param=4)
       parameter (hdc_num_cards=80)
       parameter (hdc_max_wires_per_layer=122)
@@ -227,6 +231,8 @@
       real*4 hyt_track_criterion    
       real*4 hxpt_track_criterion   
       real*4 hypt_track_criterion   
+ 
+      real*4 mhstart_time(hmax_chamber_hits,hmax_num_chambers)
 
       real*4 hspace_point_criterion(hmax_num_chambers)       
 
@@ -241,7 +247,9 @@
 *     CTPTYPE=event
 *     
       integer*4 hncham_hits(hmax_num_chambers)
-      integer*4 hnspace_points(hmax_num_chambers)     
+      integer*4 hnspace_points(hmax_num_chambers)  
+      integer*4 prelinkflag(hmax_space_points,hmax_space_points) 
+      integer*4 precutflag(hmax_space_points)
 *     ! number of space points in each chamber
       integer*4 htrack_fit_num     
 *     ! track number in fitting loop
@@ -260,12 +268,15 @@
       equivalence (glayerhdc2(1),glayerhdc(2,1))
       equivalence (glayerhdc3(1),glayerhdc(3,1))
 
-      integer*4 hspace_point_hits(hmax_space_points,hmax_hits_per_point+2)  
+      integer*4 hspace_point_hits(hmax_space_points,10*hmax_hits_per_point+2) 
+      integer*4 hspace_point_hits_multi(hmax_space_points_multi)
+      integer*4 hspace_point_hits_pre(hmax_space_points,hmax_hits_per_point+2)
 *! array of n rows of space points
                                    ! (n,1) = number of hits
                                    ! (n,2) = number of valid combinations
                                    ! (n,3...) hit numbers for space point
-      real*4 hspace_points(hmax_space_points,2)         
+      real*4 hspace_points(hmax_space_points,2)   
+       real*4 hspace_points_pre(hmax_space_points,2)
 *! array of x, y of space points
       real*4 hbeststub(hmax_space_points,hnum_fpray_param)             
 *! array of stubs fit to each space point
@@ -281,7 +292,10 @@
      &     hdc_layers_per_chamber,
      &     glayerhdc,
      &     hspace_points,
+     &     hspace_points_pre,
      &     hspace_point_hits,
+     &     hspace_point_hits_pre,
+     &     hspace_point_hits_multi,
      &     hnspace_points,
      &     hnspace_points_tot,
      &     hbeststub,
@@ -310,7 +324,10 @@
      &     hdc_card_delay,
      &     hdc_card_no,
      &     hdc_card_pos,
-     &     hdc_sing_cardid
+     &     hdc_sing_cardid,
+     &     mhstart_time,
+     &     prelinkflag,
+     &     precutflag
 
 
 *----------------------------------------------------------------------
@@ -392,6 +409,12 @@
       integer*4 hdc_eff(hmax_num_dc_layers)
       real*4 hdc_track_coord(hntracks_max,hmax_num_dc_layers)
 
+
+* add DD 2010/7/11
+      real*4 hdc_wire_coord_sp(HNTRACKS_MAX,HMAX_DC_HITS)
+* add DD 2010/7/11
+
+
 *hdc_track_coord   !track position per layer, in x,y,u,v directions.
 *hdc_shouldhit     !times a wire should have fired.
 *hdc_didhit        !times a wire did fire.
@@ -413,7 +436,8 @@
      &   hwire_mult,
      &   hwire_early_mult,
      &   hwire_late_mult,
-     &   hwire_extra_mult
+     &   hwire_extra_mult,
+     &   hdc_wire_coord_sp
 
 
 *----------------------------------------------------------------------

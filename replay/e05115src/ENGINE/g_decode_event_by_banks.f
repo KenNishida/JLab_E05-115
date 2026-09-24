@@ -62,7 +62,7 @@
 *     probably be put in an include file.
 *
 
-      ABORT = iand(event(2),X'FFFF').ne.X'10CC'
+      ABORT = iand(event(2),INT(Z'FFFF')).ne.INT(Z'10CC')
       if(ABORT) then
          err = here//'Event header not standard physics event'
          return
@@ -91,7 +91,7 @@ c     --- g_decode_maxwords - 100, here 96 = 1877 # of channels to be safe
          goto 101
       EndIf
       
-      ABORT = event(bankpointer+1).ne.X'C0000100'
+      ABORT = event(bankpointer+1).ne.INT(Z'C0000100')
       if(ABORT) then
          err = here//'First bank is not an Event ID bank'
          return

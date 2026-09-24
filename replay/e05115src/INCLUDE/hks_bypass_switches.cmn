@@ -58,6 +58,8 @@
       integer*4 hbypass_track_eff
       integer*4 hbypass_track_eff_files
       integer*4 h_debugnt(11)
+      integer*4 hdc_hitinfo_flag
+      integer*4 hdc_hitinfo_flag2
 *
       common/hks_bypass_switches/
      &     hbypass_trans_scin,
@@ -73,5 +75,6 @@
      &     hbypass_lucite,
      &     hbypass_track_eff,
      &     hbypass_track_eff_files,
-     &     h_debugnt
-
+     &     h_debugnt,
+     &     hdc_hitinfo_flag,
+     &     hdc_hitinfo_flag2

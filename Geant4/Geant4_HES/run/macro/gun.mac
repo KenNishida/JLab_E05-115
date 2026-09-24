@@ -1,0 +1,9 @@
+# Sets some default verbose
+#
+/control/verbose 0
+/tracking/verbose 0
+/run/verbose 2
+#
+/control/suppressAbortion 2
+#/run/beamOn 500000
+/run/beamOn 50000

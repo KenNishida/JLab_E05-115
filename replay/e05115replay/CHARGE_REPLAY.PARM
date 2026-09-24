@@ -1,0 +1,98 @@
+; Setup file for engine
+begin parm engine
+
+;CODA EVENT FILE.
+  gen_run_number = 1
+
+;specify your raw data directory
+;g_data_source_filename = '/rawdata/hks09-coin_%d.log'
+;g_data_source_filename = '/net/cdaqfs/home/cdaq/hks09/coda25/runlist/hks09-hks_%d.log'
+;g_data_source_filename = '/net/cdaqfs/home/cdaq/hks09/coda25/runlist/hks09-ch_%d.log'
+;g_data_source_filename = '/net/cdaqfs/home/cdaq/hks09/coda25/runlist/hks09-ch1_%d.log'
+g_data_source_filename = '/home/cdaq/hks09/coda25/runlist/hks09-coin_%d.log'
+
+; PREPROCESSOR FLAGS. Uncomment and 
+; change g_preproc_event.f to make reduced data files.
+; should also disable unnecessary analysis 
+; in gdebug.param file.
+
+g_preproc_on=0
+;g_preproc_filename='output/dummy_short_%d.log'
+
+;INPUT FILES.
+  g_ctp_database_filename =   'DBASE/e05115.database' 
+; pointers to map/param files.
+  g_ctp_test_filename =       'CTP/e05115.test'       
+; ctp test definitions.
+  g_ctp_hist_filename =       'CTP/e05115.hist'       
+; ctp histogram definitions.
+
+;RUN FLAGS.
+; 1=on 0=disabled
+; gen_run_enable(i) 
+; i=1 HKS triggers
+; i=2 HES triggers, 
+; i=3 COIN triggers
+; i=4 PED triggers (disable may not work)
+
+ gen_run_enable(1) = 0
+ gen_run_enable(2) = 0
+ gen_run_enable(3) = 0
+ gen_run_enable(4) = 1  
+
+;TEMPLATES.
+;e_report... HES scalers ; h_report... HKS scalers
+;  e_report_template_filename = 'TEMPLATE/ereport.template' 
+;  h_report_template_filename = 'TEMPLATE/hreport.template'
+;  g_report_template_filename = 'TEMPLATE/greport.template'
+  g_stats_template_filename  = 'TEMPLATE/gstats.template'
+
+;OUTPUT FILE NAMES.
+;  g_report_output_filename = 'scalers/gen%d.txt'
+;  e_report_output_filename = 'scalers/hes%d.txt'
+;  h_report_output_filename = 'scalers/hks%d.txt'
+;  g_bad_output_filename    = 'scalers/bad%d.txt'
+  g_stats_output_filename  = 'scalers/stats%d.txt'
+;  g_epics_output_filename  = 'epics/epics%d.txt'
+;  e_threshold_output_filename = 'peds/hes_thresholds.%d'
+;  h_threshold_output_filename = 'peds/hks_thresholds.%d'
+;  g_pedestal_output_filename = 'peds/gen_pedestals.%d'
+;  e_pedestal_output_filename = 'peds/hes_pedestals.%d'
+;  h_pedestal_output_filename = 'peds/hks_pedestals.%d'
+  g_charge_scaler_filename  = 'scalers/charge%d.txt'
+
+;  g_alias_filename    = 'paw/paw%d.kumac'  
+;  g_histout_filename  = 'paw/%d.hbook'
+;  beam_ntuple        = 'paw/beam%d.rzdat'
+;  hks_ntuple          = 'paw/hks%d.rzdat'   
+;  hks_DCntuple        = 'paw/hdc%d.rzdat'   
+;  hks_SCINntuple      = 'paw/hscin%d.rzdat'   
+;  hks_WATntuple        = 'paw/hwat%d.rzdat'   
+;  hks_AERntuple        = 'paw/haer%d.rzdat'   
+;  hks_LUCntuple        = 'paw/hluc%d.rzdat'   
+; hks_PIDntuple        = 'paw/hpid%d.rzdat'   
+;  hes_ntuple        = 'paw/hes%d.rzdat'
+;  hes_DCntuple      = 'paw/edc%d.rzdat'
+;  hes_SCINntuple    = 'paw/escin%d.rzdat'
+;  hes_FISNtuple     = 'paw/efis%d.rzdat'
+
+; coin_ntuple        = 'paw/coin%d.rzdat'
+;  coin_ntuple        = 'newnt/coin%d.rzdat'
+
+;(CURRENTLY) UNUSED RUN FLAGS
+   gen_run_enable(5) = 1 ;(0=disabled)
+   gen_run_enable(6) = 1 ;(0=disabled)
+   gen_run_enable(7) = 1 ;(0=disabled)
+   gen_run_enable(8) = 1 ;(0=disabled)
+   gen_run_enable(9) = 1 ;(0=disabled)
+   gen_run_enable(10) = 1 ;(0=disabled)
+   gen_run_enable(11) = 1 ;(0=disabled)
+   gen_run_enable(12) = 1 ;(0=disabled)
+   gen_run_enable(13) = 1 ;(0=disabled)
+   gen_run_enable(14) = 1 ;(0=disabled)
+   gen_run_enable(15) = 1 ;(0=disabled)
+   gen_run_enable(16) = 1 ;(0=disabled)
+
+end parm engine
+
+

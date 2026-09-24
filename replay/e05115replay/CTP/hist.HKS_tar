@@ -9,7 +9,7 @@ hdeltatar,120,-15.,15. $hdelta-tar
 hptar,120,0.9,1.5      $hp-tar
 ;hpwide,100,-2.,3.       $hp-tar (wide)
 
-hxsv,100,-15.,15.       $hx-sv
-hysv,100,-15.,15.       $hy-sv
-hsvxy,100,-15., 15., 100, -15., 15.   $hks sv y vs x
+hxsv,200,-15.,15.       $hx-sv
+hysv,200,-15.,15.       $hy-sv
+hsvxy,500,-15., 15., 500, -15., 15.   $hks sv y vs x
 end   hist hks_tar

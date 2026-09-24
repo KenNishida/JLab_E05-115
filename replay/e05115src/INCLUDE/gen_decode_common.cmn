@@ -60,8 +60,7 @@
       integer G_DECODE_MAXSLOTS
       parameter (G_DECODE_MAXSLOTS=29)          ! # slots in a FB crate
 *     ---  Pointer into map arrays
-      integer*4 g_decode_slotpointer
-     $     (0:G_DECODE_MAXROCS, G_DECODE_MAXSLOTS)
+      integer*4 g_decode_slotpointer(0:G_DECODE_MAXROCS, G_DECODE_MAXSLOTS)
 *     --- Number of subadds per slot
       integer*4 g_decode_subaddcnt(0:G_DECODE_MAXROCS,G_DECODE_MAXSLOTS)
 *     --- bit shift to get subadd

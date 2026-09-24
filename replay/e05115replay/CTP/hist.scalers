@@ -17,6 +17,30 @@ gtrigtdc8,1000,5000.,15000.         $HKS Gr6
 gtrigcoin,1000,-1000.,1000.         $HKS-HES
 gprobe, 2000, 5500., 8500.      $Splitter hall probe
 
+gmisctdc1,1000,5000.,70000.         $RF1 TDC 
+gmisctdc2,1000,5000.,70000.         $RF2 TDC
+gmisctdc3,1000,5000.,70000.         $HKS0 TDC 
+gmisctdc4,1000,5000.,70000.         $HES0 TDC
+gmisctdc5,1000,5000.,70000.         $DH-1 TDC
+gmisctdc6,1000,5000.,70000.         $DH-2 TDC
+
+gbpm3c07xp,500, 0., 8000.        $BPM3c07 X+
+gbpm3c07xm,500, 0., 8000.        $BPM3c07 X-
+gbpm3c07yp,500, 0., 8000.        $BPM3c07 Y+
+gbpm3c07ym,500, 0., 8000.        $BPM3c07 Y-
+gbpm3c08xp,500, 0., 8000.        $BPM3c08 X+
+gbpm3c08xm,500, 0., 8000.        $BPM3c08 X-
+gbpm3c08yp,500, 0., 8000.        $BPM3c08 Y+
+gbpm3c08ym,500, 0., 8000.        $BPM3c08 Y-
+gbpm3c12xp,500, 0., 8000.        $BPM3c12 X+
+gbpm3c12xm,500, 0., 8000.        $BPM3c12 X-
+gbpm3c12yp,500, 0., 8000.        $BPM3c12 Y+
+gbpm3c12ym,500, 0., 8000.        $BPM3c12 Y-
+gFR1,500, 0., 8000.        $FR1
+gFR2,500, 0., 8000.        $FR2
+gFR3,500, 0., 8000.        $FR3
+gFR4,500, 0., 8000.        $FR4
+
 htulrawtothits,129,0.5,129.5        $HTUL RAW TOT HITS
 htulrawtotchannelnum,129,0.5,129.5  $HTUL RAW TOT CHANNEL NUM
 htulrawtdc,100,0.,2000.             $HTUL RAW TDC

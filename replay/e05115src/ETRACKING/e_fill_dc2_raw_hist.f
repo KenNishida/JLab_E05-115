@@ -46,7 +46,8 @@
       logical ABORT
       character*(*) err
       real*4  histval
-      integer*4 layer,ihit,la,wi,sl,t1
+      integer*4 layer,ihit,la,wi,sl,t1,i
+      integer*4 layerhit(6)
 *     
       include 'hes_data_structures.cmn'
       include 'hes_tracking.cmn'
@@ -62,6 +63,10 @@
       ABORT= .FALSE.
       err= ' '
 *     
+      do i=1,6
+         layerhit(i)=0
+      enddo
+
       Call Hf1(eiddc2rawtothit,Float(edc2_raw_tot_hits),1.)
       Call Hf1(eiddc2rawtothitzoom,Float(edc2_raw_tot_hits),1.)
 
@@ -74,6 +79,7 @@
          Call HF1(eiddc2rawtdcall,float(edc2_raw_tdc_sub_trig(ihit)),1.)
          la=EDC2_RAW_LAYER_NUM(ihit)
          wi=EDC2_RAW_WIRE_NUM(ihit)
+         layerhit(la)=layerhit(la)+1
          Call HF1(eiddc2rawhitpat(la),float(wi),1.)
          Call HF1(eiddc2rawlayertdc(la),
      &        float(edc2_raw_tdc_sub_trig(ihit)),1.)
@@ -101,6 +107,13 @@
      &           float(edc2_raw_tdc_sub_trig(ihit)),1.)
          endif                  ! end test on histogram block turned on.         
       EndDo                     ! end loop over hits
+      
+      do i=1,6
+         Call HF1(eiddc2rawlayerhit(i),float(layerhit(i)),1.)
+      enddo
+
+      Call Hf1(eiddc2rawtothit,Float(edc2_raw_tot_hits),1.)
+      Call Hf1(eiddc2rawtothitzoom,Float(edc2_raw_tot_hits),1.)
       
       RETURN
       END

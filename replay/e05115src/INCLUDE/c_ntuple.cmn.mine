@@ -1,0 +1,53 @@
+**************************begin: c_ntuple.cmn ***********************
+*- 
+*-   Created    8-Apr-1994   Kevin B. Beard, Hampton Univ.
+*........................................................................
+*- Misc. info. required for COIN Ntuple
+*
+* Revision 1.3  1995/05/22  19:05:06  cdaq
+* (SAW) Correct some CTP class types
+*
+* Revision 1.2  1994/06/17  02:02:14  cdaq
+* (KBB) Fix typos, change variable names, reorder common
+*
+* Revision 1.1  1994/04/14  16:05:45  cdaq
+* Initial revision
+*
+*
+      integer CMAX_Ntuple_size
+c      parameter (CMAX_Ntuple_size= 100)
+c      parameter (CMAX_Ntuple_size= 200)
+      parameter (CMAX_Ntuple_size= 250)	
+      integer default_c_Ntuple_ID
+      parameter (default_c_Ntuple_ID= 9500)
+*
+*     CTPTYPE=parm
+*
+      integer c_Ntuple_ID
+      integer c_Ntuple_size
+      integer c_Ntuple_IOchannel
+      character*80 c_Ntuple_name
+      character*80 c_Ntuple_title
+      character*132 c_Ntuple_directory
+      character*50 c_Ntuple_file
+      character*9 c_Ntuple_tag(CMAX_Ntuple_size)
+
+      logical c_Ntuple_exists
+
+      COMMON /COIN_Ntuple_par/
+     &       c_Ntuple_ID,
+     &            c_Ntuple_size,c_Ntuple_IOchannel,
+     &            c_Ntuple_name,c_Ntuple_title,
+     &            c_Ntuple_directory,c_Ntuple_file,
+     &            c_Ntuple_tag,
+     &       c_Ntuple_exists
+
+*
+*     CTPTYPE=event
+*
+      real c_Ntuple_contents(CMAX_Ntuple_size)
+*
+      Common /coin_ntuple_ev/
+     &      c_ntuple_contents 
+
+*****************************end: c_ntuple.cmn ***********************

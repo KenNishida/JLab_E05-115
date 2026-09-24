@@ -6,12 +6,13 @@ ALLOBJS= daVarHandlers.o daVarHashLib.o daVarRegister.o daVarRpcProc.o \
          thParm.o thReport.o thTest.o thTestExecute.o thTestParse.o thUtils.o
 
 LIB= libctp.a
-GCC=/usr/bin/gcc34
+GCC=/usr/bin/gcc
 MACROS= -Df2cFortran -Dextname
 
-CFLAGS= -m32 -O -g $(MACROS)
+#CFLAGS= -m32 -O -g $(MACROS)
+CFLAGS= -O -g $(MACROS)
 
-INC= $(CERNINC)
+INC= $(CERNINC) -I/usr/include/tirpc
 
 .c.o:
 	$(GCC) $(CFLAGS) $(INC) -c $<

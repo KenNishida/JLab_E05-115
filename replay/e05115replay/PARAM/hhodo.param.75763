@@ -1,7 +1,8 @@
 ; center of allowed time window      
 
    hstart_time_center = 15.                                       
-
+   h1start_time_center=-71.46
+   h2start_time_center=-67.81
 ; 1/2 width of time window                             
 
    hstart_time_slop = 30.
@@ -10,6 +11,9 @@
    hscin_adc_max = 8192
    hscin_tdc_min = 10000
    hscin_tdc_max = 50000
+;   hscin_tdc_min = 18000
+;   hscin_tdc_max = 20500
+
 
    hscin_tdc_to_time = 0.0566
                                                                                

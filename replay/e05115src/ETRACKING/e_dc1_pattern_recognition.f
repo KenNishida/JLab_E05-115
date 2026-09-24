@@ -16,6 +16,9 @@
       INCLUDE 'hes_geometry.cmn'
       INCLUDE 'hes_id_histid.cmn'
       INCLUDE 'gen_event_info.cmn'
+      include 'gen_run_info.cmn'
+      include 'hes_bypass_swiches.cmn' !Added by Gogami (3Feb2011)
+
 *     
 *     local variables
       Integer*4 hit_number(edc1max_chamber_hits)
@@ -38,6 +41,7 @@
       Real*4 time_corr
       Real*4 testx,testy
       Real*4 wcvec(emax_num_dc1_layers)
+      Real*4 ddis 
       Integer*4 pr_hits(emax_num_dc1_layers),pl_skip(emax_num_dc1_layers)
       Integer*4 pr_hits_number
      &     (emax_num_dc1_layers,edc1_max_wires_per_layer*2)
@@ -65,14 +69,41 @@
       real*4 sqdistance_test
       Integer*4 track_lunno
       Parameter(track_lunno=51)
-
+      Integer*4 etrig
+      Integer*4 dindex
       Real*4 e_drift_dist_calc
       external e_drift_dist_calc
 *     
 *     temporary initialization
       ABORT= .FALSE.
       err=' '
-      
+
+c     =======OUTPUT CHAMBER INFROMATION=====================
+c     ============Added by Gogami (3Feb2011)================
+      if(edc_hitinfo_flag.eq.1)then
+         etrig=etrig+1      
+*     if you belive initialized value is 1, then you
+*     can use below code.
+*     Create dat file in the case of trig==1
+         if(etrig .eq. 1)then
+            open(23,file='hes_cham.dat',status='replace')
+*     Add to the dat file in the case of  trig > 1
+         else
+            open(23,file='hes_cham.dat',access='append')   
+         endif
+         
+*     Write data out to the dat file 
+         write(23,*)"start"
+         write(23,*)gen_run_number
+         write(23,*)etrig
+         write(23,*)edc1_tot_hits
+         write(23,*)edc1_hits_per_layer
+         do dindex=1,edc1_tot_hits
+            write(23,*)edc1_layer_num(dindex),edc1_wire_num(dindex),
+     &           edc1_wire_center(dindex),edc1_drift_time(dindex)
+         enddo
+         close(23)
+      endif
 *************************************************************
 *     --- Histogram for dc1 dec bank 
 *************************************************************
@@ -476,26 +507,19 @@ c      Enddo
 *************************************************************
 *     --- fill drift distance and correct drift time by cards
 *************************************************************
-      if(edc1nspace_points_tot.gt.0) then
-c         Write(*,*) '(epattern)*',gen_event_ID_number,edc1nspace_points_tot
-         do isp=1,edc1nspace_points_tot
-c     Write(*,*) '(epattern)*',edc1space_point_hits(isp,1)
-c     Write(*,*) '(epattern)*',
-c     &           (edc1space_point_hits(isp,2+j),
-c     &           j=1,edc1space_point_hits(isp,1))
-            do ihit=1,edc1space_point_hits(isp,1)
-               hit = edc1space_point_hits(isp,ihit+2)
-               pln = edc1_layer_num(hit)
-               wiren = edc1_wire_num(hit)
-               slot = edc1_slot_num(hit)
-c     Write(*,*) '---',isp,hit,
-c     &              pln,wiren,slot,edc1_drift_time(hit)
-               edc1_drift_dis(hit) = e_drift_dist_calc
-     &              (pln,slot,edc1_drift_time(hit))
-c      Write(*,*) 'res1=',edc1_drift_dis(hit)
-            enddo               ! edc1space_point_hits(isp,1) loop
-         EndDo                  ! enspace_point_tot loop
-      endif                     ! enspace_point_tot > 0
+ccc drift distance should not be calculated here ! DK 2010/12/02
+c      if(edc1nspace_points_tot.gt.0) then
+c         do isp=1,edc1nspace_points_tot
+c            do ihit=1,edc1space_point_hits(isp,1)
+c               hit = edc1space_point_hits(isp,ihit+2)
+c               pln = edc1_layer_num(hit)
+c               wiren = edc1_wire_num(hit)
+c               slot = edc1_slot_num(hit)
+c               edc1_drift_dis(hit) = e_drift_dist_calc
+c     &              (pln,slot,edc1_drift_time(hit))
+c            enddo               ! edc1space_point_hits(isp,1) loop
+c         EndDo                  ! enspace_point_tot loop
+c      endif                     ! enspace_point_tot > 0
       
       return
       end

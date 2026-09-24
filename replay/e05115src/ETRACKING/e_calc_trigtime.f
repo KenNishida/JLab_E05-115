@@ -18,7 +18,7 @@
       Include 'gen_event_info.cmn'
       Include 'gen_run_info.cmn'
       
-      Integer*4 i1,i2,ihit,jhit,la,co,tdcpos,tdcneg,hit1(25),hit2(25)
+      Integer*4 i1,i2,ihit,jhit,la,co,tdcpos,tdcneg,hit1(29*10),hit2(29*10)
       Integer*4 tmax,tmin,codiff,tco,tla
       Real*4 timetemp,meantemp,ave
 
@@ -114,14 +114,14 @@ c            endif
 c         enddo
 c      endif
       
-      if( -10.lt.timetemp.and.timetemp.lt.30) then
-         estart_time = timetemp
-      else
-         estart_time = 10.
-      endif
+c      if( -10.lt.timetemp.and.timetemp.lt.30) then
+c         estart_time = timetemp
+c      else
+c         estart_time = 10.
+c      endif
       
 * Off. Use pre_link by MIZUKI
-      estart_time = 0.
+c      estart_time = 0.
 
       Return
       end

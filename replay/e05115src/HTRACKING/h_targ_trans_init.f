@@ -18,7 +18,7 @@ c       Argument definitions.
 	
 c       Open ERIKA.COE file
 	
-	open (unit=chan,status='old',name='matrices/hks_t2s_coeff.dat',err=92)
+	open (unit=chan,status='old',file='matrices/hks_t2s_coeff.dat',err=92)
 	
 c       Read coefficients
 	
@@ -48,7 +48,7 @@ c     Read in target to collimator transfer matrix elements
       
 !     Open and read in coefficients.
       
-      open (unit=chan,status='old',name='matrices/hks_t2s_coeff.dat',err=97)
+      open (unit=chan,status='old',file='matrices/hks_t2s_coeff.dat',err=97)
       Write(*,*) 'hks_t2s_coeff.dat is opened successfully.' 
 *
       do j=1,h_num_t2s_terms
@@ -131,8 +131,7 @@ C       NOTE FOLLOWING FORMAT STATEMENTS HAVE BEEN MODIFIED 3/10/85
 	READ(LNERKN,6031) (XIMAXE(N), N=1,NCORRE)
 	READ(LNERKN,7010) ID,MAXLEV
  190	NUM = 0
- 200	READ(LNERKN,7010,END=1000)ID,IFIT,IA,IACC,COEF,
-      1 (IPWR(K),K=1,12),KFITLP
+ 200	READ(LNERKN,7010,END=1000)ID,IFIT,IA,IACC,COEF,(IPWR(K),K=1,12),KFITLP
 	IF(ID.EQ.69) MAXLEV = IFIT
 	IF(ID.EQ.69) GO TO 190
 	NUM = NUM + 1

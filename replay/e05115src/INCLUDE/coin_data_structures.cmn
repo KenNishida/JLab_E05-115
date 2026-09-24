@@ -20,7 +20,8 @@
 *     CTPTYPE=event
 *     
       Integer*4 cnphysics_max
-      Parameter(cnphysics_max=50)
+cDK      Parameter(cnphysics_max=50)
+      Parameter(cnphysics_max=100)
       
 c     --- missing mass - proton mass in elementary reaction configuration
 c     --- missing mass - target nuclear mass 

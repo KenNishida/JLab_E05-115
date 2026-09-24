@@ -87,7 +87,9 @@
       real*4 hscin_tdc_min
       real*4 hscin_tdc_max
       real*4 hscin_tdc_to_time
-      real*4 hstart_time_center    
+      real*4 hstart_time_center
+      real*4 h1start_time_center  
+      real*4 h2start_time_center
       real*4 htof_tolerance        ! tolerance for tof window in nsec
       Integer hdumptof
 *     ! center of time window on scin. hits
@@ -111,9 +113,13 @@
       real*4 hscin_trk_time2(hntracks_max,hnum_scin_layers)
       real*4 hscin_trk_diff(hntracks_max,hnum_scin_layers)
       real*4 hscin_trk_fptime(hntracks_max,hnum_scin_layers)
+      Integer*4 hpro_counter_num(hmax_scin_hits,hnum_scin_layers)
+      real*4 hstart_pro(hmax_scin_hits,hnum_scin_layers)
+   
       real*4 htrk_tof(hntracks_max)
       real*4 htrk_leng(hntracks_max)
       real*4 htrk_beta(hntracks_max)
+      real*4 htrk_beta1y(hntracks_max)
       real*4 htrk_depo(hntracks_max)
       Integer*4 htrk_id(hntracks_max)
             
@@ -140,9 +146,12 @@
      &     htrk_tof,
      &     htrk_leng,
      &     htrk_beta,
+     &     htrk_beta1y,
      &     htrk_depo,
      &     htrk_id,
      &     hstart_time_center,
+     &     h1start_time_center,
+     &     h2start_time_center,
      &     hstart_time_slop,
      &     hdumptof, 
      &     htof_tolerance,
@@ -151,7 +160,10 @@
      >     hscin_pos_invadc_linear,
      >     hscin_neg_invadc_linear,
      >     hscin_pos_invadc_adc,
-     >     hscin_neg_invadc_adc
+     >     hscin_neg_invadc_adc,
+     >     hpro_counter_num,
+     >     hstart_pro
+    
 
 *     
 *     CTPTYPE=event

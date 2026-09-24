@@ -1,8 +1,0 @@
-PROJECT     e01011
-COMMAND     /work/hallc/hes-hks/gogami/tags/Oct14-2009/e05115replay/batch_files/batch_77124
-JOBNAME     hks.analysis.77124
-TRACK       analysis
-TIME        4000
-OS          linux
-MAIL:       gogami@jlab.org
-INPUT_FILES: /work/hallc/hes-hks/gogami/tags/Oct14-2009/e05115replay/REPLAY.PARM

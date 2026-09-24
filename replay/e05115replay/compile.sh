@@ -1,9 +1,9 @@
 #!/bin/sh
 ##
-cd /work/hallc/hes-hks/gogami/tags/Oct14-2009/e05115src
+cd /w/hallc-scshelf2102/hks/knishida/E05-115/replay/e05115src
 make clean
 make
 make install
-cd /work/hallc/hes-hks/gogami/tags/Oct14-2009/e05115replay/SRC
+cd /w/hallc-scshelf2102/hks/knishida/E05-115/replay/e05115replay/SRC
 make clean;make
-cd /work/hallc/hes-hks/gogami/tags/Oct14-2009/e05115replay
+cd /w/hallc-scshelf2102/hks/knishida/E05-115/replay/e05115replay

@@ -7,7 +7,7 @@
 *
 *
       integer SMAX_bm_Ntuple_size
-      parameter (SMAX_bm_Ntuple_size= 60)
+      parameter (SMAX_bm_Ntuple_size= 150)
       integer default_g_beam_Ntuple_ID
       parameter (default_g_beam_Ntuple_ID= 6600)
 *

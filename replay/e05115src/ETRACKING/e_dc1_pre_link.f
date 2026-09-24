@@ -10,6 +10,7 @@
       INCLUDE 'hes_geometry.cmn'
       INCLUDE 'hes_scin_parms.cmn'
       INCLUDE 'gen_event_info.cmn'
+      INCLUDE 'gen_constants.par'
       INCLUDE 'hes_statistics.cmn'
 
 *For linefit_2d.cmn
@@ -33,21 +34,27 @@
       real*4 x_la,x_min,x_max, stime
       Integer*4 goodtrack, test1(2),test2(2)
       real*4 aa1,aa2,aa3
+      real*4 dx,dx_min
+      real*4 slope
+      real*4 estart_time,estart_time2
 
       if(edc1nspace_points_tot .le. 0) Return
       estart_time = -1000.
+      estart_time2 = -1000.
       tco = 0
 
       do isp = 1, edc1nspace_points_tot 
 
          if(escin_tot_hits.le.0) then
             estart_time = -1000.
+            estart_time2 = -1000.
             goto 200
          endif
 
          estart_time=0
+         estart_time2=0
          starttime(isp)=0
-         goto 200
+c         goto 200
 
          fnpos_2d = 0 
          starttime(isp) = -1000
@@ -69,8 +76,10 @@
          if(fnpos_2d.ge.3) then
             call linefit2
 *  z -> -z
-            a1 = -A(1,3)
+            !a1 = -A(1,3)
+            a1 = A(1,3)
             b1 = A(2,3)
+            slope=sqrt(1+a1*a1)
 
             num   = 0
             stime = 0
@@ -78,10 +87,19 @@
                escineff_good_trig(3,1)=escineff_good_trig(3,1)+1
                goodtrack=1
                Do la=1,2
-                  x_la=a1*escin_zpos(la)+b1
-                  Do co=1,25
-                     x_min = escin_xcenter(la,co) -1.5*escin_width
-                     x_max = escin_xcenter(la,co) +1.5*escin_width
+c                  x_la=a1*escin_zpos(la)+b1
+                  Do co=1,29
+
+                     if( mod(co,2).eq.1 ) then
+                        x_la = a1 * (escin_zpos(la)+1.5) + b1 !EHODO downstream side
+                     else 
+                        x_la = a1 * (escin_zpos(la)-1.5) + b1 !EHODO upstream side
+                     endif
+                     x_min = escin_xcenter(la,co) - 0.5*escin_width-escin_xslop
+                     x_max = escin_xcenter(la,co) + 0.5*escin_width+escin_xslop
+
+c                     x_min = escin_xcenter(la,co) -1.5*escin_width
+c                     x_max = escin_xcenter(la,co) +1.5*escin_width
                      if(x_la .ge. x_min .and. x_la .le. x_max) then
                           escineff_good_trig(la,co) =
      &                      escineff_good_trig(la,co)+1
@@ -89,20 +107,38 @@
                   enddo
                enddo
             endif
+            dx_min=10000
             Do j = 1, escin_tot_hits
                
                la = escin_layer_num(j)
                if(la.eq.3) goto 100
                co = escin_counter_num(j)
-               
-               x_la = a1 *escin_zpos(la) + b1
-               x_min = escin_xcenter(la,co) - 1.0*escin_width
-               x_max = escin_xcenter(la,co) + 1.0*escin_width
-               
-               if( x_la .ge. x_min .and. x_la .le. x_max ) then
+c               x_la = a1 *escin_zpos(la) + b1
+               if( mod(co,2).eq.1 ) then
+                  x_la = a1 * (escin_zpos(la)+1.5) + b1 !EHODO downstream side
+               else 
+                  x_la = a1 * (escin_zpos(la)-1.5) + b1 !EHODO upstream side
+               endif
+c     x_min = escin_xcenter(la,co) - 1.0*escin_width
+c     x_max = escin_xcenter(la,co) + 1.0*escin_width
+               x_min = escin_xcenter(la,co)-0.5*escin_width-escin_xslop*3
+               x_max = escin_xcenter(la,co)+0.5*escin_width+escin_xslop*3
+c               write(*,*) "x_la,x_min,x_max",x_la,x_min,x_max 
+               if( la.eq.1 .and.
+     &             x_la .ge. x_min .and. x_la .le. x_max ) then
+                  dx=abs(x_la-escin_xcenter(la,co))
+c                  write(*,*) "id,isp,j,dx,dx_min,mtime",
+c     &             gen_event_ID_number,isp,j,dx,dx_min,escin_mean_time(j)
+                  if ( num.eq.0 .or. dx.le.dx_min) then
+c                  write(*,*) "dx,mtime",dx,escin_mean_time(j)
+                     dx_min=dx
+                     stime = escin_mean_time(j)
+                     tco = escin_counter_num(j)
+c                     print *, "stime,la,co",stime,la,tco
+                  endif
                   num = num + 1 
-                  stime = stime + escin_mean_time(j)
-                  tco = escin_counter_num(j)
+c                  stime = stime + escin_mean_time(j)
+c                  tco = escin_counter_num(j)
                   if(goodtrack.eq.1) then
                        escineff_did_trig(la,co)=escineff_did_trig(la,co)+1
                   endif
@@ -110,17 +146,33 @@
  100           continue
             Enddo
            
+c            write(*,*) "num",num
             if(num.gt.0) then
-               estart_time = stime/num
+c               estart_time = stime/num
+c<<<<<<< .mine
+c*     ===Here, should be checked !=======================================
+c               estart_time = stime/num 
+c     &              - escin_zpos(1)*slope/speed_of_light+1.55
+c*     ====================================================================
+c=======
+c               estart_time = stime-escin_zpos(1)*slope/speed_of_light+1.55
+               estart_time = stime-escin_zpos(1)*slope/speed_of_light
+               estart_time2 = stime-(escin_zpos(1)-edc2_zpos(3))*slope/speed_of_light
+c>>>>>>> .r446
                starttime(isp) = estart_time
+               starttime2(isp) = estart_time2
             else
                starttime(isp) = -1000.
+               starttime2(isp) = -1000.
                estart_time = -1000.
+               estart_time2 = -1000.
             endif
          else
             write(*,*) 'Less than 4'
             starttime(isp) = -1000.
+            starttime2(isp) = -1000.
             estart_time = -1000.
+            estart_time2 = -1000.
             a1 = -1000
             b1 = -1000
          endif
@@ -152,7 +204,7 @@
       
       
       Do la=1,2
-         Do co=1,25
+         Do co=1,29
             if( escineff_good_trig(la,co).gt.1 ) then
                escin_layer_eff(la,co)=
      >              real(escineff_did_trig(la,co))/real(escineff_good_trig(la,co))
@@ -177,7 +229,7 @@ c     >                 escin_layer_eff_err(la,co)
          test2(la)=0
       enddo
       Do la=1,2
-         Do co=1,25
+         Do co=1,29
             test1(la)=test1(la)+escineff_did_trig(la,co)
             test2(la)=test2(la)+escineff_good_trig(la,co)
          enddo

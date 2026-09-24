@@ -87,14 +87,14 @@ c
       real*8 delta_time
 *
 * Find if hnss or sos scaler event (assumes first HNSS scaler is DA01).
-      if (iand(ishft(event(3),-16),X'FFFF').eq.X'DA01') then !first scaler
+      if (iand(ishft(event(3),-16),INT(Z'FFFF')).eq.INT(Z'DA01')) then !first scaler
         cratenum=1     !hnss
       else
         cratenum=2     !sos
       endif
 *
       evtype = ishft(event(2),-16)
-      evnum = iand(event(2),X'FF')  ! last 2 bytes give event number (mod 256)
+      evnum = iand(event(2),INT(Z'FF'))  ! last 2 bytes give event number (mod 256)
 *
 * evnum is mod(256), so must reset lastevnum for rollover
       if (evnum.eq.0 .and. gscal_lastevnum(cratenum).gt.200) then
@@ -117,11 +117,11 @@ c
 *
         do while(pointer.lt.evlen)
 *
-          scalid = iand(ishft(event(pointer),-16),X'FF')
-          countinmod = iand(event(pointer),X'FFFF')
-          if(iand(event(pointer),X'FF000000').eq.X'DA000000') then
+          scalid = iand(ishft(event(pointer),-16),INT(Z'FF'))
+          countinmod = iand(event(pointer),INT(Z'FFFF'))
+          if(iand(event(pointer),INT(Z'FF000000')).eq.INT(Z'DA000000')) then
 c     Old style header with scaler ID @ 00FF0000
-            scalid = iand(ishft(event(pointer),-16),X'FF')
+            scalid = iand(ishft(event(pointer),-16),INT(Z'FF'))
             address = scalid*16
 *
 *     Might want to check that count is not to big.

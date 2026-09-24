@@ -132,6 +132,8 @@
       Integer*4 la,co,good(ENUM_SCIN_LAYERS,ENUM_SCIN_COUNTERS)
       Integer*4 tmin,tmax,amin,amax
       Real*4    adcpos, adcneg, minph
+      Real*4    timemin, timemax 
+      Real*4    timepos, timeneg
       Integer*4 tdcpos, tdcneg
       Integer*4 temp_rocid,have_tdc
       real*4 f1time,ttime
@@ -225,8 +227,8 @@ c     &              escin_rawadc_neg(i)
       endif
 
       if(  num .eq. 0) then
-         Write(*,*) 'No ESCIN trigger signal : ev=',
-     &        gen_event_ID_number, ' Number of events=', num
+c         Write(*,*) 'No ESCIN trigger signal : ev=',
+c     &        gen_event_ID_number, ' Number of events=', num
          escin_raw_tot_hits = 0 
          return
       endif
@@ -263,6 +265,9 @@ c      enddo
       if(amax .le. 0) amax = 8000.
       if(tmin .le. 0) tmin = 0.   
       if(tmax .le. 0) tmax = 8000.
+
+      timemin=-100.
+      timemax=100.
 
 *     --- Hodoscope raw ADC and TDC cut ---
       do ihit = 1, escin_raw_tot_hits
@@ -325,9 +330,10 @@ c         else
                escin_layer_num(nhit)   = la
                escin_counter_num(nhit) = co
                escin_good_hits(nhit) = 1
+c               write(*,*)"escin_layer_num(nhit)",escin_layer_num(nhit)
             
             
-C     --- if you already have hit and it is one-end hit, do not add new.
+c     --- if you already have hit and it is one-end hit, do not add new.
                if(good(la,co) .eq. 1 .and. 
      &            escin_good_hits(nhit) .ne. 1) then
                   escin_tot_hits = escin_tot_hits - 1               
@@ -341,12 +347,12 @@ C     --- if you already have hit and it is one-end hit, do not add new.
                   escin_tdc_pos(nhit)  = tdcpos
                   minph = escin_adc_pos(nhit) - escin_pos_minph(la,co)
                   if(minph .gt. 0) then
-                     escin_time_pos(nhit) = tdcpos*escin_tdc_to_time
-     &                  - (estart_time_center 
-     &                  + escin_pos_time_offset(la,co)
-     &                  + escin_pos_phc_coeff(la,co)/sqrt(minph))
+                     escin_time_pos(nhit) = (tdcpos
+     &                  - estart_time_center 
+     &                  + escin_pos_phc_coeff(la,co)/sqrt(minph+200))
 c     &                  + 2*escin_pos_phc_coeff(la,co)/sqrt(minph))
      &                  *escin_tdc_to_time
+     &                  - escin_pos_time_offset(la,co)
 c                  write(*,*) estart_time_center,escin_pos_time_offset(la,co),
 c     =                 escin_pos_phc_coeff(la,co),escin_pos_phc_coeff(la,co)
 c                   write(*,*) "pos",la,escin_time_pos(nhit) 
@@ -370,12 +376,12 @@ c                   write(*,*) "pos",la,escin_time_pos(nhit)
                   escin_tdc_neg(nhit)  = tdcneg
                   minph = escin_adc_neg(nhit) - escin_neg_minph(la,co)
                   if(minph .gt. 0) then
-                     escin_time_neg(nhit) = tdcneg*escin_tdc_to_time
-     &                  - (estart_time_center 
-     &                  + escin_neg_time_offset(la,co)
-     &                  + escin_neg_phc_coeff(la,co)/sqrt(minph))
+                     escin_time_neg(nhit) = (tdcneg
+     &                  - estart_time_center 
+     &                  + escin_neg_phc_coeff(la,co)/sqrt(minph+200))
 c     &                  + 2*escin_neg_phc_coeff(la,co)/sqrt(minph))
      &                  *escin_tdc_to_time
+     &                  - escin_neg_time_offset(la,co)
 c                   write(*,*) "neg",la,escin_time_neg(nhit) 
                   Else
                      escin_time_neg(nhit) = tdcneg*escin_tdc_to_time
@@ -387,21 +393,26 @@ c                   write(*,*) "neg",la,escin_time_neg(nhit)
                   escin_tdc_neg(nhit) = -70000
                   escin_time_neg(nhit) = -1000.
                EndIf               ! negative tubes.
+
+               timepos=escin_time_pos(nhit)
+               timeneg=escin_time_neg(nhit)
             
 *     --- calculate mean time.
                if(
-     &            (tdcpos .ge. tmin .and. tdcpos .le. tmax) 
+     &            (timepos.ge.timemin.and.timepos.le.timemax) 
      &            .AND.
-     &            (tdcneg .ge. tmin .and. tdcneg .le. tmax) 
+     &            (timeneg.ge.timemin.and.timeneg.le.timemax) 
      &            ) then
                      escin_mean_time(nhit) = 0.5 *( escin_time_pos(nhit) + 
      &               escin_time_neg(nhit))
                Else if(adcpos .ge. amin .and. adcpos .le. amax .and.
-     &            tdcpos .ge. tmin .and. tdcpos .le. tmax) then
+     &            timepos .ge. timemin .and. timepos .le. timemax) then
                      escin_mean_time(nhit) = escin_time_pos(nhit)
                Else
                   escin_mean_time(nhit) = escin_time_neg(nhit)
                EndIF               ! mean time.
+c               print *, "la,co,mean,pos,neg",la,co,
+c     &          escin_mean_time(nhit),escin_time_pos(nhit),escin_time_neg(nhit)
 
 c     --- fill 'good' here.
 c     --- good hits<0, This is one-end hit

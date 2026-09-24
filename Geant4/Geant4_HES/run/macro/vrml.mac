@@ -1,0 +1,6 @@
+/vis/open VRML2FILE
+/vis/viewer/set/style surface
+/vis/drawVolume
+/vis/viewer/flush
+
+#/run/beamOn 5

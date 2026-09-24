@@ -117,7 +117,7 @@ c--   L.Yuan 05/15/2005
       include 'gen_f1tdc.cmn'
       include 'gen_run_info.cmn'
       include 'gen_event_info.cmn'
-      
+       INCLUDE 'hks_geometry.cmn'
       logical abort
       character*1024 errmsg
       character*20 here
@@ -134,13 +134,30 @@ c--   L.Yuan 05/15/2005
       Integer*4 tdcpos, tdcneg
       Integer*4 tmin,tmax,amin,amax
 c--   temporary variables              ! add by L.Yuan
-      real*4 fptraw(3), fptraw_sum(3)
-      integer*4 t_num(3)
+      real*4 fptraw(4), fptraw_sum(4),h1tsum,h2tsum
+      integer*4 t_num(4)
       integer*4 f1time,ttime
-      save
+c      real*4 hstart_pro(hmax_scin_hits,3)
+      real*4 hsm_counter_num(hmax_scin_hits,3)
+      real*4 h11time,h21time,t1x2x, t1x2x_new,t1xh1,t1xh2
+      real*4 h12time,h22time,t2xh1,t2xh2,h1time_pre,h2time_pre
+      real*4 t1x1y,t1y2x
+      real*4 deltax,prelen,deltaz,deltay !deltaz is distance between 1x and 2x which can be calculated somewhere once
+      real*4 deltaz1x1y,deltaz1y2x,deltaz1x2x,deltazh11x,deltazh12x  
+      real*4 deltazh11y,deltazh21x,deltazh22x,deltazh21y
+      integer*4 h1num,h2num,ntof2
+      real*4 t1yh1,t1yh2
+c--------------------------------------
+c give the counter number and time to the new array which after cut
+      integer*4 skipflag1x(hmax_scin_hits),skipflag2x(hmax_scin_hits)
+      integer*4 skipflag1y(hmax_scin_hits)
+      integer*4 nhitscut1x,nhitscut2x,nhitscut1y
+    
+      save 
       
-      abort = .false.
-      
+       abort = .false.
+
+
 
       IF(hscin_raw_tot_hits .le. 0 ) return
       
@@ -155,6 +172,30 @@ c         EndIf
 c      EndDo
 
       num=0
+      nhits1x=0
+      nhits2x=0
+      nhits1y=0
+      ntof=0
+      ntof2=0
+      ntof1x2x=0
+      ntof1x1y=0
+      ntof1y2x=0
+      h1num=0
+      h2num=0
+      h1tsum=0.0
+      h2tsum=0.0
+
+cc     For test (T.Gogami, 24/Oct/2011)
+cc      if(gen_event_ID_number.eq.1) then 
+cc         open(22,file='test.dat',status='replace')
+cc         close(22)
+cc      endif
+cc      open(22,file='test.dat',access='append')
+cc      write(22,*)hscin_raw_tot_hits
+cc      close(22)
+cc      
+cc      open(22,file='test.dat',access='append') !For test (T.Gogami, 24/Oct/2011)
+cc     
       Do i=1,hscin_raw_tot_hits
          ttime=g_f1_trigger_time(HR_VME_ROCID)
          f1time=g_f1_refer_time(HR_VME_ROCID,1,1)
@@ -162,6 +203,12 @@ c      EndDo
          co = hscin_raw_counter_num(i)
          tdcpos = hscin_raw_tdc_pos(i)
          tdcneg = hscin_raw_tdc_neg(i)
+c     For test (T.Gogami, 24/Oct/2011)
+!      open(22,file='test.dat',access='append')   
+!      write(22,*)la,co,tdcpos,tdcneg
+!      close(22)
+         
+
 c--   in EEL test, VMEID is 1. In Hall C, this may be changed to 2.
 *      if(  f1time .lt. 0 .and. have_tdc .eq. 1) then
 *         if(have_tdc(i).eq.0) then !for F1 test
@@ -278,6 +325,8 @@ cc         print *, 'ped',la, co, hscin_raw_ped_pos(la,co)
          tdcpos = hscin_rawtdc_pos_sub_trig(ihit)
          tdcneg = hscin_rawtdc_neg_sub_trig(ihit)
 
+cc         write(22,*)la,co,tdcpos,tdcneg,adcpos,adcneg
+
 C     Search good hits
          if(  
 c     &        (tdcpos .gt. tmin .and. tdcpos .lt. tmax) 
@@ -304,6 +353,7 @@ c     --- store position info.
 
 c     Write(*,*) '(htransscin)centercoord=',
 c     &           la,co,hscin_center_coord(nhit)
+          
             if (la .eq. 1) then !1x
                hscin_pos_coord(nhit) = hscin_1x_top
                hscin_neg_coord(nhit) = hscin_1x_bot
@@ -313,6 +363,9 @@ c     &           la,co,hscin_center_coord(nhit)
             else if (la .eq. 3) then !2x
                hscin_pos_coord(nhit) = hscin_2x_top
                hscin_neg_coord(nhit) = hscin_2x_bot
+            else if (la.eq.4) then ! temperally for 2y
+               hscin_pos_coord(nhit) = hscin_1y_left
+               hscin_neg_coord(nhit) = hscin_1y_right
             else                ! unknown layer
                abort = .true.
                write(errmsg,*) 'Trying to init. hks hodoscope layer',la
@@ -332,9 +385,9 @@ c     &                 - hscin_pos_phc_coeff(la,co)/sqrt(adcpos)
 c     &                 - hscin_pos_time_offset(la,co)
                   hscin_pos_time(nhit) = (tdcpos
      &                 - hscin_pos_phc_coeff(la,co)/sqrt(adcpos)
-     &                 - hscin_pos_time_offset(la,co))
+     &                 + hscin_pos_phc_coeff2(la,co)*adcpos)
      &                 * hscin_tdc_to_time
-     &                 + (hscin_zpos(la)-hscin_zpos(1))*1e-2/0.3
+     &                 - hscin_pos_time_offset(la,co)
                Else
                   hscin_pos_time(nhit) = tdcpos*hscin_tdc_to_time 
      &                 - hscin_pos_time_offset(la,co)
@@ -358,9 +411,9 @@ c     &                 - hscin_neg_phc_coeff(la,co)/sqrt(adcneg)
 c     &                 - hscin_neg_time_offset(la,co) 
                   hscin_neg_time(nhit) = (tdcneg
      &                 - hscin_neg_phc_coeff(la,co)/sqrt(adcneg)
-     &                 - hscin_neg_time_offset(la,co))
+     &                 + hscin_neg_phc_coeff2(la,co)*adcneg)
      &                 * hscin_tdc_to_time
-     &                 + (hscin_zpos(la)-hscin_zpos(1))*1e-2/0.3
+     &                 - hscin_neg_time_offset(la,co)
                Else
                   hscin_neg_time(nhit) = tdcneg*hscin_tdc_to_time
      &                 - hscin_neg_time_offset(la,co) 
@@ -401,13 +454,35 @@ c     &              dist_from_center)
      &              - (hit_position-hscin_neg_coord(nhit))
      &              /hscin_vel_light(la,co)
                hscin_cor_time(nhit) = 0.5 * (corpos + corneg)
+             if(la.eq.1) then
+             nhits1x=nhits1x+1
+c           print*,la,co,nhit,nhits1x,hscin_cor_time(nhit)
+              hstart_pro(nhits1x,1)=hscin_cor_time(nhit)
+              hpro_counter_num(nhits1x,1)=co
+            
+
+             endif
+            if(la.eq.2) then
+              nhits1y=nhits1y+1
+c           print*,la,co,nhit,nhits1y,hscin_cor_time(nhit)
+              hstart_pro(nhits1y,2)=hscin_cor_time(nhit)
+              hpro_counter_num(nhits1y,2)=co
+           
+             endif
+             if(la.eq.3) then
+             nhits2x=nhits2x+1
+             hstart_pro(nhits2x,3)=hscin_cor_time(nhit)
+             hpro_counter_num(nhits2x,3)=co
+c             print*,la,co,nhit,nhits2x,hscin_cor_time(nhit)
+c             write(37,*) hstart_pro(nhits2x,3)
+            endif
 *     start time calculation.  assume xp=yp=0 radians.  project all
 *     time values to focal layer.  use average for start time.
 
 *     need expected particle velocity for start time calculation.
          hbeta_pcent = hpcentral/sqrt(hpcentral*hpcentral+
      &      hpartmass*hpartmass)
-
+c        print*,hbeta_pcent 
                fptime  = hscin_cor_time(nhit) - hscin_zpos(la)
      &              /(29.979*hbeta_pcent)
                call hf1(hidscinfptime,fptime,1.)
@@ -438,8 +513,8 @@ c--   temporary
       
 *     --- Decoded data filling ---
       call h_fill_scin_dec_hist(ABORT,errmsg)
-      
-      if (time_num.eq.0) then
+c------------------------------------------------------------------------------      
+       if (time_num.eq.0) then
          hgood_start_time = .false.
          hstart_time = hstart_time_center
       else
@@ -448,11 +523,323 @@ c--   temporary
          do i=1,3
             if (t_num(i).ge.1) fptraw(i) = fptraw_sum(i)/t_num(i)
          enddo
-cc         write(32,*) (i,fptraw(i),i=1,3)
-      endif
-      
+c         write(32,*) (i,fptraw(i),i=1,3)
+        endif
+cc---------------------------------------------------------------------------
+c--------------------------------------------------------------------------
+c C.CHEN Jan.25,2010
+c calculate the hstart_time by project tof from 1x-2x to HDC1-1X and HDC2-2x
+c---------------------------------------------------------------------------
+c---for data transform after cut
+
+         deltaz1x2x=hscin_zpos(1)-hscin_zpos(3)
+         deltaz1x1y=hscin_zpos(1)-hscin_zpos(2)
+         deltaz1y2x=hscin_zpos(2)-hscin_zpos(3)
+         deltazh11x= hdc_1_zpos-hscin_zpos(1)
+         deltazh12x= hdc_1_zpos-hscin_zpos(3)
+         deltazh11y= hdc_1_zpos-hscin_zpos(2)
+         deltazh21x= hdc_2_zpos-hscin_zpos(1)
+         deltazh22x= hdc_2_zpos-hscin_zpos(3)
+         deltazh21y= hdc_2_zpos-hscin_zpos(2)
+         do j=1,nhits2x
+             skipflag2x(j)=1
+         enddo
+
+         do j=1,nhits1x
+            skipflag1x(j)=1
+         enddo
+
+         do j=1,nhits1y
+            skipflag1y(j)=1
+         enddo
+
+             nhitscut1x=0
+             nhitscut2x=0
+             nhitscut1y=0    
+c----------------------------------------------------
+c-1x 2x pretracking
+c  
+         if(nhits1x.gt.0.and.nhits2x.gt.0) then
+           do i=1,nhits1x
+              do j=1,nhits2x
+              
+            t1x2x=hstart_pro(i,1)-hstart_pro(j,3)
+            deltax=(hscin_1x_center(hpro_counter_num(i,1))
+     +                -hscin_2x_center(hpro_counter_num(j,3)))
+            deltaz=deltaz1x2x     !hscin_zpos(1)-hscin_zpos(3),it is different from survey data
+            prelen=sqrt(deltax*deltax+deltaz*deltaz)
+            t1x2x=abs(deltaz)*t1x2x/prelen
+        
+            if(t1x2x.lt.0.0.and.t1x2x.gt.-10.0) then
+            
+              
+              ntof1x2x=ntof1x2x+1
+              hsm_counter_num(ntof1x2x,1)=hpro_counter_num(i,1)
+              hsm_counter_num(ntof1x2x,3)=hpro_counter_num(j,3)
+
+c             write(15,*) t1x2x,t1x2x_new,hstart_pro(j,3),hstart_pro(i,1)
+              t1xh2=t1x2x*deltazh21x/deltaz1x2x  ! time_h2-timex1 it is negative
+           
+                                       !19.2cm is the distance between 1x and HDC2, 125.6 is the distance between 1x and 2x from survey data
+              h21time=hstart_pro(i,1)+t1xh2 !h21time=time_x1-(time_x1-time_h2)=time_x1+(time_h2-time_x1)
+              t1xh1=t1x2x*deltazh11x/deltaz1x2x !119.371cm is the distance between 1x and HDC1 all those number could get from parameter files
+              h11time=hstart_pro(i,1)+t1xh1
+              t2xh1=t1x2x*deltazh12x/deltaz1x2x 
+              t2xh2=t1x2x*deltazh22x/deltaz1x2x
+              h12time=hstart_pro(j,3)+t2xh1
+              h22time=hstart_pro(j,3)+t2xh2
+              h1time_pre=(h11time+h12time)/2
+              h2time_pre=(h21time+h22time)/2
+
+              
+              if(abs(h1time_pre-h1start_time_center).le.hstart_time_slop) then   ! -72.16 is the mean value of h1time_pre, need to be write it to outside as a parameter
+              h1tsum=h1tsum+h1time_pre
+              h1num=h1num+1
+              endif
+              if(abs(h2time_pre-h2start_time_center).le.hstart_time_slop) then
+              h2tsum=h2tsum+h2time_pre
+              h2num=h2num+1
+              endif
+              if(skipflag2x(j).gt.0) then
+                skipflag2x(j)=0
+               
+              endif
+
+              if(skipflag1x(i).gt.0) then
+                skipflag1x(i)=0
+               
+               endif
+
+
+             endif
+             enddo  !nhits2x loop
+            enddo !nhits1x loop
+   
+             if(h1num.gt.0) then
+             h1start_pre=h1tsum/h1num
+             else
+             h1start_pre=h1start_time_center
+             endif
+             if(h2num.gt.0) then
+             h2start_pre=h2tsum/h2num
+             else
+             h2start_pre=h2start_time_center
+             endif           
+             ntof=ntof1x2x
+          
+             do i=1,nhits1x
+              if(skipflag1x(i).eq.0) then
+               nhitscut1x=nhitscut1x+1
+               hpro_counter_num(nhitscut1x,1)=hpro_counter_num(i,1)
+            
+               hstart_pro(nhitscut1x,1)=hstart_pro(i,1)
+               endif
+             enddo
+            
+              do i=1,nhits2x
+              if(skipflag2x(i).eq.0) then
+               nhitscut2x=nhitscut2x+1
+               
+               hpro_counter_num(nhitscut2x,3)=hpro_counter_num(i,3)
+               hstart_pro(nhitscut2x,3)=hstart_pro(i,3)
+               endif
+             enddo
+           
+             nhits1x=nhitscut1x
+             nhits2x=nhitscut2x
+             
+             
+
+            endif  ! nhits1x>0, nhits2x>0
+c----------------------------------------------------------------------------------------          
+             
+
+              if(nhits1x.eq.0) then
+              if(nhits2x.gt.0.and.nhits1y.gt.0) then
+               do i=1,nhits1y
+                 do j=1,nhits2x
+                
+                t1y2x=hstart_pro(i,2)-hstart_pro(j,3)
+                deltaz=deltaz1y2x    !hscin_zpos(2)-hscin_zpos(3)
+               deltax=hscin_1y_center(hpro_counter_num(i,2))
+               deltay=hscin_2x_center(hpro_counter_num(j,3))
+               prelen=sqrt(deltax*deltax+deltaz*deltaz+deltay*deltay)
+               t1y2x=t1y2x*abs(deltaz)/prelen
+              
+              if(t1y2x.le.-2.and.t1y2x.ge.-7) then  !if 0.7<beta<1.2 then -5.0ns<delta<-2.91ns d2x1y=104.6cm
+               
+              ntof1y2x=ntof1y2x+1
+              hsm_counter_num(ntof1y2x,2)=hpro_counter_num(i,2)
+              hsm_counter_num(ntof1y2x,3)=hpro_counter_num(j,3)
+
+
+              t1yh2=t1y2x*deltazh21y/deltaz1y2x  !19.2cm is the distance between 1x and HDC2, 125.6 is the distance between 1x and 2x from survey data
+              h21time=hstart_pro(i,2)+t1yh2
+              t1yh1=t1y2x*deltazh11y/deltaz1y2x !119.371cm is the distance between 1x and HDC1 all those number could get from parameter files
+              h11time=hstart_pro(i,2)+t1yh1
+              t2xh1=t1y2x*deltazh12x/deltaz1y2x 
+              t2xh2=t1y2x*deltazh22x/deltaz1y2x
+              h12time=hstart_pro(j,3)+t2xh1
+              h22time=hstart_pro(j,3)+t2xh2
+              h1time_pre=(h11time+h12time)/2
+              h2time_pre=(h21time+h22time)/2
+              
+                if(abs(h1time_pre-h1start_time_center).le.hstart_time_slop) then   ! -72.16 is the mean value of h1time_pre, need to be write it to outside as a parameter
+                h1tsum=h1tsum+h1time_pre
+                h1num=h1num+1
+                endif
+                if(abs(h2time_pre-h2start_time_center).le.hstart_time_slop) then
+                h2tsum=h2tsum+h2time_pre
+                h2num=h2num+1
+                endif
+               if(skipflag2x(j).gt.0) then
+                skipflag2x(j)=0
+
+              endif
+              if(skipflag1y(i).gt.0) then
+                skipflag1y(i)=0
+
+               endif
+             endif 
+    
+             enddo
+             enddo
+
+             if(h1num.gt.0) then
+             h1start_pre=h1tsum/h1num
+             else
+             h1start_pre=h1start_time_center
+             endif
+             if(h2num.gt.0) then
+             h2start_pre=h2tsum/h2num
+             else
+             h2start_pre=h2start_time_center
+             endif           
+
+             ntof=ntof1y2x
+
+            do i=1,nhits1y
+              if(skipflag1y(i).eq.0) then
+               nhitscut1y=nhitscut1y+1
+               hpro_counter_num(nhitscut1y,2)=hpro_counter_num(i,2)
+               hstart_pro(nhitscut1y,2)=hstart_pro(i,2)
+               endif
+             enddo
+            
+              do i=1,nhits2x
+              if(skipflag2x(i).eq.0) then
+               nhitscut2x=nhitscut2x+1
+               hpro_counter_num(nhitscut2x,3)=hpro_counter_num(i,3)
+               hstart_pro(nhitscut2x,3)=hstart_pro(i,3)
+               endif
+             enddo
+             nhits1y=nhitscut1y
+             nhits2x=nhitscut2x
+
+
+            endif
+           endif
+           
+           if(nhits2x.eq.0) then
+           if(nhits1x.gt.0.and.nhits1y.gt.0) then
+            do i=1,nhits1x
+             do j=1,nhits1y
+                       
+             t1x1y=hstart_pro(i,1)-hstart_pro(j,2)
+             deltaz=deltaz1x1y     !hscin_zpos(1)-hscin_zpos(2)
+             deltax=hscin_1x_center(hpro_counter_num(i,1))
+             deltay=hscin_1y_center(hpro_counter_num(j,2))
+             prelen=sqrt(deltax*deltax+deltaz*deltaz+deltay*deltay)
+             t1x1y=t1x1y*abs(deltaz)/prelen
+              
+             if(t1x1y.ge.-2.and.t1x1y.le.1) then  !d1x1y=21cm, -1ns<delta<-0.583ns
+             ntof1x1y=ntof1x1y+1
+             hsm_counter_num(ntof1x1y,1)=hpro_counter_num(i,1)
+             hsm_counter_num(ntof1x1y,2)=hpro_counter_num(j,2)
+              t1xh2=t1x1y*deltazh21x/deltaz1x1y  !19.2cm is the distance between 1x and HDC2, 125.6 is the distance between 1x and 2x from survey data
+              h21time=hstart_pro(i,1)+t1xh2
+              t1xh1=t1x1y*deltazh11x/deltaz1x1y !119.371cm is the distance between 1x and HDC1 all those number could get from parameter files
+              h11time=hstart_pro(i,1)+t1xh1
+              t1yh1=t1x1y*deltazh11y/deltaz1x1y 
+              t1yh2=t1x1y*deltazh21y/deltaz1x1y
+              h12time=hstart_pro(j,2)+t1yh1
+              h22time=hstart_pro(j,2)+t1yh2
+              h1time_pre=(h11time+h12time)/2
+              h2time_pre=(h21time+h22time)/2
+            
+             if(abs(h1time_pre-h1start_time_center).le.hstart_time_slop) then   ! -72.16 is the mean value of h1time_pre, need to be write it to outside as a parameter
+              h1tsum=h1tsum+h1time_pre 
+              h1num=h1num+1              
+              endif
+              if(abs(h2time_pre-h2start_time_center).le.hstart_time_slop) then
+              h2tsum=h2tsum+h2time_pre
+              h2num=h2num+1            
+              endif
+             if(skipflag1x(j).gt.0) then
+                skipflag1x(j)=0
+
+              endif
+              if(skipflag1y(i).gt.0) then
+                skipflag1y(i)=0
+
+               endif
+             endif
+             enddo
+            enddo
+
+             if(h1num.gt.0) then
+             h1start_pre=h1tsum/h1num
+             else
+             h1start_pre=h1start_time_center
+             endif
+             if(h2num.gt.0) then
+             h2start_pre=h2tsum/h2num
+             else
+             h2start_pre=h2start_time_center
+             endif           
+             ntof=ntof1x1y
+
+              do i=1,nhits1x
+              if(skipflag1x(i).eq.0) then
+               nhitscut1x=nhitscut1x+1
+               hpro_counter_num(nhitscut1x,1)=hpro_counter_num(i,1)
+               hstart_pro(nhitscut1x,1)=hstart_pro(i,1)
+               endif
+             enddo
+            
+              do i=1,nhits1y
+              if(skipflag1y(i).eq.0) then
+               nhitscut1y=nhitscut1y+1
+               hpro_counter_num(nhitscut1y,2)=hpro_counter_num(i,2)
+               hstart_pro(nhitscut1y,2)=hstart_pro(i,2)
+               endif
+             enddo
+             nhits1x=nhitscut1x
+             nhits1y=nhitscut1y
+
+            
+            endif  
+           endif
+c           if(ntof.gt.0) then
+c          count2=count2+1
+c           print*,count2
+c           endif
+c         
+c           print*,ntof,ntof1x2x    
+           if(ntof.eq.0) then  ! ntof1x2x only for test before put all the conditions in
+c right now only use 1x-2x tracking  this is only for test 
+                 h1start_time=-70000
+                 h2start_time=-70000     
+          endif  
+       
+         
+        
+
+c      write(16,*) ntof,h1start_time,h2start_time          
 *     Dump decoded bank if sdebugprintscindec is set
       if( hdebugprintscindec .ne. 0) call h_prt_dec_scin(ABORT,errmsg)
+      
+c      close(22)                 !For test (T.Gogami, 24/Oct/2011)
       
       return
       end

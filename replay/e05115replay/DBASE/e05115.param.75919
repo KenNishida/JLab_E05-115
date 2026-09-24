@@ -22,7 +22,7 @@ begin parm hks_parameters
 #include "PARAM/hdc.pos.0"
 #include "PARAM/hdc.param.75885"
 #include "PARAM/hdc_offsets.param.0"
-#include "PARAM/hdriftmap.param.75884"
+#include "PARAM/hdriftmap.param.75885"
 #include "PARAM/htracking.param.0"
 #include "PARAM/hhodo.pos.0"
 #include "PARAM/hhodo.param.75884"
