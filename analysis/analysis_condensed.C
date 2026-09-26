@@ -266,6 +266,8 @@ void analysis_condensed::Loop()
 
    //* Event Loop */
    if (fChain == 0) return;
+   Long64_t nAccepted = 0;
+   const Long64_t maxAccepted = 9600;
 
    Long64_t nentries = fChain->GetEntriesFast();
    for (Long64_t jentry=0; jentry<nentries;jentry++) {
@@ -301,6 +303,8 @@ void analysis_condensed::Loop()
 
       // ===== Fill histograms =====
       if (KaonCut() && CtimeCut()) {
+         if (nAccepted >= maxAccepted) break;
+         nAccepted++;
          h_m2->Fill(m2);
          h_ctime->Fill(htimetar - etimetar);
          if (MissingMass > -900.0) {

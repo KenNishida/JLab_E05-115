@@ -1,6 +1,6 @@
 *******************************************************************************
 *     This file (r_hks_lucite_parms.f) was generated from hks_lucite_parms.cmn by makereg v1.01
-*     This file was created on Thu Sep 24 12:37:24 2026
+*     This file was created on Thu Sep 24 18:27:32 2026
 *
 *     The command used to create this file was:
 *     /work/hallc/hks/sanghwa/fortran/e05115/final/e05115_source_Tabun_Final/e05115src/makereg hks_lucite_parms.cmn -o r_hks_lucite_parms.f -e /dev/null 

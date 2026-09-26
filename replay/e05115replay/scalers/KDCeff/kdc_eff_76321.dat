@@ -1,0 +1,33 @@
+ RUN:        76321
+ START:            1
+ ANALnum:            0
+ DENO:    606042.000    
+ ====KDC_efficiency=====
+           1 :   0.995011926    
+           2 :   0.995645523    
+           3 :   0.993262827    
+           4 :   0.997001886    
+           5 :   0.992672145    
+           6 :   0.989561796    
+           7 :   0.997251034    
+           8 :   0.997363210    
+           9 :   0.979724169    
+          10 :   0.998463809    
+          11 :   0.996442497    
+          12 :   0.996016800    
+ KDC1:   0.963700235    
+ KDC2:   0.965634763    
+ Tracking Eff:   0.999088943    
+ ====KDC_Rates(accicental,signal)=====
+           1 :          Infinity           Infinity
+           2 :          Infinity           Infinity
+           3 :          Infinity           Infinity
+           4 :          Infinity           Infinity
+           5 :          Infinity           Infinity
+           6 :          Infinity           Infinity
+           7 :          Infinity           Infinity
+           8 :          Infinity           Infinity
+           9 :          Infinity           Infinity
+          10 :          Infinity           Infinity
+          11 :          Infinity           Infinity
+          12 :          Infinity           Infinity

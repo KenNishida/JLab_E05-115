@@ -28,7 +28,7 @@ Double_t gSpeedOfLight = 29.9792458; // cm/ns
 // 52: Chromium-52
 // 101: Hydrogen in Water for Lambda and Sigma0 production.
 // 112: Thick Carbon-12.
-Int_t gTargetFlag = 101;
+Int_t gTargetFlag = 1;
 
 // ===== Condensed ROOT files =====
 TString gCH2File   = "ch2_9-3.root";

@@ -43,8 +43,8 @@ g_preproc_on=0
 ; i=4 PED triggers (disable may not work)
 
  gen_run_enable(1) = 1
- gen_run_enable(2) = 0   
- gen_run_enable(3) = 0
+ gen_run_enable(2) = 1   
+ gen_run_enable(3) = 1
  gen_run_enable(4) = 1  
 
 ;TEMPLATES.
@@ -73,7 +73,7 @@ g_preproc_on=0
 ;  g_alias_filename    = 'paw/paw%d.kumac'  
 ;  g_histout_filename  = 'paw/%d.hbook'
 ;  beam_ntuple        = 'paw/beam%d.rzdat'
-  hks_ntuple          = 'paw/hks%d.rzdat'   
+;  hks_ntuple          = 'paw/hks%d.rzdat'   
 ;  hks_ntuple          = '/ntuple/hks%d.rzdat'   
 ;  hks_TRACKntuple      = 'paw/htrack%d.rzdat'
 ;  hks_DCntuple        = 'paw/hdc%d.rzdat'   
@@ -90,7 +90,7 @@ g_preproc_on=0
 ;  hes_SCINntuple    = 'paw/escin%d.rzdat'
 ;  hes_FISNtuple     = 'paw/efis%d.rzdat'
 
-;  coin_ntuple        = 'paw/coin%d.rzdat'
+  coin_ntuple        = 'paw/coin%d.rzdat'
 ;  coin_ntuple        = '/ntuple/water/coin%d.rzdat'
 ;  coin_ntuple        = '/ntuple/carbon/coin%d.rzdat'
 ;  coin_ntuple        = 'newnt/coin%d.rzdat'
