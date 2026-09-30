@@ -1,1 +1,6 @@
- (e_pattern...) pr_hits exceed edc1max_pr_hits=          60  ev=      728477  layer=           6
+ (e_pattern...) group hits exceed edc1max_pr_hits=          60  ev=       83994  group=           5
+ (e_pattern...) group hits exceed edc1max_pr_hits=          60  ev=      111353  group=           5
+ (e_pattern...) group hits exceed edc1max_pr_hits=          60  ev=      220671  group=           3
+ (e_pattern...) group hits exceed edc1max_pr_hits=          60  ev=      243104  group=           4
+ (e_pattern...) pr_hits exceed edc1max_pr_hits=          60  ev=      338152  layer=           4
+ (e_pattern...) group hits exceed edc1max_pr_hits=          60  ev=      524367  group=           3

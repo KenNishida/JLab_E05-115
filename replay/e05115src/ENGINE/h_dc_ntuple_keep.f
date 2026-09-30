@@ -40,6 +40,7 @@
 *     
       IF(.NOT.h_dc_ntuple_exists) RETURN !nothing to do
 *     
+
       if (h_debugnt(1).eq.0) then
          if (h_debugnt(3).eq.1) then
             Do i=1,hdc_raw_tot_hits
@@ -126,5 +127,6 @@
       endif
 
 *
+
       RETURN
       END      

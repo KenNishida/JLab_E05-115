@@ -5,8 +5,12 @@
 #include <TStyle.h>
 #include <TCanvas.h>
 #include <cmath>
+#include <fstream>
+#include <iostream>
+#include <string>
 
 using namespace std;
+
 
 // ============================================================
 // Hard-coded raster correction used in krd.C
@@ -267,7 +271,7 @@ void analysis_condensed::Loop()
    //* Event Loop */
    if (fChain == 0) return;
    Long64_t nAccepted = 0;
-   const Long64_t maxAccepted = 9600;
+   const Long64_t maxAccepted = 36784;
 
    Long64_t nentries = fChain->GetEntriesFast();
    for (Long64_t jentry=0; jentry<nentries;jentry++) {
@@ -303,7 +307,7 @@ void analysis_condensed::Loop()
 
       // ===== Fill histograms =====
       if (KaonCut() && CtimeCut()) {
-         if (nAccepted >= maxAccepted) break;
+         //if (nAccepted >= maxAccepted) break;
          nAccepted++;
          h_m2->Fill(m2);
          h_ctime->Fill(htimetar - etimetar);
@@ -349,6 +353,7 @@ void analysis_condensed::Loop()
          h_expfp_eypfp->Fill(esxpfp, esypfp);
          h_exfp_expfp->Fill(esxfp, esxpfp);
          h_eyfp_eypfp->Fill(esyfp, esypfp); 
+
       }
    }
 
@@ -411,6 +416,11 @@ void analysis_condensed::Loop()
    c7->cd(3); gPad->SetLogz(); h_expfp_eypfp->Draw("COLZ");
    c7->cd(4); gPad->SetLogz(); h_exfp_expfp->Draw("COLZ");
    c7->cd(5); gPad->SetLogz(); h_eyfp_eypfp->Draw("COLZ");
+
+   TFile *fin = fChain->GetCurrentFile();
+   fin->cd();
+   h_emom->Write("h_emom", TObject::kOverwrite);
+   fin->Save();
    
 }
 

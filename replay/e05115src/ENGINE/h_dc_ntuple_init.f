@@ -28,13 +28,15 @@
       parameter (default_name= 'HKSDCntuple')
       integer default_bank,default_recL
       parameter (default_bank= 8000) !4 bytes/word
-      parameter (default_recL= 1024) !record length
+      parameter (default_recL= 4096) !record length
       character*80 title
       character*80 directory,name
       character*256 file
       character*1000 pat,msg
       integer status,size,io,id,bank,recL,iv(10),m
       real rv(10)
+      integer IQUEST(100)
+      COMMON /QUEST/ IQUEST
 *     
       logical HEXIST            !CERNLIB function
 *     
@@ -90,9 +92,11 @@ c     INCLUDE 'h_ntuple.dte'
       call g_sub_run_number(file,gen_run_number)
       
       recL= default_recL
-*     
+*     -allow a large RZ file-
+      IQUEST(10)=65000
+
 *     -open New *.rzdat file-
-      call HROPEN(io,name,file,'N',recL,status) !CERNLIB
+      call HROPEN(io,name,file,'NQ',recL,status) !CERNLIB
 *     !directory set to "//TUPLE"
       ABORT= status.NE.0
       IF(ABORT) THEN

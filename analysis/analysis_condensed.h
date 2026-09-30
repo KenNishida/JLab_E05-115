@@ -472,7 +472,7 @@ analysis_condensed::analysis_condensed(TTree *tree) : fChain(0)
       TFile *f = (TFile*)gROOT->GetListOfFiles()->FindObject(filepath);
 
       if (!f || !f->IsOpen()) {
-         f = new TFile(filepath);
+         f = new TFile(filepath, "UPDATE");
       }
 
       if (!f || f->IsZombie()) {

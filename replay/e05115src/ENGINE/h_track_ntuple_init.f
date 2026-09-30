@@ -31,6 +31,8 @@
       character*1000 pat,msg
       integer status,size,io,id,bank,recL,iv(10),m
       real rv(10)
+      integer IQUEST(100)
+      COMMON /QUEST/ IQUEST
 *
       logical HEXIST           !CERNLIB function
 *
@@ -86,9 +88,12 @@ c      INCLUDE 'e_ntuple.dte'
       call g_sub_run_number(file,gen_run_number)
 
       recL= default_recL
+
+*     -allow a large RZ file-
+      IQUEST(10)=65000
 *
-*-open New *.rzdat file-
-      call HROPEN(io,name,file,'N',recL,status)       !CERNLIB
+*     -open New *.rzdat file-
+      call HROPEN(io,name,file,'NQ',recL,status)       !CERNLIB
 *                                       !directory set to "//TUPLE"
       ABORT= status.NE.0
       IF(ABORT) THEN

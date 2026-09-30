@@ -52,11 +52,13 @@
       real proton_mass
       parameter ( proton_mass = 0.93827247 ) ! [GeV/c^2]
 *
+
 *--------------------------------------------------------
       err= ' '
       ABORT = .FALSE.
 *     
       IF(.NOT.h_track_ntuple_exists) RETURN !nothing to do
+
 *     
 c      Do i=1,enphysics
 c      Do i=1,hmax_dc1_dec_hits
@@ -119,7 +121,6 @@ c     &     ) then
             h_track_ntuple_contents(m)= hxp_fp(i) ! 44
             m= m+1
             h_track_ntuple_contents(m)= hyp_fp(i) ! 45
-            
   
 *     Fill ntuple for this event
             ABORT= .NOT.HEXIST(h_track_ntuple_ID)
@@ -132,6 +133,6 @@ c     &     ) then
             ENDIF
 *     
       EndDo
-      
+
       RETURN
       END      

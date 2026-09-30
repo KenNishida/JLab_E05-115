@@ -21,27 +21,19 @@ static Double_t CalcF2T(const Double_t *P,
                         Double_t yf, Double_t ypf,
                         Int_t nMat)
 {
-   Double_t Y = 0.0;
-   Int_t npar = 0;
-   for (Int_t n=0; n<=nMat; n++) {
-      for (Int_t d=0; d<=n; d++) {
-         for (Int_t c=0; c<=n; c++) {
-            for (Int_t b=0; b<=n; b++) {
-               for (Int_t a=0; a<=n; a++) {
-                  if (a+b+c+d == n) {
-                     Y += pow(xf,a) * pow(xpf,b) *
-                          pow(yf,c) * pow(ypf,d) * P[npar];
-                     npar++;
-                  }
-               }
-            }
-         }
-      }
-   }
-   return Y;
+    Double_t Y=0.0;
+    Int_t npar=0;
+    for(Int_t n=0;n<=nMat;n++)
+        for(Int_t d=0;d<=n;d++)
+            for(Int_t c=0;c<=n;c++)
+                for(Int_t b=0;b<=n;b++)
+                    for(Int_t a=0;a<=n;a++)
+                        if(a+b+c+d==n)
+                            Y+=pow(xf,a)*pow(xpf,b)*pow(yf,c)*pow(ypf,d)*P[npar++];
+    return Y;
 }
 
-static Bool_t ReadOpticsMatrix(const char *filename, Double_t *P)
+static Bool_t ReadMatrix(const char *filename, Double_t *P)
 {
    ifstream fin(filename);
    if (!fin) {
@@ -319,7 +311,7 @@ void analysis_replayed::Loop()
 
 
    // ============================================================
-   // Load tuned optics matrices listed in reconData.dat
+   // Load tuned matrices listed in reconData.dat
    // Only p, x', y' matrices are needed here.
    // The first two entries (plK/plE) are read only to preserve file order.
    // ============================================================
@@ -339,21 +331,22 @@ void analysis_replayed::Loop()
    recon >> str_momK >> str_xptK >> str_yptK
          >> str_momE >> str_xptE >> str_yptE;
    if (!recon) {
-      cerr << "ERROR: failed reading optics filenames from reconData.dat" << endl;
+      cerr << "ERROR: failed reading filenames from reconData.dat" << endl;
       return;
    }
    recon.close();
-   if (!ReadOpticsMatrix(str_momK, momK)) return;
-   if (!ReadOpticsMatrix(str_xptK, xptK)) return;
-   if (!ReadOpticsMatrix(str_yptK, yptK)) return;
-   if (!ReadOpticsMatrix(str_momE, momE)) return;
-   if (!ReadOpticsMatrix(str_xptE, xptE)) return;
-   if (!ReadOpticsMatrix(str_yptE, yptE)) return;
-   cout << "Loaded tuned optics matrices from reconData.dat" << endl;
+   if (!ReadMatrix(str_momK, momK)) return;
+   if (!ReadMatrix(str_xptK, xptK)) return;
+   if (!ReadMatrix(str_yptK, yptK)) return;
+   if (!ReadMatrix(str_momE, momE)) return;
+   if (!ReadMatrix(str_xptE, xptE)) return;
+   if (!ReadMatrix(str_yptE, yptE)) return;
+   cout << "Loaded tuned matrices from reconData.dat" << endl;
 
 
    //* Event Loop */
    if (fChain == 0) return;
+   Long64_t nAccepted = 0;
 
    Long64_t nentries = fChain->GetEntriesFast();
    for (Long64_t jentry=0; jentry<nentries;jentry++) {
@@ -403,7 +396,8 @@ void analysis_replayed::Loop()
       }
 
       // ===== Fill histograms =====
-      if (KaonCut() && CtimeCut()) {
+      if (KaonCut() && CtimeCut()) { 
+         nAccepted++;
          h_m2->Fill(m2);
          h_ctime->Fill(htimetar - etimetar);
          if (MissingMass > -900.0) {
@@ -448,8 +442,12 @@ void analysis_replayed::Loop()
          h_expfp_eypfp->Fill(esxpfp, esypfp);
          h_exfp_expfp->Fill(esxfp, esxpfp);
          h_eyfp_eypfp->Fill(esyfp, esypfp); 
+
+         }
       }
    }
+
+   cout << "Total accepted events: " << nAccepted << endl;
 
    //* Draw Histograms */
    TCanvas *c1 = new TCanvas("c1","M2/ctime cut & missing mass",1000,1000);
@@ -511,4 +509,8 @@ void analysis_replayed::Loop()
    c7->cd(4); gPad->SetLogz(); h_exfp_expfp->Draw("COLZ");
    c7->cd(5); gPad->SetLogz(); h_eyfp_eypfp->Draw("COLZ");
    
+   TFile *fin = fChain->GetCurrentFile();
+   fin->cd();
+   h_emom->Write("h_emom", TObject::kOverwrite);
+   fin->Save();
 }

@@ -67,12 +67,13 @@
       integer m,i,j,k,hitn
       real*4 ts(5)
       real*4 hmsq
-      
+
 *--------------------------------------------------------
       err= ' '
       ABORT = .FALSE.
 *     
       IF(.NOT.h_Ntuple_exists) RETURN !nothing to do
+
 *     
       Do i=1,hnphysics
          m= 0

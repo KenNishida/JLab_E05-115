@@ -534,7 +534,7 @@ analysis_replayed::analysis_replayed(TTree *tree, const char *filename) : fChain
       TFile *f = (TFile*)gROOT->GetListOfFiles()->FindObject(filepath);
 
       if (!f || !f->IsOpen()) {
-         f = new TFile(filepath);
+         f = new TFile(filepath, "UPDATE");
       }
 
       if (!f || f->IsZombie()) {
