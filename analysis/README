@@ -1,0 +1,17 @@
+Analysis Macros Instructions
+
+
+****************************
+***** Transfer Matrix ******
+****************************
+Received final transfer matrices developed by T. Gogami, on 
+
+
+*****************************
+***** HKS Event Display *****
+*****************************
+Developed on Oct. 2, 2026 by K. Nishida.
+Overlays recconstructed HKS track candiates from COIN ntuple on the HKS detector geometry.
+
+root [0] .L compare_events.C 
+root [1] evdisplay("coin76312.root",0,100) #run number, start event, # of events

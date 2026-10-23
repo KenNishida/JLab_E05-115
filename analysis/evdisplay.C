@@ -17,7 +17,7 @@
 #include <TVector3.h>
 #include <TColor.h>
 
-#include "evdisplay_ext.h"
+#include "evdisplay.h"
 
 using namespace std;
 

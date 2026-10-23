@@ -1,9 +1,0 @@
-#!/bin/tcsh
-
-#set base = /work/hallc/hes-hks/gogami/tags/Oct14-2009/e05115replay/paw
-set base = /work/hallc/hes-hks/gogami/tags/Oct14-2009/e05115replay/paw/carbon/rev256
-#set base = /work/hallc/hes-hks/gogami/tags/Oct14-2009/e05115replay/paw/ch2/rev256
-#set base = /work/hallc/hes-hks/gogami/tags/Oct14-2009/e05115replay/paw/chromium
-set target = /volatile/hallc/c-hks/E05-115
-
-h2root "$base/$1.rzdat" "$target/$1.root"
