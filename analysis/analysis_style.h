@@ -37,8 +37,9 @@ inline void SetHist1D(
     h->GetYaxis()->SetTitleOffset(1.10);
 
     h->SetLineColor(hColor);
-    h->SetFillColor(hColor);
-    h->SetFillStyle(3003);
+    //h->SetFillColor(hColor);
+    h->SetLineWidth(1);
+    //h->SetFillStyle(3003);
 }
 
 inline void SetHist2D(
@@ -64,5 +65,42 @@ inline void SetHist2D(
 
     h->GetXaxis()->SetTitleOffset(0.9);
     h->GetYaxis()->SetTitleOffset(0.95);
+}
+
+inline void SetPlotGraph(
+    TGraph* g,
+    TString title = "",
+    TString xtitle = "",
+    TString ytitle = "",
+    int gColor = kBlue
+)
+{
+    g->SetStats(0);
+
+    if (title != "")  g->SetTitle(title);
+    if (xtitle != "") g->GetXaxis()->SetTitle(xtitle);
+    if (ytitle != "") g->GetYaxis()->SetTitle(ytitle);
+
+    g->GetXaxis()->SetMaxDigits(3);
+    g->GetYaxis()->SetMaxDigits(3);
+
+    g->GetXaxis()->SetNdivisions(510);
+    g->GetYaxis()->SetNdivisions(510);
+
+    g->GetXaxis()->CenterTitle(true);
+    g->GetYaxis()->CenterTitle(true);
+
+    g->GetXaxis()->SetTitleSize(0.05);
+    g->GetYaxis()->SetTitleSize(0.045);
+
+    g->GetXaxis()->SetLabelSize(0.045);
+    g->GetYaxis()->SetLabelSize(0.040);
+
+    g->GetXaxis()->SetTitleOffset(0.9);
+    g->GetYaxis()->SetTitleOffset(1.10);
+
+    g->SetMarkerColorAlpha(gColor, 0.15);
+    g->SetMarkerStyle(1);
+    g->SetMarkerSize(0.15);
 }
 #endif
