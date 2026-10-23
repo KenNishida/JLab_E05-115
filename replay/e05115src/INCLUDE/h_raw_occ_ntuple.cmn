@@ -1,0 +1,7 @@
+
+      integer hraw_id,hraw_io
+      logical hraw_open
+      character*80 hraw_name
+      character*132 hraw_dir
+      common /hraw_occ_ntuple/ hraw_id,hraw_io,hraw_open,
+     &     hraw_name,hraw_dir

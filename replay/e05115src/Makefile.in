@@ -1,5 +1,5 @@
 #OFFLINE=/work/hallc/hks/sanghwa/fortran/e05115/final/e05115_source_Tabun_Final/e05115src
-OFFLINE=/w/hallc-scshelf2102/hks/knishida/E05-115/replay/e05115src
+OFFLINE=/w/hallc-scshelf2102/hks/knishida/E05-115/replay_revision/replay/e05115src
 
 ##
 INC=$(OFFLINE)/INCLUDE

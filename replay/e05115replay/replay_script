@@ -16,3 +16,7 @@ fi
 if [ -e paw/coin$1.rzdat ]; then
     $ROOTSYS/bin/h2root paw/coin$1.rzdat rootfiles/coin$1.root
 fi
+
+if [ -e paw/hraw$1.rzdat ]; then
+    $ROOTSYS/bin/h2root paw/hraw$1.rzdat rootfiles/hraw$1.root
+fi

@@ -46,6 +46,7 @@
 *     
       call h_ntuple_shutdown(ABORT,err)
       call h_dc_ntuple_shutdown(ABORT,err)
+      call h_raw_occ_ntuple_shutdown(ABORT,err)
       call h_track_ntuple_shutdown(ABORT,err) !commented out for test GOGAMI
       call h_scin_ntuple_shutdown(ABORT,err)
       call h_ch_ntuple_shutdown(ABORT,err)

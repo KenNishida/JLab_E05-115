@@ -1,0 +1,8 @@
+
+*     Per-raw-hit result of H_TRANS_DC, before tracking changes banks.
+      integer hraw_max
+      parameter (hraw_max=3600)
+      integer hraw_decstat,hraw_decidx(hraw_max)
+      real*4 hraw_driftt(hraw_max),hraw_driftd(hraw_max)
+      common /hraw_diag_i/ hraw_decstat,hraw_decidx
+      common /hraw_diag_r/ hraw_driftt,hraw_driftd

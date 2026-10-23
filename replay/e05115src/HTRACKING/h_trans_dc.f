@@ -114,6 +114,7 @@
       include 'gen_f1tdc.cmn'
       include 'gen_rocid.cmn'
       include 'hks_tracking.cmn'
+      include 'h_raw_occ_diag.cmn'
       include 'hks_geometry.cmn'
       include 'hks_bypass_switches.cmn'
       include 'hks_id_histid.cmn'
@@ -125,7 +126,7 @@
       integer*4 ihit,gh,old_wire,old_pln,wire,pln,chamber
       integer*4 pol,i,k,vec_no,hdc_tot_hit_dc1,hdc_tot_hit_dc2
       real*4 histval,cut_min(12,6),cut_max(12,6)
-      integer*4 gh1,gh2,nt,j,whichgroup,sl
+      integer*4 gh1,gh2,nt,j,whichgroup,sl,diag_card,diag_bin
       real*4 hdc_tdc_offset_cable(80) 
       data hdc_tdc_offset_cable /0.0,2.5,-1.0,-2.5,1.0,0.0,
      +                          0.0,-0.5,-0.5,-1.0,2.5,0.0,
@@ -145,6 +146,7 @@
     
       ABORT= .FALSE.
       err= ' '
+      hraw_decstat=-1
       old_wire = -1
       old_pln = -1
       gh = 0
@@ -192,6 +194,7 @@ cc            chamber = hdc_chamber_layers(pln)
       endif
 
 *     Are there any raw hits
+      hraw_decstat=1
       if(hdc_raw_tot_hits.le.0) Return
       
 *     loop over all raw hits
@@ -343,6 +346,25 @@ c     print*,sl,pln,hdc_tdc_offset_cable(sl)
      &                          +hdc_tdc_offset_cable(sl)
                         endif
                         
+*     Record only diagnostic data; do not change tracking banks.
+                        hraw_decidx(ihit)=gh
+                        hraw_driftt(ihit)=hdc_drift_time(gh)
+                        if (hdriftbinsz.gt.0. .and.
+     &                      hdriftbins.ge.2.) then
+                           diag_bin=int((hraw_driftt(ihit)-
+     &                          hdrift1stbin)/hdriftbinsz)+1
+                           if (diag_bin.ge.1.and.
+     &                         diag_bin+1.le.int(hdriftbins).and.
+     &                         wire.le.hdc_max_wires_per_layer) then
+                              diag_card=hdc_card_no(wire,pln)
+                              if (diag_card.ge.1.and.
+     &                            diag_card.le.hdc_num_cards) then
+                                 hraw_driftd(ihit)=h_drift_dist_calc(
+     &                                      pln,wire,hraw_driftt(ihit))
+                              endif
+                           endif
+                        endif
+
                         hdc_hits_per_layer(pln) = 
      &                       hdc_hits_per_layer(pln)+1
                         

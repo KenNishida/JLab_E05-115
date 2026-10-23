@@ -37,9 +37,9 @@ inline void SetHist1D(
     h->GetYaxis()->SetTitleOffset(1.10);
 
     h->SetLineColor(hColor);
-    //h->SetFillColor(hColor);
+    h->SetFillColor(hColor);
     h->SetLineWidth(1);
-    //h->SetFillStyle(3003);
+    h->SetFillStyle(3003);
 }
 
 inline void SetHist2D(

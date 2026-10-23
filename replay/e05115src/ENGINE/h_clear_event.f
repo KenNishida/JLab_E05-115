@@ -72,6 +72,7 @@
 *     
       INTEGER i, j, k, layer
 *     
+      call h_raw_occ_ntuple_reset
 *     
       HDC_RAW_TOT_HITS = 0
 *
