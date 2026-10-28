@@ -1,0 +1,6 @@
+*     Separate output file for tracking-stage diagnostics.
+      integer hst_io
+      logical hst_open
+      character*80 hst_name
+      character*132 hst_dir
+      common /hst_ntuple/ hst_io,hst_open,hst_name,hst_dir

@@ -75,6 +75,7 @@
       implicit none
       include 'hks_data_structures.cmn'
       include 'hks_tracking.cmn'
+      include 'h_stage_diag.cmn'
       include 'hks_id_histid.cmn'
       include 'hks_geometry.cmn'
 
@@ -140,7 +141,9 @@
       tempflag=0
       tempflag2=0
       
+      hst_linkstat=-1
       if(ntof.eq.0) return
+      hst_linkstat=1
 *     
 c      print*,hnspace_points_tot 
 
@@ -224,6 +227,7 @@ c      print*,hnspace_points_tot
 *     are these stubs in the same chamber. If so then skip
                if(h_chamnum(isp1) .ne. h_chamnum(isp2)) then
                 if(prelinkflag(isp1,isp2).ne.0) then
+                 hst_linkeval=hst_linkeval+1
               
 *     does this stub match
               
@@ -274,6 +278,7 @@ c     --- debug histogram
      $                .and. abs(dposy) .lt. hyt_track_criterion
      $                .and. abs(dposxp).lt. hxpt_track_criterion
      $                .and. abs(dposyp).lt. hypt_track_criterion) then
+                  hst_linkpass=hst_linkpass+1
 c     print*,"newtrack=",newtrack,tryflag
 
                   if(newtrack.eq.1) then

@@ -2,16 +2,53 @@ Analysis Macros Instructions
 
 
 ****************************
-***** Transfer Matrix ******
+***** Transfer matrix ******
 ****************************
 Received final transfer matrices developed by T. Gogami, on 
 
 
+********************************
+***** Analysis parameters ******
+********************************
+_ analysis_param.h, analysis_style.h
+- analysis_param.h defines global constants and target flag used in the missing mass calculation.
+- analysis_style.h defines the style of 1D and 2D histograms.
+
+
+*************************************************
+***** Missing mass from condensed rootfiles *****
+*************************************************
+- analysis_condensed.C, analysis_condensed.h
+- Developed on Oct. 2, 2026 by K. Nishida.
+
+
+************************************************
+***** Missing mass from replayed rootfiles *****
+************************************************
+_ analysis_replayed.C, analysis_replayed.h
+- Developed on Oct. 2, 2026 by K. Nishida.
+
+
 *****************************
-***** HKS Event Display *****
+***** HKS event display *****
 *****************************
-Developed on Oct. 2, 2026 by K. Nishida.
-Overlays recconstructed HKS track candiates from COIN ntuple on the HKS detector geometry.
+- evdisplay.C, evdisplay.h
+- Developed on Oct. 2, 2026 by K. Nishida.
+- Overlays recconstructed HKS track candiates from COIN ntuple (coinxxxx.root) on the HKS detector geometry.
 
 root [0] .L compare_events.C 
 root [1] evdisplay("coin76312.root",0,100) #run number, start event, # of events
+
+
+***********************************************
+***** Study of single rate & multiplicity *****
+***********************************************
+_ multiplicity.C
+- Developed on Oct. 26, 2026 by K. Nishida.
+
+
+***************************************************************
+***** Study of TDC characteristics of FP track candidates *****
+***************************************************************
+_ track_tdchits.C
+- Developed on Oct. 27, 2026 by K. Nishida.

@@ -1,6 +1,6 @@
 *******************************************************************************
 *     This file (r_gen_f1tdc.f) was generated from gen_f1tdc.cmn by makereg v1.01
-*     This file was created on Fri Oct 23 03:52:10 2026
+*     This file was created on Tue Oct 27 11:57:24 2026
 *
 *     The command used to create this file was:
 *     /w/hallc-scshelf2102/hks/knishida/E05-115/replay_revision/replay/e05115src/makereg gen_f1tdc.cmn -o r_gen_f1tdc.f -e /dev/null 

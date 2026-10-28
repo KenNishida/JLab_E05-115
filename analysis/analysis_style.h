@@ -18,6 +18,8 @@ inline void SetHist1D(
     if (xtitle != "") h->GetXaxis()->SetTitle(xtitle);
     if (ytitle != "") h->GetYaxis()->SetTitle(ytitle);
 
+    h->SetMinimum(0);
+    
     h->GetXaxis()->SetMaxDigits(3);
     h->GetYaxis()->SetMaxDigits(3);
 

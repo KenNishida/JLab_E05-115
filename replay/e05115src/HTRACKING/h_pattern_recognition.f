@@ -97,6 +97,7 @@
       INCLUDE 'gen_constants.par'
       INCLUDE 'gen_units.par'
       INCLUDE 'hks_tracking.cmn'
+      INCLUDE 'h_stage_diag.cmn'
       INCLUDE 'hks_geometry.cmn'
       include 'hks_id_histid.cmn'  
       include 'hks_scin_tof.cmn'
@@ -158,12 +159,22 @@ c     --- fill dc decorded hist
       endif
 
       
+      hst_tofstat=-1
+      hst_spstat=-1
       if(hdc_tot_hits .le. 0) Return
       if(ntof.eq.0) return
+      hst_tofstat=1
+      do i=1,12
+         hst_pre(i)=hdc_hits_per_layer(i)
+      enddo
 ***********************************************
 ***   DC hit information selection with TOF  ***
       call h_dc_tofcut(ABORT,err)
 ***********************************************
+      do i=1,12
+         hst_post(i)=hdc_hits_per_layer(i)
+      enddo
+
 
 c      write(*,*)"hitinfo_flag",hdc_hitinfo_flag
 ***************************************************
@@ -200,6 +211,7 @@ c         write(22,*)111
          close(22)
       endif
 
+      hst_spstat=1
       do ich=1,hdc_num_chambers ! hdc_num_chambers=2 in PARAM(hdc.pos.0)
          easy_space_point = .false.
          hnspace_points(ich)=0        
@@ -279,6 +291,7 @@ c            if (hnspace_points(ich).gt.50)
 c     >           hnspace_points(ich)=0
 c            if (hnspace_points(ich).gt.50) then
 c            if (hnspace_points(ich).gt.100) then ! Increased (T.Gogami, 31/Oct/2011)
+            hst_spraw(ich)=hnspace_points(ich)
             if (hnspace_points(ich).gt.200) then ! Increased (T.Gogami, 31/Oct/2011)
 c               write(*,*)"  KITA---  ",hnspace_points(ich)
                hnspace_points(ich)=0
@@ -303,6 +316,9 @@ c               write(*,*)"  KITA---  ",hnspace_points(ich)
                hspace_point_hits(k,1)=space_point_hits(i,1)
                hspace_point_hits(k,2)=space_point_hits(i,2)
                hspace_point_hits_multi(k)=space_points_multi(i)
+               hst_spch(k)=ich
+               hst_sphits(k)=space_point_hits(i,1)
+               hst_spalt(k)=space_points_multi(i)
                if(hspace_point_hits_multi(k).gt.0) then
                   space_hits_tot=space_points_multi(i)*space_point_hits(i,1)
                else
@@ -314,10 +330,12 @@ c               write(*,*)"  KITA---  ",hnspace_points(ich)
             enddo
          endif
 *     total number of space points of KDC1 and KDC2
+         hst_spfinal(ich)=hnspace_points(ich)
          hnspace_points_tot = hnspace_points_tot + hnspace_points(ich)
 *     total number of hits of KDC1 and KDC2
          ihit = ihit + hncham_hits(ich)
       enddo    
+      hst_numsp=hnspace_points_tot
       do isp=1,hnspace_points_tot
          numhits=hspace_point_hits(isp,1)
          nummulti=hspace_point_hits_multi(isp)

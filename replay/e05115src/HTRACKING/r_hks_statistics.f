@@ -1,6 +1,6 @@
 *******************************************************************************
 *     This file (r_hks_statistics.f) was generated from hks_statistics.cmn by makereg v1.01
-*     This file was created on Fri Oct 23 03:52:17 2026
+*     This file was created on Tue Oct 27 11:57:33 2026
 *
 *     The command used to create this file was:
 *     /w/hallc-scshelf2102/hks/knishida/E05-115/replay_revision/replay/e05115src/makereg hks_statistics.cmn -o r_hks_statistics.f -e /dev/null 

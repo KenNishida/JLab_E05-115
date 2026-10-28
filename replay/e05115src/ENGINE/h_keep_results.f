@@ -51,6 +51,7 @@
       ABORT= .FALSE.
       err= ' '
 
+      call h_stage_ntuple_keep(ABORT,err)
 *   
       call h_raw_occ_ntuple_keep(ABORT,err)
       call h_ch_ntuple_keep(ABORT,err)

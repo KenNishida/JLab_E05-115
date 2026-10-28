@@ -22,6 +22,7 @@ c
       include 'hks_scin_parms.cmn'
       include 'hks_scin_tof.cmn'
       include 'hks_tracking.cmn'
+      include 'h_stage_diag.cmn'
       include 'hks_geometry.cmn'
       include 'hks_bypass_switches.cmn'
       include 'hks_id_histid.cmn'
@@ -411,6 +412,7 @@ c     =============== OUTPUT DATA(1/2) =======================
          close(22)
       endif
 c      ============ Event cut and Reordering for KDC ===================
+      hst_tofstat=2
       la = 0
       gh = 0
       do ihit=1 , hdc_tot_hits

@@ -1,0 +1,14 @@
+*     Per-event tracking-stage diagnostic counters.
+      integer hst_maxsp
+      parameter (hst_maxsp=500)
+      integer hst_tofstat,hst_numsp,hst_pre(12),hst_post(12)
+      integer hst_spraw(2),hst_spfinal(2)
+      integer hst_spch(hst_maxsp),hst_sphits(hst_maxsp)
+      integer hst_spalt(hst_maxsp)
+      integer hst_lrplan(hst_maxsp),hst_lrfit(hst_maxsp)
+      integer hst_linkeval,hst_linkpass
+      integer hst_spstat,hst_lrstat,hst_linkstat
+      common /hst_diag_i/ hst_tofstat,hst_numsp,hst_pre,hst_post,
+     &     hst_spraw,hst_spfinal,hst_spch,hst_sphits,hst_spalt,
+     &     hst_lrplan,hst_lrfit,hst_linkeval,hst_linkpass,
+     &     hst_spstat,hst_lrstat,hst_linkstat

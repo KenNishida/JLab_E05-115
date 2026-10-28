@@ -44,6 +44,7 @@
 *     
 *     call e_sv_nt_shutdown(ABORT,err)
 *     
+      call h_stage_ntuple_shutdown(ABORT,err)
       call h_ntuple_shutdown(ABORT,err)
       call h_dc_ntuple_shutdown(ABORT,err)
       call h_raw_occ_ntuple_shutdown(ABORT,err)

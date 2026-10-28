@@ -47,14 +47,28 @@ void wire_multiplicity(const char* filename="hraw76312.root", int plane=2, int s
     const Long64_t nevents = events->GetEntries();
     TH1::AddDirectory(kFALSE);
 
-    TH1D *h_totrawhits = new TH1D("h_totrawhits", Form("Plane %d: Total raw hits",plane), nwire,0.5,nwire+0.5);
+    TH1D *h_totrawhits = new TH1D("h_totrawhits", Form("Plane %d: Total raw hits",plane), nwire,0,nwire);
+    TH1D *h_planerate = new TH1D("h_planerate", "Plane hit rates", 12,1,13);
+    TH1D *h_wirerate[12];
+    for (int i=0; i<12; ++i) {
+        h_wirerate[i] = new TH1D(Form("h_wirerate%02d",i+1),Form("Plane %d",i+1),nwire,0,nwire);
+        SetHist1D(h_wirerate[i], "Wire", "Single hit rate [kHz]");
+    }
+     
     SetHist1D(h_totrawhits, "Wire", "Number of raw hits");
+    SetHist1D(h_planerate, "Plane", "Single hit rate [MHz]");
 
     map<tuple<int,int,int>,vector<int>> wireTDC;
     map<tuple<int,int,int>,vector<int>> wireTDCinwin;
     const Long64_t nentries = hits->GetEntries();
     for (Long64_t i=0; i<nentries; ++i) {
         hits->GetEntry(i);
+
+        if (tdc>=2100 && tdc<2400 && layer>=1 && layer<=12) {
+            h_planerate->Fill(layer);
+            h_wirerate[(int)layer-1]->Fill(wire);
+        }
+
         if ((int)layer!=plane) continue;
         const int r = (int)run;
         const int e = (int)event;
@@ -64,11 +78,18 @@ void wire_multiplicity(const char* filename="hraw76312.root", int plane=2, int s
         h_totrawhits->Fill(w);
     }
 
+    if (nevents>0) {
+        h_planerate->Scale(1.0/(nevents*150.e-9*1.e6));
+        for (int i=0; i<12; ++i) {
+            h_wirerate[i]->Scale(1.0/(nevents*150.e-9*1.e3));
+        }
+    }
+
     TH1D *h_wiremulti = new TH1D("h_wiremulti", Form("Plane %d: Raw multiplicity of single wire",plane), 6,0.5,6.5);
-    TH2D *h_wire_wiremulti = new TH2D("h_wire_wiremulti", Form("Plane %d: Raw multiplicity of single wire",plane), nwire,0.5,nwire+0.5,6,0.5,6.5);
+    TH2D *h_wire_wiremulti = new TH2D("h_wire_wiremulti", Form("Plane %d: Raw multiplicity of single wire",plane), nwire,0,nwire,6,0.5,6.5);
     TH1D *h_deltaTDC = new TH1D("h_deltaTDC", Form("Plane %d: #DeltaTDC of multi-hits on single wire",plane), 100,0.0,1000.0);
     TH1D *h_deltaTDC_inwin = new TH1D("h_deltaTDC_inwin", Form("Plane %d: #DeltaTDC of multi-hits on single wire",plane), 100,0.0,1000.0);
-    TH2D *h_wire_deltaTDC = new TH2D("h_wire_deltaTDC", Form("Plane %d: #DeltaTDC vs wire",plane), nwire,0.5,nwire+0.5,100,0.0,1000.0);
+    TH2D *h_wire_deltaTDC = new TH2D("h_wire_deltaTDC", Form("Plane %d: #DeltaTDC vs wire",plane), nwire,0,nwire,100,0.0,1000.0);
 
     SetHist1D(h_wiremulti, "Raw multiplicity of single wire", "Number of (event, wire) groups");
     SetHist2D(h_wire_wiremulti, "Wire", "Raw multiplicity of single wire");
@@ -107,12 +128,14 @@ void wire_multiplicity(const char* filename="hraw76312.root", int plane=2, int s
     c1->cd(1); h_wire_wiremulti->Draw("COLZ");
     c1->cd(2); h_wiremulti->Draw("HIST");
     c1->cd(3); h_totrawhits->Draw("HIST");
+    c1->cd(4); h_deltaTDC->Draw("HIST"); h_deltaTDC_inwin->Draw("HIST SAME");
 
-    TCanvas *c2 = new TCanvas("c2","c2",800,400);
-    c2->Divide(2,1);
-    gStyle->SetPalette(kRainbow);
-    c2->cd(1); h_wire_deltaTDC->Draw("COLZ");
-    c2->cd(2); h_deltaTDC->Draw("HIST"); h_deltaTDC_inwin->Draw("HIST SAME");
+    TCanvas *c2 = new TCanvas("c2","Plane hit rates",1600,1600);
+    c2->Divide(4,4);
+    c2->cd(1); h_planerate->Draw("HIST");
+    for (int i=0; i<12; ++i) {
+        c2->cd(i+5); h_wirerate[i]->Draw("HIST");
+    }
 
     file->Close();
 }

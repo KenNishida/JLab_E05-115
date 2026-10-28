@@ -1,6 +1,6 @@
 *******************************************************************************
 *     This file (r_hes_physics_sing.f) was generated from hes_physics_sing.cmn by makereg v1.01
-*     This file was created on Fri Oct 23 03:52:16 2026
+*     This file was created on Tue Oct 27 11:57:32 2026
 *
 *     The command used to create this file was:
 *     /w/hallc-scshelf2102/hks/knishida/E05-115/replay_revision/replay/e05115src/makereg hes_physics_sing.cmn -o r_hes_physics_sing.f -e /dev/null 

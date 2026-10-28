@@ -73,6 +73,7 @@
 
       include 'hks_data_structures.cmn'
       include 'hks_tracking.cmn'
+      include 'h_stage_diag.cmn'
       include 'hks_geometry.cmn'
       include 'hks_id_histid.cmn'
 *     
@@ -121,8 +122,10 @@ c     print*,hnspace_points_tot
       endif
 
 
+      hst_lrstat=-1
       if(ntof.eq.0) return
       if(hnspace_points_tot .le. 1) Return
+      hst_lrstat=1
 c      if(hnspace_points_tot .le. 0) Return
       
       do isp=1,hnspace_points_tot ! loop over all space points
@@ -251,6 +254,7 @@ c     endif
                endif
                
 *     use bit value of integer word to set + or -
+               hst_lrplan(isp)=hst_lrplan(isp)+nplusminus
                do pmloop=0,nplusminus-1
                   iswhit = 1
                   do ihit=1,numhits
@@ -267,6 +271,7 @@ c     endif
                   enddo
                   
                   if (pindex.ge.0 .and. pindex.le.14) then
+                     hst_lrfit(isp)=hst_lrfit(isp)+1
                      call h_find_best_stub(numhits,hits,pl,pindex,
      &                    plusminus,stub,chi2)
                      if(hdebugstubchisq.ne.0) then
@@ -439,6 +444,7 @@ c     endif
             endif
             
 *     use bit value of integer word to set + or -
+            hst_lrplan(isp)=hst_lrplan(isp)+nplusminus
             do pmloop=0,nplusminus-1
                iswhit = 1
                do ihit=1,numhits
@@ -456,6 +462,7 @@ c     endif
                
                if (pindex.ge.0 .and. pindex.le.14) then
 c     print*,imul
+                  hst_lrfit(isp)=hst_lrfit(isp)+1
                   call h_find_best_stub(numhits,hits,pl,pindex,
      &                 plusminus,stub,chi2)
                   

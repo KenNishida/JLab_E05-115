@@ -90,6 +90,14 @@
 *     
 
 *--   for test purpose
+      call h_stage_ntuple_init(FAIL,why)
+      if(err.NE.' ' .and. why.NE.' ') then
+         call G_append(err,' & '//why)
+      elseif(why.NE.' ') then
+         err= why
+      endif
+      ABORT= ABORT .or. FAIL
+
       call h_ntuple_init(FAIL,why)
       if(err.NE.' ' .and. why.NE.' ') then
          call G_append(err,' & '//why)

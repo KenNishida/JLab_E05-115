@@ -1,0 +1,9 @@
+--- a/replay_script
++++ b/replay_script
+@@ -3,2 +3,6 @@
+ EXE/engine_replay grun=$1 $2 $3 $4 $5
++if [ -e paw/hstage$1.rzdat ]; then
++    $ROOTSYS/bin/h2root paw/hstage$1.rzdat rootfiles/hstage$1.root
++fi
++
+ if [ -e paw/$1.hbook ]
