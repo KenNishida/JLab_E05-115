@@ -98,6 +98,7 @@
       INCLUDE 'gen_units.par'
       INCLUDE 'hks_tracking.cmn'
       INCLUDE 'h_stage_diag.cmn'
+      include 'htracking_ids.cmn'
       INCLUDE 'hks_geometry.cmn'
       include 'hks_id_histid.cmn'  
       include 'hks_scin_tof.cmn'
@@ -131,6 +132,8 @@
       integer*4 trig
       integer*4 dindex
       integer*4 temp_trig
+      integer*4 htrk_nalt,htrk_nhit,htrk_hitidx,htrk_alt
+      integer*4 htrk_ids(hmax_hits_per_point)
 c-- debug variables
       integer*4 numhits,nummulti,imul,hits(10*hmax_hits_per_point+2)
      
@@ -291,6 +294,15 @@ c            if (hnspace_points(ich).gt.50)
 c     >           hnspace_points(ich)=0
 c            if (hnspace_points(ich).gt.50) then
 c            if (hnspace_points(ich).gt.100) then ! Increased (T.Gogami, 31/Oct/2011)
+*     Record every geometrically generated SP, including those discarded
+*     by the >200 SP chamber limit. These IDs never change afterward.
+            do isp=1,hnspace_points(ich)
+               htrk_next_sp_id=htrk_next_sp_id+1
+               htrk_local_sp_id(isp)=htrk_next_sp_id
+               call htrk_space_point(htrk_local_sp_id(isp),ich,
+     &              space_points(isp,1),space_points(isp,2),
+     &              space_point_hits(isp,1))
+            enddo
             hst_spraw(ich)=hnspace_points(ich)
             if (hnspace_points(ich).gt.200) then ! Increased (T.Gogami, 31/Oct/2011)
 c               write(*,*)"  KITA---  ",hnspace_points(ich)
@@ -300,7 +312,34 @@ c               write(*,*)"  KITA---  ",hnspace_points(ich)
 *     If two hits in same layer, choose one with minimum drift time
                call h_choose_single_hit(ABORT,err,hnspace_points(ich),
      &              space_point_hits,space_points_multi)
-               
+*     Freeze the hit-set alternatives BEFORE SP selection/compaction.
+*     The hit list stores immutable post-TOF decoded IDs, not HDC indexes.
+               do isp=1,hnspace_points(ich)
+                  htrk_nhit=space_point_hits(isp,1)
+                  call htrk_space_nhits(htrk_local_sp_id(isp),
+     &                 htrk_nhit)
+                  if(htrk_nhit.gt.0.and.
+     &                 htrk_nhit.le.hmax_hits_per_point) then
+                     htrk_nalt=max(1,space_points_multi(isp))
+                     do htrk_alt=1,htrk_nalt
+                        do j=1,htrk_nhit
+                           htrk_hitidx=space_point_hits(isp,2+
+     &                          (htrk_alt-1)*htrk_nhit+j)
+                           htrk_ids(j)=0
+                           if(htrk_hitidx.ge.1.and.
+     &                          htrk_hitidx.le.hdc_tot_hits) then
+                              htrk_ids(j)=
+     &                             htrk_dec_id_at(htrk_hitidx)
+                           endif
+                        enddo
+                        htrk_next_hitset_id=htrk_next_hitset_id+1
+                        call htrk_hitset(htrk_next_hitset_id,
+     &                       htrk_local_sp_id(isp),htrk_nhit,
+     &                       htrk_ids)
+                     enddo
+                  endif
+               enddo
+
 *     Select on minimum number of combinations and hits
                call select_space_points_hks(hmax_space_points,
      &              hnspace_points(ich),
@@ -311,6 +350,7 @@ c               write(*,*)"  KITA---  ",hnspace_points(ich)
             endif
             do i=1,hnspace_points(ich)
                k=hnspace_points_tot+i
+               htrk_global_sp_id(k)=htrk_local_sp_id(i)
                hspace_points(k,1)=space_points(i,1)
                hspace_points(k,2)=space_points(i,2)
                hspace_point_hits(k,1)=space_point_hits(i,1)

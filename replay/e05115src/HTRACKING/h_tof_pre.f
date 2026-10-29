@@ -12,6 +12,7 @@ c***********************************************************************
       include 'hks_scin_tof.cmn'
       include 'hks_id_histid.cmn'
       include 'hks_tracking.cmn'
+      include 'htracking_ids.cmn'
 
       INCLUDE 'gen_constants.par'
       INCLUDE 'hks_geometry.cmn'
@@ -31,6 +32,7 @@ c***********************************************************************
       character*20 here
       parameter (here = 'h_tof_pre')
       integer*4 i,j,k,ihit,pln,itrack,hit,s,nsp,iy,it
+      integer*4 htrk_prepass
       real*4 xdist,ydist
       real*4 time_corr
       real*4 h12time,h22time,t2xh1,t2xh2
@@ -1090,6 +1092,10 @@ c           print*,precutflag(isp)
      &              + hdc_drifttime_sign(pln)*time_corr
                hdc_drift_dis(hit) = h_drift_dist_calc
      &              (pln,hdc_wire_num(hit),hdc_drift_time(hit))
+               if(htrk_dec_id_at(hit).gt.0) then
+                  call htrk_drift(htrk_dec_id_at(hit),
+     &                 hdc_drift_time(hit),hdc_drift_dis(hit))
+               endif
 *     hdc_drifttime_sign is defined in PARAM (e05115replay/PARAM/hdc.pos.0)
 *     
 *     djm 8/25/94
@@ -1115,6 +1121,15 @@ c                call hf1(hiddcdrifttime(pln),dt,1.)
       if(hdebugflagpr.ne.0) then
          call h_print_pr
       endif
+*     This routine has completed: preserve the per-SP precut decisions.
+      do isp=1,hnspace_points_tot
+         if(htrk_global_sp_id(isp).gt.0) then
+            htrk_prepass=0
+            if(precutflag(isp).gt.0) htrk_prepass=1
+            call htrk_space_precut(htrk_global_sp_id(isp),
+     &           htrk_prepass)
+         endif
+      enddo
 *
       return
        

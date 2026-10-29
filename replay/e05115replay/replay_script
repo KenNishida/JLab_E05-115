@@ -1,10 +1,6 @@
 #!/bin/sh
 
 EXE/engine_replay grun=$1 $2 $3 $4 $5
-if [ -e paw/hstage$1.rzdat ]; then
-    $ROOTSYS/bin/h2root paw/hstage$1.rzdat rootfiles/hstage$1.root
-fi
-
 if [ -e paw/hks$1.rzdat ]; then
     $ROOTSYS/bin/h2root paw/hks$1.rzdat rootfiles/hks$1.root
 fi

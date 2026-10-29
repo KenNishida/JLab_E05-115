@@ -23,6 +23,7 @@ c
       include 'hks_scin_tof.cmn'
       include 'hks_tracking.cmn'
       include 'h_stage_diag.cmn'
+      include 'htracking_ids.cmn'
       include 'hks_geometry.cmn'
       include 'hks_bypass_switches.cmn'
       include 'hks_id_histid.cmn'
@@ -63,6 +64,7 @@ c
       integer*4 i
       integer*4 gh,com          ! GOOD HIT , COMBINATION (using for LOOP)
       integer*4 wire,wcenter    ! Wire number , wire center
+      integer*4 htrk_stable_dec_id,htrk_pass
       integer*4 pre_hdc_tot_hits ! Total hits in KDC before this routine
       real*4 allow,allow2
 c      parameter ( allow = 0.0 ) ! Allowance of the cut ( +- allow ) in [cm]
@@ -457,12 +459,19 @@ c     write(*,*)cutmin_dc1(com),",",cutmax_dc1(com)
 c     &              ,",",cutmin_dc2(com),",",cutmax_dc2(com)
          enddo
          
+         htrk_stable_dec_id=htrk_dec_id_at(ihit)
+         htrk_pass=1-cutflag
+         if(htrk_stable_dec_id.gt.0) then
+            call htrk_mark_tof(htrk_stable_dec_id,htrk_pass)
+         endif
+
          if(cutflag.eq.1)then
             hdc_hits_per_layer(la) = hdc_hits_per_layer(la)-1
          endif
          
          if(cutflag.eq.0) then
             gh = gh+1
+            htrk_dec_id_at(gh)=htrk_stable_dec_id
             hdc_tdc(gh)           = hdc_tdc(ihit)
             hdc_layer_num(gh)     = hdc_layer_num(ihit)
             hdc_wire_num(gh)      = hdc_wire_num(ihit)

@@ -38,6 +38,13 @@
 *--------------------------------------------------------
       ABORT = .false.
       err = ' '
+*     htracking ROOT writer; do not modify HBOOK directories.
+      call htracking_open_file(FAIL,why)
+      if (FAIL) then
+         ABORT=.true.
+         err=why
+         return
+      endif
 *     
       call e_ntuple_init(FAIL,why)
       if(err.NE.' ' .and. why.NE.' ') then
@@ -88,15 +95,6 @@
 *     endif
 *     ABORT= ABORT .or. FAIL
 *     
-
-*--   for test purpose
-      call h_stage_ntuple_init(FAIL,why)
-      if(err.NE.' ' .and. why.NE.' ') then
-         call G_append(err,' & '//why)
-      elseif(why.NE.' ') then
-         err= why
-      endif
-      ABORT= ABORT .or. FAIL
 
       call h_ntuple_init(FAIL,why)
       if(err.NE.' ' .and. why.NE.' ') then

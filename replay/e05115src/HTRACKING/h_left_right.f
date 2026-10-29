@@ -74,6 +74,7 @@
       include 'hks_data_structures.cmn'
       include 'hks_tracking.cmn'
       include 'h_stage_diag.cmn'
+      include 'htracking_ids.cmn'
       include 'hks_geometry.cmn'
       include 'hks_id_histid.cmn'
 *     
@@ -107,6 +108,8 @@
       real*4 mulminchi2
       integer*4 imulbest,k
       real*4 mulhbeststub(hmax_space_points_multi,4)
+      integer*4 htrk_alt,htrk_fitok,htrk_spid,htrk_best_alt
+      real*4 htrk_chi2,htrk_stub(4)
       logical smallAngOk
 *     
 
@@ -134,6 +137,8 @@ c      if(hnspace_points_tot .le. 0) Return
          minchi2=1e10
          mulminchi2=1e10
          smallAngOK = .FALSE.
+         htrk_spid=htrk_global_sp_id(isp)
+         htrk_best_alt=1
          isa_y1 = 0
          isa_y2 = 0
    
@@ -270,10 +275,12 @@ c     endif
                      endif
                   enddo
                   
+                  htrk_fitok=0
                   if (pindex.ge.0 .and. pindex.le.14) then
                      hst_lrfit(isp)=hst_lrfit(isp)+1
                      call h_find_best_stub(numhits,hits,pl,pindex,
      &                    plusminus,stub,chi2)
+                     htrk_fitok=1
                      if(hdebugstubchisq.ne.0) then
                   write(hluno,'(12H hks pmloop=,i4,8H   chi2=,e14.6)')
      &                 pmloop,chi2
@@ -290,6 +297,10 @@ c     endif
             else                ! if pindex<0 or >14
                write(6,*) 'pindex=',pindex,' in h_left_right'
                
+            endif
+            if(htrk_spid.gt.0) then
+               call htrk_lr_hyp(htrk_spid,1,numhits,plusminus,
+     &              htrk_fitok,stub,chi2)
             endif
          enddo                  ! end loop on possible left-right
 *     
@@ -460,11 +471,13 @@ c     endif
                   endif
                enddo
                
+               htrk_fitok=0
                if (pindex.ge.0 .and. pindex.le.14) then
 c     print*,imul
                   hst_lrfit(isp)=hst_lrfit(isp)+1
                   call h_find_best_stub(numhits,hits,pl,pindex,
      &                 plusminus,stub,chi2)
+                  htrk_fitok=1
                   
                   
                   if(hdebugstubchisq.ne.0) then
@@ -488,7 +501,11 @@ c     print*,imul
                   write(6,*) 'pindex=',pindex,' in h_left_right multi'
 c     print*,imul,nummulti,ihit
                   
-               endif             
+               endif
+               if(htrk_spid.gt.0) then
+                  call htrk_lr_hyp(htrk_spid,imul,numhits,plusminus,
+     &                 htrk_fitok,stub,chi2)
+               endif
             enddo               ! end loop on possible left-right
 c-----------------------
             mulchi2(imul)=minchi2          
@@ -509,6 +526,7 @@ c-----------------------
          enddo
          
 c     print*,imulbest
+         htrk_best_alt=imulbest
          k=0
          do ihit=1+(imulbest-1)*numhits,numhits+(imulbest-1)*numhits
             k=k+1 
@@ -556,6 +574,12 @@ c         print *, "hbeststub before",hbeststub(isp,1),hbeststub(isp,2),hbeststu
          hbeststub(isp,4)=stub(4)
 c         print *, "hbeststub after",hbeststub(isp,1),hbeststub(isp,2),hbeststub(isp,3),hbeststub(isp,4)
          
+      endif
+*     Preserve the post-rotation chosen stub and selected alternative.
+      if(htrk_spid.gt.0) then
+         call htrk_lr_finish(htrk_spid,htrk_best_alt,
+     &        hbeststub(isp,1),hbeststub(isp,2),
+     &        hbeststub(isp,3),hbeststub(isp,4))
       endif
       endif
       

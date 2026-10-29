@@ -84,6 +84,8 @@
       INCLUDE 'gen_data_structures.cmn'
       INCLUDE 'gen_event_info.cmn'
       INCLUDE 'gen_decode_common.cmn'
+      INCLUDE 'gen_run_info.cmn'
+      integer*4 htrk_ihit,htrk_layer,htrk_wire,htrk_tdc
 *     
       logical FAIL
       character*1024 why
@@ -100,6 +102,16 @@
          RETURN
       ENDIF
 *     
+*     Start provenance event immediately after CODA decoded banks exist.
+      call htrk_begin(gen_run_number,gen_event_ID_number,
+     &     gen_event_type)
+      do htrk_ihit=1,hdc_raw_tot_hits
+         htrk_layer=hdc_raw_layer_num(htrk_ihit)
+         htrk_wire =hdc_raw_wire_num(htrk_ihit)
+         htrk_tdc  =hdc_raw_tdc(htrk_ihit)
+         call htrk_raw(htrk_ihit,htrk_layer,htrk_wire,htrk_tdc)
+      enddo
+
       call G_analyze_triggersupervisor(ABORT,err)
       IF(ABORT) THEN
          call G_add_path(here,err)

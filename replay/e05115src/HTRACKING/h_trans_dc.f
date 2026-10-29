@@ -115,6 +115,7 @@
       include 'gen_rocid.cmn'
       include 'hks_tracking.cmn'
       include 'h_raw_occ_diag.cmn'
+      include 'htracking_ids.cmn'
       include 'hks_geometry.cmn'
       include 'hks_bypass_switches.cmn'
       include 'hks_id_histid.cmn'
@@ -156,6 +157,7 @@ c   check valid the start time which due to the physics that the particle goes t
 
 c      if(h1start_time.le.-100.0.or.h2start_time.le.-100.0) Return
       if(ntof.eq.0) return
+      call htrk_decode_started
 
       Do i=1,hmax_num_dc_layers
          hdc_hits_per_layer(i) = 0
@@ -347,6 +349,10 @@ c     print*,sl,pln,hdc_tdc_offset_cable(sl)
                         endif
                         
 *     Record only diagnostic data; do not change tracking banks.
+                        htrk_dec_id_at(gh)=gh
+                        call htrk_decoded(gh,ihit,pln,wire,
+     &                       hdc_wire_center(gh),hdc_drift_time(gh),
+     &                       hdc_drift_time_pre(gh))
                         hraw_decidx(ihit)=gh
                         hraw_driftt(ihit)=hdc_drift_time(gh)
                         if (hdriftbinsz.gt.0. .and.

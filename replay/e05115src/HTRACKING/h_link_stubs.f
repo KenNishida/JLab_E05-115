@@ -76,6 +76,7 @@
       include 'hks_data_structures.cmn'
       include 'hks_tracking.cmn'
       include 'h_stage_diag.cmn'
+      include 'htracking_ids.cmn'
       include 'hks_id_histid.cmn'
       include 'hks_geometry.cmn'
 
@@ -104,6 +105,7 @@
       integer*4  newtrack       ! make a new track
       real*4 dposx,dposy,dposxp,dposyp
       real*4 y1,y2
+      integer*4 htrk_linkid,htrk_pass,htrk_nsp
       
 **************************************
 *     local variables by T. Miyoshi
@@ -228,6 +230,8 @@ c      print*,hnspace_points_tot
                if(h_chamnum(isp1) .ne. h_chamnum(isp2)) then
                 if(prelinkflag(isp1,isp2).ne.0) then
                  hst_linkeval=hst_linkeval+1
+                 htrk_next_link_id=htrk_next_link_id+1
+                 htrk_linkid=htrk_next_link_id
               
 *     does this stub match
               
@@ -274,6 +278,17 @@ c     --- debug histogram
                   close(16)
                  endif
                  
+                 htrk_pass=0
+                 if(abs(dposx).lt.hxt_track_criterion.and.
+     &              abs(dposy).lt.hyt_track_criterion.and.
+     &              abs(dposxp).lt.hxpt_track_criterion.and.
+     &              abs(dposyp).lt.hypt_track_criterion) then
+                    htrk_pass=1
+                 endif
+                 call htrk_stub_link(htrk_linkid,
+     &                htrk_global_sp_id(isp1),
+     &                htrk_global_sp_id(isp2),
+     &                dposx,dposy,dposxp,dposyp,htrk_pass)
                  if        (abs(dposx) .lt. hxt_track_criterion
      $                .and. abs(dposy) .lt. hyt_track_criterion
      $                .and. abs(dposxp).lt. hxpt_track_criterion
@@ -301,6 +316,9 @@ c     print*,"newtrack=",newtrack,tryflag
                     hy_sp2(hntracks_fp)=hbeststub(isp2,2)
                     hxp_sp1(hntracks_fp)=hbeststub(isp1,3)
                     hxp_sp2(hntracks_fp)=hbeststub(isp2,3)
+                    call htracking_snapshot_track(HNTRACKS_FP,0,
+     &                   htrk_linkid,track_space_points(
+     &                   HNTRACKS_FP,1),track_space_points)
                     newtrack=0  ! make no more track in this loop
 
                    endif        ! end test on too many tracks                
@@ -332,6 +350,9 @@ c     print*,"newtrack",newtrack,hntracks_fp,tryflag,isp1,isp2
                       spindex = track_space_points(track,1) + 1
                       track_space_points(track,1) = spindex
                       track_space_points(track,spindex+1) = isp2
+                      call htracking_snapshot_track(track,0,
+     &                     htrk_linkid,track_space_points(track,1),
+     &                     track_space_points)
                       
 *     if there is another point in the same chamber in this track
 *     create a new track with all the same space points except spoint
@@ -394,7 +415,11 @@ c     print*,"newtrack",newtrack,hntracks_fp,tryflag,isp1,isp2
                           track_space_points(HNTRACKS_FP,isp+1)= isp2
                          endif  ! end check for dup on copy
                          
-                        enddo   ! end copy of track                     
+                        enddo   ! end copy of track
+                         call htracking_snapshot_track(HNTRACKS_FP,
+     &                        track,htrk_linkid,
+     &                        track_space_points(HNTRACKS_FP,1),
+     &                        track_space_points)
                        endif    ! end if on too many tracks
                       endif     ! end of track skip condition 
                       
@@ -430,6 +455,9 @@ c     print*,"hntracks_fp" ,hntracks_fp
          HNTRACKS_FP=HNTRACKS_FP+1 ! increment the number of tracks
          track_space_points(HNTRACKS_FP,1)= 1
          track_space_points(HNTRACKS_FP,2)= isp1
+         call htracking_snapshot_track(HNTRACKS_FP,0,-1,
+     &        track_space_points(HNTRACKS_FP,1),
+     &        track_space_points)
         endif                   ! end if on too many tracks
        enddo                    ! end loop over all space points
        
@@ -458,6 +486,18 @@ c add DD 2010/7/11
            hdc_wire_coord_sp(itrack,
      &          hntrack_hits(itrack,hntrack_hits(itrack,1)+1))=
      &          hdc_wire_coord_sp(spindex,hspace_point_hits(spindex,ihit+2))
+           if(htrk_track_id_at(itrack).gt.0) then
+              call htrk_track_hit(htrk_track_id_at(itrack),
+     &             htrk_dec_id_at(hntrack_hits(itrack,
+     &             hntrack_hits(itrack,1)+1)),
+     &             htrk_global_sp_id(spindex),
+     &             hdc_layer_num(hntrack_hits(itrack,
+     &             hntrack_hits(itrack,1)+1)),
+     &             hdc_wire_num(hntrack_hits(itrack,
+     &             hntrack_hits(itrack,1)+1)),
+     &             hdc_drift_dis(hntrack_hits(itrack,
+     &             hntrack_hits(itrack,1)+1)))
+           endif
 c add DD 2010/7/11
           endif                 ! end test on too many hits
          enddo                  ! end loop over space point hits

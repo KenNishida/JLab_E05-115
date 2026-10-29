@@ -17,9 +17,11 @@ ETRACKINGLIB = $(LIBROOT)/libetracking.a
 HTRACKINGLIB = $(LIBROOT)/libhtracking.a
 EVDISPLAYLIB = $(LIBROOT)/libevdisplay.a
 PORTLIB = $(LIBROOT)/libport.a
+HTRKLIB = $(LIBROOT)/libhtrackingoutput.a
+ROOTLIBS = $(shell root-config --libs)
 
 OURLIBS = $(ENGINELIB) $(ETRACKINGLIB) $(HTRACKINGLIB) $(TRACKINGLIB) \
-          $(UTILLIB) $(CTPLIB) $(CODALIB) $(EVDISPLAYLIB) $(PORTLIB)
+          $(UTILLIB) $(CTPLIB) $(CODALIB) $(EVDISPLAYLIB) $(PORTLIB) $(HTRKLIB)
 
 OBJS = engine.o g_get_compileinfo.o
 
@@ -40,7 +42,7 @@ compileenv:
 #.f.o: $(F77) $(FFLAGS) -c $<
 
 engine_replay: $(OBJS) $(OURLIBS)
-	$(F77) -o ../EXE/$@ $(FFLAGS) $(OBJS) $(OURLIBS) $(CERNLIBS) $(X11LIBS)
+	$(F77) -o ../EXE/$@ $(FFLAGS) $(OBJS) $(OURLIBS) $(CERNLIBS) $(X11LIBS) $(ROOTLIBS) -lstdc++
 
 clean:
 	rm *.o ../EXE/engine_replay

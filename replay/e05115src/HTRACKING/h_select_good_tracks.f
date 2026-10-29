@@ -69,6 +69,7 @@ c
       INCLUDE 'gen_units.par'
       INCLUDE 'hks_physics_sing.cmn'
       INCLUDE 'hks_tracking.cmn'
+      include 'htracking_ids.cmn'
       Include 'hks_id_histid.cmn'
       include 'hks_geometry.cmn'
 *     
@@ -152,6 +153,8 @@ c                   print*,HKS_DX_MIN,HKS_DY_MIN
          Do i=1,hntracks_fp
             if(mark(i) .eq. 1) then
                tnew = tnew + 1
+               call htrk_track_final(htrk_track_id_at(i),tnew)
+               htrk_track_id_at(tnew)=htrk_track_id_at(i)
                hx_fp(tnew) = hx_fp(i)
                hy_fp(tnew) = hy_fp(i)
                hz_fp(tnew) = 0.

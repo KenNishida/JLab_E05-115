@@ -28,6 +28,7 @@
 * Initial revision
 *
       implicit none
+      include 'htracking_ids.cmn'
      
       
 *     inputs
@@ -50,14 +51,19 @@
 *     modified by the action of this routine
 *     local variables
       integer*4 space_point_count,ploop,hloop
+      integer*4 htrk_pass
 *
       space_point_count=0
 
       do ploop=1,nspace_points
+        htrk_pass=0
 * if easy_space_point, then the number of combos is not filled.
         if(space_point_hits(ploop,2).ge.min_combos.or.easy_space_point) then
           if(space_point_hits(ploop,1).ge.min_hits) then
             space_point_count=space_point_count+1
+            htrk_pass=1
+            htrk_local_sp_id(space_point_count)=
+     &           htrk_local_sp_id(ploop)
             space_points(space_point_count,1)=space_points(ploop,1)
             space_points(space_point_count,2)=space_points(ploop,2)
          space_points_multi(space_point_count)=space_points_multi(ploop)
@@ -77,6 +83,7 @@ c            print*, space_points_multi(space_point_count)
             enddo
           endif
         endif
+        call htrk_space_selected(htrk_local_sp_id(ploop),htrk_pass)
       enddo
       nspace_points=space_point_count
 

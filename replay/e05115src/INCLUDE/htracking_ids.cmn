@@ -1,0 +1,16 @@
+*     Per-event identity map: CURRENT decoded bank index to stable ID.
+*     The array must move with HDC_* when H_DC_TOFCUT compacts hits.
+      integer htrk_dec_id_at(3600)
+      common /htrk_dec_map/ htrk_dec_id_at
+*     Space-point ID maps. The local map travels with SP compaction.
+*     The global map corresponds to HSPACE_POINTS after chamber merge.
+      integer*4 htrk_local_sp_id(500),htrk_global_sp_id(500)
+      integer*4 htrk_next_sp_id,htrk_next_hitset_id
+      common /htrk_sp_map/ htrk_local_sp_id,htrk_global_sp_id,
+     &     htrk_next_sp_id,htrk_next_hitset_id
+
+*     Track ID map follows both H_TRACK_FIT and H_SELECT_GOOD_TRACKS.
+      integer*4 htrk_track_id_at(240),htrk_next_track_id
+      integer*4 htrk_next_link_id
+      common /htrk_track_map/ htrk_track_id_at,htrk_next_track_id,
+     &     htrk_next_link_id

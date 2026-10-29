@@ -72,6 +72,8 @@
 *     
       INTEGER i, j, k, layer
 *     
+      call htrk_clear
+      call htracking_reset_ids
       call h_stage_diag_reset
       call h_raw_occ_ntuple_reset
 *     

@@ -48,7 +48,7 @@ R_OBJS=r_c_ntuple.o r_coin_data_structures.o r_coin_filenames.o \
        r_hks_data_structures.o r_coin_id_histid.o
 
 H_OBJS=h_clear_event.o h_initialize.o h_keep_results.o \
-       h_stage_ntuple.o \
+       htracking_fortran.o \
        h_ntuple_init.o h_ntuple_keep.o h_ntuple_shutdown.o \
        h_raw_occ_ntuple.o \
        h_dc_ntuple_init.o h_dc_ntuple_keep.o h_dc_ntuple_shutdown.o \

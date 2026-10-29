@@ -57,6 +57,7 @@
       implicit none
       include "hks_data_structures.cmn"
       include "hks_tracking.cmn"
+      include 'htracking_ids.cmn'
       include "hks_geometry.cmn"
       include 'hks_id_histid.cmn'
 *     
@@ -106,6 +107,7 @@ c     save initialray,initialsteps,fitnames   ! starting ray, steps, names
       integer*4 skipflag(hntracks_max)
       integer*4 itrk_new(hntracks_max)
       integer*4 itrk_min(hntracks_max)
+      integer*4 htrk_old_ids(hntracks_max),htrk_fit_success
       real*4 x1,xp1,y1,yp1
       real*4 x2,xp2,y2,yp2
       real*4 chi2_min,chi2_1,chi2_2
@@ -127,11 +129,13 @@ c     save initialray,initialsteps,fitnames   ! starting ray, steps, names
 *     test for no tracks
       if(hntracks_fp.ge.1) then
          do itrk=1,hntracks_fp
+            htrk_fit_success=0
             htrack_fit_num=itrk
             
 *     are there enough degrees of freedom
             hnfree_fp(itrk)=hntrack_hits(itrk,1)-hnum_fpray_param
             if(hnfree_fp(itrk).gt.0) then
+               call htrk_track_fit_attempt(htrk_track_id_at(itrk))
                
 c     *     initialize parameters
 c     do i=1,hnum_fpray_param
@@ -226,6 +230,7 @@ c add DD 2010/7/11
                else
 *     calculate chi2
                   chi2=0.
+                  htrk_fit_success=1
                   
 *     ray(1)=dray(1)
 *     ray(2)=dray(2)
@@ -269,6 +274,10 @@ c                     hdc_drift_distance(itrk,pln)=HDC_DRIFT_DIS(hit)
                      chi2=chi2+
      &                    (hdc_single_residual(itrk,pln)
      &                    /hdc_sigma(pln))**2
+                     call htrk_track_hit_fit(htrk_track_id_at(itrk),
+     &                    ihit-1,hdc_wire_coord_sp(itrk,hit),
+     &                    hdc_track_coord(itrk,pln),
+     &                    hdc_drift_dis(hit),hdc_sigma(pln))
 
 c     Write(*,*) hdc_wire_coord(hit),
 c     &                    hdc_track_coord(itrk,pln),
@@ -290,6 +299,11 @@ c /////////////////////////////////////////////////////
                hyp_fp(itrk)=dray(4)
 
             endif               ! end test on degrees of freedom
+            if(htrk_fit_success.eq.1) then
+               call htrk_track_fit(htrk_track_id_at(itrk),
+     &              hx_fp(itrk),hy_fp(itrk),hxp_fp(itrk),
+     &              hyp_fp(itrk),chi2,hnfree_fp(itrk))
+            endif
             hchi2_fp(itrk)=chi2
             hchi2perdof_fp(itrk)=chi2/hnfree_fp(itrk)
 
@@ -355,8 +369,12 @@ cDK         print*,"ntracks_new",ntracks_new
 cDK         print*,"itrk_new",itrk_new
 cDK         print*,"itrk_min",itrk_min
 
+         do itrk1=1,hntracks_fp
+            htrk_old_ids(itrk1)=htrk_track_id_at(itrk1)
+         enddo
          do itrk1=1,ntracks_new
             itrk2=itrk_min(itrk1)
+            htrk_track_id_at(itrk1)=htrk_old_ids(itrk2)
 cDK            print*,"itrk1,itrk2",itrk1,itrk2
             hnfree_fp(itrk1)=hnfree_fp(itrk2)
             hx_fp(itrk1) =hx_fp(itrk2) 
